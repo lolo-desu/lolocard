@@ -1,0 +1,87 @@
+{
+  "story": {
+    "date": "Anno Domini 1250, Martius XII",
+    "location": "修道院",
+    "scene": "图书室",
+    "dialogue": [
+      {
+        "speaker": "narrator",
+        "content": "阳光透过花窗洒进修道院的图书室，照亮了布满灰尘的书架和古老的羊皮卷。",
+        "style": "normal"
+      },
+      {
+        "speaker": "cecilia",
+        "content": "这本草药学手稿太引人入胜了！你看这些插图多精美啊！",
+        "style": "normal",
+        "emotion": "smile"
+      },
+      {
+        "speaker": "player",
+        "content": "你似乎对草药学很有研究？",
+        "style": "normal",
+        "emotion": "default"
+      },
+      {
+        "speaker": "cecilia",
+        "content": "是的，我一直对治愈药草很感兴趣。在修道院里，我负责照料草药园。",
+        "style": "normal",
+        "emotion": "smile"
+      },
+      {
+        "speaker": "player",
+        "content": "能让我看看这本书吗？",
+        "style": "normal",
+        "emotion": "smile"
+      },
+      {
+        "speaker": "cecilia",
+        "content": "当然可以！这页讲述的是一种罕见的蓝色花朵，据说有助于缓解发热症状。",
+        "style": "normal",
+        "emotion": "smile"
+      },
+      {
+        "speaker": "narrator",
+        "content": "当你接过书时，一张折叠的纸片从书页间滑落到地上。",
+        "style": "normal"
+      },
+      {
+        "speaker": "cecilia",
+        "content": "咦？那是什么？",
+        "style": "normal",
+        "emotion": "shocked"
+      },
+      {
+        "speaker": "player",
+        "content": "看起来像是一封信...",
+        "style": "normal",
+        "emotion": "default"
+      }
+    ],
+    "options": [
+      "捡起纸条查看内容",
+      "询问这本书的来历",
+      "转移话题回到草药学的讨论",
+      "警惕地观察周围是否有人注意到这张纸条"
+    ],
+    "currentDialogueIndex": 0,
+    "currentChapter": "Chapter 2 - Secrets of the Abbey",
+    "currentFunds": 50
+  },
+  "storySummary": [
+    {
+      "id": 1,
+      "content": "玩家抵达圣奥古斯丁修道院，进入抄写室，遇见了Beatrice修女。",
+      "image": "https://gitgud.io/lolodesu/lolobabytutorial/-/raw/master/lologame/%E8%83%8C%E6%99%AF/%E4%B9%A6%E5%BA%97%E5%86%85/%E4%B9%A6%E5%BA%97.jpg?ref_type=heads"
+    },
+    {
+      "id": 2,
+      "content": "玩家在Beatrice修女的指导下完成了第一个抄写任务。",
+      "image": "https://gitgud.io/lolodesu/lolobabytutorial/-/raw/master/lologame/%E8%83%8C%E6%99%AF/%E5%85%AC%E5%9B%AD/%E7%99%BD%E5%A4%A9.jpg?ref_type=heads"
+    },
+    {
+      "id": 3,
+      "content": "玩家探索修道院，在图书室发现Cecilia正在寻找一本草药学手稿。",
+      "image": "https://gitgud.io/lolodesu/lolobabytutorial/-/raw/master/lologame/%E8%83%8C%E6%99%AF/%E5%85%AC%E5%9B%AD/%E9%BB%84%E6%98%8F.jpg?ref_type=heads"
+    }
+  ]
+}

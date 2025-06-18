@@ -1,0 +1,185 @@
+@import 'variables';
+
+.battle-container {
+  font-family: $base-font-family;
+  background-color: $background-color;
+  color: $primary-text-color;
+  padding: $padding-base;
+  border: 1px solid $border-color;
+  border-radius: $border-radius-base;
+  max-width: 600px; // 根据实际需要调整
+  margin: auto; // 居中显示
+  display: flex;
+  flex-direction: column;
+  gap: $margin-base;
+
+  .battle-scene {
+    display: flex;
+    justify-content: space-around;
+    gap: $margin-base;
+
+    .character-area {
+      flex: 1;
+      padding: $padding-base;
+      border: 1px solid $border-color;
+      border-radius: $border-radius-base;
+      min-height: 100px; // 保证有最小高度
+    }
+
+    .player-area {
+      // 玩家区域特定样式
+    }
+
+    .enemy-area {
+      // 敌人区域特定样式
+    }
+
+    .character-info {
+      // 角色信息通用样式
+      h3 {
+        margin-top: 0;
+        margin-bottom: $margin-base / 2;
+        font-size: $base-font-size * 1.2;
+      }
+      .status-bar {
+        width: 100%;
+        background-color: lighten($border-color, 10%);
+        border-radius: $border-radius-base / 2;
+        margin-bottom: $margin-base / 2;
+        height: 10px;
+        overflow: hidden;
+        .bar-fill {
+          height: 100%;
+          transition: width 0.3s ease-in-out;
+        }
+        &.hp .bar-fill {
+          background-color: $hp-color;
+        }
+        &.mp .bar-fill {
+          background-color: $mp-color;
+        }
+      }
+      .status-effects {
+        font-size: $base-font-size * 0.9;
+        color: $secondary-text-color;
+      }
+    }
+  }
+
+  .battle-log-container {
+    border: 1px solid $border-color;
+    border-radius: $border-radius-base;
+    padding: $padding-base;
+    height: 150px; // 固定高度
+    overflow-y: auto; // 超出则滚动
+    background-color: lighten($background-color, 5%);
+
+    .battle-log {
+      .log-entry {
+        padding: $padding-base / 2 0;
+        border-bottom: 1px dashed darken($border-color, 5%);
+        &:last-child {
+          border-bottom: none;
+        }
+        &.player-action {
+          color: $player-color;
+        }
+        &.enemy-action {
+          color: $enemy-color;
+        }
+        &.system-message {
+          color: $system-color;
+          font-style: italic;
+        }
+        .damage {
+          color: $damage-color;
+          font-weight: bold;
+        }
+        .heal {
+          color: $heal-color;
+          font-weight: bold;
+        }
+        .critical {
+          color: $critical-color;
+          font-weight: bold;
+          animation: flash 0.5s infinite alternate;
+        }
+      }
+    }
+  }
+
+  .battle-controls {
+    display: flex;
+    flex-direction: column;
+    gap: $margin-base;
+
+    .skill-list {
+      display: flex;
+      flex-wrap: wrap;
+      gap: $margin-base / 2;
+    }
+
+    .action-buttons {
+      display: flex;
+      justify-content: center;
+      gap: $margin-base / 2;
+    }
+
+    .action-button,
+    .skill-button {
+      padding: $padding-base / 1.5 $padding-base;
+      background-color: lighten($background-color, 10%);
+      border: 1px solid $border-color;
+      color: $primary-text-color;
+      border-radius: $border-radius-base;
+      cursor: pointer;
+      transition: background-color 0.2s ease;
+
+      &:hover {
+        background-color: lighten($background-color, 20%);
+      }
+
+      &:active {
+        background-color: darken($background-color, 5%);
+      }
+    }
+  }
+
+  .battle-result {
+    padding: $padding-base;
+    text-align: center;
+    border: 1px solid $border-color;
+    border-radius: $border-radius-base;
+    h2 {
+      margin-top: 0;
+    }
+    #continue-plot-button {
+      padding: $padding-base / 1.5 $padding-base;
+      background-color: $player-color;
+      border: 1px solid darken($player-color, 10%);
+      color: white;
+      border-radius: $border-radius-base;
+      cursor: pointer;
+      transition: background-color 0.2s ease;
+      font-size: $base-font-size * 1.1;
+      margin-top: $margin-base;
+
+      &:hover {
+        background-color: lighten($player-color, 10%);
+      }
+    }
+  }
+}
+
+// 暴击闪烁动画
+@keyframes flash {
+  0% {
+    opacity: 1;
+  }
+  50% {
+    opacity: 0.6;
+  }
+  100% {
+    opacity: 1;
+  }
+}

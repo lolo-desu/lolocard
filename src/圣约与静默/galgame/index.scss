@@ -1,0 +1,853 @@
+/* 全局样式重置 */
+* {
+  -webkit-tap-highlight-color: transparent;  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
+  font-family: 'Microsoft YaHei', 'Hiragino Sans GB', sans-serif;
+  scrollbar-width: none !important;
+  user-select: none !important;
+  -webkit-user-select: none !important;
+  -moz-user-select: none !important;
+  -ms-user-select: none !important;
+}
+
+/* 隐藏滚动条 */
+::-webkit-scrollbar {
+  width: 0 !important;
+  display: none !important;
+}
+
+body,
+html {
+  width: 100%;
+  aspect-ratio: 16/9;
+  overflow: hidden;
+  background-color: rgba(1, 1, 1, 0);
+  margin: 0 !important;
+  padding: 0 !important;
+  -ms-overflow-style: none !important;
+  scrollbar-width: none !important;
+}
+
+/* 主容器样式 - 少女风格 */
+.main-container {
+  width: 100%;
+  max-width: 1200px;
+  aspect-ratio: 16/9;
+  position: relative;
+  margin: 0 auto;
+  background: linear-gradient(135deg, #fff0f3, #ffe5ea);
+  border: 1px solid white;
+  border-radius: 12px;
+  box-shadow: 0 0 20px rgba(145, 125, 138, 0.15);
+  overflow: hidden;
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  max-height: 95%;
+  display: flex;
+  flex-direction: column;
+  box-sizing: border-box;
+}
+
+/* 确保容器边框一致性 */
+.main-container::after {
+  content: '';
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  border: 1px solid white;
+  border-radius: 12px;
+  pointer-events: none;
+  z-index: 100;
+  box-sizing: border-box;
+}
+
+/* 内部容器 - 少女风格 */
+.inner-container {
+  position: relative;
+  width: 97%;
+  height: 97%;
+  margin: 1.5% auto;
+  background: white;
+  border-radius: 8px;
+  box-shadow: 0 5px 15px rgba(145, 125, 138, 0.15);
+  overflow: hidden;
+  display: flex;
+  flex-direction: column;
+  flex: 1;
+  box-sizing: border-box;
+}
+
+/* 标题栏 - 少女风格 */
+.title-bar {
+  position: relative;
+  height: 5.5%;
+  background: linear-gradient(to right, #ffd0d8, #ffbbc8);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  color: #7d6b6e;
+  font-weight: bold;
+  font-size: clamp(10px, 1.5vw, 16px);
+  text-shadow: 0px 1px 1px rgba(255, 255, 255, 0.5);
+  border-radius: 8px 8px 0 0;
+}
+
+/* 图标样式 */
+.icon-left {
+  position: absolute;
+  left: 15px;
+  font-size: 18px;
+  color: #c18e98;
+}
+
+.icon-right {
+  position: absolute;
+  right: 15px;
+  font-size: 14px;
+  color: #c18e98;
+}
+
+/* 场景区域 */
+.scene-area {
+  position: relative;
+  flex: 1;
+  overflow: hidden;
+  background-color: #000;
+  min-height: 0;
+}
+
+/* CG图片容器 */
+#cg-container {
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  z-index: 1;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  //background-color: #000;//
+}
+
+.background-image {
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  transition: opacity 1.2s cubic-bezier(0.4, 0, 0.2, 1);
+  /* 添加这些属性以确保图片正确加载 */
+  z-index: 2;
+  background-color: #000;
+}
+
+#background-image-current {
+  opacity: 1;
+  z-index: 3;
+}
+
+#background-image-next {
+  opacity: 0;
+  z-index: 4;
+}
+
+/* 立绘容器样式 */
+#character-container {
+  position: absolute;
+  width: 100%;
+  height: 100%;
+  z-index: 2;
+  pointer-events: none;
+  overflow: hidden;
+}
+
+/* 立绘元素基础样式 */
+.character-sprite {
+  position: absolute;
+  bottom: 0;
+  height: 95%;
+  max-height: 95%;
+  width: auto;
+  object-fit: contain;
+  transition: opacity 0.8s ease, transform 0.5s ease, filter 0.5s ease, left 0.8s ease, right 0.8s ease;
+  filter: drop-shadow(0 0 5px rgba(0, 0, 0, 0.2));
+  transform-origin: bottom center;
+}
+
+/* 左侧立绘 - 调整位置，减少间距 */
+.character-left {
+  left: 30%;
+  transform: translateX(-50%);
+}
+
+/* 右侧立绘 - 调整位置，减少间距 */
+.character-right {
+  right: 30%;
+  transform: translateX(50%);
+}
+
+/* 中间立绘(当只有一个角色时) - 完全重新定义确保居中 */
+.character-center {
+  position: absolute;
+  left: 50%;
+  transform: translateX(-50%);
+  bottom: 0;
+  height: 98%;
+  max-height: 98%;
+  width: auto;
+  object-fit: contain;
+}
+
+/* 角色淡入效果 */
+.character-enter {
+  transform: scale(0.95);
+  filter: blur(2px);
+}
+
+/* 角色淡出效果 */
+.character-exit {
+  transform: scale(0.9);
+  filter: blur(3px);
+  transition: transform 0.5s ease, filter 0.5s ease;
+}
+
+/* 立绘显示状态 */
+.character-active {
+  opacity: 1;
+  transform: scale(1);
+}
+
+/* 说话中的角色突出显示 */
+.character-speaking {
+  filter: drop-shadow(0 0 8px rgba(0, 0, 0, 0.3));
+  transform: scale(1.05);
+  z-index: 3;
+}
+
+/* 立绘淡化效果 */
+.character-dimmed {
+  filter: brightness(0.85) contrast(0.95);
+}
+
+/* 对话框样式 - 少女风格 */
+#dialog-box {
+  position: absolute;
+  bottom: 4%;
+  left: 50%;
+  transform: translateX(-50%);
+  width: 50%;
+  max-width: 600px;
+  background: linear-gradient(135deg, rgba(255, 235, 240, 0.8), rgba(255, 202, 215, 0.8));
+  backdrop-filter: blur(8px);
+  border-radius: 10px;
+  padding: clamp(6px, 1.5%, 12px) clamp(10px, 2%, 20px);
+  color: #7d5b65;
+  z-index: 10;
+  box-shadow: 0 4px 12px rgba(145, 125, 138, 0.15), 0 0 0 1px rgba(255, 255, 255, 0.4) inset;
+  border: 1px solid rgba(255, 255, 255, 0.7);
+  transition: transform 0.3s ease, opacity 0.3s ease;
+}
+
+#dialog-box:hover {
+  transform: translateX(-50%) translateY(-2px);
+  box-shadow: 0 6px 15px rgba(145, 125, 138, 0.2), 0 0 0 1px rgba(255, 255, 255, 0.5) inset;
+}
+
+/* 角色名称样式 - 少女风格 */
+#character-name {
+  font-size: 16px;
+  font-weight: bold;
+  color: #c18e98;
+  margin-bottom: 4px;
+  text-shadow: 0 0 5px rgba(255, 255, 255, 0.7);
+  position: relative;
+  display: inline-block;
+  padding-right: 16px;
+}
+
+#character-name:after {
+  content: '❀';
+  position: absolute;
+  right: 0;
+  top: 50%;
+  transform: translateY(-50%);
+  font-size: 14px;
+  color: #ffb0c0;
+}
+
+/* 对话文本样式 - 少女风格 */
+#dialog-text {
+  font-size: 14px;
+  line-height: 1.4;
+  min-height: 50px;
+  margin-bottom: 8px;
+  color: #4d2b35;
+  text-shadow: 0 1px 1px rgba(255, 255, 255, 0.9);
+  letter-spacing: 0.2px;
+  position: relative;
+  padding: 0 2px;
+}
+
+/* 装饰性边框 */
+#dialog-text:before,
+#dialog-text:after {
+  content: '';
+  position: absolute;
+  height: 80%;
+  width: 1px;
+  background: linear-gradient(to bottom, rgba(255, 180, 190, 0), rgba(255, 180, 190, 0.5), rgba(255, 180, 190, 0));
+  top: 10%;
+}
+
+#dialog-text:before {
+  left: 0;
+}
+
+#dialog-text:after {
+  right: 0;
+}
+
+/* 下一步提示样式 - 少女风格 */
+#next-hint {
+  text-align: right;
+  font-size: 12px;
+  color: rgba(193, 142, 152, 0.8);
+  animation: pulse 1.5s infinite;
+  position: relative;
+  padding-right: 16px;
+}
+
+#next-hint:after {
+  content: '✿';
+  position: absolute;
+  right: 0;
+  top: 50%;
+  transform: translateY(-50%) rotate(5deg);
+  font-size: 14px;
+  animation: float 2s ease-in-out infinite;
+}
+
+@keyframes pulse {
+  0% {
+    opacity: 0.4;
+  }
+
+  50% {
+    opacity: 1;
+  }
+
+  100% {
+    opacity: 0.4;
+  }
+}
+
+@keyframes float {
+  0%,
+  100% {
+    transform: translateY(-50%) rotate(5deg);
+  }
+
+  50% {
+    transform: translateY(-65%) rotate(10deg);
+  }
+}
+
+/* 底部区域样式 - 少女风格 */
+.bottom-area {
+  position: absolute;
+  bottom: 15px;
+  right: 15px;
+  display: flex;
+  align-items: center;
+  z-index: 900;
+}
+
+.sweet-memories {
+  display: flex;
+  align-items: center;
+}
+
+/* 历史按钮样式 */
+.history-button {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  background: linear-gradient(135deg, #ffb5c5, #ffd6e0);
+  border: none;
+  padding: 10px;
+  border-radius: 50%;
+  color: #7d5b65;
+  font-size: 16px;
+  cursor: pointer;
+  margin-right: 10px;
+  width: 40px;
+  height: 40px;
+  transition: transform 0.3s ease, opacity 0.3s ease, background 0.3s ease;
+  box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
+}
+
+.history-button:hover {
+  transform: scale(1.1);
+  opacity: 0.9;
+  background: linear-gradient(135deg, #ffd6e0, #ffb5c5);
+}
+
+/* 重新播放按钮样式 */
+.restart-button {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  background: linear-gradient(135deg, #ffb5c5, #ffd6e0);
+  border: none;
+  padding: 10px;
+  border-radius: 50%;
+  color: #7d5b65;
+  font-size: 16px;
+  cursor: pointer;
+  margin-right: 10px;
+  width: 40px;
+  height: 40px;
+  transition: transform 0.3s ease, opacity 0.3s ease, background 0.3s ease;
+  box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
+  line-height: 1;
+  text-align: center;
+  padding: 0;
+}
+
+.restart-button:hover {
+  transform: scale(1.1);
+  opacity: 0.9;
+  background: linear-gradient(135deg, #ffd6e0, #ffb5c5);
+}
+
+/* UI按钮样式 */
+#toggle-ui-btn {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  background: linear-gradient(135deg, #ffb5c5, #ffd6e0);
+  border: none;
+  padding: 10px;
+  border-radius: 50%;
+  color: #7d5b65;
+  font-size: 16px;
+  cursor: pointer;
+  width: 40px;
+  height: 40px;
+  transition: transform 0.3s ease, opacity 0.3s ease, background 0.3s ease;
+  box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
+}
+
+#toggle-ui-btn:hover {
+  transform: scale(1.1);
+  opacity: 0.9;
+  background: linear-gradient(135deg, #ffd6e0, #ffb5c5);
+}
+
+/* 当UI隐藏时的样式 */
+body.ui-hidden #dialog-box {
+  display: none !important;
+}
+
+body.ui-hidden #toggle-ui-btn {
+  background: linear-gradient(135deg, #ffadc0, #ff8da0) !important;
+}
+
+/* 确保UI隐藏时重新播放按钮不被隐藏 */
+body.ui-hidden .restart-button {
+  opacity: 1;
+  visibility: visible;
+}
+
+/* 在UI隐藏时，立绘继续显示并移除区分效果 */
+body.ui-hidden #character-container {
+  z-index: 3;
+}
+
+body.ui-hidden .character-dimmed {
+  filter: none !important;
+}
+
+/* 添加日记感装饰元素 */
+.decoration-sticker {
+  position: absolute;
+  width: 50px;
+  height: 50px;
+  background-size: contain;
+  background-repeat: no-repeat;
+  z-index: 15;
+  opacity: 0.8;
+  pointer-events: none;
+}
+
+.sticker-1 {
+  top: 15px;
+  right: 15px;
+  transform: rotate(10deg);
+  font-size: 24px;
+  color: #ffb0c0;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.sticker-2 {
+  bottom: 80px;
+  left: 15px;
+  transform: rotate(-5deg);
+  font-size: 24px;
+  color: #ffb0c0;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+/* 立绘转场效果 */
+body.transitioning .character-sprite {
+  transition: opacity 1s ease, transform 1s ease, filter 1s ease, left 1s ease, right 1s ease;
+}
+
+body.transitioning #next-hint {
+  opacity: 0;
+  transition: opacity 0.6s ease;
+}
+
+/* 简化转场动画 */
+body.transitioning #dialog-box {
+  opacity: 0.7;
+  transition: opacity 1.2s ease, transform 1.2s ease;
+}
+
+body.transitioning .decoration-sticker {
+  opacity: 0.5;
+  transition: opacity 1.2s ease;
+}
+
+/* 当需要旁白或主角视角（无立绘）时的样式 */
+.narrator-mode #character-container,
+.protagonist-mode #character-container {
+  opacity: 0;
+  pointer-events: none;
+}
+
+/* 旁白模式下对话框样式调整 */
+.narrator-mode #dialog-box {
+  background: linear-gradient(135deg, rgba(255, 235, 254, 0.895), rgba(250, 222, 255, 0.9));
+}
+
+/* 主角视角模式下对话框样式调整 */
+.protagonist-mode #dialog-box {
+  background: linear-gradient(135deg, rgba(245, 225, 235, 0.9), rgba(235, 215, 230, 0.9));
+}
+
+/* 旁白模式下角色名称样式 */
+.narrator-mode #character-name {
+  opacity: 0;
+  height: 0;
+  margin: 0;
+  overflow: hidden;
+}
+
+/* 移动设备样式 */
+@media (max-width: 768px) {
+  body,
+  html {
+    aspect-ratio: 3/4;
+  }
+
+  #dialog-box {
+    position: absolute;
+    left: 50%;
+    bottom: -100%;
+    width: 100%;
+    /* 增加宽度以适应移动端 */
+    max-width: none;
+    /* 移除最大宽度限制 */
+    z-index: 25;
+    /* 确保在底部区域之上 */
+    transition: none;
+    /* 禁用过渡效果 */
+  }
+
+  /* 禁用悬浮效果 */
+  #dialog-box:hover {
+    box-shadow: 0 4px 12px rgba(145, 125, 138, 0.15), 0 0 0 1px rgba(255, 255, 255, 0.4) inset;
+    /* 恢复默认阴影 */
+  }
+
+  /* 禁用转场动画 */
+  body.transitioning #dialog-box {
+    opacity: 1;
+    /* 强制透明度为 1 */
+    transition: none;
+    /* 禁用转场过渡 */
+    transform: translateX(-50%);
+    /* 强制位移为默认值 */
+  }
+
+  .main-container {
+    top: 25%;
+    overflow: visible;
+    /* 关键：防止裁剪 */
+  }
+
+  .inner-container {
+    overflow: visible;
+    /* 关键：防止裁剪 */
+  }
+
+  .scene-area {
+    overflow: visible;
+    /* 关键：防止裁剪 */
+  }
+  
+  .title-bar {
+    height: 20px;
+  }
+  
+  .bottom-area {
+    z-index: 15;
+    /* 低于 dialog-box */
+    bottom: 10px;
+    right: 10px;
+  }
+  
+  .decoration-sticker {
+    display: none;
+  }
+  
+  #toggle-ui-btn {
+    display: none !important;
+  }
+
+  .history-button,
+  #toggle-ui-btn {
+    width: 35px;
+    height: 35px;
+    font-size: 14px;
+  }
+
+  /* --- 历史面板移动端样式 --- */
+  #history-panel {
+    width: 96%;
+    height: 240% !important;
+    max-height: 300% !important;
+    top: 120% !important;
+    border-radius: 12px;
+    /* 稍微减小圆角 */
+  }
+
+  #history-header {
+    padding: 12px 15px;
+    /* 减小内边距 */
+    font-size: 16px;
+    /* 调整字体大小 */
+    border-radius: 12px 12px 0 0;
+    /* 匹配面板圆角 */
+  }
+
+  #close-history {
+    font-size: 22px;
+    /* 调整关闭按钮大小 */
+  }
+
+  /* 移动端滚动条可以更细 */
+  #history-content::-webkit-scrollbar {
+    width: 6px !important;
+  }
+
+  #history-content::-webkit-scrollbar-thumb {
+    border: none;
+    /* 移除边框 */
+  }
+
+  .history-item {
+    padding: 12px !important;
+    margin-bottom: 12px !important;
+    border-radius: 10px;
+    /* 减小圆角 */
+  }
+
+  .history-name {
+    font-size: 14px !important;
+    margin-bottom: 6px !important;
+    padding-left: 16px;
+    /* 调整间距 */
+  }
+
+  .history-name::before {
+    font-size: 12px;
+    /* 调整装饰大小 */
+  }
+
+  .history-text {
+    font-size: 13px !important;
+    line-height: 1.5;
+    /* 调整行高 */
+  }
+}
+
+/* --- 历史面板基础样式 (脱离父容器，基于视口定位) --- */
+#history-panel {
+  position: fixed;
+  /* 使用 fixed 定位，相对于浏览器视口 */
+  top: 25%;
+  /* 距离视口顶部 5% */
+  left: 5%;
+  /* 距离视口左侧 5% */
+  width: 90%;
+  /* 宽度为视口的 90% */
+  height: 90%;
+  /* 高度为视口的 90% */
+  max-height: 90%;
+  /* 最大高度限制 */
+  background: linear-gradient(135deg, rgba(255, 240, 245, 0.95), rgba(255, 225, 235, 0.95));
+  /* 背景稍微不透明 */
+  backdrop-filter: blur(10px);
+  /* 背景模糊效果 */
+  border-radius: 15px;
+  box-shadow: 0 8px 30px rgba(145, 125, 138, 0.25), 0 0 0 1px rgba(255, 255, 255, 0.6) inset;
+  border: 1px solid rgba(255, 255, 255, 0.8);
+  z-index: 1000;
+  /* 设置高层级，确保在最前面 */
+  display: none;
+  /* 初始状态隐藏 */
+  flex-direction: column;
+  /* 内部元素垂直排列 */
+  box-sizing: border-box;
+  /* 移除 transform 和 margin，因为 fixed 定位不需要它们 */
+  transform: none;
+  margin: 0;
+  overflow: hidden;
+  /* 防止内部元素溢出圆角 */
+}
+
+#history-header {
+  flex-shrink: 0;
+  /* 防止头部被压缩 */
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 15px 20px;
+  background: linear-gradient(to right, rgba(255, 208, 216, 0.8), rgba(255, 187, 200, 0.8));
+  border-bottom: 1px solid rgba(255, 255, 255, 0.5);
+  border-radius: 15px 15px 0 0;
+  /* 匹配面板圆角 */
+  color: #7d5b65;
+  font-weight: bold;
+  font-size: clamp(14px, 1.8vw, 18px);
+  text-shadow: 0 1px 1px rgba(255, 255, 255, 0.6);
+}
+
+#close-history {
+  background: none;
+  border: none;
+  font-size: 24px;
+  color: #c18e98;
+  cursor: pointer;
+  padding: 5px;
+  line-height: 1;
+  transition: color 0.2s ease, transform 0.2s ease;
+}
+
+#close-history:hover {
+  color: #a16e78;
+  transform: scale(1.1);
+}
+
+#history-content {
+  flex-grow: 1;
+  /* 占据剩余空间 */
+  overflow-y: auto;
+  /* 内容超出时允许滚动 */
+  padding: 20px;
+  color: #4d2b35;
+  /* 默认滚动条样式 (针对非 Webkit 浏览器) */
+  scrollbar-width: thin;
+  scrollbar-color: #ffb0c0 #fff0f3;
+}
+
+/* Webkit 浏览器滚动条样式 */
+#history-content::-webkit-scrollbar {
+  width: 8px !important;
+  display: block !important;
+  /* 默认显示滚动条 */
+}
+
+#history-content::-webkit-scrollbar-track {
+  background: rgba(255, 240, 243, 0.5);
+  /* 半透明轨道 */
+  border-radius: 4px;
+}
+
+#history-content::-webkit-scrollbar-thumb {
+  background-color: rgba(255, 176, 192, 0.8);
+  /* 半透明滑块 */
+  border-radius: 4px;
+  border: 1px solid rgba(255, 255, 255, 0.3);
+}
+
+#history-content::-webkit-scrollbar-thumb:hover {
+  background-color: rgba(255, 160, 180, 1);
+}
+
+.history-item {
+  margin-bottom: 15px;
+  padding: 15px;
+  border-radius: 12px;
+  background: rgba(255, 255, 255, 0.6);
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.05), 0 0 0 1px rgba(255, 255, 255, 0.7) inset;
+  transition: transform 0.2s ease, box-shadow 0.2s ease;
+}
+
+.history-item:hover {
+  transform: translateY(-2px);
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.08), 0 0 0 1px rgba(255, 255, 255, 0.8) inset;
+}
+
+.history-name {
+  font-weight: bold;
+  color: #c18e98;
+  margin-bottom: 8px;
+  position: relative;
+  padding-left: 18px;
+  /* 为装饰留出空间 */
+  font-size: 15px;
+  /* 调整基础字体大小 */
+}
+
+.history-name::before {
+  /* 使用伪元素添加装饰 */
+  content: '❀';
+  position: absolute;
+  left: 0;
+  top: 50%;
+  transform: translateY(-50%);
+  color: #ffb0c0;
+  font-size: 13px;
+}
+
+.history-text {
+  line-height: 1.6;
+  /* 增加行高 */
+  letter-spacing: 0.3px;
+  font-size: 14px;
+  /* 调整基础字体大小 */
+  color: #4d2b35;
+}
+
+/* 旁白特殊样式 */
+.history-item.narrator {
+  /* 给旁白项添加一个 class，例如 'narrator' */
+  font-style: italic;
+  background: rgba(245, 235, 235, 0.8);
+  /* 不同的背景 */
+  border-left: 3px solid #ffcad5;
+}

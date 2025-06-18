@@ -1,0 +1,218 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no" />
+    <meta name="theme-color" content="#2a2a2a" />
+    <meta name="apple-mobile-web-app-capable" content="yes" />
+    <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent" />
+    <title>修道院箱庭 - 百合恋爱文字冒险</title>
+
+    <!-- 引入字体 -->
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link
+      href="https://fonts.googleapis.com/css2?family=Cinzel:wght@400;500;600;700&family=Lato:ital,wght@0,300;0,400;0,700;1,300;1,400&display=swap"
+      rel="stylesheet"
+    />
+
+    <!-- 引入Bootstrap -->
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@4.6.2/dist/css/bootstrap.min.css" />
+
+    <!-- 引入外部库 -->
+    <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+    <script src="https://code.jquery.com/ui/1.13.2/jquery-ui.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/popper.js@1.16.1/dist/umd/popper.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@4.6.2/dist/js/bootstrap.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/lodash@4.17.21/lodash.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/toastr.js/latest/toastr.min.js"></script>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.4/css/all.min.css" />
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/toastr.js/latest/toastr.min.css" />
+    <script src="https://cdn.jsdelivr.net/npm/js-yaml@4.1.0/dist/js-yaml.min.js"></script>
+  </head>
+  <body>
+    <div class="game-container">
+      <!-- 游戏标题栏 -->
+      <header class="game-header">
+        <div class="header-left">
+          <h1 class="game-title">Saint Aurelia</h1>
+        </div>
+        <div class="header-right">
+          <span class="game-date" id="game-date">Anno Domini 1250, Martius XII</span>
+          <div class="game-controls">
+            <button id="save-game" class="icon-button gold" title="记录典籍"><i class="fas fa-feather-alt"></i></button>
+            <button id="load-game" class="icon-button gold" title="查看典籍"><i class="fas fa-book-open"></i></button>
+            <button id="settings-button" class="icon-button" title="设置"><i class="fas fa-cog"></i></button>
+          </div>
+        </div>
+      </header>
+
+      <!-- 主要内容区域 -->
+      <div class="content-wrapper">
+        <!-- 标签导航栏 -->
+        <div class="tab-navigation">
+          <button id="tab-story" class="tab-button active" data-tab="story-tab">
+            <i class="fas fa-book-open"></i> 正文
+          </button>
+          <button id="tab-journal" class="tab-button" data-tab="journal-tab">
+            <i class="fas fa-journal-whills"></i> 日记
+          </button>
+          <button id="tab-memory" class="tab-button" data-tab="memory-tab">
+            <i class="fas fa-clock-rotate-left"></i> 记忆
+          </button>
+        </div>
+
+        <!-- 标签内容区域 -->
+        <div class="tab-content">
+          <!-- 正文标签 - 主游戏区域 -->
+          <div id="story-tab" class="tab-pane active">
+            <!-- 游戏核心区域 - 严格16:9比例 -->
+            <div class="game-core">
+              <!-- 背景区域 -->
+              <div class="background-container" id="background-container">
+                <!-- 背景图将通过CSS插入 -->
+              </div>
+
+              <!-- 角色立绘区域 -->
+              <div class="characters-container" id="characters-container">
+                <div class="character-left" id="character-left"></div>
+                <div class="character-right" id="character-right"></div>
+              </div>
+
+              <!-- 对话框区域 - 漂浮在画面下方 -->
+              <div class="dialogue-container" id="dialogue-container">
+                <div class="dialogue-header">
+                  <span class="speaker-name" id="speaker-name">Sister Cecilia</span>
+                  <div class="dialogue-controls">
+                    <button id="auto-play" class="icon-button small" title="自动播放">
+                      <i class="fas fa-play"></i>
+                    </button>
+                    <button id="dialogue-history" class="icon-button small" title="历史记录">
+                      <i class="fas fa-history"></i>
+                    </button>
+                  </div>
+                </div>
+                <div class="dialogue-content" id="dialogue-content">
+                  <!-- 对话内容将通过脚本插入 -->
+                </div>
+              </div>
+
+              <!-- 选择区域 - 漂浮在游戏画面中央，更加紧凑 -->
+              <div class="choices-container hidden" id="choices-container">
+                <div class="choices-header">
+                  <h3>接下来的行动</h3>
+                  <button id="hide-choices-btn" class="icon-button small" title="隐藏选项">
+                    <i class="fas fa-times"></i>
+                  </button>
+                </div>
+                <div class="preset-choices" id="preset-choices">
+                  <!-- 预设选项将通过脚本插入 -->
+                </div>
+                <div class="custom-choice">
+                  <input type="text" id="custom-choice-input" placeholder="自定义回应..." />
+                  <button id="custom-choice-button" type="button">确定</button>
+                </div>
+              </div>
+            </div>
+          </div>
+
+          <!-- 日记标签 - 角色/修道院信息等 -->
+          <div id="journal-tab" class="tab-pane">
+            <div class="journal-container">
+              <!-- 日记导航栏 -->
+              <div class="journal-nav">
+                <button class="journal-nav-item active" data-section="characters">
+                  <i class="fas fa-users"></i> 角色信息
+                </button>
+                <button class="journal-nav-item" data-section="monastery">
+                  <i class="fas fa-church"></i> 修道院状态
+                </button>
+                <button class="journal-nav-item" data-section="knowledge"><i class="fas fa-book"></i> 知识库</button>
+              </div>
+
+              <!-- 日记内容区域 -->
+              <div class="journal-content">
+                <!-- 角色信息部分 -->
+                <div id="characters-section" class="journal-section active">
+                  <div class="character-cards" id="character-cards">
+                    <!-- 角色卡片将通过脚本插入 -->
+                  </div>
+                  <div class="character-details" id="character-details">
+                    <!-- 角色详情将通过脚本插入 -->
+                  </div>
+                </div>
+
+                <!-- 修道院状态部分 -->
+                <div id="monastery-section" class="journal-section">
+                  <div class="monastery-info" id="monastery-info">
+                    <!-- 修道院信息将通过脚本插入 -->
+                  </div>
+                </div>
+
+                <!-- 知识库部分 -->
+                <div id="knowledge-section" class="journal-section">
+                  <div class="knowledge-categories" id="knowledge-categories">
+                    <!-- 知识分类将通过脚本插入 -->
+                  </div>
+                  <div class="knowledge-entries" id="knowledge-entries">
+                    <!-- 知识条目将通过脚本插入 -->
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+
+          <!-- 记忆标签 - 记忆与时间旅行功能 -->
+          <div id="memory-tab" class="tab-pane">
+            <div class="memory-container">
+              <div class="memory-header">
+                <h2><i class="fas fa-hourglass-half"></i> 穿越记忆点</h2>
+                <button id="save-memory" class="memory-button"><i class="fas fa-bookmark"></i> 保存此刻</button>
+              </div>
+
+              <!-- 记忆时间轴 -->
+              <div class="memory-timeline-container">
+                <div class="memory-timeline" id="memory-timeline">
+                  <!-- 记忆节点将通过脚本插入 -->
+                </div>
+              </div>
+
+              <!-- 记忆详情 -->
+              <div class="memory-detail-container">
+                <div class="memory-content" id="memory-content">
+                  <!-- 记忆内容将通过脚本插入 -->
+                </div>
+                <div class="memory-actions">
+                  <button id="travel-to-memory" class="memory-travel-button">
+                    <i class="fas fa-clock-rotate-left"></i> 穿越到此刻
+                  </button>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <!-- 加载提示 - 默认隐藏 -->
+        <div class="loading-indicator hidden" id="loading-indicator">
+          <div class="loading-spinner"></div>
+          <div class="loading-text">加载中...</div>
+        </div>
+
+        <!-- 通知容器 -->
+        <div id="notification-container"></div>
+      </div>
+    </div>
+
+    <!-- 确认对话框容器 - 位于DOM树的最外层，脱离游戏容器限制 -->
+    <div class="confirm-container hidden" id="confirm-container">
+      <div class="modal-backdrop" id="modal-backdrop"></div>
+      <div class="confirm-dialog" id="confirm-dialog">
+        <div class="confirm-message" id="confirm-message">确定要执行此操作吗？</div>
+        <div class="confirm-buttons">
+          <button class="confirm-button confirm-yes" id="confirm-yes">确认</button>
+          <button class="confirm-button confirm-no" id="confirm-no">取消</button>
+        </div>
+      </div>
+    </div>
+  </body>
+</html>

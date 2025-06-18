@@ -1,0 +1,49 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>回合制战斗界面</title>
+  </head>
+  <body>
+    <!-- 战斗界面的容器将由 battle-interface.html 的内容填充 -->
+    <div id="battle-root">
+      <!-- 这里的内容将在 JS 加载后由 battle-interface.html 替换或填充 -->
+      <!-- 或者直接将 battle-interface.html 的内容放在这里 -->
+      <div id="battle-container" class="battle-container">
+        <div class="battle-scene">
+          <div class="character-area player-area">
+            <div class="character-info" id="player-info">
+              <!-- 玩家信息 -->
+            </div>
+          </div>
+          <div class="character-area enemy-area">
+            <div class="character-info" id="enemy-info">
+              <!-- 敌人信息 -->
+            </div>
+          </div>
+        </div>
+        <div class="battle-log-container">
+          <div class="battle-log" id="battle-log">
+            <!-- 战斗日志 -->
+          </div>
+        </div>
+        <div class="battle-controls">
+          <div class="skill-list" id="skill-list">
+            <!-- 技能按钮 -->
+          </div>
+          <div class="action-buttons">
+            <button class="action-button" data-action="attack">攻击</button>
+            <button class="action-button" data-action="defend">防御</button>
+            <button class="action-button" data-action="escape">逃跑</button>
+            <!-- 可能有道具按钮 -->
+          </div>
+        </div>
+        <div class="battle-result" id="battle-result" style="display: none">
+          <!-- 战斗结果 -->
+          <button id="continue-plot-button">继续剧情</button>
+        </div>
+      </div>
+    </div>
+  </body>
+</html>
