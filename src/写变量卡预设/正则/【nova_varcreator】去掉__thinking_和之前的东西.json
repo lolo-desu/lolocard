@@ -1,0 +1,17 @@
+{
+    "id": "85dbeaaf-9003-48ec-9c14-a46a665ea453",
+    "scriptName": "【Nova VarCreator】去掉</thinking>和之前的东西",
+    "disabled": false,
+    "runOnEdit": true,
+    "findRegex": "/^.*?</thinking>/s",
+    "replaceString": "",
+    "trimStrings": [],
+    "placement": [
+        2
+    ],
+    "substituteRegex": 0,
+    "minDepth": null,
+    "maxDepth": null,
+    "markdownOnly": true,
+    "promptOnly": true
+}

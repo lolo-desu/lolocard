@@ -1,0 +1,17 @@
+{
+    "id": "d3321ea2-2b0f-4219-9ddb-70dbbcc8f3f3",
+    "scriptName": "【Nova VarCreator】(配抗空回)去掉战书",
+    "disabled": false,
+    "runOnEdit": true,
+    "findRegex": "/<challenge_to_censorship>.*</challenge_to_censorship>/gs",
+    "replaceString": "",
+    "trimStrings": [],
+    "placement": [
+        2
+    ],
+    "substituteRegex": 0,
+    "minDepth": null,
+    "maxDepth": null,
+    "markdownOnly": false,
+    "promptOnly": false
+}

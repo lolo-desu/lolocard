@@ -1,0 +1,17 @@
+{
+    "id": "ac70112c-c317-4878-919e-195e1b497c53",
+    "scriptName": "【Nova VarCreator】css状态栏时使用",
+    "findRegex": "【\\[(.*?)\\]】",
+    "replaceString": "{{$1}}",
+    "trimStrings": [],
+    "placement": [
+        2
+    ],
+    "disabled": false,
+    "markdownOnly": false,
+    "promptOnly": false,
+    "runOnEdit": true,
+    "substituteRegex": 0,
+    "minDepth": null,
+    "maxDepth": null
+}
