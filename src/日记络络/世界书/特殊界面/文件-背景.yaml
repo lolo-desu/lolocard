@@ -1,0 +1,98 @@
+---
+背景列表:
+  文件信息:
+    格式: JPEG
+    后缀: .jpg
+  时间:
+    - &day_dusk
+      - 白天
+      - 黄昏
+    - &common_lights
+      - *day_dusk
+      - 夜晚开灯
+      - 夜晚关灯
+  背景:
+    - 地铁内:
+        - *day_dusk
+        - 夜晚开灯
+    - 海滩:
+        - *day_dusk
+        - 夜晚关灯
+    - 河旁:
+        - *day_dusk
+        - 夜晚关灯
+    - 城市中的铁路道口:
+        - *day_dusk
+        - 夜晚开灯
+    - 公园:
+        - *day_dusk
+        - 夜晚开灯
+    - 男生房间:
+        - *common_lights
+    - 女生房间:
+        - *common_lights
+        - 夜晚夜灯
+    - 上学路上:
+        - *common_lights
+    - 学校教学楼正门前:
+        - *common_lights
+    - 学校外侧楼梯:
+        - *common_lights
+    - 学校屋顶:
+        - *day_dusk
+        - 夜晚关灯
+    - 住宅街:
+        - *common_lights
+    - 餐馆:
+        - *day_dusk
+        - 夜晚开灯
+    - 教室:
+        - *common_lights
+    - 商店街:
+        - *day_dusk
+        - *common_lights
+    - 庙会小吃街:
+        - *day_dusk
+        - 夜晚开灯
+    - 学校中庭:
+        - *common_lights
+    - 住所玄关:
+        - *common_lights
+        - 夜晚半开灯
+    - 住所客厅:
+        - *day_dusk
+        - *common_lights
+    - 公园凉亭:
+        - *day_dusk
+        - 夜晚开灯
+    - 公园商店亭:
+        - *day_dusk
+        - 夜晚开灯
+    - 城镇街道上:
+        - *common_lights
+    - 拱廊商店街:
+        - *day_dusk
+        - 夜晚开灯
+    - 咖啡厅:
+        - *day_dusk
+        - 夜晚开灯
+    - 美术馆:
+        - 白天
+        - 夜晚关灯
+    - 购物中心:
+        - *day_dusk
+        - 夜晚关灯
+    - 繁华商业街:
+        - *day_dusk
+        - 夜晚开灯
+
+    # 以下是无时间变化的背景
+    - 地铁站内: 地铁站内
+    - 书店内: 书店内
+    - 便利店内: 便利店内
+    - 购物中心二层: 购物中心二层
+  调用格式: ${地点}/${时间 if 时间 else 地点}.jpg
+  调用示例:
+    - 地铁内/白天.jpg
+    - 美术馆/夜晚关灯.jpg
+    - 购物中心二层/购物中心二层.jpg

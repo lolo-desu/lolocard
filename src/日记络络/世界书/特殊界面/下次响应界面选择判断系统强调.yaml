@@ -1,0 +1,27 @@
+---
+下次响应界面选择判断系统强调:
+  # :<%_ if (getvar('stat_data.世界.下次响应界面选择判断') === 0) { _%>
+  sprite:
+    rule: by recalling `下次响应界面选择判断系统`, `背景列表`, `立绘列表` documents, the following must be inserted to the reply and cannot be omitted
+    format: |-
+      <!-- STORY END: ... -->
+      <sprite>
+      ...
+      </sprite>
+  # :<%_ } else if (getvar('stat_data.世界.下次响应界面选择判断') === 1) { _%>
+  diary:
+    rule: by recalling `下次响应界面选择判断系统`, `背景列表`, `立绘列表`` documents, the following must be inserted to the reply and cannot be omitted
+    format: |-
+      <!-- STORY END: ... -->
+      <diary>
+      ...
+      </diary>
+  # :<%_ } else { _%>
+  galgame:
+    rule: by recalling `下次响应界面选择判断系统`, `背景列表`, `立绘列表`, `NSFWCG列表` documents, the following must be inserted to the reply and cannot be omitted
+    format: |-
+      <!-- ... -->
+      <galgame>
+      ...
+      </galgame>
+  # :<%_ } _%>

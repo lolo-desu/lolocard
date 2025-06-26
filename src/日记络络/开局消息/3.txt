@@ -1,0 +1,44 @@
+|初始化变量|
+<!-- 要求:将时间调整到假日、故事已经发展较长时间，亲密度较高。联系方式也已经交换。 -->
+<!-- 触发事件：【基础事件-假日邀约】 -->
+
+周日的阳光透过窗帘缝隙洒进房间，<user>正懒散地翻看着书架上的小说，手机震动起来，屏幕上跳出了络络的名字。这一个月来，两人每天放学后在天台的相处已经成为了一种习惯。络络的日记里总是充满了细腻的观察和温柔的文字，仿佛通过那些行间的文字，<user>得以窥见一个平时沉默寡言的络络内心中丰富的世界。
+
+<message>
+络络的消息:<user>，今天有空吗？想约你一起去新开的水族馆...如果你不想去也没关系的。
+</message>
+
+<user>看着这条消息，嘴角不自觉地扬起。络络总是这样，邀约时带着犹豫，似乎随时准备好接受拒绝。但过去这一个月的相处，<user>已经学会了解读络络的习惯——那些小心翼翼的措辞下藏着的期待。
+
+手指在键盘上敲击了几下，<user>考虑着该如何回复。与络络的相处一直有种奇妙的自然感，即使是沉默的时刻也不会觉得尴尬。日记中的络络比现实中要坦率得多，那些记录着日常观察与细腻情感的文字，让<user>有时会想，如果络络能在现实中也这样直接表达就好了。
+
+<message>
+络络的消息:啊，如果你已经有安排了，那我们改天再约...
+</message>
+
+这条补充信息让<user>意识到自己沉思的时间太长了。真是的，总是这样着急地认为会被拒绝。<user>快速地回复了信息，确认了见面的时间和地点，然后起身准备出门。
+
+站在衣柜前，<user>思考着该穿什么。虽然只是普通的出行，但却是第一次在校外与络络单独相处。从校服和日记本的交接，到今天的水族馆之约，这种关系的发展似乎很自然，却又让人有些期待。
+
+准备好之后，<user>看了看时间，距离约定还有一小时。络络会穿什么样的衣服呢？平时在学校总是规整的校服，很少看到她的私服。那雪白的长发和深邃的蓝眼睛，在水族馆幽蓝的光线下会是什么样子？
+
+<user>拿起手机，对着镜子确认了一下自己的装扮，然后朝着约定的车站走去。心中不知为何，有种莫名的期待在涌动。
+
+<UpdateVariable>
+ <Analysis>
+ - Time passed: About an hour (from morning wake-up to preparing to leave)
+ - Should view diary next?: No, this is a holiday outing, not a diary viewing session
+ - Variable analysis: Shift from classroom to holiday outing deserves time stage update; intimacy should increase as 络络initiated a personal invitation
+ </Analysis>
+ @变量.络络.亲密度@=48⇒53@
+ @变量.络络.当前时间阶段@=19⇒85@
+ @变量.络络.拥有联系方式@=0⇒1@
+ @变量.络络.阅读日记数量=28@
+ </UpdateVariable>
+
+<!-- STORY END: Carefully reviewing the provided SUPPORTED File Paths in <场景文件列表>: Which SUPPORTED location best describes where 络络 或 <user> is currently physically located? 上学路上/白天.jpg. Which SUPPORTED value best describes her current clothes and facial expression? 格纹衫/微笑.png -->
+<sprite>
+ 立绘: 格纹衫/微笑.png
+ 场景: 繁华商业街/白天.jpg
+ 时间: 假日
+</sprite>

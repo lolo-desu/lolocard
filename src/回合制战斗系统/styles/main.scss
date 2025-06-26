@@ -1,4 +1,212 @@
-@import 'variables';
-@import 'battle-interface';
+@use 'sass:color';
 
-// 可以添加全局样式或重置样式
+// 颜色变量
+$primary-text-color: #e0e0e0; // 主要文本颜色
+$secondary-text-color: #b0b0b0; // 次要文本颜色
+$background-color: #252526; // 背景色
+$border-color: #404040; // 边框颜色
+
+$player-color: #64b5f6; // 玩家颜色
+$enemy-color: #e57373; // 敌人颜色
+$system-color: #ffd54f; // 系统消息颜色
+
+$hp-color: #4caf50; // HP 颜色
+$mp-color: #2196f3; // MP 颜色
+$damage-color: #f44336; // 伤害颜色
+$heal-color: #81c784; // 治疗颜色
+$buff-color: #ffb74d; // Buff 颜色
+$debuff-color: #ba68c8; // Debuff 颜色
+$critical-color: gold; // 暴击颜色
+
+// 字体变量
+$base-font-size: 14px;
+$base-font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+
+// 布局变量
+$padding-base: 10px;
+$margin-base: 10px;
+$border-radius-base: 4px;
+
+.battle-container {
+  font-family: $base-font-family;
+  background-color: $background-color;
+  color: $primary-text-color;
+  padding: $padding-base;
+  border: 1px solid $border-color;
+  border-radius: $border-radius-base;
+  max-width: 600px; // 根据实际需要调整
+  margin: auto; // 居中显示
+  display: flex;
+  flex-direction: column;
+  gap: $margin-base;
+
+  .battle-scene {
+    display: flex;
+    justify-content: space-around;
+    gap: $margin-base;
+
+    .character-area {
+      flex: 1;
+      padding: $padding-base;
+      border: 1px solid $border-color;
+      border-radius: $border-radius-base;
+      min-height: 100px; // 保证有最小高度
+    }
+
+    .player-area {
+      // 玩家区域特定样式
+    }
+
+    .enemy-area {
+      // 敌人区域特定样式
+    }
+
+    .character-info {
+      // 角色信息通用样式
+      h3 {
+        margin-top: 0;
+        margin-bottom: calc($margin-base / 2);
+        font-size: $base-font-size * 1.2;
+      }
+      .status-bar {
+        width: 100%;
+        background-color: color.adjust($border-color, $lightness: 10%);
+        border-radius: calc($border-radius-base / 2);
+        margin-bottom: calc($margin-base / 2);
+        height: 10px;
+        overflow: hidden;
+        .bar-fill {
+          height: 100%;
+          transition: width 0.3s ease-in-out;
+        }
+        &.hp .bar-fill {
+          background-color: $hp-color;
+        }
+        &.mp .bar-fill {
+          background-color: $mp-color;
+        }
+      }
+      .status-effects {
+        font-size: $base-font-size * 0.9;
+        color: $secondary-text-color;
+      }
+    }
+  }
+
+  .battle-log-container {
+    border: 1px solid $border-color;
+    border-radius: $border-radius-base;
+    padding: $padding-base;
+    height: 150px; // 固定高度
+    overflow-y: auto; // 超出则滚动
+    background-color: color.adjust($background-color, $lightness: 5%);
+
+    .battle-log {
+      .log-entry {
+        padding: calc($padding-base / 2) 0;
+        border-bottom: 1px dashed color.adjust($border-color, $lightness: -5%);
+        &:last-child {
+          border-bottom: none;
+        }
+        &.player-action {
+          color: $player-color;
+        }
+        &.enemy-action {
+          color: $enemy-color;
+        }
+        &.system-message {
+          color: $system-color;
+          font-style: italic;
+        }
+        .damage {
+          color: $damage-color;
+          font-weight: bold;
+        }
+        .heal {
+          color: $heal-color;
+          font-weight: bold;
+        }
+        .critical {
+          color: $critical-color;
+          font-weight: bold;
+          animation: flash 0.5s infinite alternate;
+        }
+      }
+    }
+  }
+
+  .battle-controls {
+    display: flex;
+    flex-direction: column;
+    gap: $margin-base;
+
+    .skill-list {
+      display: flex;
+      flex-wrap: wrap;
+      gap: calc($margin-base / 2);
+    }
+
+    .action-buttons {
+      display: flex;
+      justify-content: center;
+      gap: calc($margin-base / 2);
+    }
+
+    .action-button,
+    .skill-button {
+      padding: calc($padding-base / 1.5) $padding-base;
+      background-color: color.adjust($background-color, $lightness: 10%);
+      border: 1px solid $border-color;
+      color: $primary-text-color;
+      border-radius: $border-radius-base;
+      cursor: pointer;
+      transition: background-color 0.2s ease;
+
+      &:hover {
+        background-color: color.adjust($background-color, $lightness: 20%);
+      }
+
+      &:active {
+        background-color: color.adjust($background-color, $lightness: -5%);
+      }
+    }
+  }
+
+  .battle-result {
+    padding: $padding-base;
+    text-align: center;
+    border: 1px solid $border-color;
+    border-radius: $border-radius-base;
+    h2 {
+      margin-top: 0;
+    }
+    #continue-plot-button {
+      padding: calc($padding-base / 1.5) $padding-base;
+      background-color: $player-color;
+      border: 1px solid color.adjust($player-color, $lightness: -10%);
+      color: white;
+      border-radius: $border-radius-base;
+      cursor: pointer;
+      transition: background-color 0.2s ease;
+      font-size: $base-font-size * 1.1;
+      margin-top: $margin-base;
+
+      &:hover {
+        background-color: color.adjust($player-color, $lightness: 10%);
+      }
+    }
+  }
+}
+
+// 暴击闪烁动画
+@keyframes flash {
+  0% {
+    opacity: 1;
+  }
+  50% {
+    opacity: 0.6;
+  }
+  100% {
+    opacity: 1;
+  }
+}

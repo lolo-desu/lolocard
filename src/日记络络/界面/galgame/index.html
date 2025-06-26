@@ -1,0 +1,101 @@
+<html>
+  <head> </head>
+  <body>
+    <div class="main-container">
+      <div class="inner-container">
+        <!-- 标题栏 -->
+        <div class="title-bar">
+          <span class="icon-left">❀</span>
+          『⁺⊹𝒞𝒢𝒯𝒾𝓂ℯʚෆɞ₊』
+          <span class="icon-right">✧*:･ﾟ✧</span>
+        </div>
+
+        <!-- 场景区域 -->
+        <div class="scene-area">
+          <!-- 背景CG图片区域 -->
+          <div id="cg-container">
+            <img id="background-image-current" class="background-image" alt="当前背景CG" />
+            <img id="background-image-next" class="background-image" style="opacity: 0" alt="下一个背景CG" />
+          </div>
+
+          <!-- 装饰贴纸 -->
+          <div class="decoration-sticker sticker-1">♡</div>
+          <div class="decoration-sticker sticker-2">✿</div>
+
+          <!-- 立绘容器 -->
+          <div id="character-container">
+            <!-- 角色立绘将由JavaScript动态添加 -->
+          </div>
+
+          <!-- 对话框区域 - PC端显示在场景内 -->
+          <div id="dialog-box">
+            <div id="character-name">角色名称</div>
+            <div id="dialog-text">这里是对话内容...</div>
+            <div id="next-hint">点击或按空格继续</div>
+          </div>
+
+          <!-- 历史对话列表 -->
+          <div
+            id="history-panel"
+            style="
+              display: none;
+              position: absolute;
+              top: 50%;
+              left: 50%;
+              transform: translate(-50%, -50%);
+              width: 80%;
+              height: 80%;
+              background: rgba(255, 240, 243, 0.95);
+              z-index: 1001;
+              border-radius: 15px;
+              overflow: hidden;
+              box-shadow: 0 10px 30px rgba(0, 0, 0, 0.25), 0 0 10px rgba(0, 0, 0, 0.1);
+              backdrop-filter: blur(5px);
+            "
+          >
+            <div
+              style="
+                position: sticky;
+                top: 0;
+                background: linear-gradient(to right, #ffd0d8, #ffbbc8);
+                padding: 5px 10px;
+                border-bottom: 1px solid rgba(255, 255, 255, 0.5);
+                display: flex;
+                justify-content: space-between;
+                align-items: center;
+                z-index: 10;
+                box-shadow: 0 1px 3px rgba(0, 0, 0, 0.05);
+                height: 30px;
+                box-sizing: border-box;
+              "
+            >
+              <h3 style="margin: 0; color: #7d5b65; font-size: 12px; text-shadow: 0 1px 1px rgba(255, 255, 255, 0.7)">
+                𝕃𝕆𝔾
+              </h3>
+              <button id="close-history" style="font-size: 12px">⊗</button>
+            </div>
+            <div
+              id="history-content"
+              style="
+                padding: 20px;
+                height: calc(100% - 60px);
+                overflow-y: auto;
+                scrollbar-width: thin;
+                box-sizing: border-box;
+              "
+            >
+              <!-- 历史对话内容将由JavaScript动态添加 -->
+            </div>
+          </div>
+        </div>
+
+        <!-- 底部区域 -->
+        <div class="bottom-area">
+          <button id="history-btn" class="history-button">📜</button>
+          <button id="restart-btn" class="restart-button" style="display: none">📖</button>
+          <button id="toggle-ui-btn">🎮</button>
+        </div>
+      </div>
+    </div>
+  </body>
+</html>

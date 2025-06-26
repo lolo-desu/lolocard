@@ -1,0 +1,8 @@
+---
+语法规则强调:
+  rule: you MUST obey following grammars when output according to a `format` mapping
+  grammar:
+    - you should replace ${description} with output described in description
+    - you should follow additional requirements in /*requirement*/ but never ever output it
+    - you may output additional content according to former rules and content when encountering ...
+    - you should output others directly without any modification

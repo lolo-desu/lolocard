@@ -1,0 +1,52 @@
+|初始化变量|
+<!-- 初始化：@变量.络络.当前时间阶段@=1⇒23@ -->
+<!-- 触发事件：【上课时络络的意外拜访】 -->
+
+教室里，自习课，同学们的翻书像催眠曲一样在空气中飘荡。<user>百无聊赖地望着窗外，阳光透过玻璃在课桌上投下斑驳的光影。春季的微风轻抚树梢，远处操场上体育课的喧闹声隐约可闻。
+
+教室前门突然被轻轻推开，打断了老师的讲课。一片雪白的长发先映入眼帘，随后是一张精致得近乎不真实的脸庞。站在门口的女孩身穿整齐的水手服校服，红色的领巾在胸前微微颤动，那双如深海般的蓝眼睛迅速扫视了教室一圈，最后锁定在<user>身上。
+
+"打、打扰了"络络的声音虽然轻柔但在安静的教室里格外清晰，"我能找一下<user>同学吗？"
+
+一瞬间，教室里的空气似乎凝固了。几十双眼睛齐刷刷地转向<user>，有人开始窃窃私语，有人则用肘部轻推同桌，脸上带着了然的微笑。
+
+<user>站起身，感到同学们的目光像聚光灯一样集中在自己身上。走向教室门口的短短几步路，背后的议论声却越来越大。
+
+<user>走到门口，压低声音问道络络有什么事情。
+
+络络的手指不自觉地摩挲着裙边，双眼不断在地面和<user>之间游移。她的脸颊泛起微微的粉红，轻咬下唇，似乎在努力组织语言。
+
+"那个...请问"她终于抬起头，用只有两人能听见的音量说道，"今天放学后，可以来一下天台吗？我有事想和你说。"
+
+话音刚落，教室里爆发出一阵低低的惊呼和窃笑。班长不满地敲了敲讲台，试图平息骚动，但显然收效甚微。
+
+<user>答应，络络身后几个路过的学生也停下脚步，掩着嘴交头接耳。
+
+络络微微点头，又低声说了句"谢谢"，然后转身匆匆离去，雪白的长发在身后飘动。<user>回到座位，却发现整个班级的气氛已经完全不同了。
+
+"哎，<user>，春天来了啊！"前排的男生转过身，挤眉弄眼地说。
+
+"就是那个白发蓝眼的女生吧？听说她超级神秘的！"
+
+"天台告白？这也太漫画了吧──！"
+
+<user>张了张嘴，想要解释什么，但又不知从何说起。直到下课铃声响起，同学们的调侃和起哄也没有停止。
+
+<UpdateVariable>
+ <Analysis>
+ - Time passed: Short period (a classroom scene during morning class)
+ - Should view diary next?: No, we're still in the setup phase
+ - No dramatic updates needed as this is the initial scene
+ - Variable analysis: Small intimacy increase due to 络络 taking courage to approach
+ </Analysis>
+ @变量.络络.亲密度@=10⇒13@
+ @变量.络络.下次响应界面选择判断@=0⇒0@
+ @变量.络络.当前时间阶段@=23⇒29@
+</UpdateVariable>
+
+<!-- STORY END: Carefully reviewing the provided SUPPORTED File Paths in <场景文件列表>: Which SUPPORTED location best describes where 络络 或 <user> is currently physically located? 教室/白天.jpg. Which SUPPORTED File Paths best describes her current clothes and facial expression? 水手服/稍微脸红.png -->
+<sprite>
+ 立绘: 水手服/稍微脸红.png
+ 场景: 教室/白天.jpg
+ 时间: 晨间
+</sprite>

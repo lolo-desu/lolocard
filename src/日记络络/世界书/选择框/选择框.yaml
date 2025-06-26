@@ -1,0 +1,52 @@
+# :<%_ if (getvar('stat_data.世界.下次响应界面选择判断') === 0 || getvar('stat_data.世界.下次响应界面选择判断') === 1) { _%>
+---
+选择框:
+  rule:
+    - You must output the checkbox wrapped in <Checkbox> tags into a code block at the bottom of each reply
+    - You can only output 100 to 200 Chinese words in total for checkbox
+    - Each option inside the checkbox must completely differ from others in titles and contents, leading to various creative plot directions
+    - You should use option types listed below averagely
+    - '**选项必须符合人设，且接续剧情，在空间、行为上保持人设**'
+    - 绝对禁止出现任何<user>不知道的事情，禁止出现和童年回忆相关的事情，<user>绝对不会自己想起来任何回忆
+  format:
+    basic: |-
+      ```yaml
+      <Checkbox>
+      ${按照content而非type拟定标题标题}:${content，必须以第三人称输出行为的主语}
+      .../*generate {{random::4::5::6}} options based on option type below*/
+      </Checkbox>
+      ```
+    option type: [
+        {
+          type: '普通发展',
+          content: '${根据当前的情况，合理构思当前可能出现的不同发展}',
+        },
+        {
+          type: '跳过时间',
+          content: '${分析当前故事中接下来最重要的时间节点，用概括性的语言来跳过当前动作的描写并快速跳转到那个时间场景，剧情上保持连贯}',
+          rule: '必须给出至少一个跳过时间',
+        },
+        # :<%_ if (getvar('stat_data.世界.下次响应界面选择判断') === 0) { _%>
+        {
+          type: '前往地点',
+          content: '${分析玩家接下来可以前往的地点，思考<user>可以做出的动作，并以此给出一个由玩家视角输出的动作发起}',
+          rule: '前往地点的选择要分散，但不要过于偏离剧情',
+        },
+        {
+          type: '和络络聊天',
+          content: '${如果当前络络在场，或者两人关系好到经常用手机发消息，则出现该选项，可以是对络络话题的回应也可以是发起新话题，但绝对不能无端的突然问出<user>不知道的事情，绝对不能出现关于童年回忆的事情}',
+          rule: '络络在场时，和络络聊天的选项必须出现',
+        },
+        # :<%_ } else { _%>
+        {
+          type: '评价日记',
+          content: '${根据她的日记来进行符合<user>性格的合适评价，总体上为夸赞她}',
+        },
+        {
+          type: '寻找话题',
+          content: '${对于她日记中的小细节进行询问以此来展开话题}',
+          rule: '禁止让<user>回想起童年相关的事情，除非用户主动输入',
+        },
+        # :<%_ } _%>
+      ]
+# :<%_ } _%>
