@@ -42,40 +42,42 @@ async function install_extension(url: string): Promise<boolean> {
   return true;
 }
 
-$(async () => {
-  const extensions = Object.entries<string>(
-    _.get(getVariables({ type: 'script', script_id: getScriptId() }), '自动安装插件', {}) as Record<string, string>,
-  )
-    .map(([name, url]) => {
-      let tag = url.replace(/(\.git|\/)$/, '');
-      tag = tag.substring(tag.lastIndexOf('/') + 1);
-      return {
-        [tag]: {
-          name,
-          url,
-        },
-      };
-    })
-    .reduce((previous, current) => _.defaults(previous, current), {});
+$(() => {
+  setTimeout(async () => {
+    const extensions = Object.entries<string>(
+      _.get(getVariables({ type: 'script', script_id: getScriptId() }), '自动安装插件', {}) as Record<string, string>,
+    )
+      .map(([name, url]) => {
+        let tag = url.replace(/(\.git|\/)$/, '');
+        tag = tag.substring(tag.lastIndexOf('/') + 1);
+        return {
+          [tag]: {
+            name,
+            url,
+          },
+        };
+      })
+      .reduce((previous, current) => _.defaults(previous, current), {});
 
-  const current_extensions = await get_third_party_extension_names();
-  const uninstall_extension_tags = _.difference(Object.keys(extensions), current_extensions);
-  if (uninstall_extension_tags.length === 0) {
-    return;
-  }
+    const current_extensions = await get_third_party_extension_names();
+    const uninstall_extension_tags = _.difference(Object.keys(extensions), current_extensions);
+    if (uninstall_extension_tags.length === 0) {
+      return;
+    }
 
-  if (
-    !(await SillyTavern.callGenericPopup(
-      '以下需要的插件尚未安装, 是否安装?<br>' +
-        uninstall_extension_tags.map(tag => `- ${extensions[tag].name}`).join('<br>'),
-      SillyTavern.POPUP_TYPE.CONFIRM,
-      '',
-      { leftAlign: true },
-    ))
-  ) {
-    return;
-  }
+    if (
+      !(await SillyTavern.callGenericPopup(
+        '以下需要的插件尚未安装, 是否安装?<br>' +
+          uninstall_extension_tags.map(tag => `- ${extensions[tag].name}`).join('<br>'),
+        SillyTavern.POPUP_TYPE.CONFIRM,
+        '',
+        { leftAlign: true },
+      ))
+    ) {
+      return;
+    }
 
-  await Promise.allSettled(uninstall_extension_tags.map(tag => install_extension(extensions[tag].url)));
-  setTimeout(() => triggerSlash('/reload-page'), 3000);
+    await Promise.allSettled(uninstall_extension_tags.map(tag => install_extension(extensions[tag].url)));
+    setTimeout(() => triggerSlash('/reload-page'), 3000);
+  }, 10000);
 });

@@ -1,119 +1,191 @@
 <style>
+  * {
+    -webkit-tap-highlight-color: transparent;
+  }
   .roleplay_checkbox_hr {
-    display: block;
-    margin-block-start: 0.5em;
-    margin-block-end: 0.5em;
-    margin-inline-start: auto;
-    margin-inline-end: auto;
-    unicode-bidi: isolate;
-    overflow: hidden;
-    border-style: inset;
-    border-width: 1px;
-    font-weight: 600;
-    color: #382b22;
-    text-transform: uppercase;
-    opacity: 1;
+    display: none;
   }
 
   .roleplay_checkbox_back {
-    background-color: pink;
-    padding: 10px;
-    border-radius: 12px;
-    display: flex;
-    flex-direction: column;
-    gap: 25px;
-    padding-bottom: 30px;
-    box-shadow: 2px 2px 2px rgba(0, 0, 0, 0.5);
-    margin-right: 5px;
-    border: 1px solid #b18597;
-    font-size: 15px;
-  }
-
-  .roleplay_checkbox_content {
-    margin-left: 2rem;
-    font-size: 14px;
-    line-height: 1.4;
-    letter-spacing: 0.7px;
+    background: #fff0f3; /* 淡粉色背景 */
+    border-radius: 16px;
+    box-shadow: 0 8px 20px rgba(145, 125, 138, 0.15); /* 柔和阴影 */
+    padding: 22px 24px;
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
+    gap: 16px;
+    border: 1px solid #ffe5ea; /* 淡粉色边框 */
+    width: 90%;
+    max-width: 740px;
+    margin: 24px auto;
   }
 
   .roleplay_checkbox_item {
-    font-weight: bold;
-    color: #382b22;
-    text-transform: uppercase;
-    padding: 1em 1em 0.5em 1em;
-    background: #fff0f0;
-    border: 2px solid #b18597;
-    border-radius: 0.75em;
-    -webkit-transform-style: preserve-3d;
-    transform-style: preserve-3d;
-    -webkit-transition: background 150ms cubic-bezier(0, 0, 0.58, 1),
-      -webkit-transform 150ms cubic-bezier(0, 0, 0.58, 1);
-    transition: transform 150ms cubic-bezier(0, 0, 0.58, 1), background 150ms cubic-bezier(0, 0, 0.58, 1),
-      -webkit-transform 150ms cubic-bezier(0, 0, 0.58, 1);
-    display: inline-block;
+    position: relative;
+    background: #fffafb; /* 略淡的粉色背景 */
+    border-radius: 12px;
+    box-shadow: 0 5px 15px rgba(145, 125, 138, 0.1); /* 柔和阴影 */
+    padding: 18px 20px;
     cursor: default;
-    outline: none;
-    border: 0;
-    vertical-align: middle;
-    text-decoration: none;
-    font-family: inherit;
-    font-size: 15px;
-    -webkit-tap-highlight-color: transparent;
+    border: 1px solid #ffe5ea; /* 淡粉色边框 */
+    transition: all 0.28s cubic-bezier(0.22, 1, 0.36, 1);
+    overflow: hidden;
+    display: flex;
+    flex-direction: column;
+    z-index: 1;
+    margin: 0;
+    color: #7d6b6e; /* 深粉色文字 */
+    font-weight: 400;
+    line-height: 1.6;
+    height: 100%;
+    font-family: 'Microsoft YaHei', Arial, sans-serif; /* 使用微软雅黑 */
   }
 
   .last_mes .roleplay_checkbox_item {
     cursor: pointer;
   }
 
-  .roleplay_checkbox_item::before {
-    position: absolute;
+  .last_mes .roleplay_checkbox_item::after {
     content: '';
-    width: 100%;
-    height: 100%;
+    position: absolute;
     top: 0;
     left: 0;
-    right: 0;
-    bottom: 0;
-    background: #f9c4d2;
-    border-radius: inherit;
-    -webkit-box-shadow: 0 0 0 2px #b18597, 0 0.425em 0 0 #ffe3e2;
-    box-shadow: 0 0 0 2px #b18597, 0 0.425em 0 0 #ffe3e2;
-    -webkit-transform: translate3d(0, 0.45em, -1em);
-    transform: translate3d(0, 0.45em, -1em);
-    transition: transform 150ms cubic-bezier(0, 0, 0.58, 1), box-shadow 150ms cubic-bezier(0, 0, 0.58, 1),
-      -webkit-transform 150ms cubic-bezier(0, 0, 0.58, 1), -webkit-box-shadow 150ms cubic-bezier(0, 0, 0.58, 1);
+    width: 100%;
+    height: 100%;
+    background: linear-gradient(140deg, transparent 0%, transparent 50%, rgba(255, 204, 214, 0.15) 150%); /* 柔化粉色 */
+    opacity: 0;
+    transition: opacity 0.35s ease;
+    z-index: -1;
   }
 
   .last_mes .roleplay_checkbox_item:hover {
-    background: #ffe9e9;
-    -webkit-transform: translate(0, 0.15em);
-    transform: translate(0, 0.15em);
+    transform: translateY(-4px);
+    box-shadow: 0 8px 24px rgba(145, 125, 138, 0.2); /* 柔和阴影 */
+    background: #fff5f7; /* 悬浮时稍亮 */
+    border-color: rgba(255, 204, 214, 0.3); /* 柔化粉色 */
   }
 
-  .last_mes .roleplay_checkbox_item:hover::before {
-    -webkit-box-shadow: 0 0 0 2px #b18597, 0 0.5em 0 0 #ffe3e2;
-    box-shadow: 0 0 0 2px #b18597, 0 0.5em 0 0 #ffe3e2;
-    -webkit-transform: translate3d(0, 0.3em, -1em);
-    transform: translate3d(0, 0.3em, -1em);
+  .last_mes .roleplay_checkbox_item:hover::after {
+    opacity: 1;
+  }
+
+  .last_mes .roleplay_checkbox_item:hover .roleplay_checkbox_content {
+    color: #635759; /* 稍微加深，降低对比 */
   }
 
   .last_mes .roleplay_checkbox_item:active {
-    background: #ffe9e9;
-    -webkit-transform: translate(0em, 0.45em);
-    transform: translate(0em, 0.45em);
+    transform: translateY(-2px);
+    box-shadow: 0 4px 12px rgba(145, 125, 138, 0.1);
   }
 
-  .last_mes .roleplay_checkbox_item:active::before {
-    -webkit-box-shadow: 0 0 0 2px #b18597, 0 0 #ffe3e2;
-    box-shadow: 0 0 0 2px #b18597, 0 0 #ffe3e2;
-    -webkit-transform: translate3d(0, 0, -1em);
-    transform: translate3d(0, 0, -1em);
+  .roleplay_checkbox_item:before {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 3px;
+    background: linear-gradient(90deg, #ffd0d8, #ffbbc8); /* 柔化粉色 */
+    transform: scaleX(0);
+    transform-origin: 0 0;
+    transition: transform 0.35s cubic-bezier(0.4, 0, 0.2, 1);
+  }
+
+  .last_mes .roleplay_checkbox_item:hover:before {
+    transform: scaleX(1);
   }
 
   .roleplay_checkbox_title {
-    font-weight: bolder;
-    font-size: 13px;
+    font-size: 0.95em;
+    font-weight: 600;
+    color: #7d6b6e; /* 深粉色文字 */
+    margin-bottom: 12px;
+    letter-spacing: 0.04em;
+    text-align: left;
+    padding-bottom: 10px;
+    border-bottom: 1px solid rgba(200, 200, 200, 0.3);
+    text-shadow: 0 1px 1px rgba(255, 255, 255, 0.5); /* 白色文字阴影 */
     line-height: 1.4;
-    letter-spacing: 0.7px;
+    position: relative;
+    display: flex;
+    align-items: center;
+  }
+
+  .roleplay_checkbox_title::before {
+    content: '';
+    display: inline-block;
+    width: 6px;
+    height: 6px;
+    background: #ffd0d8; /* 柔化粉色 */
+    border-radius: 50%;
+    margin-right: 10px;
+    box-shadow: 0 0 0 2px rgba(255, 204, 214, 0.2);
+  }
+
+  .roleplay_checkbox_content {
+    font-size: 0.95em;
+    line-height: 1.65;
+    color: #8e7478; /* 降低对比度 */
+    font-weight: normal;
+    transition: color 0.25s ease;
+    text-align: left;
+    flex: 1;
+    text-shadow: 0 1px 1px rgba(255, 255, 255, 0.5); /* 白色文字阴影 */
+    letter-spacing: 0.018em;
+  }
+
+  .roleplay_checkbox_item.selected {
+    background: rgba(255, 235, 240, 0.7); /* 调整为更柔和的粉灰 */
+    border-color: rgba(255, 204, 214, 0.5); /* 柔化粉色 */
+  }
+
+  .roleplay_checkbox_item.selected:before {
+    background: linear-gradient(90deg, #ffd0d8, #ffbbc8); /* 柔化粉色 */
+    transform: scaleX(1);
+  }
+
+  .roleplay_checkbox_item.selected .roleplay_checkbox_title::before {
+    background: #ffd0d8; /* 柔化粉色 */
+    box-shadow: 0 0 0 2px rgba(255, 204, 214, 0.3);
+  }
+
+  @media (max-width: 999px) {
+    .roleplay_checkbox_back {
+      padding: 18px;
+      gap: 14px;
+      grid-template-columns: 1fr;
+      width: 100%;
+      max-width: none;
+      margin: 24px 0;
+      background: #fff0f3;
+      border: 1px solid #ffe5ea;
+    }
+
+    .roleplay_checkbox_item {
+      padding: 16px;
+      background: #fffafb;
+      border: 1px solid #ffe5ea;
+    }
+
+    .roleplay_checkbox_title {
+      font-size: 0.9em;
+      padding-bottom: 8px;
+      margin-bottom: 10px;
+    }
+
+    .roleplay_checkbox_content {
+      font-size: 0.92em;
+      line-height: 1.6;
+    }
+  }
+
+  @media (prefers-reduced-motion: reduce) {
+    .roleplay_checkbox_item,
+    .roleplay_checkbox_item::before,
+    .roleplay_checkbox_item::after,
+    .roleplay_checkbox_content,
+    .roleplay_checkbox_title {
+      transition: none;
+    }
   }
 </style>

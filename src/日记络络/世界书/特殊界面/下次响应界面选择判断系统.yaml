@@ -1,22 +1,22 @@
 ---
 下次响应界面选择判断系统:
   status:
-    下次响应界面选择判断: # :{{get_message_variable::世界.下次响应界面选择判断}}
+    下次响应界面选择判断: # :{{get_message_variable::stat_data.世界.下次响应界面选择判断}}
   判断可能情况:
     0: 无需查看日记，生成sprite界面
     1: 必须查看日记，只使用diary界面
     2: 进入感人或剧情高潮CG场景，如告白、离别、和解等情感爆发点，使用galgame界面展示关键CG
     3: 进入NSFW场景，使用galgame界面展示NSFWCG
-  你必须输出判断{{get_message_variable::世界.下次响应界面选择判断}}对应的界面，因此必须最优先地遵守以下内容:
+  你必须输出判断{{get_message_variable::stat_data.世界.下次响应界面选择判断}}对应的界面，因此必须最优先地遵守以下内容:
     # :<%_ if (getvar('stat_data.世界.下次响应界面选择判断') === 0) { _%>
     sprite:
       rule: the following must be inserted to the end of each reply and cannot be omitted
       format: |-
-        <!-- STORY END: carefully reviewing the provided EXISTING file paths in <背景列表> and <立绘列表>. which EXISTING location in <背景列表> best describes where 络络 or <user> is currently physically located? ${地点}/${时间}.jpg. which EXISTING tachi-e in <立绘列表> best describes her current clothes and facial expression? ${服装}/${表情}.png -->
+        <!-- STORY END: carefully reviewing the provided EXISTING file paths in `背景列表` document and `立绘列表` document. which EXISTING location in `背景列表` document best describes where 络络 or <user> is currently physically located? ${地点}/${地点情况}.jpg. which EXISTING tachi-e in `立绘列表` document best describes her current clothes and facial expression? ${服装}/${表情}.png -->
         <sprite>
         立绘: ${刚刚选择的当前络络的立绘 (仅包括格纹衫、开衫、水手服、睡衣和全裸)服装/表情路径}.png
-        场景: ${刚刚选择的当前络络所在的地点/时间路径}.jpg
-        时间: ${请检查时间阶段变量！目前是:{{get_message_variable::络络.当前时间阶段}}，请你查看这个数值对应的时间阶段是什么，并在这里填写，比如假设当前值是54小于66，则这里填写'放学后'}
+        场景: ${刚刚选择的当前络络所在的地点/地点情况路径}.jpg
+        时间: ${请检查时间阶段变量！目前是:{{get_message_variable::stat_data.世界.当前时间阶段}}，请你查看这个数值对应的时间阶段是什么，并在这里填写，比如假设当前值是54小于66，则这里填写'放学后'}
         </sprite>
     # :<%_ } else if (getvar('stat_data.世界.下次响应界面选择判断') === 1) { _%>
     diary:
@@ -29,10 +29,10 @@
         - 本次响应**仅输出日记内容**，非必要情况下**避免生成任何正文**
         - 输出日记后，你必须在本次<UpdateVariable>中更新`世界.下次响应界面选择判断`为0
       format: |-
-        <!-- STORY END: carefully reviewing the provided EXISTING file paths in <背景列表> and <立绘列表>. which EXISTING location in <背景列表> best describes where 络络 or <user> is currently physically located? ${地点}/${时间}.jpg. which EXISTING tachi-e in <立绘列表> best describes her current clothes and facial expression? ${服装}/${表情}.png -->
+        <!-- STORY END: carefully reviewing the provided EXISTING file paths in `背景列表` document and `立绘列表` document. which EXISTING location in `背景列表` document best describes where 络络 or <user> is currently physically located? ${地点}/${地点情况}.jpg. which EXISTING tachi-e in `立绘列表` document best describes her current clothes and facial expression? ${服装}/${表情}.png -->
         <diary>
-        立绘: ${当前络络将日记交给<user>时，刚刚选择的当前络络的立绘表情文件路径}.png
-        场景: ${当前络络将日记交给<user>时 刚刚选择的当前络络所在的地点/时间文件路径}.jpg
+        立绘: ${当前络络将日记交给<user>时，刚刚选择的当前络络的立绘服装/表情路径}.png
+        场景: ${当前络络将日记交给<user>时 刚刚选择的当前络络所在的地点/地点情况路径}.jpg
         对话: ${当前络络所说的一句台词，不要使用双引号等符号来包裹}
         日期: ${络络写日记时的日期而非现在的日期}
         天气: ${一个能表示络络写日记时的天气的emoji}

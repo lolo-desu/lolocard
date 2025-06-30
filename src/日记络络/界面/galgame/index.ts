@@ -26,7 +26,8 @@ class GalgameEngine {
     this.historyContent = document.getElementById('history-content');
 
     // ===== 可自定义背景图片基础 URL =====
-    this.imageBaseUrl = 'https://gitgud.io/lolodesu/lolocard/-/raw/master/src/日记络络/图片/背景/';
+    this.imageBaseUrl =
+      'https://gitgud.io/lolodesu/lolocard/-/raw/ebf826c38410ee0b35111f9a982063ab291b88c9/src/日记络络/图片/背景/';
 
     // ===== 新增可自定义：角色立绘链接 =====
     // 角色立绘图片URL对象
@@ -35,198 +36,198 @@ class GalgameEngine {
       络络: {
         水手服: {
           '微笑.png':
-            'https://gitgud.io/lolodesu/lolocard/-/raw/master/src/日记络络/图片/立绘/水手服/微笑.png',
+            'https://gitgud.io/lolodesu/lolocard/-/raw/ebf826c38410ee0b35111f9a982063ab291b88c9/src/日记络络/图片/立绘/水手服/微笑.png',
           '浅笑.png':
-            'https://gitgud.io/lolodesu/lolocard/-/raw/master/src/日记络络/图片/立绘/水手服/浅笑.png',
+            'https://gitgud.io/lolodesu/lolocard/-/raw/ebf826c38410ee0b35111f9a982063ab291b88c9/src/日记络络/图片/立绘/水手服/浅笑.png',
           '生气.png':
-            'https://gitgud.io/lolodesu/lolocard/-/raw/master/src/日记络络/图片/立绘/水手服/生气.png',
+            'https://gitgud.io/lolodesu/lolocard/-/raw/ebf826c38410ee0b35111f9a982063ab291b88c9/src/日记络络/图片/立绘/水手服/生气.png',
           '惊讶.png':
-            'https://gitgud.io/lolodesu/lolocard/-/raw/master/src/日记络络/图片/立绘/水手服/惊讶.png',
+            'https://gitgud.io/lolodesu/lolocard/-/raw/ebf826c38410ee0b35111f9a982063ab291b88c9/src/日记络络/图片/立绘/水手服/惊讶.png',
           '害羞.png':
-            'https://gitgud.io/lolodesu/lolocard/-/raw/master/src/日记络络/图片/立绘/水手服/害羞.png',
+            'https://gitgud.io/lolodesu/lolocard/-/raw/ebf826c38410ee0b35111f9a982063ab291b88c9/src/日记络络/图片/立绘/水手服/害羞.png',
           '稍微脸红.png':
-            'https://gitgud.io/lolodesu/lolocard/-/raw/master/src/日记络络/图片/立绘/水手服/稍微脸红.png',
+            'https://gitgud.io/lolodesu/lolocard/-/raw/ebf826c38410ee0b35111f9a982063ab291b88c9/src/日记络络/图片/立绘/水手服/稍微脸红.png',
           '手托下巴思考.png':
-            'https://gitgud.io/lolodesu/lolocard/-/raw/master/src/日记络络/图片/立绘/水手服/手托下巴思考.png',
+            'https://gitgud.io/lolodesu/lolocard/-/raw/ebf826c38410ee0b35111f9a982063ab291b88c9/src/日记络络/图片/立绘/水手服/手托下巴思考.png',
           '看透一切的坏笑.png':
-            'https://gitgud.io/lolodesu/lolocard/-/raw/master/src/日记络络/图片/立绘/水手服/看透一切的坏笑.png',
+            'https://gitgud.io/lolodesu/lolocard/-/raw/ebf826c38410ee0b35111f9a982063ab291b88c9/src/日记络络/图片/立绘/水手服/看透一切的坏笑.png',
           '邪恶的坏笑.png':
-            'https://gitgud.io/lolodesu/lolocard/-/raw/master/src/日记络络/图片/立绘/水手服/邪恶的坏笑.png',
+            'https://gitgud.io/lolodesu/lolocard/-/raw/ebf826c38410ee0b35111f9a982063ab291b88c9/src/日记络络/图片/立绘/水手服/邪恶的坏笑.png',
           '星星眼.png':
-            'https://gitgud.io/lolodesu/lolocard/-/raw/master/src/日记络络/图片/立绘/水手服/星星眼.png',
+            'https://gitgud.io/lolodesu/lolocard/-/raw/ebf826c38410ee0b35111f9a982063ab291b88c9/src/日记络络/图片/立绘/水手服/星星眼.png',
           '晕晕眼.png':
-            'https://gitgud.io/lolodesu/lolocard/-/raw/master/src/日记络络/图片/立绘/水手服/晕晕眼.png',
+            'https://gitgud.io/lolodesu/lolocard/-/raw/ebf826c38410ee0b35111f9a982063ab291b88c9/src/日记络络/图片/立绘/水手服/晕晕眼.png',
           '猫爪生气.png':
-            'https://gitgud.io/lolodesu/lolocard/-/raw/master/src/日记络络/图片/立绘/水手服/猫爪生气.png',
+            'https://gitgud.io/lolodesu/lolocard/-/raw/ebf826c38410ee0b35111f9a982063ab291b88c9/src/日记络络/图片/立绘/水手服/猫爪生气.png',
           '流口水.png':
-            'https://gitgud.io/lolodesu/lolocard/-/raw/master/src/日记络络/图片/立绘/水手服/流口水.png',
+            'https://gitgud.io/lolodesu/lolocard/-/raw/ebf826c38410ee0b35111f9a982063ab291b88c9/src/日记络络/图片/立绘/水手服/流口水.png',
           '哭泣.png':
-            'https://gitgud.io/lolodesu/lolocard/-/raw/master/src/日记络络/图片/立绘/水手服/哭泣.png',
+            'https://gitgud.io/lolodesu/lolocard/-/raw/ebf826c38410ee0b35111f9a982063ab291b88c9/src/日记络络/图片/立绘/水手服/哭泣.png',
           '擦眼泪.png':
-            'https://gitgud.io/lolodesu/lolocard/-/raw/master/src/日记络络/图片/立绘/水手服/擦眼泪.png',
+            'https://gitgud.io/lolodesu/lolocard/-/raw/ebf826c38410ee0b35111f9a982063ab291b88c9/src/日记络络/图片/立绘/水手服/擦眼泪.png',
           '等待吻.png':
-            'https://gitgud.io/lolodesu/lolocard/-/raw/master/src/日记络络/图片/立绘/水手服/等待吻.png',
+            'https://gitgud.io/lolodesu/lolocard/-/raw/ebf826c38410ee0b35111f9a982063ab291b88c9/src/日记络络/图片/立绘/水手服/等待吻.png',
           '性高潮.png':
-            'https://gitgud.io/lolodesu/lolocard/-/raw/master/src/日记络络/图片/立绘/水手服/性高潮.png',
+            'https://gitgud.io/lolodesu/lolocard/-/raw/ebf826c38410ee0b35111f9a982063ab291b88c9/src/日记络络/图片/立绘/水手服/性高潮.png',
           '眼神空洞的催眠状态.png':
-            'https://gitgud.io/lolodesu/lolocard/-/raw/master/src/日记络络/图片/立绘/水手服/眼神空洞的催眠状态.png',
+            'https://gitgud.io/lolodesu/lolocard/-/raw/ebf826c38410ee0b35111f9a982063ab291b88c9/src/日记络络/图片/立绘/水手服/眼神空洞的催眠状态.png',
           '无表情.png':
-            'https://gitgud.io/lolodesu/lolocard/-/raw/master/src/日记络络/图片/立绘/水手服/无表情.png',
+            'https://gitgud.io/lolodesu/lolocard/-/raw/ebf826c38410ee0b35111f9a982063ab291b88c9/src/日记络络/图片/立绘/水手服/无表情.png',
           '无人.png':
-            'https://gitgud.io/lolodesu/lolocard/-/raw/master/src/日记络络/图片/立绘/水手服/无人.png',
+            'https://gitgud.io/lolodesu/lolocard/-/raw/ebf826c38410ee0b35111f9a982063ab291b88c9/src/日记络络/图片/立绘/水手服/无人.png',
         },
         格纹衫: {
           '微笑.png':
-            'https://gitgud.io/lolodesu/lolocard/-/raw/master/src/日记络络/图片/立绘/格纹衫/微笑.png',
+            'https://gitgud.io/lolodesu/lolocard/-/raw/ebf826c38410ee0b35111f9a982063ab291b88c9/src/日记络络/图片/立绘/格纹衫/微笑.png',
           '浅笑.png':
-            'https://gitgud.io/lolodesu/lolocard/-/raw/master/src/日记络络/图片/立绘/格纹衫/浅笑.png',
+            'https://gitgud.io/lolodesu/lolocard/-/raw/ebf826c38410ee0b35111f9a982063ab291b88c9/src/日记络络/图片/立绘/格纹衫/浅笑.png',
           '生气.png':
-            'https://gitgud.io/lolodesu/lolocard/-/raw/master/src/日记络络/图片/立绘/格纹衫/生气.png',
+            'https://gitgud.io/lolodesu/lolocard/-/raw/ebf826c38410ee0b35111f9a982063ab291b88c9/src/日记络络/图片/立绘/格纹衫/生气.png',
           '惊讶.png':
-            'https://gitgud.io/lolodesu/lolocard/-/raw/master/src/日记络络/图片/立绘/格纹衫/惊讶.png',
+            'https://gitgud.io/lolodesu/lolocard/-/raw/ebf826c38410ee0b35111f9a982063ab291b88c9/src/日记络络/图片/立绘/格纹衫/惊讶.png',
           '害羞.png':
-            'https://gitgud.io/lolodesu/lolocard/-/raw/master/src/日记络络/图片/立绘/格纹衫/害羞.png',
+            'https://gitgud.io/lolodesu/lolocard/-/raw/ebf826c38410ee0b35111f9a982063ab291b88c9/src/日记络络/图片/立绘/格纹衫/害羞.png',
           '稍微脸红.png':
-            'https://gitgud.io/lolodesu/lolocard/-/raw/master/src/日记络络/图片/立绘/格纹衫/稍微脸红.png',
+            'https://gitgud.io/lolodesu/lolocard/-/raw/ebf826c38410ee0b35111f9a982063ab291b88c9/src/日记络络/图片/立绘/格纹衫/稍微脸红.png',
           '手托下巴思考.png':
-            'https://gitgud.io/lolodesu/lolocard/-/raw/master/src/日记络络/图片/立绘/格纹衫/手托下巴思考.png',
+            'https://gitgud.io/lolodesu/lolocard/-/raw/ebf826c38410ee0b35111f9a982063ab291b88c9/src/日记络络/图片/立绘/格纹衫/手托下巴思考.png',
           '看透一切的坏笑.png':
-            'https://gitgud.io/lolodesu/lolocard/-/raw/master/src/日记络络/图片/立绘/格纹衫/看透一切的坏笑.png',
+            'https://gitgud.io/lolodesu/lolocard/-/raw/ebf826c38410ee0b35111f9a982063ab291b88c9/src/日记络络/图片/立绘/格纹衫/看透一切的坏笑.png',
           '邪恶的坏笑.png':
-            'https://gitgud.io/lolodesu/lolocard/-/raw/master/src/日记络络/图片/立绘/格纹衫/邪恶的坏笑.png',
+            'https://gitgud.io/lolodesu/lolocard/-/raw/ebf826c38410ee0b35111f9a982063ab291b88c9/src/日记络络/图片/立绘/格纹衫/邪恶的坏笑.png',
           '星星眼.png':
-            'https://gitgud.io/lolodesu/lolocard/-/raw/master/src/日记络络/图片/立绘/格纹衫/星星眼.png',
+            'https://gitgud.io/lolodesu/lolocard/-/raw/ebf826c38410ee0b35111f9a982063ab291b88c9/src/日记络络/图片/立绘/格纹衫/星星眼.png',
           '晕晕眼.png':
-            'https://gitgud.io/lolodesu/lolocard/-/raw/master/src/日记络络/图片/立绘/格纹衫/晕晕眼.png',
+            'https://gitgud.io/lolodesu/lolocard/-/raw/ebf826c38410ee0b35111f9a982063ab291b88c9/src/日记络络/图片/立绘/格纹衫/晕晕眼.png',
           '猫爪生气.png':
-            'https://gitgud.io/lolodesu/lolocard/-/raw/master/src/日记络络/图片/立绘/格纹衫/猫爪生气.png',
+            'https://gitgud.io/lolodesu/lolocard/-/raw/ebf826c38410ee0b35111f9a982063ab291b88c9/src/日记络络/图片/立绘/格纹衫/猫爪生气.png',
           '流口水.png':
-            'https://gitgud.io/lolodesu/lolocard/-/raw/master/src/日记络络/图片/立绘/格纹衫/流口水.png',
+            'https://gitgud.io/lolodesu/lolocard/-/raw/ebf826c38410ee0b35111f9a982063ab291b88c9/src/日记络络/图片/立绘/格纹衫/流口水.png',
           '哭泣.png':
-            'https://gitgud.io/lolodesu/lolocard/-/raw/master/src/日记络络/图片/立绘/格纹衫/哭泣.png',
+            'https://gitgud.io/lolodesu/lolocard/-/raw/ebf826c38410ee0b35111f9a982063ab291b88c9/src/日记络络/图片/立绘/格纹衫/哭泣.png',
           '擦眼泪.png':
-            'https://gitgud.io/lolodesu/lolocard/-/raw/master/src/日记络络/图片/立绘/格纹衫/擦眼泪.png',
+            'https://gitgud.io/lolodesu/lolocard/-/raw/ebf826c38410ee0b35111f9a982063ab291b88c9/src/日记络络/图片/立绘/格纹衫/擦眼泪.png',
           '等待吻.png':
-            'https://gitgud.io/lolodesu/lolocard/-/raw/master/src/日记络络/图片/立绘/格纹衫/等待吻.png',
+            'https://gitgud.io/lolodesu/lolocard/-/raw/ebf826c38410ee0b35111f9a982063ab291b88c9/src/日记络络/图片/立绘/格纹衫/等待吻.png',
           '性高潮.png':
-            'https://gitgud.io/lolodesu/lolocard/-/raw/master/src/日记络络/图片/立绘/格纹衫/性高潮.png',
+            'https://gitgud.io/lolodesu/lolocard/-/raw/ebf826c38410ee0b35111f9a982063ab291b88c9/src/日记络络/图片/立绘/格纹衫/性高潮.png',
           '眼神空洞的催眠状态.png':
-            'https://gitgud.io/lolodesu/lolocard/-/raw/master/src/日记络络/图片/立绘/格纹衫/眼神空洞的催眠状态.png',
+            'https://gitgud.io/lolodesu/lolocard/-/raw/ebf826c38410ee0b35111f9a982063ab291b88c9/src/日记络络/图片/立绘/格纹衫/眼神空洞的催眠状态.png',
           '无人.png':
-            'https://gitgud.io/lolodesu/lolocard/-/raw/master/src/日记络络/图片/立绘/格纹衫/无人.png',
+            'https://gitgud.io/lolodesu/lolocard/-/raw/ebf826c38410ee0b35111f9a982063ab291b88c9/src/日记络络/图片/立绘/格纹衫/无人.png',
         },
         开衫: {
           '微笑.png':
-            'https://gitgud.io/lolodesu/lolocard/-/raw/master/src/日记络络/图片/立绘/开衫/微笑.png',
+            'https://gitgud.io/lolodesu/lolocard/-/raw/ebf826c38410ee0b35111f9a982063ab291b88c9/src/日记络络/图片/立绘/开衫/微笑.png',
           '浅笑.png':
-            'https://gitgud.io/lolodesu/lolocard/-/raw/master/src/日记络络/图片/立绘/开衫/浅笑.png',
+            'https://gitgud.io/lolodesu/lolocard/-/raw/ebf826c38410ee0b35111f9a982063ab291b88c9/src/日记络络/图片/立绘/开衫/浅笑.png',
           '生气.png':
-            'https://gitgud.io/lolodesu/lolocard/-/raw/master/src/日记络络/图片/立绘/开衫/生气.png',
+            'https://gitgud.io/lolodesu/lolocard/-/raw/ebf826c38410ee0b35111f9a982063ab291b88c9/src/日记络络/图片/立绘/开衫/生气.png',
           '惊讶.png':
-            'https://gitgud.io/lolodesu/lolocard/-/raw/master/src/日记络络/图片/立绘/开衫/惊讶.png',
+            'https://gitgud.io/lolodesu/lolocard/-/raw/ebf826c38410ee0b35111f9a982063ab291b88c9/src/日记络络/图片/立绘/开衫/惊讶.png',
           '害羞.png':
-            'https://gitgud.io/lolodesu/lolocard/-/raw/master/src/日记络络/图片/立绘/开衫/害羞.png',
+            'https://gitgud.io/lolodesu/lolocard/-/raw/ebf826c38410ee0b35111f9a982063ab291b88c9/src/日记络络/图片/立绘/开衫/害羞.png',
           '稍微脸红.png':
-            'https://gitgud.io/lolodesu/lolocard/-/raw/master/src/日记络络/图片/立绘/开衫/稍微脸红.png',
+            'https://gitgud.io/lolodesu/lolocard/-/raw/ebf826c38410ee0b35111f9a982063ab291b88c9/src/日记络络/图片/立绘/开衫/稍微脸红.png',
           '手托下巴思考.png':
-            'https://gitgud.io/lolodesu/lolocard/-/raw/master/src/日记络络/图片/立绘/开衫/手托下巴思考.png',
+            'https://gitgud.io/lolodesu/lolocard/-/raw/ebf826c38410ee0b35111f9a982063ab291b88c9/src/日记络络/图片/立绘/开衫/手托下巴思考.png',
           '看透一切的坏笑.png':
-            'https://gitgud.io/lolodesu/lolocard/-/raw/master/src/日记络络/图片/立绘/开衫/看透一切的坏笑.png',
+            'https://gitgud.io/lolodesu/lolocard/-/raw/ebf826c38410ee0b35111f9a982063ab291b88c9/src/日记络络/图片/立绘/开衫/看透一切的坏笑.png',
           '邪恶的笑容.png':
-            'https://gitgud.io/lolodesu/lolocard/-/raw/master/src/日记络络/图片/立绘/开衫/邪恶的笑容.png',
+            'https://gitgud.io/lolodesu/lolocard/-/raw/ebf826c38410ee0b35111f9a982063ab291b88c9/src/日记络络/图片/立绘/开衫/邪恶的笑容.png',
           '星星眼.png':
-            'https://gitgud.io/lolodesu/lolocard/-/raw/master/src/日记络络/图片/立绘/开衫/星星眼.png',
+            'https://gitgud.io/lolodesu/lolocard/-/raw/ebf826c38410ee0b35111f9a982063ab291b88c9/src/日记络络/图片/立绘/开衫/星星眼.png',
           '晕晕眼.png':
-            'https://gitgud.io/lolodesu/lolocard/-/raw/master/src/日记络络/图片/立绘/开衫/晕晕眼.png',
+            'https://gitgud.io/lolodesu/lolocard/-/raw/ebf826c38410ee0b35111f9a982063ab291b88c9/src/日记络络/图片/立绘/开衫/晕晕眼.png',
           '猫爪生气.png':
-            'https://gitgud.io/lolodesu/lolocard/-/raw/master/src/日记络络/图片/立绘/开衫/猫爪生气.png',
+            'https://gitgud.io/lolodesu/lolocard/-/raw/ebf826c38410ee0b35111f9a982063ab291b88c9/src/日记络络/图片/立绘/开衫/猫爪生气.png',
           '流口水.png':
-            'https://gitgud.io/lolodesu/lolocard/-/raw/master/src/日记络络/图片/立绘/开衫/流口水.png',
+            'https://gitgud.io/lolodesu/lolocard/-/raw/ebf826c38410ee0b35111f9a982063ab291b88c9/src/日记络络/图片/立绘/开衫/流口水.png',
           '哭泣.png':
-            'https://gitgud.io/lolodesu/lolocard/-/raw/master/src/日记络络/图片/立绘/开衫/哭泣.png',
+            'https://gitgud.io/lolodesu/lolocard/-/raw/ebf826c38410ee0b35111f9a982063ab291b88c9/src/日记络络/图片/立绘/开衫/哭泣.png',
           '擦眼泪.png':
-            'https://gitgud.io/lolodesu/lolocard/-/raw/master/src/日记络络/图片/立绘/开衫/擦眼泪.png',
+            'https://gitgud.io/lolodesu/lolocard/-/raw/ebf826c38410ee0b35111f9a982063ab291b88c9/src/日记络络/图片/立绘/开衫/擦眼泪.png',
           '等待吻.png':
-            'https://gitgud.io/lolodesu/lolocard/-/raw/master/src/日记络络/图片/立绘/开衫/等待吻.png',
+            'https://gitgud.io/lolodesu/lolocard/-/raw/ebf826c38410ee0b35111f9a982063ab291b88c9/src/日记络络/图片/立绘/开衫/等待吻.png',
           '性高潮.png':
-            'https://gitgud.io/lolodesu/lolocard/-/raw/master/src/日记络络/图片/立绘/开衫/性高潮.png',
+            'https://gitgud.io/lolodesu/lolocard/-/raw/ebf826c38410ee0b35111f9a982063ab291b88c9/src/日记络络/图片/立绘/开衫/性高潮.png',
           '无表情.png':
-            'https://gitgud.io/lolodesu/lolocard/-/raw/master/src/日记络络/图片/立绘/开衫/无表情.png',
+            'https://gitgud.io/lolodesu/lolocard/-/raw/ebf826c38410ee0b35111f9a982063ab291b88c9/src/日记络络/图片/立绘/开衫/无表情.png',
           '无人.png':
-            'https://gitgud.io/lolodesu/lolocard/-/raw/master/src/日记络络/图片/立绘/开衫/无人.png',
+            'https://gitgud.io/lolodesu/lolocard/-/raw/ebf826c38410ee0b35111f9a982063ab291b88c9/src/日记络络/图片/立绘/开衫/无人.png',
         },
         睡衣: {
           '微笑.png':
-            'https://gitgud.io/lolodesu/lolocard/-/raw/master/src/日记络络/图片/立绘/睡衣/微笑.png',
+            'https://gitgud.io/lolodesu/lolocard/-/raw/ebf826c38410ee0b35111f9a982063ab291b88c9/src/日记络络/图片/立绘/睡衣/微笑.png',
           '浅笑.png':
-            'https://gitgud.io/lolodesu/lolocard/-/raw/master/src/日记络络/图片/立绘/睡衣/浅笑.png',
+            'https://gitgud.io/lolodesu/lolocard/-/raw/ebf826c38410ee0b35111f9a982063ab291b88c9/src/日记络络/图片/立绘/睡衣/浅笑.png',
           '生气.png':
-            'https://gitgud.io/lolodesu/lolocard/-/raw/master/src/日记络络/图片/立绘/睡衣/生气.png',
+            'https://gitgud.io/lolodesu/lolocard/-/raw/ebf826c38410ee0b35111f9a982063ab291b88c9/src/日记络络/图片/立绘/睡衣/生气.png',
           '惊讶.png':
-            'https://gitgud.io/lolodesu/lolocard/-/raw/master/src/日记络络/图片/立绘/睡衣/惊讶.png',
+            'https://gitgud.io/lolodesu/lolocard/-/raw/ebf826c38410ee0b35111f9a982063ab291b88c9/src/日记络络/图片/立绘/睡衣/惊讶.png',
           '害羞.png':
-            'https://gitgud.io/lolodesu/lolocard/-/raw/master/src/日记络络/图片/立绘/睡衣/害羞.png',
+            'https://gitgud.io/lolodesu/lolocard/-/raw/ebf826c38410ee0b35111f9a982063ab291b88c9/src/日记络络/图片/立绘/睡衣/害羞.png',
           '稍微脸红.png':
-            'https://gitgud.io/lolodesu/lolocard/-/raw/master/src/日记络络/图片/立绘/睡衣/稍微脸红.png',
+            'https://gitgud.io/lolodesu/lolocard/-/raw/ebf826c38410ee0b35111f9a982063ab291b88c9/src/日记络络/图片/立绘/睡衣/稍微脸红.png',
           '看透一切的坏笑.png':
-            'https://gitgud.io/lolodesu/lolocard/-/raw/master/src/日记络络/图片/立绘/睡衣/看透一切的坏笑.png',
+            'https://gitgud.io/lolodesu/lolocard/-/raw/ebf826c38410ee0b35111f9a982063ab291b88c9/src/日记络络/图片/立绘/睡衣/看透一切的坏笑.png',
           '邪恶的坏笑.png':
-            'https://gitgud.io/lolodesu/lolocard/-/raw/master/src/日记络络/图片/立绘/睡衣/邪恶的坏笑.png',
+            'https://gitgud.io/lolodesu/lolocard/-/raw/ebf826c38410ee0b35111f9a982063ab291b88c9/src/日记络络/图片/立绘/睡衣/邪恶的坏笑.png',
           '星星眼.png':
-            'https://gitgud.io/lolodesu/lolocard/-/raw/master/src/日记络络/图片/立绘/睡衣/星星眼.png',
+            'https://gitgud.io/lolodesu/lolocard/-/raw/ebf826c38410ee0b35111f9a982063ab291b88c9/src/日记络络/图片/立绘/睡衣/星星眼.png',
           '晕晕眼.png':
-            'https://gitgud.io/lolodesu/lolocard/-/raw/master/src/日记络络/图片/立绘/睡衣/晕晕眼.png',
+            'https://gitgud.io/lolodesu/lolocard/-/raw/ebf826c38410ee0b35111f9a982063ab291b88c9/src/日记络络/图片/立绘/睡衣/晕晕眼.png',
           '猫爪生气.png':
-            'https://gitgud.io/lolodesu/lolocard/-/raw/master/src/日记络络/图片/立绘/睡衣/猫爪生气.png',
+            'https://gitgud.io/lolodesu/lolocard/-/raw/ebf826c38410ee0b35111f9a982063ab291b88c9/src/日记络络/图片/立绘/睡衣/猫爪生气.png',
           '流口水.png':
-            'https://gitgud.io/lolodesu/lolocard/-/raw/master/src/日记络络/图片/立绘/睡衣/流口水.png',
+            'https://gitgud.io/lolodesu/lolocard/-/raw/ebf826c38410ee0b35111f9a982063ab291b88c9/src/日记络络/图片/立绘/睡衣/流口水.png',
           '哭泣.png':
-            'https://gitgud.io/lolodesu/lolocard/-/raw/master/src/日记络络/图片/立绘/睡衣/哭泣.png',
+            'https://gitgud.io/lolodesu/lolocard/-/raw/ebf826c38410ee0b35111f9a982063ab291b88c9/src/日记络络/图片/立绘/睡衣/哭泣.png',
           '等待吻.png':
-            'https://gitgud.io/lolodesu/lolocard/-/raw/master/src/日记络络/图片/立绘/睡衣/等待吻.png',
+            'https://gitgud.io/lolodesu/lolocard/-/raw/ebf826c38410ee0b35111f9a982063ab291b88c9/src/日记络络/图片/立绘/睡衣/等待吻.png',
           '性高潮.png':
-            'https://gitgud.io/lolodesu/lolocard/-/raw/master/src/日记络络/图片/立绘/睡衣/性高潮.png',
+            'https://gitgud.io/lolodesu/lolocard/-/raw/ebf826c38410ee0b35111f9a982063ab291b88c9/src/日记络络/图片/立绘/睡衣/性高潮.png',
           '眼神空洞的催眠状态.png':
-            'https://gitgud.io/lolodesu/lolocard/-/raw/master/src/日记络络/图片/立绘/睡衣/眼神空洞的催眠状态.png',
+            'https://gitgud.io/lolodesu/lolocard/-/raw/ebf826c38410ee0b35111f9a982063ab291b88c9/src/日记络络/图片/立绘/睡衣/眼神空洞的催眠状态.png',
           '无人.png':
-            'https://gitgud.io/lolodesu/lolocard/-/raw/master/src/日记络络/图片/立绘/睡衣/无人.png',
+            'https://gitgud.io/lolodesu/lolocard/-/raw/ebf826c38410ee0b35111f9a982063ab291b88c9/src/日记络络/图片/立绘/睡衣/无人.png',
         },
         全裸: {
           '浅笑.png':
-            'https://gitgud.io/lolodesu/lolocard/-/raw/master/src/日记络络/图片/立绘/全裸/浅笑.png',
+            'https://gitgud.io/lolodesu/lolocard/-/raw/ebf826c38410ee0b35111f9a982063ab291b88c9/src/日记络络/图片/立绘/全裸/浅笑.png',
           '生气.png':
-            'https://gitgud.io/lolodesu/lolocard/-/raw/master/src/日记络络/图片/立绘/全裸/生气.png',
+            'https://gitgud.io/lolodesu/lolocard/-/raw/ebf826c38410ee0b35111f9a982063ab291b88c9/src/日记络络/图片/立绘/全裸/生气.png',
           '惊讶.png':
-            'https://gitgud.io/lolodesu/lolocard/-/raw/master/src/日记络络/图片/立绘/全裸/惊讶.png',
+            'https://gitgud.io/lolodesu/lolocard/-/raw/ebf826c38410ee0b35111f9a982063ab291b88c9/src/日记络络/图片/立绘/全裸/惊讶.png',
           '害羞.png':
-            'https://gitgud.io/lolodesu/lolocard/-/raw/master/src/日记络络/图片/立绘/全裸/害羞.png',
+            'https://gitgud.io/lolodesu/lolocard/-/raw/ebf826c38410ee0b35111f9a982063ab291b88c9/src/日记络络/图片/立绘/全裸/害羞.png',
           '稍微脸红.png':
-            'https://gitgud.io/lolodesu/lolocard/-/raw/master/src/日记络络/图片/立绘/全裸/稍微脸红.png',
+            'https://gitgud.io/lolodesu/lolocard/-/raw/ebf826c38410ee0b35111f9a982063ab291b88c9/src/日记络络/图片/立绘/全裸/稍微脸红.png',
           '看透一切的坏笑.png':
-            'https://gitgud.io/lolodesu/lolocard/-/raw/master/src/日记络络/图片/立绘/全裸/看透一切的坏笑.png',
+            'https://gitgud.io/lolodesu/lolocard/-/raw/ebf826c38410ee0b35111f9a982063ab291b88c9/src/日记络络/图片/立绘/全裸/看透一切的坏笑.png',
           '邪恶的坏笑.png':
-            'https://gitgud.io/lolodesu/lolocard/-/raw/master/src/日记络络/图片/立绘/全裸/邪恶的坏笑.png',
+            'https://gitgud.io/lolodesu/lolocard/-/raw/ebf826c38410ee0b35111f9a982063ab291b88c9/src/日记络络/图片/立绘/全裸/邪恶的坏笑.png',
           '星星眼.png':
-            'https://gitgud.io/lolodesu/lolocard/-/raw/master/src/日记络络/图片/立绘/全裸/星星眼.png',
+            'https://gitgud.io/lolodesu/lolocard/-/raw/ebf826c38410ee0b35111f9a982063ab291b88c9/src/日记络络/图片/立绘/全裸/星星眼.png',
           '晕晕眼.png':
-            'https://gitgud.io/lolodesu/lolocard/-/raw/master/src/日记络络/图片/立绘/全裸/晕晕眼.png',
+            'https://gitgud.io/lolodesu/lolocard/-/raw/ebf826c38410ee0b35111f9a982063ab291b88c9/src/日记络络/图片/立绘/全裸/晕晕眼.png',
           '流口水.png':
-            'https://gitgud.io/lolodesu/lolocard/-/raw/master/src/日记络络/图片/立绘/全裸/流口水.png',
+            'https://gitgud.io/lolodesu/lolocard/-/raw/ebf826c38410ee0b35111f9a982063ab291b88c9/src/日记络络/图片/立绘/全裸/流口水.png',
           '哭泣.png':
-            'https://gitgud.io/lolodesu/lolocard/-/raw/master/src/日记络络/图片/立绘/全裸/哭泣.png',
+            'https://gitgud.io/lolodesu/lolocard/-/raw/ebf826c38410ee0b35111f9a982063ab291b88c9/src/日记络络/图片/立绘/全裸/哭泣.png',
           '性高潮.png':
-            'https://gitgud.io/lolodesu/lolocard/-/raw/master/src/日记络络/图片/立绘/全裸/性高潮.png',
+            'https://gitgud.io/lolodesu/lolocard/-/raw/ebf826c38410ee0b35111f9a982063ab291b88c9/src/日记络络/图片/立绘/全裸/性高潮.png',
           '眼神空洞的催眠状态.png':
-            'https://gitgud.io/lolodesu/lolocard/-/raw/master/src/日记络络/图片/立绘/全裸/眼神空洞的催眠状态.png',
+            'https://gitgud.io/lolodesu/lolocard/-/raw/ebf826c38410ee0b35111f9a982063ab291b88c9/src/日记络络/图片/立绘/全裸/眼神空洞的催眠状态.png',
           '无人.png':
-            'https://gitgud.io/lolodesu/lolocard/-/raw/master/src/日记络络/图片/立绘/全裸/无人.png',
+            'https://gitgud.io/lolodesu/lolocard/-/raw/ebf826c38410ee0b35111f9a982063ab291b88c9/src/日记络络/图片/立绘/全裸/无人.png',
         },
-      }
+      },
     };
 
     try {
       const message = SillyTavern.chat[getCurrentMessageId()].mes;
-      const gameDataString = message.match(/<Galgame>\s*```(?:json|yaml)?(.*)```\s*<\/Galgame>/s)[1]; // 获取数据并去除首尾空格
+      const gameDataString = message.match(/<galgame>\s*```(?:json|yaml)?(.*)```\s*<\/galgame>/si)[1]; // 获取数据并去除首尾空格
 
       if (!gameDataString) {
         throw new Error('游戏数据 <Galgame> 为空。');
@@ -306,7 +307,7 @@ class GalgameEngine {
         console.error('背景图片加载失败:', initialBgUrl);
         // 尝试使用预设的CG URL
         this.currentImage.src =
-          'https://gitgud.io/lolodesu/lolocard/-/raw/master/src/日记络络/图片/背景/商店街/黄昏.jpg';
+          'https://gitgud.io/lolodesu/lolocard/-/raw/ebf826c38410ee0b35111f9a982063ab291b88c9/src/日记络络/图片/背景/商店街/黄昏.jpg';
       };
 
       // 检查图片是否已经加载完成
@@ -326,9 +327,9 @@ class GalgameEngine {
 
     // 使用预定义的硬编码URL
     if (relativePath === '商店街/黄昏.jpg') {
-      return 'https://gitgud.io/lolodesu/lolocard/-/raw/master/src/日记络络/图片/背景/商店街/黄昏.jpg';
+      return 'https://gitgud.io/lolodesu/lolocard/-/raw/ebf826c38410ee0b35111f9a982063ab291b88c9/src/日记络络/图片/背景/商店街/黄昏.jpg';
     } else if (relativePath === '商店街/夜晚开灯.jpg') {
-      return 'https://gitgud.io/lolodesu/lolocard/-/raw/master/src/日记络络/图片/背景/商店街/夜晚开灯.jpg';
+      return 'https://gitgud.io/lolodesu/lolocard/-/raw/ebf826c38410ee0b35111f9a982063ab291b88c9/src/日记络络/图片/背景/商店街/夜晚开灯.jpg';
     }
 
     // 如果不是硬编码的图片，则尝试构建URL

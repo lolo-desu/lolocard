@@ -27,7 +27,7 @@ check list:
       - special case (optional diary view): If it seems the diary can be viewed next but it is not absolutely required, do not modify the '下次响应界面选择判断' value, and instead only output the '[点击查看日记]' option at the bottom
   - update '当前时间阶段': +(1~5) for meaningful events, +(5~15) for idle periods, +(10~20) between major phases; reset to (0) when day ends (~83+); keep between (0-99); always prioritize narrative flow
   - update '阅读日记数量' by +1 when <user> read a diary
-  - update '拥有联系方式' to 1 when Luoluo and <user> exchange contact details
+  - update '拥有联系方式' to true when Luoluo and <user> exchange contact details
   - update '当前日期' and '当前星期' to the current date and day of the week respectively
   - update '当前主线事件ID' and '当前主线事件阶段' strictly according to instructions in `主线事件系统` document:
       - when a new event is triggered (stage changes from 0 to 1), update '当前主线事件ID' to the new event's ID, and '当前主线事件阶段' to 1
@@ -48,7 +48,7 @@ format: |-
   <%_ } _%>
   - ${analyze every variable based on its corresponding item in `check list`: ...}
   </Analysis>
-  _.set('${variable}', ${old_value}, ${new_value}); // ${brief reason for change}
-  _.set('${variable}', ${new_value}); // ${brief reason for change}
+  _.set(${variable, such as '络络.亲密度', '世界.下次响应界面选择判断'}, ${old_value}, ${new_value}); // ${brief reason for change}
+  _.set(${variable}, ${new_value}); // ${brief reason for change}
   ...
   </UpdateVariable>

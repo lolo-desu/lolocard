@@ -1,8 +1,3 @@
-<UpdateVariable>
-@变量.络络.阅读日记数量=31@
-@变量.络络.拥有联系方式=1@
-</UpdateVariable>
-
 <!-- 触发事件：【放学后走廊前往花田告白】 -->
 
 时间过得飞快，两人已经相识一个月。
@@ -38,17 +33,12 @@
 "<user>"络络突然停下脚步，转身面对<user>，阳光在她身后形成一圈柔和的轮廓，向后一仰，躺在雏菊花海中微笑。
 
 <UpdateVariable>
- <Analysis>
- - Time passed: Brief hallway encounter (a few minutes)
- - Should view diary next?: No, not yet established in scene
- - This is setting up for an important love confession scene , set to 2
- - Variable updates: Minor time progression, slight intimacy increase for Luoluo's confession preparation
- </Analysis>
- @变量.络络.亲密度@=78⇒80@
- @变量.络络.下次响应界面选择判断@=0⇒2@
- @变量.络络.当前时间阶段@=66⇒70@
- @变量.络络.阅读日记数量=38@
- </UpdateVariable>
+_.set('络络.亲密度', 74);
+_.set('络络.阅读日记数量', 31);
+_.set('络络.拥有联系方式', true);
+_.set('世界.当前时间阶段', 70);
+_.set('世界.下次响应界面选择判断', 2);
+</UpdateVariable>
 
 <!-- STORY END: Carefully reviewing the provided SUPPORTED File Paths in <场景文件列表>: Which SUPPORTED location best describes where 络络 或 <user> is currently physically located? 住宅街/白天.jpg. Which SUPPORTED File Paths in <立绘文件列表> best describes her current clouthes and facial expression? 水手服/稍微脸红.png -->
 <sprite>

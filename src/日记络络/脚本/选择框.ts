@@ -1,6 +1,6 @@
 export {};
 
-import default_css from './选择框默认样式.scss?raw';
+import default_css from './选择框默认样式.css?raw';
 
 const lorebook_name = '上锁的日记本' as const;
 const checkbox_tag = '<Checkbox>' as const;
