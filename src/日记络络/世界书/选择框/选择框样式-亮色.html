@@ -2,11 +2,11 @@
   * {
     -webkit-tap-highlight-color: transparent;
   }
-  .roleplay_checkbox_hr {
+  .roleplay_options_hr {
     display: none;
   }
 
-  .roleplay_checkbox_back {
+  .roleplay_options_back {
     background: #fff0f3; /* 淡粉色背景 */
     border-radius: 16px;
     box-shadow: 0 8px 20px rgba(145, 125, 138, 0.15); /* 柔和阴影 */
@@ -20,7 +20,7 @@
     margin: 24px auto;
   }
 
-  .roleplay_checkbox_item {
+  .roleplay_options_item {
     position: relative;
     background: #fffafb; /* 略淡的粉色背景 */
     border-radius: 12px;
@@ -41,11 +41,11 @@
     font-family: 'Microsoft YaHei', Arial, sans-serif; /* 使用微软雅黑 */
   }
 
-  .last_mes .roleplay_checkbox_item {
+  .last_mes .roleplay_options_item {
     cursor: pointer;
   }
 
-  .last_mes .roleplay_checkbox_item::after {
+  .last_mes .roleplay_options_item::after {
     content: '';
     position: absolute;
     top: 0;
@@ -58,27 +58,27 @@
     z-index: -1;
   }
 
-  .last_mes .roleplay_checkbox_item:hover {
+  .last_mes .roleplay_options_item:hover {
     transform: translateY(-4px);
     box-shadow: 0 8px 24px rgba(145, 125, 138, 0.2); /* 柔和阴影 */
     background: #fff5f7; /* 悬浮时稍亮 */
     border-color: rgba(255, 204, 214, 0.3); /* 柔化粉色 */
   }
 
-  .last_mes .roleplay_checkbox_item:hover::after {
+  .last_mes .roleplay_options_item:hover::after {
     opacity: 1;
   }
 
-  .last_mes .roleplay_checkbox_item:hover .roleplay_checkbox_content {
+  .last_mes .roleplay_options_item:hover .roleplay_options_content {
     color: #635759; /* 稍微加深，降低对比 */
   }
 
-  .last_mes .roleplay_checkbox_item:active {
+  .last_mes .roleplay_options_item:active {
     transform: translateY(-2px);
     box-shadow: 0 4px 12px rgba(145, 125, 138, 0.1);
   }
 
-  .roleplay_checkbox_item:before {
+  .roleplay_options_item:before {
     content: '';
     position: absolute;
     top: 0;
@@ -91,11 +91,11 @@
     transition: transform 0.35s cubic-bezier(0.4, 0, 0.2, 1);
   }
 
-  .last_mes .roleplay_checkbox_item:hover:before {
+  .last_mes .roleplay_options_item:hover:before {
     transform: scaleX(1);
   }
 
-  .roleplay_checkbox_title {
+  .roleplay_options_title {
     font-size: 0.95em;
     font-weight: 600;
     color: #7d6b6e; /* 深粉色文字 */
@@ -111,7 +111,7 @@
     align-items: center;
   }
 
-  .roleplay_checkbox_title::before {
+  .roleplay_options_title::before {
     content: '';
     display: inline-block;
     width: 6px;
@@ -122,7 +122,7 @@
     box-shadow: 0 0 0 2px rgba(255, 204, 214, 0.2);
   }
 
-  .roleplay_checkbox_content {
+  .roleplay_options_content {
     font-size: 0.95em;
     line-height: 1.65;
     color: #8e7478; /* 降低对比度 */
@@ -134,23 +134,23 @@
     letter-spacing: 0.018em;
   }
 
-  .roleplay_checkbox_item.selected {
+  .roleplay_options_item.selected {
     background: rgba(255, 235, 240, 0.7); /* 调整为更柔和的粉灰 */
     border-color: rgba(255, 204, 214, 0.5); /* 柔化粉色 */
   }
 
-  .roleplay_checkbox_item.selected:before {
+  .roleplay_options_item.selected:before {
     background: linear-gradient(90deg, #ffd0d8, #ffbbc8); /* 柔化粉色 */
     transform: scaleX(1);
   }
 
-  .roleplay_checkbox_item.selected .roleplay_checkbox_title::before {
+  .roleplay_options_item.selected .roleplay_options_title::before {
     background: #ffd0d8; /* 柔化粉色 */
     box-shadow: 0 0 0 2px rgba(255, 204, 214, 0.3);
   }
 
   @media (max-width: 999px) {
-    .roleplay_checkbox_back {
+    .roleplay_options_back {
       padding: 18px;
       gap: 14px;
       grid-template-columns: 1fr;
@@ -161,30 +161,30 @@
       border: 1px solid #ffe5ea;
     }
 
-    .roleplay_checkbox_item {
+    .roleplay_options_item {
       padding: 16px;
       background: #fffafb;
       border: 1px solid #ffe5ea;
     }
 
-    .roleplay_checkbox_title {
+    .roleplay_options_title {
       font-size: 0.9em;
       padding-bottom: 8px;
       margin-bottom: 10px;
     }
 
-    .roleplay_checkbox_content {
+    .roleplay_options_content {
       font-size: 0.92em;
       line-height: 1.6;
     }
   }
 
   @media (prefers-reduced-motion: reduce) {
-    .roleplay_checkbox_item,
-    .roleplay_checkbox_item::before,
-    .roleplay_checkbox_item::after,
-    .roleplay_checkbox_content,
-    .roleplay_checkbox_title {
+    .roleplay_options_item,
+    .roleplay_options_item::before,
+    .roleplay_options_item::after,
+    .roleplay_options_content,
+    .roleplay_options_title {
       transition: none;
     }
   }
