@@ -4,7 +4,9 @@
   sprite:
     rule: by recalling `下次响应界面选择判断系统`, `背景列表`, `立绘列表` documents, the following must be inserted to the reply and cannot be omitted
     format: |-
-      <!-- STORY END: ... -->
+      <interface_analysis>
+      ...
+      </interface_analysis>
       <sprite>
       ...
       </sprite>
@@ -12,7 +14,9 @@
   diary:
     rule: by recalling `下次响应界面选择判断系统`, `背景列表`, `立绘列表`` documents, the following must be inserted to the reply and cannot be omitted
     format: |-
-      <!-- STORY END: ... -->
+      <interface_analysis>
+      ...
+      </interface_analysis>
       <diary>
       ...
       </diary>
@@ -20,7 +24,9 @@
   galgame:
     rule: by recalling `下次响应界面选择判断系统`, `背景列表`, `立绘列表`, `NSFWCG列表` documents, the following must be inserted to the reply and cannot be omitted
     format: |-
-      <!-- ... -->
+      <interface_analysis>
+      ...
+      </interface_analysis>
       <galgame>
       ...
       </galgame>

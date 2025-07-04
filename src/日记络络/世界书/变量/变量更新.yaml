@@ -34,8 +34,8 @@ check list:
       - when the storyline progresses to a point where the event can enter the next stage (as described in the `主线事件系统` document), increment '当前主线事件阶段' (1->2, 2->3, 3->4)
       - when the event is effectively concluded or resolved in the narrative (stage changes from 4 to 0), update '当前主线事件ID' to '无', and '当前主线事件阶段' to 0
 format: |-
-  <UpdateVariable>
-  <Analysis>/*IN ENGLISH, no more than 120 words*/
+  <update>
+  <update_analysis>/*IN ENGLISH, no more than 120 words*/
   - ${calculate time passed: ...}
   - ${should the current storyline progression include viewing 络络's diary?: yes/no}
   - ${does the current storyline progression lead directly into an emotional or climactic CG scene?: yes/no}
@@ -47,8 +47,8 @@ format: |-
   - ${main event conclusion check: has the event effectively concluded in the narrative? should ID be set to '无' and stage to 0? why?}
   <%_ } _%>
   - ${analyze every variable based on its corresponding item in `check list`: ...}
-  </Analysis>
+  </update_analysis>
   _.set(${variable, such as '络络.亲密度', '世界.下次响应界面选择判断'}, ${old_value}, ${new_value}); // ${brief reason for change}
   _.set(${variable}, ${new_value}); // ${brief reason for change}
   ...
-  </UpdateVariable>
+  </update>

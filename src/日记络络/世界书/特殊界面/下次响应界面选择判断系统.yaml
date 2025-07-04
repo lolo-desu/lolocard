@@ -12,7 +12,10 @@
     sprite:
       rule: the following must be inserted to the end of each reply and cannot be omitted
       format: |-
-        <!-- STORY END: carefully reviewing the provided EXISTING file paths in `背景列表` document and `立绘列表` document. which EXISTING location in `背景列表` document best describes where 络络 or <user> is currently physically located? ${地点}/${地点情况}.jpg. which EXISTING tachi-e in `立绘列表` document best describes her current clothes and facial expression? ${服装}/${表情}.png -->
+        <interface_analysis>
+        - which EXISTING location in `背景列表` document best describes where 络络 or <user> is currently physically located? ${地点}/${地点情况}.jpg
+        - which EXISTING tachi-e in `立绘列表` document best describes her current clothes and facial expression? ${服装}/${表情}.png
+        </interface_analysis>
         <sprite>
         立绘: ${刚刚选择的当前络络的立绘 (仅包括格纹衫、开衫、水手服、睡衣和全裸)服装/表情路径}.png
         场景: ${刚刚选择的当前络络所在的地点/地点情况路径}.jpg
@@ -27,9 +30,12 @@
         - 日期、天气和心情是络络写日记的日期天气心情等，其中天气和心情只允许单一个emoji
         - 日记内容是前一天晚上或者其他时间络络写的日记，避免出现写日记之后发生的事件
         - 本次响应**仅输出日记内容**，非必要情况下**避免生成任何正文**
-        - 输出日记后，你必须在本次<UpdateVariable>中更新`世界.下次响应界面选择判断`为0
+        - 输出日记后，你必须在本次<update>中更新`世界.下次响应界面选择判断`为0
       format: |-
-        <!-- STORY END: carefully reviewing the provided EXISTING file paths in `背景列表` document and `立绘列表` document. which EXISTING location in `背景列表` document best describes where 络络 or <user> is currently physically located? ${地点}/${地点情况}.jpg. which EXISTING tachi-e in `立绘列表` document best describes her current clothes and facial expression? ${服装}/${表情}.png -->
+        <interface_analysis>
+        - which EXISTING location in `背景列表` document best describes where 络络 or <user> is currently physically located? ${地点}/${地点情况}.jpg
+        - which EXISTING tachi-e in `立绘列表` document best describes her current clothes and facial expression? ${服装}/${表情}.png
+        </interface_analysis>
         <diary>
         立绘: ${当前络络将日记交给<user>时，刚刚选择的当前络络的立绘服装/表情路径}.png
         场景: ${当前络络将日记交给<user>时 刚刚选择的当前络络所在的地点/地点情况路径}.jpg
@@ -43,10 +49,10 @@
           ${然后写日记的主体，一段记录日记，根据亲密度不同来写，当前亲密度是：{{getvar::变量.络络.亲密度}}，一定要符合当前角色阶段中的剧情指导。禁止记录刚发生的事情，日记不是现场写的，可以和前文无关写一些只有络络自己视角知道的事情，日记的内容是落后的，日记中的字肯定不知道今天发生的事情一直到昨天晚上或今天早上。络络的文笔不太好，她没有任何写作技能，因此逻辑性很差，就像普通学生的随笔一样想到哪里写哪里，一定要表现的比较跳脱，但要符合络络的人设不应出现OOC(out of character)的情况，可以写一些关于她经历过的任何事，包括上课、和同学的交流、吃到的好吃的、看到的有趣的事情、读的书，也可以在日记中写一些她喜欢的金句，总体日记不少于200字}
           ${可选的结束语，一句话或者一段话的结束语，可以是写写完日记之后要去做什么，比如"今天就写到这里吧，我要去洗澡了，好期待明天和你见面"，或者也可以引用一句名言来表示自己的心情，也可以没有这一段直接戛然而止。}
         </diary>
-        <UpdateVariable>
+        <update>
         _.set('世界.下次响应界面选择判断', 0);
         ...
-        </UpdateVariable>
+        </update>
     # :<%_ } else { _%>
     galgame:
       MUST COMPLY WITH THIS HIGHEST PRIORITY INSTRUCTION: Output ONLY the complete `<Galgame>...</Galgame>` block, including the opening/closing tags and the ```json fences containing the JSON array, exactly as shown in the `format`. DO NOT output any text, explanations, or apologies before the opening `<Galgame>` tag or after the closing `</Galgame>` tag.
@@ -81,7 +87,13 @@
           - 不得超过25条Chat，否则会显得过于冗长
           - 要注重于单个CG场景的深刻描写，因此每张CG必须至少使用5条及以上，禁止过于频繁的切换CG
       format: |-
-        <!-- 接下来的场景我将使用到CG列表中的:${所使用的CG文件}，背景将使用背景列表中存在的:${所使用的背景立绘}，立绘将使用绘文件列表中存在的:${所使用的立绘文件}，已确认，这些文件真实存在于文件列表中，没出现任何错误，开始输出JSON文件-->
+        <interface_analysis>
+        - 接下来的场景我将使用:
+          - `可调用的CG文件列表`中的: ${所使用的CG文件}
+          - `背景列表`中的: ${所使用的背景文件}
+          - `立绘列表`中的: ${所使用的立绘文件}
+        - 已确认这些文件真实存在于文件列表中，没出现任何错误，开始输出JSON
+        </interface_analysis>
         <galgame>
         ```json
         ${按JSON格式输出上方的Chat[]，营造一个符合场景风格的、具有充足情感爆发的CG场景，留给玩家深刻印象}

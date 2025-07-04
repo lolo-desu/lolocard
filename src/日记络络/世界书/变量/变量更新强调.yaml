@@ -3,6 +3,6 @@
 变量更新强调:
   rule: the following must be inserted to the end of each reply and cannot be omitted
   format: |-
-    <UpdateVariable>
+    <update>
     ...
-    </UpdateVariable>
+    </update>
