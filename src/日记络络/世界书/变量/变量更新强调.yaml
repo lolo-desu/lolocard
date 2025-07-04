@@ -1,5 +1,7 @@
 ---
+# :<%_ if (getvar('stat_data.世界.下次响应界面选择判断') === 0) { _%>
 当你将下次响应界面选择判断设置为'1'**的同时**，或当出现查看日记的剧情时，必须在底部输出: # :[点击查看日记]
+# :<%_ } _%>
 变量更新强调:
   rule: the following must be inserted to the end of each reply and cannot be omitted
   format: |-

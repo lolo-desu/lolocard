@@ -23,8 +23,11 @@
   # :<%_ } else { _%>
   galgame:
     rule:
-      - by recalling `下次响应界面选择判断系统`, `背景列表`, `立绘列表`, `NSFWCG列表` documents, the following MUST be inserted to the beginning of the reply in replacement of main text and cannot be omitted
-      - the <galgame> below will be treated as main text, so you shouldn't output main text again using plain text
+      # :<%_ if (getvar('stat_data.世界.下次响应界面选择判断') === 2) { _%>
+      - by recalling `下次响应界面选择判断系统`, `背景列表`, `立绘列表`, `关键CG列表` documents, the following must be inserted to the reply and cannot be omitted
+      # :<%_ } else { _%>
+      - by recalling `下次响应界面选择判断系统`, `背景列表`, `立绘列表`, `NSFWCG列表` documents, the following must be inserted to the reply and cannot be omitted
+      # :<%_ } _%>
     format: |-
       <interface_analysis>
       ...

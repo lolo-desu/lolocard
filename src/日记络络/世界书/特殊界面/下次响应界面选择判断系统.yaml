@@ -5,8 +5,8 @@
   判断可能情况:
     0: 无需查看日记，生成sprite界面
     1: 必须查看日记，只使用diary界面
-    2: 进入感人或剧情高潮CG场景，如告白、离别、和解等情感爆发点，使用galgame界面展示关键CG
-    3: 进入NSFW场景，使用galgame界面展示NSFWCG
+    2: 进入感人或剧情高潮CG场景，如告白、离别、和解等情感爆发点，只使用galgame界面展示关键CG
+    3: 进入NSFWCG场景，只使用galgame界面展示NSFWCG
   你必须输出判断{{get_message_variable::stat_data.世界.下次响应界面选择判断}}对应的界面，因此必须最优先地遵守以下内容:
     # :<%_ if (getvar('stat_data.世界.下次响应界面选择判断') === 0) { _%>
     sprite:
@@ -24,12 +24,10 @@
     # :<%_ } else if (getvar('stat_data.世界.下次响应界面选择判断') === 1) { _%>
     diary:
       rule:
-        - 在确认此轮回合剧情发展确实是日记输出后，必须输出日记界面。（但要以<user>的输入为优先）
-        - 本次响应专注于络络的日记编写，如非必要不要输出任何剧情，但若直接让<user>查看日记过于突兀，可以增加两行用来转折过渡的语句，之后必须输出diary标签和其中的格式
+        - 本次响应专注于络络的日记编写，**仅输出diary界面**，非必要情况下**避免生成任何正文**；但若直接查看日记过于突兀，可以增加仅一两行正文用来转折过渡，之后必须输出diary标签和其中的格式
         - 请注意！立绘、场景和对话都发生在现在，也就是络络将日记交给<user>的时间而不是写日记的时间
         - 日期、天气和心情是络络写日记的日期天气心情等，其中天气和心情只允许单一个emoji
         - 日记内容是前一天晚上或者其他时间络络写的日记，避免出现写日记之后发生的事件
-        - 本次响应**仅输出日记内容**，非必要情况下**避免生成任何正文**
         - 输出日记后，你必须在本次<update>中更新`世界.下次响应界面选择判断`为0
       format: |-
         <interface_analysis>
@@ -75,7 +73,7 @@
                   right: { id: string; expression: string; costume: string };
                 };
           }
-        rule:
+        limit:
           - 对于正常的背景和立绘，你不应该经常使用protagonist和narrator，旁白和第一人称独白都可以将character设置为络络，只有络络不在场的时候或者CG背景图片的时候才考虑使用这两个
           - single sprite display: when showing one character, the `characters` object MUST contain *either* `left` *or* `right`, but **NEVER both** simultaneously
           - CG background handling: if the `background` filename signifies a CG image, the `characters` field **MUST** be the string `"protagonist"`, irrespective of the value in the `name` field
@@ -83,21 +81,27 @@
               - 'use `characters: "protagonist"` for general narration or during CGs'
               - 'use `characters: "protagonist"` for the player''s internal thoughts when their sprite isn''t shown'
               - 'for spoken lines (`name` is "<user>" or "络络"), use the character object (`{left: ...}` or `{right: ...}`) unless it''s a CG scene'
-          - 不得超过25条Chat，否则会显得过于冗长
-          - 要注重于单个CG场景的深刻描写，因此每张CG必须至少使用5条及以上，禁止过于频繁的切换CG
+      rule:
+        - 本次响应专注于CG场景，**仅输出galgame界面，绝对禁止生成任何正文**
+        - 输出CG场景后，你必须在本次<update>中更新`世界.下次响应界面选择判断`为0
       format: |-
         <interface_analysis>
-        - 接下来的场景我将使用:
-          - `可调用的CG文件列表`中的: ${所使用的CG文件}
-          - `背景列表`中的: ${所使用的背景文件}
-          - `立绘列表`中的: ${所使用的立绘文件}
-        - 已确认这些文件真实存在于文件列表中，没出现任何错误，开始输出JSON
+        - 当前时间: ...
+        - 角色所在地点: ...
+        - `可调用的CG文件列表`中是否有对应于当前时间、角色所在地点和剧情氛围的CG: yes/no
+          - 将使用CG: ...
+        - 将`背景列表`中的背景: ...
+        - 将`立绘列表`中的立绘: ...
         </interface_analysis>
         <galgame>
         ```json
-        ${按JSON格式输出上方的Chat[]，营造一个符合场景风格的、具有充足情感爆发的CG场景，留给玩家深刻印象}
+        ${按JSON格式输出Chat[]（不少于10个Chat，不多于25个Chat），营造一个符合场景风格的、具有充足情感爆发的CG场景，留给玩家深刻印象，要注重于单个CG场景的深刻描写，禁止过于频繁地切换CG}
         ```
         </galgame>
+        <update>
+        _.set('世界.下次响应界面选择判断', 0);
+        ...
+        </update>
       example: |-
         <galgame>
         ```json
