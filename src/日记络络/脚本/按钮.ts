@@ -80,7 +80,7 @@ async function handle_地点() {
 function handle_计数() {
   console.log('📊计数');
   triggerSlash(
-    `/ejs 上次发送了：<%- variables.LAST_SEND_TOKENS %> 词符(tokens), 共计 <%- variables.LAST_SEND_CHARS %> 字符。<br/>收到的消息处理后：<%- variables.LAST_RECEIVE_TOKENS %> 词符(tokens), 共计 <%- variables.LAST_RECEIVE_CHARS %> 字符。 | /popup <h4>提示词计数</h4><br\>{{pipe}}`,
+    `/ejs 上次发送了：<%- variables.LAST_SEND_TOKENS %> 词符(tokens), 共计 <%- variables.LAST_SEND_CHARS %> 字符。<br/>收到的消息处理后：<%- variables.LAST_RECEIVE_TOKENS %> 词符(tokens), 共计 <%- variables.LAST_RECEIVE_CHARS %> 字符。 | /popup <h4>提示词计数</h4><br>{{pipe}}`,
   );
 }
 

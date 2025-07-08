@@ -898,7 +898,7 @@ class GalgameEngine {
       return;
     }
 
-    let nextImageUrl = this.getFullImageUrl(relativeImagePath);
+    const nextImageUrl = this.getFullImageUrl(relativeImagePath);
     console.log('切换背景图片:', relativeImagePath, '->', nextImageUrl);
 
     // 如果URL获取失败或与当前图片相同，则不执行转场
