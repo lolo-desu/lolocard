@@ -1,0 +1,98 @@
+// APP视图相关样式
+.app-view {
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  z-index: 60;
+  border-radius: 2.25rem;
+  visibility: hidden;
+  opacity: 0;
+  transition: opacity 0.3s ease, visibility 0.3s ease;
+  display: flex;
+  flex-direction: column;
+  backface-visibility: hidden;
+
+  &.active {
+    visibility: visible;
+    opacity: 1;
+    z-index: 80;
+  }
+}
+
+.app-screen {
+  padding: 3.75rem 1rem 1.375rem 1rem;
+  flex-grow: 1;
+  background-image: url('https://gitgud.io/lolodesu/lolobabytutorial/-/raw/master/lologame/素材/wallpaper/白色_1.jpg');
+  background-size: cover;
+  background-position: center;
+}
+
+.app-grid {
+  display: grid;
+  grid-template-columns: repeat(4, 1fr);
+  gap: 1rem;
+}
+
+.app-icon {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  text-align: center;
+  text-decoration: none;
+  cursor: pointer;
+
+  &:hover .icon-image {
+    transform: scale(1.05);
+  }
+
+  .icon-image {
+    width: 4.0625rem;
+    height: 4.0625rem;
+    background-color: var(--primary-blue);
+    border-radius: 22.5%;
+    margin-bottom: 0.4375rem;
+    background-size: cover;
+    background-position: center;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 2.2em;
+    @include transition-smooth;
+  }
+
+  .app-name {
+    color: var(--text-color);
+    font-size: 0.75em;
+    font-weight: 400;
+    text-shadow: 0 0.0625rem 0.125rem rgba(0, 0, 0, 0.5);
+  }
+}
+
+.icon-wechat,
+.icon-settings {
+  background: linear-gradient(135deg, var(--blue-gradient-start) 0%, var(--blue-gradient-end) 100%);
+  color: white;
+  box-shadow: 0 4px 12px var(--shadow-color-rgba);
+}
+
+// 微信图标使用微信绿色，其他图标使用灰色
+.icon-wechat {
+  background: linear-gradient(135deg, #09e675 0%, #07c160 50%, #06ad56 100%) !important;
+}
+
+.icon-settings {
+  background: linear-gradient(135deg, #a8a8a8 0%, #8a8a8a 50%, #777777 100%) !important;
+}
+
+// 单色图标模式下的渐变效果
+.single-color-icon .icon-wechat,
+.single-color-icon .icon-settings {
+  background: linear-gradient(
+    135deg,
+    var(--primary-gradient-light) 0%,
+    var(--primary-blue) 50%,
+    var(--primary-gradient-dark) 100%
+  ) !important;
+}

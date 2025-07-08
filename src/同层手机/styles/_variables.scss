@@ -1,0 +1,129 @@
+// 外部资源引入
+@import url('https://fonts.googleapis.com/css2?family=Noto+Sans+SC:wght@300;400;500;700&display=swap');
+@import url('https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.2/css/all.min.css');
+
+// 自定义字体
+@font-face {
+  font-family: 'MyCustomFont';
+  src: url('https://files.catbox.moe/er4wsg.ttf');
+}
+
+// 全局颜色和尺寸变量定义
+:root {
+  // 主色调变量
+  --text-color: #ffffff;
+  --primary-blue: #72adf3;
+  --light-blue: #a8cbeb;
+  --ultra-light-blue: #e8f4fd;
+  --blue-gradient-start: #accef2;
+  --blue-gradient-end: #98c2f5;
+  --soft-blue: #b8d4f0;
+  --deep-blue: #2c5282;
+
+  // 原有变量重新定义为蓝色主题
+  --wechat-green-icon: var(--primary-blue);
+  --wechat-green-bubble: var(--light-blue);
+  --wechat-bg: var(--ultra-light-blue);
+  --link-color: var(--primary-blue);
+
+  // 尺寸变量
+  --footer-height: 2.8125rem;
+  --panel-height: 14.0625rem;
+  --sticker-size: 120px;
+
+  // 蓝白主题专用变量
+  --bubble-shadow: 0 2px 8px rgba(74, 144, 226, 0.15);
+  --text-primary: rgb(139, 162, 186);
+  --text-secondary: #64748b;
+  --border-color: #cbd5e1;
+  --header-bg: linear-gradient(135deg, #f8faff 0%, #eef4ff 100%);
+
+  // 气泡背景变量
+  --wechat-bubble-them-bg: #ffffff;
+  --wechat-bubble-me-bg: var(--light-blue);
+
+  // 气泡文字颜色变量
+  --wechat-bubble-them-text: #333333;
+  --wechat-bubble-me-text: #ffffff;
+
+  // 状态栏颜色
+  --status-bar-color: #428af2;
+
+  // Checkbox按钮样式变量 - 边框高亮设计
+  --checkbox-bg-unchecked: #ffffff;
+  --checkbox-border-unchecked: var(--border-color);
+  --checkbox-border-checked: var(--primary-blue);
+  --checkbox-text-unchecked: var(--text-primary);
+  --checkbox-shadow-unchecked: 0 2px 6px var(--shadow-color-rgba);
+  --checkbox-shadow-checked: 0 4px 12px var(--shadow-color-rgba);
+  --checkbox-hover-bg: var(--ultra-light-blue);
+
+  // 灵动岛颜色
+  --dynamic-island-color: #a0c4f4;
+
+  // 应用背景色
+  --app-bg-color: #ffffff;
+
+  // 设置页面背景色
+  --settings-bg-color: #f2f2f7;
+  --settings-card-bg-color: #ffffff;
+
+  // 阴影颜色
+  --shadow-color: #4a90e2;
+  --shadow-color-rgba: rgba(74, 144, 226, 0.3);
+  --settings-icon-color: #999999;
+
+  // 渐变颜色变量
+  --primary-gradient-light: #accef2;
+  --primary-gradient-dark: #98c2f5;
+
+  // 阴影RGB分量
+  --shadow-r: 74;
+  --shadow-g: 144;
+  --shadow-b: 226;
+}
+
+// SCSS变量（用于计算和混合）
+$primary-blue: #72adf3;
+$light-blue: #a8cbeb;
+$ultra-light-blue: #e8f4fd;
+$blue-gradient-start: #accef2;
+$blue-gradient-end: #98c2f5;
+$soft-blue: #b8d4f0;
+$deep-blue: #2c5282;
+
+$text-primary: rgb(139, 162, 186);
+$text-secondary: #64748b;
+$border-color: #cbd5e1;
+
+$shadow-color: #4a90e2;
+$shadow-color-rgba: rgba(74, 144, 226, 0.3);
+
+// 响应式断点
+$mobile-breakpoint: 360px;
+
+// 常用混合
+@mixin phone-shadow {
+  box-shadow: 0 15px 20px var(--shadow-color-rgba), 0 8px 20px var(--shadow-color-rgba), 0 3px 8px rgba(0, 0, 0, 0.1),
+    inset 0 1px 0 rgba(255, 255, 255, 0.5), inset 0 -1px 0 rgba(255, 255, 255, 0.2), 0 5px var(--shadow-color-rgba);
+}
+
+@mixin bubble-shadow {
+  box-shadow: var(--bubble-shadow);
+}
+
+@mixin card-shadow {
+  box-shadow: 0 4px 12px var(--shadow-color-rgba), 0 2px 6px var(--shadow-color-rgba);
+}
+
+@mixin transition-smooth {
+  transition: all 0.2s ease;
+}
+
+@mixin gradient-blue {
+  background: linear-gradient(315deg, var(--blue-gradient-end) 0%, var(--blue-gradient-start) 100%);
+}
+
+@mixin gradient-header {
+  background: var(--header-bg);
+}

@@ -1,0 +1,94 @@
+// 暗色模式适配
+body.dark-mode {
+  background-color: transparent;
+
+  .app-view {
+    background-color: var(--app-bg-color);
+  }
+
+  .settings-card {
+    background-color: var(--settings-card-bg-color);
+
+    p,
+    a {
+      color: var(--text-primary);
+    }
+
+    li {
+      border-bottom-color: var(--border-color);
+
+      a {
+        color: var(--text-primary);
+      }
+    }
+  }
+
+  #show-last-ai-response-btn,
+  #show-last-sent-prompt-btn {
+    background-color: var(--settings-card-bg-color);
+    color: var(--text-primary);
+  }
+
+  // 夜间模式下对方的气泡
+  .message-row.them .message-bubble {
+    background: linear-gradient(315deg, #2a2a2a 0%, #333333 100%);
+    border-color: #3c3c3c;
+  }
+
+  // 夜间模式下的语音文本内容样式
+  .voice-text-content {
+    background-color: #2c2c2c;
+    border-color: #3c3c3c;
+    color: #f0f0f0;
+    box-shadow: 0 0.0625rem 0.125rem rgba(0, 0, 0, 0.3);
+  }
+
+  // 夜间模式下的图片描述卡片
+  .image-desc-content {
+    background-color: rgba(30, 30, 30, 0.7);
+    border: 0.0625rem solid rgba(60, 60, 60, 0.4);
+    color: #f0f0f0;
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.25), 0 2px 6px rgba(0, 0, 0, 0.2);
+  }
+
+  // 夜间模式下的位置卡片
+  .location-bubble .location-card {
+    background-color: #2c2c2c;
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.25), 0 2px 6px rgba(0, 0, 0, 0.15);
+  }
+
+  // 夜间模式下的位置标题
+  .location-content .location-title {
+    color: #f0f0f0;
+  }
+
+  // 夜间模式下的位置副标题
+  .location-content .location-subtitle {
+    color: #aaa;
+  }
+
+  // 夜间模式下的文件卡片
+  .file-bubble .file-card {
+    background-color: #2c2c2c;
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.25), 0 2px 6px rgba(0, 0, 0, 0.15);
+  }
+
+  // 夜间模式下的文件名称
+  .file-details .file-name {
+    color: #f0f0f0;
+  }
+
+  // 夜间模式下的文件页脚
+  .file-footer {
+    background-color: #232323;
+    color: #aaa;
+    border-top: 0.0625rem solid #3c3c3c;
+  }
+
+  // 夜间模式下的描述托盘
+  .event-description.expanded {
+    background-color: rgba(50, 50, 50, 0.9);
+    color: #f0f0f0;
+    box-shadow: 0 1px 4px rgba(0, 0, 0, 0.3);
+  }
+}

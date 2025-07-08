@@ -1,0 +1,75 @@
+// 状态栏样式
+.phone-status-bar {
+  position: absolute;
+  top: 0.625rem;
+  left: 0;
+  right: 0;
+  height: 2rem;
+  z-index: 102;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 0 1.5rem;
+  pointer-events: none;
+}
+
+.status-left {
+  display: flex;
+  align-items: center;
+  gap: 0.4rem;
+  color: var(--status-bar-color);
+  font-size: 0.95em;
+  font-weight: 600;
+}
+
+.status-right {
+  display: flex;
+  align-items: center;
+  gap: 0.35rem;
+  color: var(--status-bar-color);
+  font-size: 0.9em;
+  font-weight: 600;
+}
+
+.moon-icon {
+  font-size: 0.8em;
+  opacity: 0.9;
+}
+
+.signal-bars,
+.wifi-icon,
+.battery-icon {
+  font-size: 0.85em;
+}
+
+// 隐藏触发器
+#hidden-send-trigger {
+  position: absolute;
+  top: 0.625rem;
+  right: 1rem;
+  width: 80px;
+  height: 2rem;
+  z-index: 103;
+  cursor: pointer;
+}
+
+// 删除模式触发器
+#delete-mode-trigger {
+  position: absolute;
+  top: 0.625rem; // 与状态栏对齐
+  left: 1rem; // 在时间月亮图标下方，不贴边
+  width: 60px; // 覆盖时间和月亮区域
+  height: 2rem;
+  z-index: 103; // 在状态栏之上
+  cursor: pointer;
+}
+
+#delete-mode-trigger {
+  position: absolute;
+  top: 0.625rem;
+  left: 1rem;
+  width: 60px;
+  height: 2rem;
+  z-index: 103;
+  cursor: pointer;
+}

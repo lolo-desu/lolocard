@@ -1,0 +1,691 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+  <!-- 此同层手机免费发布于discord的尾巴镇社区和旅程社区，链接https://discord.com/channels/1379304008157499423/1388180976873766973，https://discord.com/channels/1291925535324110879/1388182155707814009 -->
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=no" />
+    <title>暴力美学BLMX同层手机</title>
+    <!-- 此同层手机免费发布于discord的尾巴镇社区和旅程社区，链接https://discord.com/channels/1379304008157499423/1388180976873766973，https://discord.com/channels/1291925535324110879/1388182155707814009 -->
+    <!-- 引入必要的外部库 -->
+    <!-- 样式现在通过TypeScript模块加载 -->
+  </head>
+  <body>
+    <div class="phone-frame">
+      <div class="phone-screen">
+        <div id="delete-mode-trigger"></div>
+        <div id="hidden-send-trigger"></div>
+
+        <!-- Status Bar (Added from original theme) -->
+        <div class="phone-status-bar">
+          <div class="status-left">
+            <span id="current-time">00:00</span>
+            <i class="fas fa-moon moon-icon"></i>
+          </div>
+          <div class="status-right">
+            <div class="signal-bars">
+              <i class="fas fa-signal"></i>
+            </div>
+            <i class="fas fa-wifi wifi-icon"></i>
+            <i class="fas fa-battery-three-quarters battery-icon"></i>
+          </div>
+        </div>
+
+        <div class="dynamic-island"></div>
+
+        <!-- 主屏幕 -->
+        <div class="app-view app-screen active" id="app-homescreen">
+          <div class="app-grid">
+            <div class="app-icon" id="app-wechat">
+              <div class="icon-image icon-wechat"><i class="fab fa-weixin"></i></div>
+              <span class="app-name">WeChat</span>
+            </div>
+            <div class="app-icon" id="app-settings">
+              <div class="icon-image icon-settings"><i class="fas fa-cog"></i></div>
+              <span class="app-name">设置</span>
+            </div>
+          </div>
+        </div>
+
+        <!-- 微信聊天界面 -->
+        <div class="app-view" id="wechat-view">
+          <div class="wechat-header">
+            <i class="fas fa-chevron-left back-btn" id="wechat-back-btn-dummy"></i>
+            <span class="contact-name" id="contact-name-header">Character</span>
+            <i class="fas fa-ellipsis-h options-btn" id="wechat-options-btn">
+              <div class="notification-dot" id="moments-notification" style="display: none"></div>
+            </i>
+          </div>
+
+          <div class="wechat-body" id="wechat-body">
+            <!-- 消息内容将通过JavaScript动态生成 -->
+          </div>
+
+          <div class="wechat-input-area">
+            <footer class="wechat-footer">
+              <i id="microphone-btn" class="fas fa-microphone footer-icon"></i>
+              <input
+                type="text"
+                id="wechat-input-field"
+                class="text-input"
+                placeholder="发送信息"
+                autocomplete="off"
+                autocapitalize="off"
+                spellcheck="false"
+              />
+              <i id="smile-btn" class="far fa-smile footer-icon"></i>
+              <i id="plus-btn" class="fas fa-plus-circle footer-icon"></i>
+              <button id="send-btn" class="send-btn"><i class="fas fa-paper-plane"></i></button>
+            </footer>
+            <div id="panel-container" class="panel-container">
+              <div id="sticker-panel" class="panel-view"><div id="sticker-grid" class="features-grid"></div></div>
+              <div id="char-sticker-panel" class="panel-view">
+                <div id="char-sticker-grid" class="features-grid"></div>
+              </div>
+              <div id="plus-panel" class="panel-view"><div id="plus-grid" class="features-grid"></div></div>
+            </div>
+          </div>
+        </div>
+
+        <!-- 设置视图 -->
+        <div id="settings-view" class="app-view">
+          <header class="settings-header">
+            <i class="fas fa-chevron-left back-btn" id="settings-back-btn"></i>
+            <span class="title">关于</span>
+          </header>
+          <main class="settings-body">
+            <div class="settings-card">
+              <p>
+                本同层手机<span class="highlight">【免费】</span>发布于discord的尾巴镇社区和旅程社区，作者：<span
+                  class="highlight"
+                  >暴力美学BLMX</span
+                >，点击即可跳转到社区
+                <a href="https://discord.com/channels/1379304008157499423/1388180976873766973" target="_blank"
+                  >https://discord.com/...</a
+                >。<a href="https://discord.com/channels/1291925535324110879/1388182155707814009" target="_blank"
+                  >https://discord.com/...</a
+                >。
+              </p>
+              <p>
+                如果你是通过任何<span class="highlight">付费途径</span>获取，请带着购买记录来找作者，<span
+                  class="highlight"
+                  >重重有赏</span
+                >。抵制任何窃取创作者劳动成果的商业化行为，从你我做起TvT
+              </p>
+              <p>
+                <span class="highlight">禁止</span>在酒馆以外的平台使用！<span class="highlight">禁止</span
+                >未经授权的二传二改！<span class="highlight">禁止</span>任何行为的倒卖和商业化行为！
+              </p>
+              <p>
+                后续更新内容也会发在discord的尾巴镇社区和旅程社区，有问题欢迎来提问哦！有想玩的功能、想提出的建议也可以在帖子下评论。
+              </p>
+            </div>
+            <div class="settings-card" style="margin-top: 1rem; padding: 0">
+              <ul style="list-style: none; margin: 0; padding: 0">
+                <li style="border-bottom: 1px solid #efefef">
+                  <a
+                    href="#"
+                    id="change-chat-wallpaper-btn"
+                    style="
+                      text-decoration: none;
+                      color: #8ba2ba;
+                      display: flex;
+                      justify-content: space-between;
+                      align-items: center;
+                      padding: 1rem;
+                    "
+                  >
+                    <span>更换聊天壁纸</span>
+                    <i class="fas fa-chevron-right"></i>
+                  </a>
+                </li>
+                <li style="border-bottom: 1px solid #efefef">
+                  <a
+                    href="#"
+                    id="change-home-wallpaper-btn"
+                    style="
+                      text-decoration: none;
+                      color: #8ba2ba;
+                      display: flex;
+                      justify-content: space-between;
+                      align-items: center;
+                      padding: 1rem;
+                    "
+                  >
+                    <span>更换主屏幕壁纸</span>
+                    <i class="fas fa-chevron-right"></i>
+                  </a>
+                </li>
+                <li>
+                  <a
+                    href="#"
+                    id="change-settings-wallpaper-btn"
+                    style="
+                      text-decoration: none;
+                      color: #8ba2ba;
+                      display: flex;
+                      justify-content: space-between;
+                      align-items: center;
+                      padding: 1rem;
+                    "
+                  >
+                    <span>更换设置壁纸</span>
+                    <i class="fas fa-chevron-right"></i>
+                  </a>
+                </li>
+              </ul>
+            </div>
+
+            <!-- 新增主题配色设置卡片 -->
+            <div class="settings-card" style="margin-top: 1rem; padding: 0">
+              <div style="padding: 1rem; border-bottom: 1px solid #efefef">
+                <h3 style="margin: 0; font-size: 1rem; color: var(--text-primary)">主题配色</h3>
+              </div>
+              <div
+                class="theme-options"
+                style="padding: 1rem; display: flex; flex-wrap: wrap; gap: 1rem; justify-content: space-between"
+              >
+                <!-- 主题选项将通过JS动态生成 -->
+              </div>
+              <div style="padding: 1rem; border-top: 1px solid #efefef">
+                <button
+                  id="custom-theme-btn"
+                  style="
+                    width: 100%;
+                    padding: 0.75rem;
+                    background: var(--primary-blue);
+                    color: white;
+                    border: none;
+                    border-radius: 0.5rem;
+                    font-weight: 500;
+                    cursor: pointer;
+                  "
+                >
+                  自定义主题
+                </button>
+              </div>
+            </div>
+
+            <div class="settings-card" style="margin-top: 1rem; padding: 1rem">
+              <p style="font-weight: 500; margin: 0 0 0.75rem 0.25rem; color: var(--text-primary); font-size: 0.9em">
+                调试工具
+              </p>
+              <ul style="list-style: none; margin: 0; padding: 0; display: flex; flex-direction: column; gap: 0.5rem">
+                <li>
+                  <a
+                    href="#"
+                    id="show-last-ai-response-btn"
+                    style="
+                      text-decoration: none;
+                      display: block;
+                      text-align: center;
+                      background-color: #eef4fd;
+                      padding: 0.6rem 1rem;
+                      border-radius: 0.6rem;
+                      color: var(--text-primary);
+                      font-weight: 500;
+                    "
+                  >
+                    <span>显示AI最新原始回复</span>
+                  </a>
+                </li>
+                <li>
+                  <a
+                    href="#"
+                    id="show-last-sent-prompt-btn"
+                    style="
+                      text-decoration: none;
+                      display: block;
+                      text-align: center;
+                      background-color: #eef4fd;
+                      padding: 0.6rem 1rem;
+                      border-radius: 0.6rem;
+                      color: var(--text-primary);
+                      font-weight: 500;
+                    "
+                  >
+                    <span>显示发送给AI的提示</span>
+                  </a>
+                </li>
+              </ul>
+            </div>
+
+            <!-- 新增手机尺寸调整卡片 -->
+            <div class="settings-card" style="margin-top: 1rem; padding: 1rem">
+              <p style="font-weight: 500; margin: 0 0 0.75rem 0.25rem; color: var(--text-primary); font-size: 0.9em">
+                手机尺寸调整
+              </p>
+              <div style="display: flex; flex-direction: column; gap: 0.75rem">
+                <div style="display: flex; justify-content: space-between; align-items: center; gap: 0.5rem">
+                  <button id="phone-size-default" class="phone-size-btn phone-size-active">
+                    <span class="size-icon" style="height: 24px"></span>
+                    <span class="size-label">默认尺寸</span>
+                  </button>
+                  <button id="phone-size-medium" class="phone-size-btn">
+                    <span class="size-icon" style="height: 20px"></span>
+                    <span class="size-label">中等尺寸</span>
+                  </button>
+                  <button id="phone-size-small" class="phone-size-btn">
+                    <span class="size-icon" style="height: 16px"></span>
+                    <span class="size-label">小尺寸</span>
+                  </button>
+                </div>
+                <div style="font-size: 0.8em; color: var(--text-secondary); text-align: center">
+                  选择适合您屏幕的手机尺寸
+                </div>
+              </div>
+            </div>
+
+            <!-- 新增表情大小调整卡片 -->
+            <div class="settings-card" style="margin-top: 1rem; padding: 1rem">
+              <p style="font-weight: 500; margin: 0 0 0.75rem 0.25rem; color: var(--text-primary); font-size: 0.9em">
+                表情包大小设置
+              </p>
+              <div style="display: flex; flex-direction: column; gap: 0.75rem">
+                <!-- 滑块区域 -->
+                <div style="display: flex; flex-direction: column; gap: 0.5rem">
+                  <div style="display: flex; justify-content: space-between; align-items: center">
+                    <span style="font-size: 0.9em; color: var(--text-secondary)">小</span>
+                    <input
+                      type="range"
+                      id="sticker-size-slider"
+                      min="40"
+                      max="200"
+                      value="120"
+                      style="flex-grow: 1; margin: 0 10px; accent-color: var(--primary-blue)"
+                    />
+                    <span style="font-size: 0.9em; color: var(--text-secondary)">大</span>
+                  </div>
+                  <div style="display: flex; justify-content: center; align-items: center; gap: 0.5rem">
+                    <input
+                      type="number"
+                      id="sticker-size-input"
+                      value="120"
+                      min="40"
+                      max="200"
+                      style="
+                        width: 70px;
+                        padding: 8px;
+                        border: 1px solid var(--border-color);
+                        border-radius: 5px;
+                        text-align: center;
+                      "
+                    />
+                    <span style="font-size: 0.9em; color: var(--text-secondary)">像素</span>
+                  </div>
+                </div>
+
+                <!-- 预设按钮 -->
+                <div style="display: flex; justify-content: space-between; gap: 0.5rem; margin-top: 0.5rem">
+                  <button id="sticker-size-small" class="phone-size-btn">
+                    <span class="size-icon" style="height: 16px"></span>
+                    <span class="size-label">小 (80px)</span>
+                  </button>
+                  <button id="sticker-size-medium" class="phone-size-btn phone-size-active">
+                    <span class="size-icon" style="height: 20px"></span>
+                    <span class="size-label">中 (120px)</span>
+                  </button>
+                </div>
+
+                <div style="font-size: 0.8em; color: var(--text-secondary); text-align: center">
+                  调整聊天中表情包的显示大小
+                </div>
+              </div>
+            </div>
+          </main>
+        </div>
+
+        <!-- 朋友圈视图 -->
+        <div id="moments-view" class="app-view">
+          <header class="moments-header">
+            <i class="fas fa-chevron-left header-action" id="moments-back-btn"></i>
+            <span class="title">朋友圈</span>
+            <i class="fas fa-camera header-action" id="post-moment-btn"></i>
+          </header>
+          <main class="moments-body">
+            <div class="moments-feed-header">
+              <img
+                src="https://gitgud.io/lolodesu/lolobabytutorial/-/raw/master/lologame/素材/wallpaper/白色_1.jpg"
+                alt="朋友圈封面"
+                class="moments-cover-photo"
+                id="moments-cover-photo"
+              />
+              <div class="moments-user-info">
+                <span class="moments-user-name" id="moments-user-name">用户名</span>
+                <img
+                  src="https://gitgud.io/lolodesu/lolobabytutorial/-/raw/master/lologame/素材/头像/默认头像.jpg"
+                  alt="用户头像"
+                  class="moments-user-avatar"
+                  id="moments-user-avatar"
+                />
+              </div>
+              <div class="user-signature" id="user-signature">这里是个性签名...</div>
+            </div>
+            <ul class="moments-feed-list" id="moments-feed-list"></ul>
+          </main>
+        </div>
+      </div>
+    </div>
+
+    <input type="file" id="image-upload-input" accept="image/*" style="display: none" />
+
+    <!-- 自定义主题编辑器模态框 -->
+    <div
+      id="theme-editor-modal"
+      class="modal"
+      style="
+        display: none;
+        position: fixed;
+        top: 0;
+        left: 0;
+        width: 100%;
+        height: 100%;
+        background-color: rgba(0, 0, 0, 0.5);
+        z-index: 1000;
+        overflow-y: auto;
+      "
+    >
+      <div
+        class="modal-content"
+        style="
+          background-color: white;
+          margin: 10% auto;
+          padding: 20px;
+          width: 80%;
+          max-width: 500px;
+          border-radius: 10px;
+          box-shadow: 0 4px 20px rgba(0, 0, 0, 0.2);
+        "
+      >
+        <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 15px">
+          <h2 style="margin: 0; color: var(--text-primary); font-size: 1.2rem">自定义主题</h2>
+          <button
+            id="close-theme-editor"
+            style="background: none; border: none; font-size: 1.5rem; cursor: pointer; color: var(--text-secondary)"
+          >
+            &times;
+          </button>
+        </div>
+
+        <div style="margin-bottom: 15px">
+          <label style="display: block; margin-bottom: 5px; color: var(--text-primary); font-weight: 500"
+            >主题名称</label
+          >
+          <input
+            type="text"
+            id="theme-name-input"
+            style="
+              width: 100%;
+              padding: 8px;
+              border: 1px solid var(--border-color);
+              border-radius: 5px;
+              box-sizing: border-box;
+            "
+            placeholder="我的自定义主题"
+          />
+        </div>
+
+        <div style="max-height: 400px; overflow-y: auto; padding-right: 10px">
+          <div style="margin-bottom: 20px">
+            <h3 style="margin: 0 0 10px 0; color: var(--text-primary); font-size: 1rem">主题色</h3>
+            <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 10px; margin-bottom: 10px">
+              <div>
+                <label style="display: block; margin-bottom: 5px; font-size: 0.9rem; color: var(--text-secondary)"
+                  >主色调</label
+                >
+                <input
+                  type="color"
+                  id="primary-color"
+                  style="width: 100%; height: 40px; border: none; border-radius: 5px; cursor: pointer"
+                />
+              </div>
+              <div>
+                <label style="display: block; margin-bottom: 5px; font-size: 0.9rem; color: var(--text-secondary)"
+                  >次要强调色</label
+                >
+                <input
+                  type="color"
+                  id="light-color"
+                  style="width: 100%; height: 40px; border: none; border-radius: 5px; cursor: pointer"
+                />
+              </div>
+            </div>
+            <div style="font-size: 0.8rem; color: var(--text-secondary); margin-top: 5px">
+              主题色用于按钮、图标、链接等交互元素
+            </div>
+          </div>
+
+          <div style="margin-bottom: 20px">
+            <h3 style="margin: 0 0 10px 0; color: var(--text-primary); font-size: 1rem">背景色</h3>
+            <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 10px; margin-bottom: 10px">
+              <div>
+                <label style="display: block; margin-bottom: 5px; font-size: 0.9rem; color: var(--text-secondary)"
+                  >应用背景色</label
+                >
+                <input
+                  type="color"
+                  id="ultra-light-color"
+                  style="width: 100%; height: 40px; border: none; border-radius: 5px; cursor: pointer"
+                />
+              </div>
+              <div>
+                <label style="display: block; margin-bottom: 5px; font-size: 0.9rem; color: var(--text-secondary)"
+                  >卡片背景色</label
+                >
+                <input
+                  type="color"
+                  id="deep-color"
+                  style="width: 100%; height: 40px; border: none; border-radius: 5px; cursor: pointer"
+                />
+              </div>
+            </div>
+          </div>
+
+          <div style="margin-bottom: 20px">
+            <h3 style="margin: 0 0 10px 0; color: var(--text-primary); font-size: 1rem">文字颜色</h3>
+            <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 10px; margin-bottom: 10px">
+              <div>
+                <label style="display: block; margin-bottom: 5px; font-size: 0.9rem; color: var(--text-secondary)"
+                  >主要文字</label
+                >
+                <input
+                  type="color"
+                  id="text-primary-color"
+                  style="width: 100%; height: 40px; border: none; border-radius: 5px; cursor: pointer"
+                />
+              </div>
+              <div>
+                <label style="display: block; margin-bottom: 5px; font-size: 0.9rem; color: var(--text-secondary)"
+                  >次要文字</label
+                >
+                <input
+                  type="color"
+                  id="text-secondary-color"
+                  style="width: 100%; height: 40px; border: none; border-radius: 5px; cursor: pointer"
+                />
+              </div>
+            </div>
+          </div>
+
+          <div style="margin-bottom: 20px">
+            <h3 style="margin: 0 0 10px 0; color: var(--text-primary); font-size: 1rem">边框与阴影</h3>
+            <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 10px; margin-bottom: 10px">
+              <div>
+                <label style="display: block; margin-bottom: 5px; font-size: 0.9rem; color: var(--text-secondary)"
+                  >边框颜色</label
+                >
+                <input
+                  type="color"
+                  id="border-color"
+                  style="width: 100%; height: 40px; border: none; border-radius: 5px; cursor: pointer"
+                />
+              </div>
+              <div>
+                <label style="display: block; margin-bottom: 5px; font-size: 0.9rem; color: var(--text-secondary)"
+                  >阴影颜色</label
+                >
+                <input
+                  type="color"
+                  id="shadow-color"
+                  style="width: 100%; height: 40px; border: none; border-radius: 5px; cursor: pointer"
+                />
+              </div>
+            </div>
+          </div>
+
+          <div style="margin-bottom: 20px">
+            <h3 style="margin: 0 0 10px 0; color: var(--text-primary); font-size: 1rem">状态栏与灵动岛</h3>
+            <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 10px; margin-bottom: 10px">
+              <div>
+                <label style="display: block; margin-bottom: 5px; font-size: 0.9rem; color: var(--text-secondary)"
+                  >状态栏颜色</label
+                >
+                <input
+                  type="color"
+                  id="status-bar-color"
+                  style="width: 100%; height: 40px; border: none; border-radius: 5px; cursor: pointer"
+                />
+              </div>
+              <div>
+                <label style="display: block; margin-bottom: 5px; font-size: 0.9rem; color: var(--text-secondary)"
+                  >灵动岛颜色</label
+                >
+                <input
+                  type="color"
+                  id="dynamic-island-color"
+                  style="width: 100%; height: 40px; border: none; border-radius: 5px; cursor: pointer"
+                />
+              </div>
+            </div>
+          </div>
+
+          <div style="margin-bottom: 20px">
+            <h3 style="margin: 0 0 10px 0; color: var(--text-primary); font-size: 1rem">我的消息气泡</h3>
+            <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 10px; margin-bottom: 10px">
+              <div>
+                <label style="display: block; margin-bottom: 5px; font-size: 0.9rem; color: var(--text-secondary)"
+                  >背景颜色</label
+                >
+                <input
+                  type="color"
+                  id="bubble-me-color"
+                  style="width: 100%; height: 40px; border: none; border-radius: 5px; cursor: pointer"
+                />
+              </div>
+              <div>
+                <label style="display: block; margin-bottom: 5px; font-size: 0.9rem; color: var(--text-secondary)"
+                  >文字颜色</label
+                >
+                <input
+                  type="color"
+                  id="bubble-me-text-color"
+                  style="width: 100%; height: 40px; border: none; border-radius: 5px; cursor: pointer"
+                />
+              </div>
+            </div>
+          </div>
+
+          <div style="margin-bottom: 20px">
+            <h3 style="margin: 0 0 10px 0; color: var(--text-primary); font-size: 1rem">AI消息气泡</h3>
+            <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 10px; margin-bottom: 10px">
+              <div>
+                <label style="display: block; margin-bottom: 5px; font-size: 0.9rem; color: var(--text-secondary)"
+                  >背景颜色</label
+                >
+                <input
+                  type="color"
+                  id="bubble-them-color"
+                  style="width: 100%; height: 40px; border: none; border-radius: 5px; cursor: pointer"
+                />
+              </div>
+              <div>
+                <label style="display: block; margin-bottom: 5px; font-size: 0.9rem; color: var(--text-secondary)"
+                  >文字颜色</label
+                >
+                <input
+                  type="color"
+                  id="bubble-them-text-color"
+                  style="width: 100%; height: 40px; border: none; border-radius: 5px; cursor: pointer"
+                />
+              </div>
+            </div>
+          </div>
+
+          <div style="margin-bottom: 20px">
+            <h3 style="margin: 0 0 10px 0; color: var(--text-primary); font-size: 1rem">手机边框</h3>
+            <div style="display: flex; gap: 10px; margin-bottom: 10px">
+              <div style="flex: 1">
+                <label style="display: block; margin-bottom: 5px; font-size: 0.9rem; color: var(--text-secondary)"
+                  >边框颜色</label
+                >
+                <input
+                  type="color"
+                  id="phone-frame-color"
+                  style="width: 100%; height: 40px; border: none; border-radius: 5px; cursor: pointer"
+                />
+              </div>
+            </div>
+          </div>
+
+          <div style="margin-bottom: 20px">
+            <h3 style="margin: 0 0 10px 0; color: var(--text-primary); font-size: 1rem">主题模式</h3>
+            <div style="display: flex; align-items: center">
+              <input type="checkbox" id="dark-mode-toggle" style="margin-right: 10px; width: 18px; height: 18px" />
+              <label for="dark-mode-toggle" style="color: var(--text-primary); font-size: 0.9rem">启用夜间模式</label>
+            </div>
+            <div style="font-size: 0.8rem; color: var(--text-secondary); margin-top: 5px">
+              夜间模式会将应用背景、设置页面和卡片等元素变为深色
+            </div>
+          </div>
+
+          <div style="margin-bottom: 20px">
+            <h3 style="margin: 0 0 10px 0; color: var(--text-primary); font-size: 1rem">图标样式</h3>
+            <div style="display: flex; align-items: center">
+              <input
+                type="checkbox"
+                id="single-color-icons-toggle"
+                style="margin-right: 10px; width: 18px; height: 18px"
+              />
+              <label for="single-color-icons-toggle" style="color: var(--text-primary); font-size: 0.9rem"
+                >使用单一颜色图标</label
+              >
+            </div>
+            <div style="font-size: 0.8rem; color: var(--text-secondary); margin-top: 5px">
+              启用后，微信图标和设置图标将使用主题色，而不是默认的绿色和灰色
+            </div>
+          </div>
+        </div>
+
+        <div style="display: flex; justify-content: space-between; margin-top: 20px">
+          <button
+            id="reset-theme-btn"
+            style="
+              padding: 10px 15px;
+              background: #f1f5f9;
+              color: var(--text-primary);
+              border: none;
+              border-radius: 5px;
+              cursor: pointer;
+              font-weight: 500;
+            "
+          >
+            重置
+          </button>
+          <button
+            id="save-theme-btn"
+            style="
+              padding: 10px 20px;
+              background: var(--primary-blue);
+              color: white;
+              border: none;
+              border-radius: 5px;
+              cursor: pointer;
+              font-weight: 500;
+            "
+          >
+            保存主题
+          </button>
+        </div>
+      </div>
+    </div>
+  </body>
+</html>

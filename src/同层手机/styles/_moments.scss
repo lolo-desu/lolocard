@@ -1,0 +1,287 @@
+// 朋友圈界面样式
+#moments-view {
+  background: linear-gradient(180deg, #ffffff 0%, var(--ultra-light-blue) 100%);
+  color: var(--text-primary);
+}
+
+.moments-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 0.5rem 0.75rem;
+  @include gradient-header;
+  border-bottom: 1px solid var(--border-color);
+  padding-top: 2.8125rem;
+  flex-shrink: 0;
+  position: relative;
+
+  .title {
+    font-weight: 600;
+    font-size: 1em;
+    color: var(--primary-blue);
+    position: absolute;
+    left: 50%;
+    transform: translateX(-50%);
+  }
+
+  .back-btn {
+    color: var(--primary-blue);
+    font-size: 1.2em;
+    cursor: pointer;
+    z-index: 1;
+  }
+
+  .header-action {
+    color: var(--primary-blue);
+    font-size: 1.2em;
+    cursor: pointer;
+    z-index: 1;
+    @include transition-smooth;
+  }
+}
+
+.moments-body {
+  flex-grow: 1;
+  overflow-y: auto;
+  background-color: #fff;
+}
+
+.moments-feed-header {
+  position: relative;
+  margin-bottom: 1.5625rem;
+}
+
+.moments-cover-photo {
+  width: 100%;
+  height: 14.0625rem;
+  object-fit: cover;
+  display: block;
+  cursor: pointer;
+}
+
+.moments-user-info {
+  position: absolute;
+  bottom: -0.75rem;
+  right: 0.75rem;
+  display: flex;
+  align-items: flex-end;
+  gap: 0.75rem;
+}
+
+.moments-user-name {
+  color: white;
+  font-size: 1.1em;
+  font-weight: bold;
+  text-shadow: 0 0.0625rem 0.1875rem rgba(0, 0, 0, 0.5);
+  position: relative;
+  bottom: 1.375rem;
+  cursor: pointer;
+}
+
+.moments-user-avatar {
+  width: 3.9375rem;
+  height: 3.9375rem;
+  border-radius: 0.5rem;
+  object-fit: cover;
+  cursor: pointer;
+}
+
+.user-signature {
+  position: absolute;
+  top: 4.25rem;
+  right: 0;
+  width: 14.0625rem;
+  text-align: right;
+  word-wrap: break-word;
+  line-height: 1.4;
+  color: #8a8a8a;
+  font-size: 0.8em;
+}
+
+.moments-feed-list {
+  padding: 0 0.75rem;
+  list-style: none;
+}
+
+.moment-post {
+  display: flex;
+  gap: 0.625rem;
+  padding: 1.125rem 0;
+  border-bottom: 0.0625rem solid #f0f0f0;
+
+  &:last-child {
+    border-bottom: none;
+  }
+}
+
+.post-author-avatar {
+  width: 2.375rem;
+  height: 2.375rem;
+  border-radius: 50%;
+  flex-shrink: 0;
+  object-fit: cover;
+  cursor: pointer;
+}
+
+.post-details {
+  display: flex;
+  flex-direction: column;
+  gap: 0.4375rem;
+  flex-grow: 1;
+}
+
+.post-author-name,
+.likes-section .liker-name,
+.comment-author,
+.delete-moment-btn,
+.post-meta .comment-button {
+  color: var(--primary-blue);
+}
+
+.post-content {
+  font-size: 0.9em;
+  line-height: 1.5;
+  white-space: pre-wrap;
+  word-wrap: break-word;
+  color: var(--text-primary);
+}
+
+.post-media {
+  margin-top: 0.25rem;
+}
+
+.post-media-image {
+  max-width: 10rem;
+  max-height: 10rem;
+  object-fit: contain;
+  border-radius: 0.25rem;
+}
+
+.post-media .image-desc-content {
+  background-color: rgba(240, 250, 255, 0.8);
+  border: 1px solid rgba(74, 149, 237, 0.1);
+  width: 10rem;
+  height: 10rem;
+  font-size: 0.9em;
+  color: var(--text-primary);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  text-align: center;
+  font-weight: normal;
+}
+
+.post-meta {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  color: #888;
+  font-size: 0.8em;
+
+  .post-time {
+    color: #888;
+  }
+
+  .post-actions {
+    display: flex;
+    gap: 1rem;
+  }
+
+  .like-button,
+  .comment-button {
+    background: #f7f7f7;
+    border-radius: 0.1875rem;
+    padding: 0.125rem 0.4375rem;
+    cursor: pointer;
+    font-size: 1.1em;
+    @include transition-smooth;
+
+    &:hover {
+      color: var(--primary-blue);
+    }
+  }
+}
+
+.post-interactions {
+  background: #f8faff;
+  border-radius: 0.5rem;
+  margin-top: 0.5rem;
+  font-size: 0.85em;
+  position: relative;
+  border: 1px solid rgba(74, 149, 237, 0.08);
+
+  &::before {
+    content: '';
+    position: absolute;
+    top: -0.375rem;
+    left: 0.9375rem;
+    width: 0;
+    height: 0;
+    border-left: 0.375rem solid transparent;
+    border-right: 0.375rem solid transparent;
+    border-bottom: 0.375rem solid #f8faff;
+  }
+}
+
+.likes-section {
+  padding: 0.4375rem 0.625rem;
+  background: rgba(248, 250, 255, 0.6);
+  display: flex;
+  align-items: center;
+  gap: 0.4375rem;
+  flex-wrap: wrap;
+  font-size: 0.8em;
+
+  .likes-list {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 0.25rem;
+  }
+
+  .liker-name {
+    cursor: pointer;
+
+    &:not(:last-child)::after {
+      content: ', ';
+      color: #888;
+    }
+  }
+
+  .fa-heart {
+    color: var(--primary-blue);
+  }
+}
+
+.comments-section {
+  padding: 0 0.625rem 0.4375rem;
+  list-style: none;
+  border-top: 0.0625rem solid #eaeaea;
+}
+
+.likes-section + .comments-section {
+  margin-top: -0.0625rem;
+}
+
+.comments-section li {
+  padding: 0.1875rem 0;
+}
+
+.comment-author {
+  font-weight: 500;
+  cursor: pointer;
+}
+
+.comment-content {
+  color: var(--text-primary);
+  margin-top: 0.25rem;
+}
+
+.delete-moment-btn {
+  cursor: pointer;
+  font-size: 0.8em; // 与post-meta时间戳字体大小一致
+  @include transition-smooth;
+
+  &:hover {
+    color: var(--deep-blue);
+  }
+}

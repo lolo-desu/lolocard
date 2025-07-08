@@ -1,0 +1,378 @@
+/**
+ * SCSS 混合器
+ * 用于减少样式重复，提供可复用的样式组件
+ */
+
+// ===== 主题适配混合器 =====
+
+/**
+ * 对话框主题适配
+ * @param $primary-color 主色调
+ * @param $bg-color 背景色
+ * @param $text-color 文字色
+ * @param $border-color 边框色
+ * @param $accent-color 强调色
+ */
+@mixin dialog-theme($primary-color, $bg-color, $text-color, $border-color, $accent-color: $primary-color) {
+  .dialog-header h3 {
+    color: $primary-color;
+  }
+  
+  .image-options,
+  .description-group {
+    background: $bg-color;
+    border-color: $border-color;
+  }
+  
+  .dialog-body {
+    color: $text-color;
+  }
+  
+  .radio-group label:has(input[type='radio']:checked) {
+    background: $primary-color;
+    color: white;
+  }
+  
+  .btn-primary {
+    background: $primary-color;
+    border-color: $primary-color;
+    
+    &:hover {
+      background: darken($primary-color, 10%);
+      border-color: darken($primary-color, 10%);
+    }
+  }
+  
+  .input-field:focus {
+    border-color: $accent-color;
+    box-shadow: 0 0 0 2px rgba($accent-color, 0.2);
+  }
+}
+
+/**
+ * 按钮主题适配
+ * @param $primary-color 主色调
+ * @param $hover-color 悬停色
+ */
+@mixin button-theme($primary-color, $hover-color: darken($primary-color, 10%)) {
+  background: $primary-color;
+  border-color: $primary-color;
+  color: white;
+  
+  &:hover:not(:disabled) {
+    background: $hover-color;
+    border-color: $hover-color;
+  }
+  
+  &:active {
+    background: darken($primary-color, 15%);
+    border-color: darken($primary-color, 15%);
+  }
+  
+  &:disabled {
+    background: lighten($primary-color, 30%);
+    border-color: lighten($primary-color, 30%);
+    opacity: 0.6;
+  }
+}
+
+/**
+ * 输入框主题适配
+ * @param $border-color 边框色
+ * @param $focus-color 聚焦色
+ * @param $bg-color 背景色
+ */
+@mixin input-theme($border-color, $focus-color, $bg-color: white) {
+  background: $bg-color;
+  border: 1px solid $border-color;
+  
+  &:focus {
+    border-color: $focus-color;
+    box-shadow: 0 0 0 2px rgba($focus-color, 0.2);
+    outline: none;
+  }
+  
+  &::placeholder {
+    color: lighten($border-color, 20%);
+  }
+}
+
+// ===== 布局混合器 =====
+
+/**
+ * Flexbox 居中
+ * @param $direction 方向 (row | column)
+ */
+@mixin flex-center($direction: row) {
+  display: flex;
+  flex-direction: $direction;
+  align-items: center;
+  justify-content: center;
+}
+
+/**
+ * Flexbox 间距分布
+ * @param $direction 方向 (row | column)
+ */
+@mixin flex-between($direction: row) {
+  display: flex;
+  flex-direction: $direction;
+  align-items: center;
+  justify-content: space-between;
+}
+
+/**
+ * 绝对定位居中
+ */
+@mixin absolute-center {
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+}
+
+/**
+ * 固定宽高比
+ * @param $ratio 宽高比 (如: 16/9)
+ */
+@mixin aspect-ratio($ratio) {
+  position: relative;
+  
+  &::before {
+    content: '';
+    display: block;
+    padding-top: percentage(1 / $ratio);
+  }
+  
+  > * {
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+  }
+}
+
+// ===== 动画混合器 =====
+
+/**
+ * 淡入动画
+ * @param $duration 持续时间
+ * @param $delay 延迟时间
+ */
+@mixin fade-in($duration: 0.3s, $delay: 0s) {
+  opacity: 0;
+  animation: fadeIn $duration ease-out $delay forwards;
+}
+
+@keyframes fadeIn {
+  to {
+    opacity: 1;
+  }
+}
+
+/**
+ * 滑入动画
+ * @param $direction 方向 (up | down | left | right)
+ * @param $distance 距离
+ * @param $duration 持续时间
+ */
+@mixin slide-in($direction: up, $distance: 20px, $duration: 0.3s) {
+  $transform: translateY($distance);
+  
+  @if $direction == down {
+    $transform: translateY(-$distance);
+  } @else if $direction == left {
+    $transform: translateX($distance);
+  } @else if $direction == right {
+    $transform: translateX(-$distance);
+  }
+  
+  transform: $transform;
+  opacity: 0;
+  animation: slideIn#{capitalize($direction)} $duration ease-out forwards;
+}
+
+@keyframes slideInUp {
+  to {
+    transform: translateY(0);
+    opacity: 1;
+  }
+}
+
+@keyframes slideInDown {
+  to {
+    transform: translateY(0);
+    opacity: 1;
+  }
+}
+
+@keyframes slideInLeft {
+  to {
+    transform: translateX(0);
+    opacity: 1;
+  }
+}
+
+@keyframes slideInRight {
+  to {
+    transform: translateX(0);
+    opacity: 1;
+  }
+}
+
+/**
+ * 脉冲动画
+ * @param $scale 缩放比例
+ * @param $duration 持续时间
+ */
+@mixin pulse($scale: 1.05, $duration: 1s) {
+  animation: pulse $duration ease-in-out infinite;
+  
+  @keyframes pulse {
+    0%, 100% {
+      transform: scale(1);
+    }
+    50% {
+      transform: scale($scale);
+    }
+  }
+}
+
+// ===== 响应式混合器 =====
+
+/**
+ * 媒体查询断点
+ */
+$breakpoints: (
+  'mobile': 480px,
+  'tablet': 768px,
+  'desktop': 1024px,
+  'large': 1200px
+);
+
+/**
+ * 响应式媒体查询
+ * @param $breakpoint 断点名称或具体数值
+ */
+@mixin respond-to($breakpoint) {
+  @if map-has-key($breakpoints, $breakpoint) {
+    @media (min-width: map-get($breakpoints, $breakpoint)) {
+      @content;
+    }
+  } @else {
+    @media (min-width: $breakpoint) {
+      @content;
+    }
+  }
+}
+
+/**
+ * 移动优先响应式
+ * @param $breakpoint 断点名称或具体数值
+ */
+@mixin mobile-first($breakpoint) {
+  @include respond-to($breakpoint) {
+    @content;
+  }
+}
+
+/**
+ * 桌面优先响应式
+ * @param $breakpoint 断点名称或具体数值
+ */
+@mixin desktop-first($breakpoint) {
+  @if map-has-key($breakpoints, $breakpoint) {
+    @media (max-width: map-get($breakpoints, $breakpoint) - 1px) {
+      @content;
+    }
+  } @else {
+    @media (max-width: $breakpoint - 1px) {
+      @content;
+    }
+  }
+}
+
+// ===== 工具混合器 =====
+
+/**
+ * 文本省略
+ * @param $lines 行数 (1 为单行省略)
+ */
+@mixin text-ellipsis($lines: 1) {
+  @if $lines == 1 {
+    overflow: hidden;
+    text-overflow: ellipsis;
+    white-space: nowrap;
+  } @else {
+    display: -webkit-box;
+    -webkit-line-clamp: $lines;
+    -webkit-box-orient: vertical;
+    overflow: hidden;
+  }
+}
+
+/**
+ * 清除浮动
+ */
+@mixin clearfix {
+  &::after {
+    content: '';
+    display: table;
+    clear: both;
+  }
+}
+
+/**
+ * 隐藏滚动条
+ */
+@mixin hide-scrollbar {
+  scrollbar-width: none; // Firefox
+  -ms-overflow-style: none; // IE 10+
+  
+  &::-webkit-scrollbar {
+    display: none; // Chrome, Safari, Opera
+  }
+}
+
+/**
+ * 自定义滚动条
+ * @param $width 宽度
+ * @param $track-color 轨道颜色
+ * @param $thumb-color 滑块颜色
+ */
+@mixin custom-scrollbar($width: 8px, $track-color: #f1f1f1, $thumb-color: #c1c1c1) {
+  &::-webkit-scrollbar {
+    width: $width;
+  }
+  
+  &::-webkit-scrollbar-track {
+    background: $track-color;
+    border-radius: $width / 2;
+  }
+  
+  &::-webkit-scrollbar-thumb {
+    background: $thumb-color;
+    border-radius: $width / 2;
+    
+    &:hover {
+      background: darken($thumb-color, 10%);
+    }
+  }
+}
+
+/**
+ * 阴影效果
+ * @param $level 阴影级别 (1-5)
+ */
+@mixin shadow($level: 1) {
+  $shadows: (
+    1: 0 1px 3px rgba(0, 0, 0, 0.12),
+    2: 0 1px 6px rgba(0, 0, 0, 0.15),
+    3: 0 3px 10px rgba(0, 0, 0, 0.2),
+    4: 0 6px 20px rgba(0, 0, 0, 0.25),
+    5: 0 10px 30px rgba(0, 0, 0, 0.3)
+  );
+  
+  box-shadow: map-get($shadows, $level);
+}

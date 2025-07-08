@@ -1,0 +1,48 @@
+// 删除模式样式（适配蓝白主题）
+#wechat-view.delete-mode .wechat-body {
+  padding-left: 25px; // 为删除按钮留出空间
+  padding-right: 25px;
+}
+
+#wechat-view.delete-mode .message-row,
+#wechat-view.delete-mode .timestamp-row,
+#wechat-view.delete-mode .event-log-row {
+  cursor: pointer;
+  position: relative;
+}
+
+// 删除按钮样式 - 适配蓝白主题
+#wechat-view.delete-mode [data-log-index]::before {
+  content: '×'; // 使用数学乘号，更圆润
+  position: absolute;
+  left: -22px;
+  top: 50%;
+  transform: translateY(-50%);
+  background: linear-gradient(135deg, var(--blue-gradient-start) 0%, var(--primary-blue) 100%);
+  color: white;
+  border-radius: 50%;
+  width: 16px;
+  height: 16px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 12px;
+  font-weight: normal;
+  box-shadow: 0 2px 6px var(--shadow-color-rgba);
+  @include transition-smooth;
+  line-height: 1;
+  text-align: center;
+  font-family: Arial, sans-serif;
+}
+
+// 我的消息删除按钮在右侧
+#wechat-view.delete-mode .message-row.me[data-log-index]::before {
+  left: auto;
+  right: -22px;
+}
+
+// 鼠标悬停效果
+#wechat-view.delete-mode [data-log-index]:hover::before {
+  transform: translateY(-50%) scale(1.1);
+  box-shadow: 0 4px 8px var(--shadow-color-rgba);
+}

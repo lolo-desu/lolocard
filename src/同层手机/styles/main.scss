@@ -1,0 +1,146 @@
+// 主样式入口文件
+// 导入所有样式模块
+
+// 1. 变量和混合 - 必须最先导入
+@import 'variables';
+@import 'mixins';
+
+// 2. 基础样式
+@import 'base';
+
+// 3. 手机框架和结构
+@import 'phone-frame';
+@import 'status-bar';
+
+// 4. 聊天界面相关
+@import 'wechat-chat';
+@import 'message-bubbles';
+@import 'special-messages';
+
+// 5. 输入和交互
+@import 'input-area';
+@import 'panels';
+@import 'delete-mode';
+
+// 6. 应用视图
+@import 'app-view';
+@import 'settings';
+@import 'moments';
+
+// 7. 主题和模式
+@import 'dark-mode';
+
+// 8. 对话框样式
+@import 'dialogs';
+
+// 9. 表单控件样式
+@import 'checkbox';
+
+// 全局样式补充
+* {
+  box-sizing: border-box;
+}
+
+// 确保所有动画都是平滑的
+* {
+  transition-timing-function: ease;
+}
+
+// 滚动条样式
+::-webkit-scrollbar {
+  width: 4px;
+}
+
+::-webkit-scrollbar-track {
+  background: transparent;
+}
+
+::-webkit-scrollbar-thumb {
+  background: var(--border-color);
+  border-radius: 2px;
+}
+
+::-webkit-scrollbar-thumb:hover {
+  background: var(--text-secondary);
+}
+
+// 隐藏特定元素的滚动条
+.wechat-body::-webkit-scrollbar,
+.moments-body::-webkit-scrollbar,
+.settings-body::-webkit-scrollbar,
+.panel-view::-webkit-scrollbar,
+.app-screen::-webkit-scrollbar,
+.file-content::-webkit-scrollbar,
+.message-bubble::-webkit-scrollbar,
+.voice-text-content::-webkit-scrollbar,
+.image-desc-content::-webkit-scrollbar,
+.event-description::-webkit-scrollbar,
+.recall-content::-webkit-scrollbar {
+  display: none;
+}
+
+// Firefox滚动条隐藏
+.wechat-body,
+.moments-body,
+.settings-body,
+.panel-view,
+.app-screen,
+.file-content,
+.message-bubble,
+.voice-text-content,
+.image-desc-content,
+.event-description,
+.recall-content {
+  scrollbar-width: none; /* Firefox */
+}
+
+// 选择文本的颜色
+::selection {
+  background: var(--primary-blue);
+  color: white;
+}
+
+::-moz-selection {
+  background: var(--primary-blue);
+  color: white;
+}
+
+// 焦点样式
+:focus {
+  outline: none;
+}
+
+// 禁用文本选择的元素
+.no-select {
+  -webkit-user-select: none;
+  -moz-user-select: none;
+  -ms-user-select: none;
+  user-select: none;
+}
+
+// 移动端响应式调整 - 参考原版本的简洁方法
+@media (max-width: $mobile-breakpoint) {
+  // 简单的移动端适配，保持原版本的方法
+  body {
+    padding: 0.5rem; // 减少边距但保持一些空间
+  }
+
+  .phone-frame {
+    max-width: 100%;
+    width: 100%;
+  }
+
+  // 移动端滚动优化
+  .wechat-body,
+  .settings-body,
+  .moments-body,
+  .app-screen {
+    -webkit-overflow-scrolling: touch;
+  }
+
+  // 防止iOS缩放
+  input,
+  textarea {
+    font-size: 16px;
+  }
+}

@@ -1,0 +1,123 @@
+// 响应式根字体大小设置
+html {
+  font-size: 16px;
+}
+
+@media (max-width: $mobile-breakpoint) {
+  html {
+    font-size: calc(100vw / 360 * 16);
+  }
+}
+
+// 基础样式
+body {
+  margin: 0;
+  padding: 0.25rem;
+  min-height: 100vh;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  box-sizing: border-box;
+  background: transparent;
+  font-family: 'MyCustomFont', sans-serif;
+}
+
+// 通用重置
+* {
+  box-sizing: border-box;
+  // 移除WebView中的蓝色点击高亮效果
+  -webkit-tap-highlight-color: rgba(0, 0, 0, 0);
+  // 确保所有元素都有平滑过渡
+  transition-timing-function: ease;
+}
+
+// 通用动画
+@keyframes fadeIn {
+  from {
+    opacity: 0;
+    transform: translateY(10px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+@keyframes fadeOut {
+  from {
+    opacity: 1;
+  }
+  to {
+    opacity: 0;
+  }
+}
+
+@keyframes slideIn {
+  from {
+    opacity: 0;
+    transform: translateY(25px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+@keyframes messageSlideIn {
+  from {
+    opacity: 0;
+    transform: translateY(25px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+// 通用类
+.fade-out {
+  animation: fadeOut 0.5s forwards;
+}
+
+.new-message {
+  animation: slideIn 0.5s cubic-bezier(0.22, 0.61, 0.36, 1);
+}
+
+// 隐藏元素
+.hidden {
+  display: none !important;
+}
+
+// 可见性控制
+.invisible {
+  visibility: hidden;
+  opacity: 0;
+}
+
+.visible {
+  visibility: visible;
+  opacity: 1;
+}
+
+// 针对特定可点击元素的点击高亮移除
+a,
+button,
+div[onclick],
+span[onclick],
+.clickable,
+.btn,
+.dialog-btn,
+.app-icon,
+.message-bubble,
+.contact-item,
+.moment-item,
+.sticker-item,
+.checkbox-btn {
+  -webkit-tap-highlight-color: rgba(0, 0, 0, 0) !important;
+  -webkit-touch-callout: none;
+  -webkit-user-select: none;
+  -khtml-user-select: none;
+  -moz-user-select: none;
+  -ms-user-select: none;
+  user-select: none;
+}

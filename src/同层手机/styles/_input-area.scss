@@ -1,0 +1,96 @@
+// 底部输入区域样式
+.wechat-input-area {
+  flex-shrink: 0;
+  background: var(--header-bg);
+  position: relative;
+  z-index: 10;
+}
+
+.wechat-footer {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+  padding: 0.75rem;
+  border-top: 1px solid var(--border-color);
+  box-sizing: border-box;
+  flex-shrink: 0;
+  @include gradient-header;
+  position: relative;
+  z-index: 10;
+
+  .footer-icon {
+    font-size: 1.4em;
+    color: var(--primary-blue) !important;
+    cursor: pointer;
+    @include transition-smooth;
+    padding: 0.3rem;
+    border-radius: 0.5rem;
+    flex-shrink: 0;
+
+    &:hover {
+      background: var(--ultra-light-blue);
+      transform: scale(1.1);
+    }
+  }
+
+  .text-input {
+    flex-grow: 1;
+    border: 1px solid var(--border-color);
+    background: #ffffff;
+    padding: 0.75rem 1rem;
+    border-radius: 1.5rem;
+    font-size: 0.9em;
+    @include transition-smooth;
+    color: var(--text-primary);
+    min-width: 0;
+
+    &:focus {
+      outline: none;
+      border-color: var(--primary-blue);
+      box-shadow: 0 0 0 3px var(--shadow-color-rgba);
+    }
+
+    &::placeholder {
+      color: var(--text-secondary);
+    }
+  }
+
+  .send-btn {
+    background: var(--primary-blue);
+    color: white;
+    border: none;
+    width: 2rem;
+    height: 2rem;
+    border-radius: 50%;
+    font-size: 1em;
+    cursor: pointer;
+    box-shadow: 0 4px 12px var(--shadow-color-rgba);
+    @include transition-smooth;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    padding: 0;
+    line-height: 1;
+    flex-shrink: 0;
+
+    &:hover {
+      transform: translateY(-2px);
+      box-shadow: 0 6px 16px var(--shadow-color-rgba);
+    }
+  }
+}
+
+// 发送按钮使用微信绿色
+.wechat-footer .send-btn {
+  background: linear-gradient(135deg, #09e675 0%, #07c160 50%, #06ad56 100%);
+}
+
+// 单色图标模式下的发送按钮
+.single-color-icon .wechat-footer .send-btn {
+  background: linear-gradient(
+    135deg,
+    var(--primary-gradient-light) 0%,
+    var(--primary-blue) 50%,
+    var(--primary-gradient-dark) 100%
+  );
+}

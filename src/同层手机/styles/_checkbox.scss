@@ -1,0 +1,283 @@
+/**
+ * 触屏友好的Checkbox按钮样式
+ * 完美适配多主题系统：blue、pink、white、custom
+ * 基于Material Design，支持主题自动切换
+ */
+
+// 隐藏原生checkbox
+input[type='checkbox'] {
+  position: absolute;
+  opacity: 0;
+  width: 0;
+  height: 0;
+  pointer-events: none;
+}
+
+// Checkbox按钮容器 - 融合界面风格
+.checkbox-button {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  min-height: 44px; // 触屏友好的最小点击区域
+  padding: 0.75rem 1.25rem;
+  margin: 0.25rem;
+  border: 1px solid var(--checkbox-border-unchecked);
+  border-radius: 1rem; // 与对话框圆角一致
+  background: var(--checkbox-bg-unchecked);
+  color: var(--checkbox-text-unchecked);
+  font-size: 0.9rem;
+  font-weight: 500;
+  text-align: center;
+  cursor: pointer;
+  user-select: none;
+  @include transition-smooth; // 使用统一的过渡效果
+  box-shadow: var(--checkbox-shadow-unchecked);
+  position: relative;
+
+  // 波纹效果已移除
+
+  // 悬停效果（桌面端）
+  @media (hover: hover) {
+    &:hover {
+      background: var(--checkbox-hover-bg);
+      border-color: var(--primary-blue);
+      transform: translateY(-1px);
+      box-shadow: 0 4px 8px rgba(0, 0, 0, 0.15);
+    }
+  }
+
+  // 激活效果已移除
+
+  // 选中状态 - 边框高亮设计
+  &.checked {
+    background: var(--checkbox-bg-unchecked); // 保持背景色不变
+    border: 2px solid var(--checkbox-border-checked); // 加粗边框
+    color: var(--checkbox-border-checked); // 文字使用主题色
+    box-shadow: var(--checkbox-shadow-checked);
+    font-weight: 600; // 加粗文字
+
+    // 选中状态的悬停效果
+    @media (hover: hover) {
+      &:hover {
+        background: var(--checkbox-hover-bg);
+        border-color: var(--checkbox-border-checked);
+        transform: translateY(-1px);
+        box-shadow: 0 6px 16px var(--checkbox-shadow-checked);
+      }
+    }
+
+    // 波纹效果已移除
+
+    // 选中图标
+    &::after {
+      content: '✓';
+      position: absolute;
+      right: 0.5rem;
+      top: 50%;
+      transform: translateY(-50%);
+      font-size: 0.9rem;
+      font-weight: bold;
+      color: var(--checkbox-border-checked);
+      opacity: 1;
+    }
+  }
+
+  // 禁用状态
+  &:disabled,
+  &.disabled {
+    opacity: 0.5;
+    cursor: not-allowed;
+    pointer-events: none;
+  }
+
+  // 焦点状态（键盘导航）
+  &:focus-within {
+    outline: 2px solid var(--primary-blue);
+    outline-offset: 2px;
+  }
+}
+
+// 特殊尺寸变体
+.checkbox-button {
+  // 小尺寸
+  &.size-small {
+    min-height: 36px;
+    padding: 0.5rem 1rem;
+    font-size: 0.8rem;
+    border-radius: 0.5rem;
+  }
+
+  // 大尺寸
+  &.size-large {
+    min-height: 52px;
+    padding: 1rem 1.5rem;
+    font-size: 1rem;
+    border-radius: 1rem;
+  }
+
+  // 全宽
+  &.full-width {
+    width: 100%;
+    margin: 0.25rem 0;
+  }
+}
+
+// Checkbox组容器
+.checkbox-group {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.5rem;
+  margin: 0.5rem 0;
+
+  // 垂直布局
+  &.vertical {
+    flex-direction: column;
+
+    .checkbox-button {
+      margin: 0.25rem 0;
+    }
+  }
+
+  // 水平布局（默认）
+  &.horizontal {
+    flex-direction: row;
+
+    .checkbox-button {
+      flex: 1;
+      min-width: 0;
+    }
+  }
+
+  // 网格布局
+  &.grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(120px, 1fr));
+    gap: 0.5rem;
+  }
+}
+
+// 完整主题系统适配
+// 粉色主题适配
+body[data-theme='pink'] .checkbox-button {
+  --checkbox-border-checked: #f372ad;
+  --checkbox-text-unchecked: rgb(186, 139, 162);
+  --checkbox-border-unchecked: #e1cbd5;
+  --checkbox-hover-bg: #fde8f4;
+  --checkbox-shadow-checked: 0 4px 12px rgba(226, 74, 144, 0.3);
+}
+
+// 微信主题适配 - 使用灰色系，不使用绿色
+body[data-theme='white'] .checkbox-button {
+  --checkbox-border-checked: #666666; // 使用深灰色而不是绿色
+  --checkbox-text-unchecked: #333333;
+  --checkbox-border-unchecked: #e0e0e0;
+  --checkbox-hover-bg: #f8f8f8;
+  --checkbox-shadow-checked: 0 4px 12px rgba(102, 102, 102, 0.3);
+}
+
+// 自定义主题适配（使用CSS变量自动适配）
+body[data-theme='custom'] .checkbox-button {
+  --checkbox-border-checked: var(--primary-blue);
+  --checkbox-text-unchecked: var(--text-primary);
+  --checkbox-border-unchecked: var(--border-color);
+  --checkbox-hover-bg: var(--ultra-light-blue);
+  --checkbox-shadow-checked: 0 4px 12px var(--shadow-color-rgba);
+}
+
+// 动画效果已移除 - 用户反馈动画效果难看
+
+// 暗色模式支持（与主题系统兼容）
+body.dark-mode .checkbox-button {
+  --checkbox-bg-unchecked: #374151;
+  --checkbox-border-unchecked: #6b7280;
+  --checkbox-text-unchecked: #d1d5db;
+  --checkbox-hover-bg: #4b5563;
+  --checkbox-shadow-unchecked: 0 2px 4px rgba(0, 0, 0, 0.3);
+}
+
+@media (prefers-color-scheme: dark) {
+  .checkbox-button {
+    --checkbox-bg-unchecked: #374151;
+    --checkbox-border-unchecked: #6b7280;
+    --checkbox-text-unchecked: #d1d5db;
+    --checkbox-hover-bg: #4b5563;
+    --checkbox-shadow-unchecked: 0 2px 4px rgba(0, 0, 0, 0.3);
+  }
+}
+
+// 暗色模式下的主题适配
+body.dark-mode[data-theme='pink'] .checkbox-button {
+  --checkbox-bg-unchecked: #4c1d3d;
+  --checkbox-border-unchecked: #8b647a;
+  --checkbox-border-checked: #f372ad;
+  --checkbox-text-unchecked: #f3d5e7;
+  --checkbox-hover-bg: #5d2449;
+}
+
+body.dark-mode[data-theme='white'] .checkbox-button {
+  --checkbox-bg-unchecked: #2a2a2a;
+  --checkbox-border-unchecked: #3c3c3c;
+  --checkbox-border-checked: #cccccc; // 暗色模式下使用浅灰色
+  --checkbox-text-unchecked: #e0e0e0;
+  --checkbox-hover-bg: #3c3c3c;
+}
+
+// 表情包checkbox的主题适配
+.sticker-checkbox-button {
+  // 继承基础checkbox的主题变量
+  border-color: var(--checkbox-border-unchecked);
+  background: var(--checkbox-bg-unchecked);
+
+  &.checked {
+    border-color: var(--checkbox-border-checked);
+
+    &::after {
+      color: var(--checkbox-border-checked);
+    }
+  }
+
+  @media (hover: hover) {
+    &:hover {
+      border-color: var(--checkbox-border-checked);
+      background: var(--checkbox-hover-bg);
+    }
+  }
+}
+
+// 表情包项目选中状态的主题适配
+.feature-item:has(.sticker-checkbox:checked),
+.sticker-item:has(.sticker-checkbox:checked) {
+  border-color: var(--checkbox-border-checked);
+  box-shadow: 0 0 0 2px var(--shadow-color-rgba);
+  background: var(--checkbox-hover-bg);
+
+  .feature-label,
+  .sticker-label {
+    color: var(--checkbox-border-checked);
+  }
+}
+
+// 移动端优化
+@media (max-width: 768px) {
+  .checkbox-button {
+    min-height: 48px; // 更大的触摸区域
+    padding: 0.875rem 1.5rem;
+    font-size: 0.95rem;
+  }
+
+  .checkbox-group.horizontal {
+    flex-direction: column;
+
+    .checkbox-button {
+      width: 100%;
+    }
+  }
+
+  // 移动端表情包checkbox优化
+  .sticker-checkbox-button {
+    width: 1.75rem;
+    height: 1.75rem;
+    top: 0.125rem;
+    right: 0.125rem;
+  }
+}

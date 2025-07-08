@@ -1,0 +1,160 @@
+// 消息气泡完全重新设计
+.message-bubble {
+  position: relative;
+  padding: 0.75rem 1rem;
+  border-radius: 1.2rem;
+  max-width: 65%;
+  font-size: 0.9em;
+  line-height: 1.4;
+  word-wrap: break-word;
+  user-select: none;
+  @include bubble-shadow;
+  @include transition-smooth;
+
+  // 移除原有小三角
+  &::after {
+    display: none;
+  }
+
+  // 图片样式
+  img:not(.sticker-img) {
+    max-width: 10rem;
+    max-height: 10rem;
+    display: block;
+    border-radius: 0.5rem;
+  }
+}
+
+// 对方的气泡 - 白色主题
+.message-row.them .message-bubble {
+  background: linear-gradient(315deg, #f8faff 0%, #ffffff 100%);
+  color: var(--wechat-bubble-them-text);
+  border: 1px solid var(--border-color);
+  border-bottom-left-radius: 0.4rem;
+}
+
+// 我的气泡 - 蓝色渐变
+.message-row.me .message-bubble {
+  @include gradient-blue;
+  color: var(--wechat-bubble-me-text);
+  border-bottom-right-radius: 0.4rem;
+  box-shadow: 0 4px 12px var(--shadow-color-rgba);
+}
+
+// 消息撤回提示样式
+.recall-notice-container {
+  display: inline-flex;
+  flex-direction: column;
+  align-items: center;
+}
+
+.recall-notice-text {
+  background: linear-gradient(135deg, var(--soft-blue) 0%, var(--light-blue) 100%);
+  color: #ffffff;
+  font-size: 0.7em;
+  padding: 0.3rem 0.8rem;
+  border-radius: 1rem;
+  cursor: pointer;
+  @include transition-smooth;
+
+  &:hover {
+    transform: translateY(-1px);
+    box-shadow: 0 4px 8px var(--shadow-color-rgba);
+  }
+}
+
+.recall-content {
+  color: #888;
+  font-size: 0.75em;
+  padding: 0;
+  max-height: 0;
+  overflow: hidden;
+  transition: max-height 0.3s ease-out, padding 0.3s ease-out;
+
+  &.expanded {
+    max-height: 6.25rem;
+    padding: 0.3125rem 0 0 0;
+  }
+}
+
+// 剧情时间日志样式
+.event-log-row {
+  text-align: center;
+  margin: 0.5rem 0;
+}
+
+.event-log-container {
+  display: inline-flex;
+  flex-direction: column;
+  align-items: center;
+}
+
+.event-time-text {
+  background: linear-gradient(135deg, var(--soft-blue) 0%, var(--light-blue) 100%);
+  color: #ffffff;
+  font-weight: 500;
+  box-shadow: 0 2px 6px var(--shadow-color-rgba);
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 0.7em;
+  padding: 0.3rem 0.8rem;
+  border-radius: 1rem;
+  @include transition-smooth;
+
+  // 不同颜色主题下的微弱彩色阴影
+  &.blue-theme {
+    box-shadow: 0 2px 6px rgba(114, 173, 243, 0.4);
+  }
+
+  &.pink-theme {
+    box-shadow: 0 2px 6px rgba(243, 114, 182, 0.4);
+  }
+
+  &.green-theme {
+    box-shadow: 0 2px 6px rgba(72, 187, 120, 0.4);
+  }
+
+  &.purple-theme {
+    box-shadow: 0 2px 6px rgba(159, 122, 234, 0.4);
+  }
+
+  &.orange-theme {
+    box-shadow: 0 2px 6px rgba(237, 137, 54, 0.4);
+  }
+
+  // 系统消息样式
+  &.system-message {
+    background: linear-gradient(135deg, #6b7280 0%, #4b5563 100%);
+    padding: 0.5rem 1rem;
+    border-radius: 1rem;
+    color: white;
+    font-size: 0.85em;
+    max-width: 80%;
+    text-align: center;
+  }
+
+  &.has-desc {
+    cursor: pointer;
+  }
+}
+
+.event-description {
+  color: #888;
+  font-size: 0.75em;
+  padding: 0;
+  max-height: 0;
+  overflow: hidden;
+  transition: max-height 0.3s ease-out, padding 0.3s ease-out;
+  margin-top: 0.3rem;
+
+  &.expanded {
+    max-height: 6.25rem;
+    padding: 0.5rem 0.8rem;
+    background-color: rgba(255, 255, 255, 0.9);
+    border-radius: 0.8rem;
+    box-shadow: 0 1px 4px rgba(0, 0, 0, 0.1);
+    color: var(--text-primary);
+    font-weight: 500;
+  }
+}

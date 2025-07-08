@@ -1,0 +1,1700 @@
+// 自定义对话框样式（无遮罩，纯阴影分离）
+.custom-dialog-overlay {
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  background-color: transparent; // 移除背景色
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  z-index: 1000;
+  animation: fadeIn 0.2s ease;
+  // 移除backdrop-filter和border-radius
+}
+
+.custom-dialog {
+  background: var(--header-bg);
+  border-radius: 1rem;
+  // 增强阴影效果来分离层级
+  box-shadow: 0 25px 50px rgba(0, 0, 0, 0.25), 0 15px 30px rgba(0, 0, 0, 0.15), 0 8px 16px rgba(0, 0, 0, 0.1),
+    0 4px 8px rgba(0, 0, 0, 0.05);
+  width: 85%;
+  max-width: 18rem;
+  overflow: hidden;
+  display: flex;
+  flex-direction: column;
+  animation: dialogSlideIn 0.3s ease;
+  border: 1px solid var(--border-color);
+  transform: translateY(0);
+}
+
+.dialog-header {
+  padding: 1rem;
+  text-align: center;
+  border-bottom: 1px solid var(--border-color);
+  background: var(--header-bg);
+}
+
+.dialog-title {
+  margin: 0;
+  font-size: 1.1rem;
+  font-weight: 500;
+  color: var(--text-primary);
+}
+
+.dialog-body {
+  padding: 1.25rem 1rem;
+  color: var(--text-primary);
+  font-size: 0.9rem;
+  line-height: 1.5;
+  text-align: center;
+}
+
+.dialog-input-container {
+  margin-top: 0.75rem;
+
+  input,
+  textarea {
+    width: 100%;
+    padding: 0.75rem;
+    border: 1px solid var(--border-color);
+    border-radius: 0.5rem;
+    font-size: 0.9rem;
+    color: var(--text-primary);
+    background-color: var(--input-bg);
+    outline: none;
+
+    &:focus {
+      border-color: var(--primary-blue);
+      box-shadow: 0 0 0 2px rgba(114, 173, 243, 0.2);
+    }
+  }
+}
+
+.dialog-footer {
+  display: flex;
+  border-top: 1px solid var(--border-color);
+}
+
+.dialog-button {
+  flex: 1;
+  padding: 0.875rem;
+  border: none;
+  background: transparent;
+  font-size: 0.95rem;
+  font-weight: 500;
+  cursor: pointer;
+  transition: background-color 0.2s ease;
+  color: var(--primary-blue);
+
+  &:not(:last-child) {
+    border-right: 1px solid var(--border-color);
+  }
+
+  &:hover {
+    background-color: rgba(114, 173, 243, 0.1);
+  }
+
+  &:active {
+    background-color: rgba(114, 173, 243, 0.2);
+  }
+
+  &.primary-button {
+    color: var(--primary-blue);
+    font-weight: 600;
+  }
+
+  &.cancel-button {
+    color: var(--text-secondary);
+  }
+}
+
+// 对话框动画
+@keyframes dialogSlideIn {
+  from {
+    opacity: 0;
+    transform: translateY(20px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+@keyframes dialogSlideOut {
+  from {
+    opacity: 1;
+    transform: translateY(0);
+  }
+  to {
+    opacity: 0;
+    transform: translateY(20px);
+  }
+}
+
+// 对话框关闭动画
+.dialog-closing {
+  animation: dialogSlideOut 0.2s ease forwards;
+}
+
+.overlay-closing {
+  animation: fadeOut 0.2s ease forwards;
+}
+
+// ===== 综合对话框样式（与现有对话框保持一致）=====
+
+// 综合对话框遮罩层（无遮罩，纯阴影分离）
+.mobile-dialog-overlay {
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  background-color: transparent; // 移除背景色
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  z-index: 1000;
+  animation: fadeIn 0.2s ease;
+  // 移除backdrop-filter和border-radius
+}
+
+// 对话框阴影主题适配
+body.dark-mode .mobile-dialog,
+body.dark-mode .custom-dialog,
+body.dark-mode .sticker-manager-container {
+  box-shadow: 0 30px 60px rgba(0, 0, 0, 0.5), 0 20px 40px rgba(0, 0, 0, 0.3), 0 10px 20px rgba(0, 0, 0, 0.2),
+    0 5px 10px rgba(0, 0, 0, 0.15);
+}
+
+body[data-theme='pink'] .mobile-dialog,
+body[data-theme='pink'] .custom-dialog,
+body[data-theme='pink'] .sticker-manager-container {
+  box-shadow: 0 30px 60px rgba(216, 51, 132, 0.3), 0 20px 40px rgba(216, 51, 132, 0.2), 0 10px 20px rgba(0, 0, 0, 0.15),
+    0 5px 10px rgba(0, 0, 0, 0.1);
+}
+
+body[data-theme='white'] .mobile-dialog,
+body[data-theme='white'] .custom-dialog,
+body[data-theme='white'] .sticker-manager-container {
+  box-shadow: 0 30px 60px rgba(0, 0, 0, 0.2), 0 20px 40px rgba(0, 0, 0, 0.15), 0 10px 20px rgba(0, 0, 0, 0.1),
+    0 5px 10px rgba(0, 0, 0, 0.05);
+}
+
+// 综合对话框主体（增强阴影分离层级）
+.mobile-dialog {
+  background: var(--header-bg);
+  border-radius: 1rem;
+  // 增强阴影效果来分离层级
+  box-shadow: 0 30px 60px rgba(0, 0, 0, 0.3), 0 20px 40px rgba(0, 0, 0, 0.2), 0 10px 20px rgba(0, 0, 0, 0.15),
+    0 5px 10px rgba(0, 0, 0, 0.1);
+  overflow: hidden;
+  display: flex;
+  flex-direction: column;
+  animation: dialogSlideIn 0.3s ease;
+  border: 1px solid var(--border-color);
+  transform: translateY(0);
+  position: relative;
+}
+
+// 朋友圈对话框尺寸（与现有对话框保持一致）
+.moment-dialog {
+  width: 90%;
+  max-width: 20rem; // 稍大一些以容纳更多内容
+}
+
+// 时间跳跃对话框尺寸
+.time-jump-dialog {
+  width: 85%;
+  max-width: 18rem; // 与现有对话框一致
+}
+
+// 综合对话框头部（动态适配主题颜色）
+.mobile-dialog .dialog-header {
+  padding: 1.2rem 1rem 1rem;
+  text-align: center;
+  border-bottom: 1px solid var(--border-color);
+  background: var(--header-bg);
+
+  h3 {
+    margin: 0;
+    font-size: 1.1rem;
+    font-weight: 600;
+    color: var(--text-primary);
+    letter-spacing: 0.3px;
+  }
+}
+
+// 综合对话框主体内容（与现有样式一致）
+.mobile-dialog .dialog-body {
+  padding: 1.25rem 1rem;
+  color: var(--text-primary);
+  font-size: 0.9rem;
+  line-height: 1.5;
+  max-height: 60vh;
+  overflow-y: auto;
+}
+
+// 综合对话框底部（与现有样式一致）
+.mobile-dialog .dialog-footer {
+  display: flex;
+  border-top: 1px solid var(--border-color);
+}
+
+// 综合对话框表单组件（与现有样式一致）
+.mobile-dialog .form-group {
+  margin-bottom: 0.75rem;
+
+  &:last-child {
+    margin-bottom: 0;
+  }
+
+  label {
+    display: block;
+    margin-bottom: 0.5rem;
+    font-weight: 500;
+    color: var(--text-primary);
+    font-size: 0.9rem;
+  }
+
+  input[type='text'],
+  input[type='url'],
+  textarea {
+    width: 100%;
+    padding: 0.75rem;
+    border: 1px solid var(--border-color);
+    border-radius: 0.5rem;
+    font-size: 0.9rem;
+    color: var(--text-primary);
+    background-color: white;
+    outline: none;
+    box-sizing: border-box;
+
+    &:focus {
+      border-color: var(--primary-blue);
+      box-shadow: 0 0 0 2px rgba(114, 173, 243, 0.2);
+    }
+  }
+
+  textarea {
+    resize: vertical;
+    min-height: 4rem;
+    font-family: inherit;
+  }
+
+  input[type='checkbox'] {
+    margin-right: 0.5rem;
+    transform: scale(1.1);
+  }
+}
+
+// 单选按钮组（现代按钮组样式）
+.mobile-dialog .radio-group {
+  display: flex;
+  margin-top: 0.5rem;
+  border-radius: 0.5rem;
+  overflow: hidden;
+  border: 1px solid var(--border-color);
+
+  label {
+    flex: 1;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    margin-bottom: 0;
+    font-weight: 500;
+    cursor: pointer;
+    font-size: 0.85rem;
+    padding: 0.5rem 0.75rem;
+    background: white;
+    color: var(--text-secondary);
+    transition: all 0.2s ease;
+    border-right: 1px solid var(--border-color);
+    position: relative;
+
+    &:last-child {
+      border-right: none;
+    }
+
+    // 隐藏原生单选按钮
+    input[type='radio'] {
+      position: absolute;
+      opacity: 0;
+      width: 0;
+      height: 0;
+    }
+
+    // 选中状态
+    &:has(input[type='radio']:checked) {
+      background: var(--primary-blue);
+      color: white;
+      font-weight: 600;
+    }
+
+    // 悬停效果
+    &:hover:not(:has(input[type='radio']:checked)) {
+      background: var(--ultra-light-blue);
+      color: var(--primary-blue);
+    }
+  }
+}
+
+// 图片选项区域（动态适配主题颜色）
+.mobile-dialog .image-options {
+  background: var(--ultra-light-blue);
+  padding: 0.75rem;
+  border-radius: 0.5rem;
+  margin-top: 0.5rem;
+  border: 1px solid var(--border-color);
+
+  .form-group {
+    margin-bottom: 0.5rem;
+
+    &:last-child {
+      margin-bottom: 0;
+    }
+  }
+}
+
+// 描述组区域（动态适配主题颜色）
+.mobile-dialog .description-group {
+  background: var(--ultra-light-blue);
+  padding: 0.75rem;
+  border-radius: 0.5rem;
+  margin-top: 0.5rem;
+  border: 1px solid var(--border-color);
+
+  .form-group {
+    margin-bottom: 0;
+  }
+}
+
+// 综合对话框按钮（与现有alert按钮样式一致）
+.mobile-dialog .dialog-btn {
+  flex: 1;
+  padding: 0.875rem;
+  border: none;
+  background: transparent;
+  font-size: 0.95rem;
+  font-weight: 500;
+  cursor: pointer;
+  transition: background-color 0.2s ease;
+  color: var(--primary-blue);
+
+  &:not(:last-child) {
+    border-right: 1px solid var(--border-color);
+  }
+
+  &:hover {
+    background-color: var(--ultra-light-blue);
+  }
+
+  &:active {
+    background-color: var(--soft-blue);
+  }
+
+  // 移除圆角，保持与现有样式一致
+  &.dialog-btn-cancel,
+  &.dialog-btn-confirm {
+    border-radius: 0;
+  }
+
+  // 最后一个按钮添加右下圆角
+  &:last-child {
+    border-bottom-right-radius: 1rem;
+  }
+
+  // 第一个按钮添加左下圆角
+  &:first-child {
+    border-bottom-left-radius: 1rem;
+  }
+}
+
+// 综合对话框关闭动画（与现有样式一致）
+.mobile-dialog.dialog-closing {
+  animation: dialogSlideOut 0.3s ease forwards;
+}
+
+// ===== 主题特殊适配 =====
+
+// 夜间模式适配
+body.dark-mode .mobile-dialog {
+  background: linear-gradient(135deg, #2c2c2c 0%, #1a1a1a 100%);
+  border-color: #3c3c3c;
+  box-shadow: 0 8px 24px rgba(0, 0, 0, 0.4), 0 4px 12px rgba(0, 0, 0, 0.3);
+
+  .dialog-header {
+    background: linear-gradient(135deg, #2c2c2c 0%, #1a1a1a 100%);
+    border-bottom-color: #3c3c3c;
+
+    h3 {
+      color: #e0e0e0;
+    }
+  }
+
+  .dialog-body {
+    color: #c0c0c0;
+  }
+
+  .form-group label {
+    color: #c0c0c0;
+  }
+
+  .form-group input[type='text'],
+  .form-group input[type='url'],
+  .form-group textarea {
+    background-color: #2a2a2a;
+    border-color: #3c3c3c;
+    color: #e0e0e0;
+
+    &:focus {
+      border-color: var(--primary-blue);
+      box-shadow: 0 0 0 2px rgba(114, 173, 243, 0.3);
+    }
+
+    &::placeholder {
+      color: #888888;
+    }
+  }
+
+  .image-options,
+  .description-group {
+    background: #1a1a1a;
+    border-color: #3c3c3c;
+  }
+
+  .radio-group {
+    border-color: #3c3c3c;
+
+    label {
+      background: #2a2a2a;
+      color: #a0a0a0;
+      border-right-color: #3c3c3c;
+
+      &:has(input[type='radio']:checked) {
+        background: var(--primary-blue);
+        color: white;
+      }
+
+      &:hover:not(:has(input[type='radio']:checked)) {
+        background: #3c3c3c;
+        color: #c0c0c0;
+      }
+    }
+  }
+
+  .dialog-btn {
+    color: var(--primary-blue);
+
+    &:hover {
+      background-color: #3c3c3c;
+    }
+
+    &:active {
+      background-color: #505050;
+    }
+  }
+}
+
+// 粉色主题特殊适配
+body[data-theme='pink'] .mobile-dialog {
+  @include dialog-theme(#d63384, #fdf2f8, #333333, #f8bbd9);
+
+  .radio-group label:hover:not(:has(input[type='radio']:checked)) {
+    background: #fdf2f8;
+    color: #d63384;
+  }
+}
+
+// 微信主题特殊适配
+body[data-theme='white'] .mobile-dialog {
+  @include dialog-theme(#333333, #f8f8f8, #333333, #e0e0e0, #a0e75a);
+
+  .form-group label {
+    color: #333333;
+  }
+
+  .form-group input[type='text'],
+  .form-group input[type='url'],
+  .form-group textarea {
+    @include input-theme(#e0e0e0, #a0e75a, #ffffff);
+    color: #333333;
+
+    &::placeholder {
+      color: #999999;
+    }
+  }
+
+  .radio-group label:has(input[type='radio']:checked) {
+    background: #a0e75a;
+    color: #333333;
+  }
+
+  .radio-group label:hover:not(:has(input[type='radio']:checked)) {
+    background: #f8f8f8;
+    color: #666666;
+  }
+}
+
+// 自定义主题通用适配（通过CSS变量自动适配）
+body[data-theme='custom'] .mobile-dialog {
+  // 自定义主题完全依赖CSS变量，无需特殊处理
+  // 所有颜色都会自动跟随主题变化
+
+  .radio-group label:has(input[type='radio']:checked) {
+    background: var(--primary-blue);
+    color: white;
+  }
+
+  .radio-group label:hover:not(:has(input[type='radio']:checked)) {
+    background: var(--ultra-light-blue);
+    color: var(--primary-blue);
+  }
+}
+
+// 蓝色主题保持默认样式（已通过CSS变量适配）
+
+// ===== 高级适配和兼容性 =====
+
+// 高对比度模式适配
+@media (prefers-contrast: high) {
+  .mobile-dialog {
+    border-width: 2px;
+
+    .dialog-btn {
+      border: 1px solid var(--border-color);
+
+      &:focus {
+        outline: 2px solid var(--primary-blue);
+        outline-offset: 2px;
+      }
+    }
+
+    .form-group input[type='text'],
+    .form-group textarea {
+      border-width: 2px;
+    }
+
+    .radio-group {
+      border-width: 2px;
+
+      label {
+        border-right-width: 2px;
+      }
+    }
+  }
+}
+
+// 减少动画模式适配
+@media (prefers-reduced-motion: reduce) {
+  .mobile-dialog {
+    animation: none;
+
+    .dialog-btn,
+    .form-group input,
+    .form-group textarea,
+    .radio-group label {
+      transition: none;
+    }
+  }
+
+  .mobile-dialog.dialog-closing {
+    animation: none;
+  }
+}
+
+// 极端自定义主题兼容性（确保在任何颜色下都可读）
+.mobile-dialog {
+  // 确保文字始终可读
+  .dialog-header h3 {
+    text-shadow: 0 1px 2px rgba(0, 0, 0, 0.1);
+  }
+
+  .dialog-body {
+    // 确保内容区域有足够的对比度
+    background: rgba(255, 255, 255, 0.02);
+    backdrop-filter: blur(1px);
+  }
+
+  // 确保按钮在任何背景下都可见
+  .dialog-btn {
+    backdrop-filter: blur(2px);
+
+    &:hover {
+      backdrop-filter: blur(4px);
+    }
+  }
+
+  // 确保表单元素在任何主题下都可用
+  .form-group input[type='text'],
+  .form-group textarea {
+    backdrop-filter: blur(1px);
+
+    &:focus {
+      backdrop-filter: blur(2px);
+    }
+  }
+}
+
+// 响应式调整 - 确保在小屏幕上正常显示
+@media (max-height: 600px) {
+  .mobile-dialog {
+    max-height: 90% !important;
+
+    .dialog-body {
+      padding: 12px 16px;
+    }
+
+    .form-group {
+      margin-bottom: 10px;
+    }
+  }
+}
+
+// ===== 评论对话框特殊样式 =====
+
+// ===== 新增对话框样式优化 =====
+
+// 通用表单样式优化
+.transfer-dialog,
+.red-packet-dialog,
+.gift-dialog,
+.comment-dialog {
+  .form-group {
+    position: relative;
+
+    label {
+      display: block;
+      margin-bottom: 0.5rem;
+      font-weight: 600;
+      color: var(--text-primary);
+      font-size: 0.9rem;
+    }
+
+    input,
+    textarea {
+      width: 100%;
+      padding: 0.75rem 1rem;
+      border: 2px solid var(--border-color);
+      border-radius: 0.75rem;
+      font-size: 1rem;
+      color: var(--text-primary);
+      background-color: var(--input-bg);
+      transition: all 0.2s ease;
+      box-sizing: border-box;
+      font-family: inherit;
+
+      &:focus {
+        outline: none;
+        border-color: var(--primary-blue);
+        box-shadow: 0 0 0 3px rgba(114, 173, 243, 0.1);
+        background-color: white;
+      }
+
+      &::placeholder {
+        color: var(--text-secondary);
+        opacity: 0.7;
+      }
+    }
+
+    // URL输入框特殊样式
+    input[type='url'] {
+      font-family: 'Consolas', 'Monaco', 'Courier New', monospace;
+      font-size: 0.9rem;
+      background: linear-gradient(135deg, #f8faff 0%, #eef4ff 100%);
+      border: 2px solid #e3f2fd;
+
+      &:focus {
+        background: white;
+        border-color: var(--primary-blue);
+        box-shadow: 0 0 0 3px rgba(114, 173, 243, 0.1);
+      }
+
+      &::placeholder {
+        color: #90a4ae;
+        font-style: italic;
+      }
+    }
+
+    // 确保数字输入框和文字输入框样式完全一致
+    input[type='number'],
+    input[type='text'],
+    input[type='email'],
+    input[type='url'] {
+      -webkit-appearance: none;
+      -moz-appearance: textfield;
+      appearance: none;
+
+      // 移除数字输入框的默认箭头
+      &::-webkit-outer-spin-button,
+      &::-webkit-inner-spin-button {
+        -webkit-appearance: none;
+        margin: 0;
+      }
+    }
+
+    // 必填字段标识
+    label:has(+ input[required])::after,
+    label:has(+ textarea[required])::after {
+      content: ' *';
+      color: #e74c3c;
+      font-weight: bold;
+    }
+  }
+
+  // 对话框内容区域优化
+  .dialog-body {
+    padding: 1.5rem 1.25rem;
+  }
+}
+
+// 评论对话框宽度优化
+.comment-dialog {
+  width: 92%;
+  max-width: 22rem; // 比默认对话框更宽，减少左右空白
+
+  textarea {
+    min-height: 4rem;
+    resize: vertical;
+    font-family: inherit;
+    line-height: 1.4;
+  }
+}
+
+// 转账对话框样式
+.transfer-dialog {
+  width: 90%;
+  max-width: 20rem;
+
+  .form-group {
+    margin-bottom: 1rem;
+
+    &:last-child {
+      margin-bottom: 0;
+    }
+  }
+
+  input[type='number'] {
+    font-size: 1.1rem;
+    font-weight: 600;
+    text-align: center;
+
+    &:focus {
+      color: var(--primary-blue);
+    }
+  }
+
+  input[type='text'] {
+    font-size: 0.95rem;
+  }
+}
+
+// 红包对话框样式
+.red-packet-dialog {
+  width: 90%;
+  max-width: 20rem;
+
+  .dialog-header h3 {
+    color: #e74c3c;
+  }
+
+  .form-group {
+    margin-bottom: 1rem;
+
+    &:last-child {
+      margin-bottom: 0;
+    }
+  }
+
+  input[type='number'] {
+    font-size: 1.1rem;
+    font-weight: 600;
+    text-align: center;
+    color: #e74c3c;
+
+    &:focus {
+      border-color: #e74c3c;
+      box-shadow: 0 0 0 2px rgba(231, 76, 60, 0.2);
+    }
+  }
+
+  input[type='text'] {
+    font-size: 0.95rem;
+    text-align: center;
+  }
+}
+
+// 礼物对话框样式
+.gift-dialog {
+  width: 90%;
+  max-width: 20rem;
+
+  .form-group {
+    margin-bottom: 1rem;
+
+    &:last-child {
+      margin-bottom: 0;
+    }
+  }
+
+  input[type='text'] {
+    font-size: 1rem;
+    font-weight: 500;
+  }
+
+  input[type='number'] {
+    font-size: 1rem;
+    text-align: center;
+  }
+}
+
+// 评论对话框使用与其他对话框完全相同的按钮样式
+.comment-dialog .dialog-footer {
+  display: flex;
+  border-top: 1px solid var(--border-color);
+}
+
+.comment-dialog .dialog-button {
+  flex: 1;
+  padding: 0.875rem;
+  border: none;
+  background: transparent;
+  font-size: 0.95rem;
+  font-weight: 500;
+  cursor: pointer;
+  transition: background-color 0.2s ease;
+  color: var(--primary-blue);
+
+  &:not(:last-child) {
+    border-right: 1px solid var(--border-color);
+  }
+
+  &:hover {
+    background-color: var(--ultra-light-blue);
+  }
+
+  &:active {
+    background-color: var(--soft-blue);
+  }
+}
+
+// ===== 新增对话框主题适配 =====
+
+// 夜间模式适配
+body.dark-mode {
+  .transfer-dialog,
+  .red-packet-dialog,
+  .gift-dialog,
+  .comment-dialog {
+    .form-group {
+      input,
+      textarea {
+        background-color: #2a2a2a;
+        border-color: #3c3c3c;
+        color: #e0e0e0;
+
+        &:focus {
+          background-color: #333333;
+          border-color: var(--primary-blue);
+          box-shadow: 0 0 0 3px rgba(114, 173, 243, 0.2);
+        }
+
+        &::placeholder {
+          color: #888888;
+        }
+      }
+
+      // URL输入框夜间模式适配
+      input[type='url'] {
+        background: #1a1a1a;
+        border-color: #3c3c3c;
+        color: #e0e0e0;
+
+        &:focus {
+          background: #2a2a2a;
+          border-color: var(--primary-blue);
+        }
+
+        &::placeholder {
+          color: #888888;
+        }
+      }
+    }
+  }
+
+  .red-packet-dialog input[type='number']:focus {
+    border-color: #e74c3c;
+    box-shadow: 0 0 0 3px rgba(231, 76, 60, 0.2);
+  }
+}
+
+// 粉色主题适配
+body[data-theme='pink'] {
+  .transfer-dialog input[type='number']:focus {
+    color: #d63384;
+    border-color: #d63384;
+    box-shadow: 0 0 0 3px rgba(216, 51, 132, 0.1);
+  }
+
+  .red-packet-dialog .dialog-header h3 {
+    color: #d63384;
+  }
+
+  // URL输入框粉色主题适配
+  .input-dialog input[type='url'] {
+    background: linear-gradient(135deg, #fdf2f8 0%, #fce7f3 100%);
+    border-color: #f8bbd9;
+
+    &:focus {
+      border-color: #d63384;
+      box-shadow: 0 0 0 3px rgba(216, 51, 132, 0.1);
+    }
+  }
+}
+
+// 微信主题适配
+body[data-theme='white'] {
+  .transfer-dialog input[type='number']:focus {
+    color: #689f38;
+    border-color: #689f38;
+    box-shadow: 0 0 0 3px rgba(104, 159, 56, 0.1);
+  }
+
+  .red-packet-dialog .dialog-header h3 {
+    color: #f44336;
+  }
+
+  // URL输入框微信主题适配
+  .input-dialog input[type='url'] {
+    background: linear-gradient(135deg, #f8f8f8 0%, #f0f0f0 100%);
+    border-color: #e0e0e0;
+    color: #333333;
+
+    &:focus {
+      border-color: #689f38;
+      box-shadow: 0 0 0 3px rgba(104, 159, 56, 0.1);
+    }
+
+    &::placeholder {
+      color: #999999;
+    }
+  }
+}
+
+// ===== 输入对话框和接收对话框样式 =====
+
+// 输入对话框样式
+.input-dialog {
+  width: 90%;
+  max-width: 20rem;
+}
+
+// 语音对话框样式
+.voice-dialog {
+  width: 90%;
+  max-width: 22rem;
+
+  .dialog-header h3 {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 0.5rem;
+  }
+
+  .form-group {
+    margin-bottom: 1rem;
+
+    &:last-child {
+      margin-bottom: 0;
+    }
+
+    label {
+      display: block;
+      margin-bottom: 0.5rem;
+      font-weight: 600;
+      color: var(--text-primary);
+      font-size: 0.9rem;
+    }
+
+    textarea {
+      width: 100%;
+      min-height: 80px;
+      padding: 0.75rem 1rem;
+      border: 2px solid var(--border-color);
+      border-radius: 0.75rem;
+      font-size: 1rem;
+      color: var(--text-primary);
+      background-color: var(--input-bg);
+      transition: all 0.2s ease;
+      box-sizing: border-box;
+      font-family: inherit;
+      resize: vertical;
+
+      &:focus {
+        outline: none;
+        border-color: var(--primary-blue);
+        box-shadow: 0 0 0 3px rgba(114, 173, 243, 0.1);
+        background-color: white;
+      }
+
+      &::placeholder {
+        color: var(--text-secondary);
+        opacity: 0.7;
+      }
+    }
+
+    input[type='number'] {
+      width: 100%;
+      padding: 0.75rem 1rem;
+      border: 2px solid var(--border-color);
+      border-radius: 0.75rem;
+      font-size: 1rem;
+      color: var(--text-primary);
+      background-color: var(--input-bg);
+      transition: all 0.2s ease;
+      box-sizing: border-box;
+      font-family: inherit;
+
+      &:focus {
+        outline: none;
+        border-color: var(--primary-blue);
+        box-shadow: 0 0 0 3px rgba(114, 173, 243, 0.1);
+        background-color: white;
+      }
+
+      &::placeholder {
+        color: var(--text-secondary);
+        opacity: 0.7;
+      }
+
+      // 移除数字输入框的默认箭头
+      &::-webkit-outer-spin-button,
+      &::-webkit-inner-spin-button {
+        -webkit-appearance: none;
+        margin: 0;
+      }
+
+      -webkit-appearance: none;
+      -moz-appearance: textfield;
+      appearance: none;
+    }
+  }
+}
+
+// 接收对话框样式 - 与其他对话框保持完全一致
+.receive-dialog {
+  width: 85%;
+  max-width: 18rem; // 与alert对话框相同
+
+  .receive-content {
+    display: flex;
+    align-items: center;
+    gap: 1rem;
+    padding: 0.5rem 0; // 减少内边距，与其他对话框一致
+  }
+
+  .receive-icon {
+    font-size: 2.5rem; // 稍微减小图标尺寸
+    flex-shrink: 0;
+  }
+
+  .receive-info {
+    flex: 1;
+  }
+
+  .receive-title {
+    font-size: 1rem; // 与其他对话框标题一致
+    font-weight: 500; // 与其他对话框一致
+    color: var(--text-primary);
+    margin-bottom: 0.25rem;
+  }
+
+  .receive-price {
+    font-size: 1.2rem; // 稍微减小价格字体
+    font-weight: 600; // 与其他对话框一致
+    color: var(--primary-blue); // 使用主题色而不是硬编码红色
+    margin-bottom: 0.25rem;
+  }
+
+  .receive-note {
+    font-size: 0.85rem;
+    color: var(--text-secondary);
+    font-style: italic;
+  }
+
+  // 按钮样式完全与其他对话框一致
+  .dialog-footer {
+    display: flex;
+    border-top: 1px solid var(--border-color);
+
+    .dialog-button {
+      flex: 1;
+      padding: 0.875rem;
+      border: none;
+      background: transparent;
+      font-size: 0.95rem;
+      font-weight: 500;
+      cursor: pointer;
+      transition: background-color 0.2s ease;
+      color: var(--primary-blue);
+
+      &:not(:last-child) {
+        border-right: 1px solid var(--border-color);
+      }
+
+      &:hover {
+        background-color: var(--ultra-light-blue);
+      }
+
+      &:active {
+        background-color: var(--soft-blue);
+      }
+    }
+  }
+}
+
+// ===== 表情管理器样式 =====
+
+// 表情管理器模态框（无遮罩，纯阴影分离）
+.sticker-manager-modal {
+  position: fixed;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  background-color: transparent; // 移除背景色
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  z-index: 1000;
+  animation: fadeIn 0.2s ease;
+  // 移除backdrop-filter
+}
+
+// 表情管理器容器 - 增强阴影分离层级
+.sticker-manager-container {
+  background: var(--header-bg);
+  border-radius: 1rem;
+  // 增强阴影效果来分离层级
+  box-shadow: 0 35px 70px rgba(0, 0, 0, 0.35), 0 25px 50px rgba(0, 0, 0, 0.25), 0 15px 30px rgba(0, 0, 0, 0.2),
+    0 8px 16px rgba(0, 0, 0, 0.15);
+  width: 90%;
+  max-width: 28rem; // 比普通对话框稍大，容纳更多内容
+  max-height: 80vh;
+  overflow: hidden;
+  display: flex;
+  flex-direction: column;
+  animation: dialogSlideIn 0.3s ease;
+  border: 1px solid var(--border-color);
+
+  // 标题区域
+  h2 {
+    margin: 0;
+    padding: 1rem;
+    text-align: center;
+    border-bottom: 1px solid var(--border-color);
+    background: var(--header-bg);
+    font-size: 1.1rem;
+    font-weight: 600;
+    color: var(--text-primary);
+  }
+
+  // 标签页导航
+  .sticker-manager-tabs {
+    display: flex;
+    border-bottom: 1px solid var(--border-color);
+    background: var(--header-bg);
+
+    .tab-button {
+      flex: 1;
+      padding: 0.75rem 1rem;
+      text-align: center;
+      cursor: pointer;
+      font-size: 0.9rem;
+      font-weight: 500;
+      color: var(--text-secondary);
+      border-bottom: 2px solid transparent;
+      transition: all 0.2s ease;
+
+      &:hover {
+        background-color: var(--ultra-light-blue);
+        color: var(--text-primary);
+      }
+
+      &.active {
+        color: var(--primary-blue);
+        border-bottom-color: var(--primary-blue);
+        font-weight: 600;
+      }
+
+      &:not(:last-child) {
+        border-right: 1px solid var(--border-color);
+      }
+    }
+  }
+
+  // 内容区域
+  .sticker-manager-content {
+    overflow-y: auto;
+    flex: 1;
+
+    // 标签页内容
+    .tab-content {
+      display: none;
+      padding: 1.5rem 1.25rem;
+
+      &.active {
+        display: block;
+      }
+    }
+
+    // 通用表单组样式
+    .form-group {
+      display: flex;
+      flex-direction: column;
+      gap: 0.5rem;
+      margin-bottom: 1rem;
+
+      label {
+        font-size: 0.9rem;
+        font-weight: 500;
+        color: var(--text-primary);
+      }
+
+      input,
+      textarea {
+        width: 100%;
+        padding: 0.75rem 1rem;
+        border: 2px solid var(--border-color);
+        border-radius: 0.75rem;
+        font-size: 1rem;
+        color: var(--text-primary);
+        background-color: var(--input-bg);
+        transition: all 0.2s ease;
+        box-sizing: border-box;
+
+        &:focus {
+          outline: none;
+          border-color: var(--primary-blue);
+          box-shadow: 0 0 0 3px rgba(114, 173, 243, 0.1);
+          background-color: white;
+        }
+
+        &::placeholder {
+          color: var(--text-secondary);
+          opacity: 0.7;
+        }
+      }
+
+      textarea {
+        min-height: 120px;
+        resize: vertical;
+        font-family: inherit;
+      }
+    }
+
+    // 添加表情包区域
+    .add-sticker-section {
+      .add-sticker-form {
+        display: flex;
+        flex-direction: column;
+        gap: 1rem;
+
+        .preview-container {
+          display: flex;
+          flex-direction: column;
+          align-items: center;
+          gap: 0.5rem;
+          margin: 1rem 0;
+
+          .preview-label {
+            font-size: 0.9rem;
+            color: var(--text-secondary);
+          }
+
+          .preview-img {
+            max-width: 150px;
+            max-height: 150px;
+            border: 1px dashed var(--border-color);
+            padding: 0.5rem;
+            border-radius: 0.5rem;
+            background: var(--input-bg);
+          }
+        }
+
+        .add-sticker-btn {
+          padding: 0.75rem 1.5rem;
+          background: var(--primary-blue);
+          color: white;
+          border: none;
+          border-radius: 0.75rem;
+          font-size: 0.95rem;
+          font-weight: 600;
+          cursor: pointer;
+          transition: all 0.2s ease;
+
+          &:hover {
+            background: var(--soft-blue);
+          }
+
+          &:active {
+            transform: translateY(1px);
+          }
+        }
+      }
+    }
+
+    // 批量添加区域
+    .batch-add-section {
+      .batch-instructions {
+        margin-bottom: 1rem;
+        padding: 1rem;
+        background: var(--input-bg);
+        border-radius: 0.75rem;
+        border-left: 4px solid var(--primary-blue);
+
+        p {
+          margin: 0 0 0.5rem 0;
+          font-size: 0.9rem;
+          font-weight: 600;
+          color: var(--text-primary);
+        }
+
+        ul {
+          margin: 0;
+          padding-left: 1.5rem;
+
+          li {
+            font-size: 0.85rem;
+            color: var(--text-secondary);
+            line-height: 1.4;
+            margin-bottom: 0.25rem;
+
+            strong {
+              color: var(--text-primary);
+            }
+
+            code {
+              background: rgba(114, 173, 243, 0.1);
+              padding: 0.2rem 0.4rem;
+              border-radius: 0.25rem;
+              font-family: 'Consolas', 'Monaco', 'Courier New', monospace;
+              font-size: 0.8rem;
+            }
+          }
+        }
+      }
+
+      .batch-add-btn {
+        width: 100%;
+        padding: 0.75rem;
+        background: var(--primary-blue);
+        color: white;
+        border: none;
+        border-radius: 0.75rem;
+        font-size: 0.95rem;
+        font-weight: 600;
+        cursor: pointer;
+        transition: all 0.2s ease;
+
+        &:hover {
+          background: var(--soft-blue);
+        }
+
+        &:active {
+          transform: translateY(1px);
+        }
+      }
+    }
+
+    // 删除管理区域
+    .delete-manage-section {
+      .control-bar {
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        margin-bottom: 1rem;
+
+        .selection-controls {
+          display: flex;
+          gap: 0.5rem;
+
+          button {
+            padding: 0.5rem 0.75rem;
+            background: var(--input-bg);
+            border: 1px solid var(--border-color);
+            border-radius: 0.5rem;
+            font-size: 0.85rem;
+            cursor: pointer;
+            transition: all 0.2s ease;
+            color: var(--text-primary);
+
+            &:hover {
+              background: var(--ultra-light-blue);
+              border-color: var(--primary-blue);
+            }
+          }
+        }
+
+        .delete-selected-btn {
+          padding: 0.5rem 0.75rem;
+          background: #e74c3c;
+          color: white;
+          border: none;
+          border-radius: 0.5rem;
+          font-size: 0.85rem;
+          cursor: pointer;
+          transition: all 0.2s ease;
+
+          &:hover {
+            background: #c0392b;
+          }
+        }
+      }
+
+      .sticker-list-container {
+        max-height: 400px;
+        overflow-y: auto;
+        border: 1px solid var(--border-color);
+        border-radius: 0.75rem;
+        padding: 1rem;
+        background: var(--input-bg);
+
+        .sticker-grid {
+          display: grid;
+          grid-template-columns: repeat(auto-fill, minmax(100px, 1fr));
+          gap: 1rem;
+
+          .sticker-item {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            padding: 0.75rem;
+            border: 1px solid var(--border-color);
+            border-radius: 0.5rem;
+            background: white;
+            transition: all 0.2s ease;
+            position: relative;
+
+            &:hover {
+              border-color: var(--primary-blue);
+              box-shadow: 0 2px 8px rgba(114, 173, 243, 0.2);
+            }
+
+            // 选中状态的整体视觉效果 - 移除缩放动画
+            &:has(.sticker-checkbox:checked) {
+              border: 2px solid var(--checkbox-border-checked);
+              box-shadow: 0 0 0 2px var(--shadow-color-rgba);
+              background: var(--checkbox-hover-bg);
+
+              .sticker-label {
+                color: var(--checkbox-border-checked);
+                font-weight: 600;
+              }
+
+              .sticker-preview {
+                opacity: 0.8;
+              }
+            }
+
+            .sticker-checkbox {
+              // 隐藏原生checkbox
+              position: absolute;
+              opacity: 0;
+              width: 0;
+              height: 0;
+              pointer-events: none;
+            }
+
+            .sticker-checkbox-button {
+              position: absolute;
+              top: 0.5rem;
+              right: 0.5rem;
+              width: 1.25rem;
+              height: 1.25rem;
+              border: 1px solid var(--checkbox-border-unchecked);
+              border-radius: 0.25rem;
+              background: var(--checkbox-bg-unchecked);
+              cursor: pointer;
+              @include transition-smooth;
+              z-index: 10;
+
+              // 选中状态
+              &.checked {
+                border: 2px solid var(--checkbox-border-checked);
+
+                // 选中图标
+                &::after {
+                  content: '✓';
+                  position: absolute;
+                  top: 50%;
+                  left: 50%;
+                  transform: translate(-50%, -50%);
+                  font-size: 0.7rem;
+                  font-weight: bold;
+                  color: var(--checkbox-border-checked);
+                }
+              }
+
+              // 悬停效果 - 移除缩放动画
+              @media (hover: hover) {
+                &:hover {
+                  border-color: var(--checkbox-border-checked);
+                  background: var(--checkbox-hover-bg);
+                }
+              }
+            }
+
+            .sticker-preview {
+              width: 60px;
+              height: 60px;
+              object-fit: contain;
+              margin-bottom: 0.5rem;
+            }
+
+            .sticker-label {
+              font-size: 0.8rem;
+              color: var(--text-secondary);
+              text-align: center;
+              word-break: break-all;
+              line-height: 1.2;
+            }
+          }
+
+          .no-stickers-msg {
+            grid-column: 1 / -1;
+            text-align: center;
+            color: var(--text-secondary);
+            padding: 2rem;
+            font-style: italic;
+          }
+        }
+      }
+    }
+  }
+
+  // 底部按钮区域
+  .sticker-manager-footer {
+    display: flex;
+    border-top: 1px solid var(--border-color);
+
+    .dialog-button {
+      flex: 1;
+      padding: 0.875rem;
+      border: none;
+      background: transparent;
+      font-size: 0.95rem;
+      font-weight: 500;
+      cursor: pointer;
+      transition: background-color 0.2s ease;
+      color: var(--primary-blue);
+
+      &:hover {
+        background-color: var(--ultra-light-blue);
+      }
+
+      &:active {
+        background-color: var(--soft-blue);
+      }
+    }
+  }
+}
+
+// 可滚动文本对话框样式 - 与其他对话框保持一致
+.scrollable-text-dialog {
+  // 继承mobile-dialog的基础样式
+  width: 85%;
+  max-width: 18rem; // 与其他对话框一致
+  max-height: 70vh;
+
+  // 头部样式与其他对话框一致
+  .dialog-header {
+    padding: 1.2rem 1rem 1rem;
+    text-align: center;
+    border-bottom: 1px solid var(--border-color);
+    background: var(--header-bg);
+
+    h3 {
+      margin: 0;
+      font-size: 1.1rem;
+      font-weight: 600;
+      color: var(--text-primary);
+      letter-spacing: 0.3px;
+    }
+  }
+
+  // 可滚动内容区域
+  .dialog-body.scrollable-content {
+    max-height: 50vh;
+    overflow-y: auto;
+    padding: 1.25rem 1rem; // 与其他对话框一致
+    color: var(--text-primary);
+    font-size: 0.9rem;
+    line-height: 1.5;
+    background: transparent; // 移除背景色，与其他对话框一致
+
+    .scrollable-text {
+      margin: 0;
+      padding: 0;
+      font-family: 'Consolas', 'Monaco', 'Courier New', monospace;
+      font-size: 0.8rem;
+      line-height: 1.4;
+      white-space: pre-wrap;
+      word-wrap: break-word;
+      color: var(--text-primary);
+      background: transparent;
+      border: none;
+    }
+  }
+
+  // 底部按钮样式与其他对话框完全一致
+  .dialog-footer {
+    display: flex;
+    border-top: 1px solid var(--border-color);
+
+    .dialog-button {
+      flex: 1;
+      padding: 0.875rem;
+      border: none;
+      background: transparent;
+      font-size: 0.95rem;
+      font-weight: 500;
+      cursor: pointer;
+      transition: background-color 0.2s ease;
+      color: var(--primary-blue);
+
+      &:hover {
+        background: var(--ultra-light-blue);
+      }
+
+      &:active {
+        background: var(--light-blue);
+      }
+
+      &:not(:last-child) {
+        border-right: 1px solid var(--border-color);
+      }
+
+      &:first-child {
+        border-bottom-left-radius: 1rem;
+      }
+
+      &:last-child {
+        border-bottom-right-radius: 1rem;
+      }
+
+      // 复制按钮样式
+      &.copy-btn {
+        color: var(--text-secondary);
+      }
+
+      // 主要按钮样式
+      &.primary-button {
+        color: var(--primary-blue);
+        font-weight: 600;
+      }
+    }
+  }
+}

@@ -1,0 +1,173 @@
+// 设置页面样式
+#settings-view {
+  background-color: var(--settings-bg-color);
+}
+
+.settings-header {
+  flex-shrink: 0;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 0.5rem 0.75rem;
+  @include gradient-header;
+  border-bottom: 1px solid var(--border-color);
+  padding-top: 2.8125rem;
+  position: relative;
+  z-index: 10;
+
+  .back-btn {
+    font-size: 1.2em;
+    color: var(--primary-blue);
+    cursor: pointer;
+  }
+
+  .title {
+    font-weight: 600;
+    color: var(--text-primary);
+    font-size: 1em;
+    position: absolute;
+    left: 50%;
+    transform: translateX(-50%);
+  }
+}
+
+.settings-body {
+  flex-grow: 1;
+  padding: 1.25rem;
+  overflow-y: auto;
+}
+
+.settings-card {
+  background-color: var(--settings-card-bg-color);
+  border-radius: 0.75rem;
+  padding: 1rem;
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.05);
+
+  p {
+    font-size: 0.9em;
+    line-height: 1.6;
+    color: var(--text-primary);
+    margin: 0 0 1rem 0;
+
+    &:last-child {
+      margin-bottom: 0;
+    }
+  }
+
+  .highlight {
+    color: #e6a23c;
+    font-weight: bold;
+  }
+
+  a {
+    color: var(--primary-blue);
+
+    &:hover {
+      text-decoration: underline;
+    }
+  }
+
+  li {
+    border-bottom-color: var(--border-color);
+
+    a {
+      color: var(--text-primary);
+    }
+  }
+}
+
+#show-last-ai-response-btn,
+#show-last-sent-prompt-btn {
+  background-color: var(--settings-card-bg-color);
+  color: var(--text-primary);
+}
+
+// 自定义主题按钮样式
+#custom-theme-btn {
+  @include transition-smooth;
+  position: relative;
+  z-index: 10;
+
+  &:hover {
+    background: var(--deep-blue) !important;
+    transform: translateY(-1px);
+    box-shadow: 0 4px 12px var(--shadow-color-rgba);
+  }
+
+  &:active {
+    transform: translateY(0);
+  }
+}
+
+// ===== 夜间模式样式 =====
+
+// 暗色模式适配
+body.dark-mode {
+  background-color: transparent;
+}
+
+body.dark-mode .app-view {
+  background-color: var(--app-bg-color);
+}
+
+body.dark-mode .settings-card {
+  background-color: var(--settings-card-bg-color);
+}
+
+body.dark-mode .settings-card p,
+body.dark-mode .settings-card a {
+  color: var(--text-primary);
+}
+
+body.dark-mode .settings-card li {
+  border-bottom-color: var(--border-color);
+}
+
+body.dark-mode .settings-card li a {
+  color: var(--text-primary);
+}
+
+body.dark-mode #show-last-ai-response-btn,
+body.dark-mode #show-last-sent-prompt-btn {
+  background-color: var(--settings-card-bg-color);
+  color: var(--text-primary);
+}
+
+// 手机尺寸按钮样式
+.phone-size-btn {
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  background-color: var(--settings-card-bg-color);
+  border: 1px solid var(--border-color);
+  border-radius: 0.75rem;
+  padding: 0.75rem 0.5rem;
+  cursor: pointer;
+  @include transition-smooth;
+  gap: 0.5rem;
+
+  &:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 4px 12px var(--shadow-color-rgba);
+  }
+
+  &.phone-size-active {
+    border-color: var(--primary-blue);
+    background-color: rgba(var(--shadow-r), var(--shadow-g), var(--shadow-b), 0.05);
+    box-shadow: 0 2px 8px var(--shadow-color-rgba);
+  }
+}
+
+.size-icon {
+  width: 10px;
+  background-color: var(--primary-blue);
+  border-radius: 2px;
+}
+
+.size-label {
+  font-size: 0.8em;
+  color: var(--text-primary);
+  font-weight: 500;
+}
