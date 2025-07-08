@@ -23,7 +23,6 @@ export class DialogManager {
   private static instance: DialogManager;
   private activeDialog: HTMLElement | null = null;
   private activeOverlay: HTMLElement | null = null;
-  private isClosing = false;
 
   private constructor() {
     // 私有构造函数，确保单例模式
@@ -52,12 +51,8 @@ export class DialogManager {
    * 安全显示对话框 - 如果已有对话框则先关闭
    */
   private async safeShowDialog<T>(dialogFunction: () => Promise<T>): Promise<T> {
-    // 如果已有活跃对话框，先关闭它
-    if (this.activeDialog && !this.isClosing) {
-      this.closeDialog();
-      // 等待关闭动画完成
-      await new Promise(resolve => setTimeout(resolve, 250));
-    }
+    // 强制清理所有对话框（无论是否有活跃对话框）
+    this.forceCleanupDialogs();
 
     return await dialogFunction();
   }
@@ -491,7 +486,10 @@ export class DialogManager {
           const handleComment = () => {
             const content = commentText.value.trim();
             if (!content) {
-              this.alert('请输入评论内容', '输入错误');
+              // 在输入框上显示错误提示，而不是弹出新的alert
+              commentText.style.borderColor = '#ff4444';
+              commentText.placeholder = '请输入评论内容';
+              commentText.focus();
               return;
             }
             this.closeDialog();
@@ -577,7 +575,10 @@ export class DialogManager {
             const note = noteInput.value.trim();
 
             if (!amount || parseFloat(amount) <= 0) {
-              this.alert('请输入有效的转账金额', '输入错误');
+              // 在输入框上显示错误提示，而不是弹出新的alert
+              amountInput.style.borderColor = '#ff4444';
+              amountInput.placeholder = '请输入有效的转账金额';
+              amountInput.focus();
               return;
             }
 
@@ -661,7 +662,10 @@ export class DialogManager {
             const note = noteInput.value.trim();
 
             if (!amount || parseFloat(amount) <= 0) {
-              this.alert('请输入有效的红包金额', '输入错误');
+              // 在输入框上显示错误提示，而不是弹出新的alert
+              amountInput.style.borderColor = '#ff4444';
+              amountInput.placeholder = '请输入有效的红包金额';
+              amountInput.focus();
               return;
             }
 
@@ -745,7 +749,10 @@ export class DialogManager {
             const price = priceInput.value.trim();
 
             if (!name) {
-              this.alert('请输入礼物名称', '输入错误');
+              // 在输入框上显示错误提示，而不是弹出新的alert
+              nameInput.style.borderColor = '#ff4444';
+              nameInput.placeholder = '请输入礼物名称';
+              nameInput.focus();
               return;
             }
 
@@ -792,76 +799,75 @@ export class DialogManager {
     placeholder: string = '',
     inputType: 'text' | 'url' | 'email' = 'text',
   ): Promise<string | null> {
-    return new Promise(resolve => {
-      if (this.activeDialog) {
-        this.closeDialog();
-      }
+    return this.safeShowDialog(
+      () =>
+        new Promise(resolve => {
+          // 创建遮罩层
+          this.activeOverlay = document.createElement('div');
+          this.activeOverlay.className = 'dialog-overlay mobile-dialog-overlay';
 
-      // 创建遮罩层
-      this.activeOverlay = document.createElement('div');
-      this.activeOverlay.className = 'dialog-overlay mobile-dialog-overlay';
+          // 创建对话框
+          this.activeDialog = document.createElement('div');
+          this.activeDialog.className = 'dialog input-dialog mobile-dialog';
 
-      // 创建对话框
-      this.activeDialog = document.createElement('div');
-      this.activeDialog.className = 'dialog input-dialog mobile-dialog';
+          this.activeDialog.innerHTML = `
+            <div class="dialog-header">
+              <h3>${title}</h3>
+            </div>
+            <div class="dialog-body">
+              <div class="form-group">
+                <label for="input-field">${label}</label>
+                <input type="${inputType}" id="input-field" placeholder="${placeholder}" value="${defaultValue}">
+              </div>
+            </div>
+            <div class="dialog-footer">
+              <button class="dialog-button cancel-btn">取消</button>
+              <button class="dialog-button confirm-btn">确定</button>
+            </div>
+          `;
 
-      this.activeDialog.innerHTML = `
-        <div class="dialog-header">
-          <h3>${title}</h3>
-        </div>
-        <div class="dialog-body">
-          <div class="form-group">
-            <label for="input-field">${label}</label>
-            <input type="${inputType}" id="input-field" placeholder="${placeholder}" value="${defaultValue}">
-          </div>
-        </div>
-        <div class="dialog-footer">
-          <button class="dialog-button cancel-btn">取消</button>
-          <button class="dialog-button confirm-btn">确定</button>
-        </div>
-      `;
+          const cancelBtn = this.activeDialog.querySelector('.cancel-btn') as HTMLButtonElement;
+          const confirmBtn = this.activeDialog.querySelector('.confirm-btn') as HTMLButtonElement;
+          const inputField = this.activeDialog.querySelector('#input-field') as HTMLInputElement;
 
-      const cancelBtn = this.activeDialog.querySelector('.cancel-btn') as HTMLButtonElement;
-      const confirmBtn = this.activeDialog.querySelector('.confirm-btn') as HTMLButtonElement;
-      const inputField = this.activeDialog.querySelector('#input-field') as HTMLInputElement;
+          const handleCancel = () => {
+            this.closeDialog();
+            resolve(null);
+          };
 
-      const handleCancel = () => {
-        this.closeDialog();
-        resolve(null);
-      };
+          const handleConfirm = () => {
+            const value = inputField.value.trim();
+            this.closeDialog();
+            resolve(value);
+          };
 
-      const handleConfirm = () => {
-        const value = inputField.value.trim();
-        this.closeDialog();
-        resolve(value);
-      };
+          cancelBtn.addEventListener('click', handleCancel);
+          confirmBtn.addEventListener('click', handleConfirm);
 
-      cancelBtn.addEventListener('click', handleCancel);
-      confirmBtn.addEventListener('click', handleConfirm);
+          // 回车键确认
+          const handleKeyDown = (e: KeyboardEvent) => {
+            if (e.key === 'Enter') {
+              handleConfirm();
+            } else if (e.key === 'Escape') {
+              handleCancel();
+              document.removeEventListener('keydown', handleKeyDown);
+            }
+          };
+          document.addEventListener('keydown', handleKeyDown);
 
-      // 回车键确认
-      const handleKeyDown = (e: KeyboardEvent) => {
-        if (e.key === 'Enter') {
-          handleConfirm();
-        } else if (e.key === 'Escape') {
-          handleCancel();
-          document.removeEventListener('keydown', handleKeyDown);
-        }
-      };
-      document.addEventListener('keydown', handleKeyDown);
+          // 添加到手机屏幕容器内
+          this.activeOverlay.appendChild(this.activeDialog);
+          this.appendDialogToPage();
 
-      // 添加到手机屏幕容器内
-      this.activeOverlay.appendChild(this.activeDialog);
-      this.appendDialogToPage();
-
-      // 聚焦到输入框并选中默认值
-      setTimeout(() => {
-        inputField.focus();
-        if (defaultValue) {
-          inputField.select();
-        }
-      }, 100);
-    });
+          // 聚焦到输入框并选中默认值
+          setTimeout(() => {
+            inputField.focus();
+            if (defaultValue) {
+              inputField.select();
+            }
+          }, 100);
+        }),
+    );
   }
 
   /**
@@ -914,14 +920,18 @@ export class DialogManager {
             const durationStr = durationInput.value.trim();
 
             if (!text) {
-              alert('请输入语音内容');
+              // 在文本框上显示错误提示，而不是弹出新的alert
+              textArea.style.borderColor = '#ff4444';
+              textArea.placeholder = '请输入语音内容';
               textArea.focus();
               return;
             }
 
             const duration = parseInt(durationStr, 10);
             if (!durationStr || isNaN(duration) || duration <= 0 || duration > 60) {
-              alert('请输入有效的语音时长（1-60秒）');
+              // 在输入框上显示错误提示，而不是弹出新的alert
+              durationInput.style.borderColor = '#ff4444';
+              durationInput.placeholder = '请输入有效的语音时长（1-60秒）';
               durationInput.focus();
               return;
             }
@@ -1203,14 +1213,20 @@ export class DialogManager {
 
             // 验证输入
             if ((!text || text.trim() === '') && (!imageContent || imageContent.trim() === '')) {
-              this.alert('请输入朋友圈内容或添加图片', '输入错误');
+              // 在文本框上显示错误提示，而不是弹出新的alert
+              textArea.style.borderColor = '#ff4444';
+              textArea.placeholder = '请输入朋友圈内容或添加图片';
+              textArea.focus();
               return;
             }
 
             // 解析时间
             const datetimeMatch = datetime.match(/^(\d{4}-\d{2}-\d{2})\s+(\d{2}:\d{2})$/);
             if (!datetimeMatch) {
-              this.alert('时间格式不正确，请使用 YYYY-MM-DD HH:MM 格式', '时间格式错误');
+              // 在时间输入框上显示错误提示，而不是弹出新的alert
+              datetimeInput.style.borderColor = '#ff4444';
+              datetimeInput.placeholder = '格式：YYYY-MM-DD HH:MM';
+              datetimeInput.focus();
               return;
             }
 
@@ -1362,7 +1378,10 @@ export class DialogManager {
             // 解析时间
             const datetimeMatch = datetime.match(/^(\d{4}-\d{2}-\d{2})\s+(\d{2}:\d{2})$/);
             if (!datetimeMatch) {
-              this.alert('时间格式不正确，请使用 YYYY-MM-DD HH:MM 格式', '时间格式错误');
+              // 在时间输入框上显示错误提示，而不是弹出新的alert
+              datetimeInput.style.borderColor = '#ff4444';
+              datetimeInput.placeholder = '格式：YYYY-MM-DD HH:MM';
+              datetimeInput.focus();
               return;
             }
 
@@ -1416,25 +1435,44 @@ export class DialogManager {
   }
 
   /**
+   * 强制清理所有对话框元素
+   */
+  private forceCleanupDialogs(): void {
+    // 清理所有可能残留的对话框元素
+    const container = document.querySelector('.phone-screen') || document.body;
+
+    // 使用通用选择器清理所有对话框相关元素
+    const selectors = [
+      '[class*="dialog-overlay"]',
+      '[class*="dialog"]',
+      '.custom-dialog-overlay',
+      '.mobile-dialog-overlay',
+      '.custom-dialog',
+      '.mobile-dialog',
+    ];
+
+    selectors.forEach(selector => {
+      const elements = container.querySelectorAll(selector);
+      elements.forEach(element => {
+        try {
+          if (element.parentNode) {
+            element.parentNode.removeChild(element);
+          }
+        } catch (error) {
+          console.warn('移除对话框元素时出错:', error);
+        }
+      });
+    });
+
+    // 清理引用
+    this.activeDialog = null;
+    this.activeOverlay = null;
+  }
+
+  /**
    * 关闭对话框
    */
   private closeDialog(): void {
-    if (!this.activeDialog || !this.activeOverlay || this.isClosing) return;
-
-    this.isClosing = true;
-
-    // 添加关闭动画类
-    this.activeDialog.classList.add('dialog-closing');
-    this.activeOverlay.classList.add('overlay-closing');
-
-    // 动画结束后移除元素
-    setTimeout(() => {
-      if (this.activeOverlay && this.activeOverlay.parentNode) {
-        this.activeOverlay.parentNode.removeChild(this.activeOverlay);
-      }
-      this.activeDialog = null;
-      this.activeOverlay = null;
-      this.isClosing = false;
-    }, 200); // 与动画持续时间相匹配
+    this.forceCleanupDialogs();
   }
 }
