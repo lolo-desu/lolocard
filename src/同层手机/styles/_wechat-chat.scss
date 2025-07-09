@@ -401,8 +401,8 @@
   display: inline-flex;
   flex-direction: column;
   align-items: center;
-  width: 100%; /* 使用固定宽度而非自适应 */
-  max-width: 90%; /* 增加最大宽度以适应更长的文本 */
+  /* 移除固定宽度，让容器根据内容自适应 */
+  max-width: 90%; /* 保持最大宽度限制 */
   margin: 0 auto; /* 居中显示 */
 }
 
@@ -500,9 +500,11 @@
   padding: 0.5rem 0.75rem;
   border-radius: 0.5rem;
   margin-top: 0.25rem;
-  width: 100%; /* 确保宽度一致 */
-  max-width: 100%; /* 使用100%宽度 */
-  text-align: left; /* 改为左对齐，便于阅读长文本 */
+  /* 移除固定宽度，让描述框根据内容自适应宽度 */
+  width: auto; /* 自适应宽度 */
+  min-width: fit-content; /* 确保至少能容纳内容 */
+  max-width: 100%; /* 保持最大宽度限制 */
+  text-align: center; /* 居中对齐文字 */
   line-height: 1.5; /* 增加行高，提高可读性 */
   box-shadow: 0 1px 3px rgba(0, 0, 0, 0.1);
   display: none;

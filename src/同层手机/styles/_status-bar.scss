@@ -22,6 +22,13 @@
   font-weight: 600;
 }
 
+#current-time {
+  display: inline-flex;
+  align-items: center;
+  height: 1em;
+  line-height: 1;
+}
+
 .status-right {
   display: flex;
   align-items: center;
@@ -41,6 +48,10 @@
   justify-content: center;
   height: 1em; // 设置固定高度以确保垂直对齐
   line-height: 1; // 确保行高一致
+}
+
+.moon-icon {
+  transform: translateY(0.5px); // 微调月亮图标位置，使其与时间对齐
 }
 
 // 隐藏触发器
