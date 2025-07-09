@@ -448,7 +448,7 @@ export class EventHandler implements IEventHandler {
         console.error('[BLMX] 无法获取朋友圈ID，data-moment-id属性缺失');
         return;
       }
-      console.log(`[BLMX] 朋友圈操作，ID: ${momentId}`);
+      // 朋友圈操作
 
       if (target.closest('.delete-moment-btn')) {
         const confirmed = await this.dialogManager.confirm(
@@ -467,10 +467,7 @@ export class EventHandler implements IEventHandler {
           const momentSequenceId = parseInt(momentId, 10);
           const actualMomentIndex = momentPostLogIndices[momentSequenceId];
 
-          console.log(
-            `[BLMX] 删除朋友圈 - 序列ID: ${momentSequenceId}, 实际索引: ${actualMomentIndex}, 朋友圈索引列表:`,
-            momentPostLogIndices,
-          );
+          // 删除朋友圈
 
           if (actualMomentIndex !== undefined && actualMomentIndex >= 0) {
             // 先收集所有需要删除的条目索引（从后往前删除避免索引变化）
@@ -516,7 +513,7 @@ export class EventHandler implements IEventHandler {
             } as import('./script').LikeEntry;
 
             this.blmxManager.addEntry(likeEntry);
-            console.log(`[BLMX] 用户点赞朋友圈，ID: ${momentId}`);
+            // 用户点赞朋友圈
           } else if (result.type === 'comment' && result.content) {
             // 添加评论
             const commentId = `comment-${Date.now()}-${Math.random().toString(36).substring(2, 10)}`;
@@ -527,7 +524,7 @@ export class EventHandler implements IEventHandler {
             } as import('./script').CommentEntry;
 
             this.blmxManager.addEntry(commentEntry);
-            console.log(`[BLMX] 用户评论朋友圈，ID: ${momentId}, 内容: ${result.content}`);
+            // 用户评论朋友圈
           }
 
           // 更新界面和状态
@@ -559,8 +556,9 @@ export class EventHandler implements IEventHandler {
       this.appController.updateUserName();
     });
     $('#moments-user-avatar').on('click', () => {
-      this.appController.updateSignature();
+      this.appController.updateAvatar('user');
     });
+    // 个性签名设置已整合到用户头像设置对话框中，无需单独点击事件
     $('#moments-cover-photo').on('click', () => {
       this.appController.updateCoverPhoto();
     });

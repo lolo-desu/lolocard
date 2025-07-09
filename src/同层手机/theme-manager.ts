@@ -472,6 +472,68 @@ export class ThemeManager {
     return this.currentTheme;
   }
 
+  // 获取当前主题的实际应用数据（从DOM的CSS变量中读取）
+  getCurrentThemeWithAppliedValues(): Theme {
+    const theme = { ...this.currentTheme };
+    const colors = { ...theme.colors };
+
+    // 从DOM中读取实际应用的CSS变量值
+    const root = document.documentElement;
+    const computedStyle = getComputedStyle(root);
+
+    // 读取实际应用的颜色值
+    const actualValues = {
+      phoneFrame: computedStyle.getPropertyValue('--phoneFrame').trim(),
+      primary: computedStyle.getPropertyValue('--primary-blue').trim(),
+      light: computedStyle.getPropertyValue('--light-blue').trim(),
+      ultraLight: computedStyle.getPropertyValue('--ultra-light-blue').trim(),
+      soft: computedStyle.getPropertyValue('--soft-blue').trim(),
+      deep: computedStyle.getPropertyValue('--deep-blue').trim(),
+      textColor: computedStyle.getPropertyValue('--text-color').trim(),
+      textPrimary: computedStyle.getPropertyValue('--text-primary').trim(),
+      textSecondary: computedStyle.getPropertyValue('--text-secondary').trim(),
+      borderColor: computedStyle.getPropertyValue('--border-color').trim(),
+      bubbleShadow: computedStyle.getPropertyValue('--bubble-shadow').trim(),
+      bubbleThemBg: computedStyle.getPropertyValue('--wechat-bubble-them-bg').trim(),
+      bubbleMeBg: computedStyle.getPropertyValue('--wechat-bubble-me-bg').trim(),
+      bubbleThemText: computedStyle.getPropertyValue('--wechat-bubble-them-text').trim(),
+      bubbleMeText: computedStyle.getPropertyValue('--wechat-bubble-me-text').trim(),
+      headerBg: computedStyle.getPropertyValue('--header-bg').trim(),
+      statusBarColor: computedStyle.getPropertyValue('--status-bar-color').trim(),
+      dynamicIslandColor: computedStyle.getPropertyValue('--dynamic-island-color').trim(),
+      appBgColor: computedStyle.getPropertyValue('--app-bg-color').trim(),
+      settingsBgColor: computedStyle.getPropertyValue('--settings-bg-color').trim(),
+      settingsCardBgColor: computedStyle.getPropertyValue('--settings-card-bg-color').trim(),
+      shadowColor: computedStyle.getPropertyValue('--shadow-color').trim(),
+      shadowColorRgba: computedStyle.getPropertyValue('--shadow-color-rgba').trim(),
+      gradientStart:
+        computedStyle.getPropertyValue('--blue-gradient-start').trim() ||
+        computedStyle.getPropertyValue('--primary-gradient-light').trim(),
+      gradientEnd:
+        computedStyle.getPropertyValue('--blue-gradient-end').trim() ||
+        computedStyle.getPropertyValue('--primary-gradient-dark').trim(),
+    };
+
+    // 使用实际应用的值，如果CSS变量存在的话
+    Object.keys(actualValues).forEach(key => {
+      const value = actualValues[key as keyof typeof actualValues];
+      if (value && value !== '') {
+        (colors as any)[key] = value;
+      }
+    });
+
+    // 保持原有的布尔值和其他非颜色属性
+    colors.isDarkMode = theme.colors.isDarkMode;
+    colors.useSingleColorIcons = theme.colors.useSingleColorIcons;
+    colors.phoneFrameGradient = theme.colors.phoneFrameGradient;
+    colors.defaultWallpapers = theme.colors.defaultWallpapers;
+
+    return {
+      ...theme,
+      colors,
+    };
+  }
+
   // 获取所有默认主题
   getThemes(): Record<string, Theme> {
     return THEMES;
@@ -546,6 +608,14 @@ export class ThemeManager {
     root.style.setProperty('--soft-blue', colors.soft);
     root.style.setProperty('--deep-blue', colors.deep);
 
+    // 设置文字颜色变量 - 这是关键的修复！
+    root.style.setProperty('--text-color', colors.textColor);
+    root.style.setProperty('--text-primary', colors.textPrimary);
+    root.style.setProperty('--text-secondary', colors.textSecondary);
+
+    // 设置边框颜色
+    root.style.setProperty('--border-color', colors.borderColor);
+
     // 根据useSingleColorIcons属性设置图标颜色
     if (colors.useSingleColorIcons) {
       // 使用主题色作为图标颜色
@@ -595,6 +665,9 @@ export class ThemeManager {
 
     // 设置设置卡片背景色
     root.style.setProperty('--settings-card-bg-color', colors.settingsCardBgColor);
+
+    // 设置输入框背景色（非夜间模式统一为白色）
+    root.style.setProperty('--input-bg', colors.isDarkMode ? '#2a2a2a' : '#ffffff');
 
     // 设置阴影颜色
     root.style.setProperty('--shadow-color', colors.shadowColor);

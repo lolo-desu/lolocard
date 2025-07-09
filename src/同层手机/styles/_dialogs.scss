@@ -16,7 +16,7 @@
 
 .custom-dialog {
   background: var(--header-bg);
-  border-radius: 1rem;
+  border-radius: var(--dialog-border-radius);
   // 增强阴影效果来分离层级
   box-shadow: 0 25px 50px rgba(0, 0, 0, 0.25), 0 15px 30px rgba(0, 0, 0, 0.15), 0 8px 16px rgba(0, 0, 0, 0.1),
     0 4px 8px rgba(0, 0, 0, 0.05);
@@ -60,7 +60,7 @@
     width: 100%;
     padding: 0.75rem;
     border: 1px solid var(--border-color);
-    border-radius: 0.5rem;
+    border-radius: var(--input-border-radius);
     font-size: 0.9rem;
     color: var(--text-primary);
     background-color: var(--input-bg);
@@ -186,7 +186,7 @@ body[data-theme='white'] .sticker-manager-container {
 // 综合对话框主体（增强阴影分离层级）
 .mobile-dialog {
   background: var(--header-bg);
-  border-radius: 1rem;
+  border-radius: var(--dialog-border-radius);
   // 增强阴影效果来分离层级
   box-shadow: 0 30px 60px rgba(0, 0, 0, 0.3), 0 20px 40px rgba(0, 0, 0, 0.2), 0 10px 20px rgba(0, 0, 0, 0.15),
     0 5px 10px rgba(0, 0, 0, 0.1);
@@ -265,7 +265,7 @@ body[data-theme='white'] .sticker-manager-container {
     width: 100%;
     padding: 0.75rem;
     border: 1px solid var(--border-color);
-    border-radius: 0.5rem;
+    border-radius: var(--input-border-radius);
     font-size: 0.9rem;
     color: var(--text-primary);
     background-color: white;
@@ -294,7 +294,7 @@ body[data-theme='white'] .sticker-manager-container {
 .mobile-dialog .radio-group {
   display: flex;
   margin-top: 0.5rem;
-  border-radius: 0.5rem;
+  border-radius: var(--element-border-radius);
   overflow: hidden;
   border: 1px solid var(--border-color);
 
@@ -345,7 +345,7 @@ body[data-theme='white'] .sticker-manager-container {
 .mobile-dialog .image-options {
   background: var(--ultra-light-blue);
   padding: 0.75rem;
-  border-radius: 0.5rem;
+  border-radius: var(--element-border-radius);
   margin-top: 0.5rem;
   border: 1px solid var(--border-color);
 
@@ -362,7 +362,7 @@ body[data-theme='white'] .sticker-manager-container {
 .mobile-dialog .description-group {
   background: var(--ultra-light-blue);
   padding: 0.75rem;
-  border-radius: 0.5rem;
+  border-radius: var(--element-border-radius);
   margin-top: 0.5rem;
   border: 1px solid var(--border-color);
 
@@ -543,14 +543,83 @@ body[data-theme='custom'] .mobile-dialog {
   // 自定义主题完全依赖CSS变量，无需特殊处理
   // 所有颜色都会自动跟随主题变化
 
-  .radio-group label:has(input[type='radio']:checked) {
-    background: var(--primary-blue);
-    color: white;
+  .image-options,
+  .description-group {
+    background: var(--settings-card-bg-color);
+    border-color: var(--border-color);
   }
 
-  .radio-group label:hover:not(:has(input[type='radio']:checked)) {
-    background: var(--ultra-light-blue);
+  .radio-group {
+    border-color: var(--border-color);
+
+    label {
+      background: var(--settings-card-bg-color);
+      color: var(--text-primary);
+      border-right-color: var(--border-color);
+
+      &:has(input[type='radio']:checked) {
+        background: var(--primary-blue);
+        color: white;
+      }
+
+      &:hover:not(:has(input[type='radio']:checked)) {
+        background: var(--ultra-light-blue);
+        color: var(--primary-blue);
+      }
+    }
+  }
+
+  .dialog-btn {
     color: var(--primary-blue);
+
+    &:hover {
+      background-color: var(--ultra-light-blue);
+    }
+
+    &:active {
+      background-color: var(--light-blue);
+    }
+  }
+}
+
+// 夜间模式下的自定义主题适配
+body.dark-mode[data-theme='custom'] .mobile-dialog {
+  .image-options,
+  .description-group {
+    background: var(--settings-card-bg-color);
+    border-color: var(--border-color);
+  }
+
+  .radio-group {
+    border-color: var(--border-color);
+
+    label {
+      background: var(--settings-card-bg-color);
+      color: var(--text-primary);
+      border-right-color: var(--border-color);
+
+      &:has(input[type='radio']:checked) {
+        background: var(--primary-blue);
+        color: white;
+      }
+
+      &:hover:not(:has(input[type='radio']:checked)) {
+        background: var(--ultra-light-blue);
+        color: var(--primary-blue);
+      }
+    }
+  }
+
+  .dialog-btn {
+    color: var(--primary-blue);
+
+    &:hover {
+      background-color: var(--ultra-light-blue);
+    }
+
+    &:active {
+      background-color: var(--light-blue);
+    }
   }
 }
 
@@ -678,7 +747,7 @@ body[data-theme='custom'] .mobile-dialog {
       width: 100%;
       padding: 0.75rem 1rem;
       border: 2px solid var(--border-color);
-      border-radius: 0.75rem;
+      border-radius: var(--input-border-radius);
       font-size: 1rem;
       color: var(--text-primary);
       background-color: var(--input-bg);
@@ -788,6 +857,23 @@ body[data-theme='custom'] .mobile-dialog {
 
   input[type='text'] {
     font-size: 0.95rem;
+  }
+}
+
+// 用户资料设置对话框样式（完全使用现有对话框样式）
+.user-profile-dialog {
+  // 继承所有现有的custom-dialog样式，只添加特定的调整
+  .dialog-input-container {
+    margin-bottom: 0.75rem;
+
+    &:last-child {
+      margin-bottom: 0;
+    }
+
+    input[type='url'] {
+      font-family: monospace;
+      font-size: 0.85rem;
+    }
   }
 }
 
@@ -1023,7 +1109,7 @@ body[data-theme='white'] {
       min-height: 80px;
       padding: 0.75rem 1rem;
       border: 2px solid var(--border-color);
-      border-radius: 0.75rem;
+      border-radius: var(--input-border-radius);
       font-size: 1rem;
       color: var(--text-primary);
       background-color: var(--input-bg);
@@ -1049,7 +1135,7 @@ body[data-theme='white'] {
       width: 100%;
       padding: 0.75rem 1rem;
       border: 2px solid var(--border-color);
-      border-radius: 0.75rem;
+      border-radius: var(--input-border-radius);
       font-size: 1rem;
       color: var(--text-primary);
       background-color: var(--input-bg);
@@ -1176,7 +1262,7 @@ body[data-theme='white'] {
 // 表情管理器容器 - 增强阴影分离层级
 .sticker-manager-container {
   background: var(--header-bg);
-  border-radius: 1rem;
+  border-radius: var(--dialog-border-radius);
   // 增强阴影效果来分离层级
   box-shadow: 0 35px 70px rgba(0, 0, 0, 0.35), 0 25px 50px rgba(0, 0, 0, 0.25), 0 15px 30px rgba(0, 0, 0, 0.2),
     0 8px 16px rgba(0, 0, 0, 0.15);
@@ -1268,7 +1354,7 @@ body[data-theme='white'] {
         width: 100%;
         padding: 0.75rem 1rem;
         border: 2px solid var(--border-color);
-        border-radius: 0.75rem;
+        border-radius: var(--input-border-radius);
         font-size: 1rem;
         color: var(--text-primary);
         background-color: var(--input-bg);
@@ -1319,7 +1405,7 @@ body[data-theme='white'] {
             max-height: 150px;
             border: 1px dashed var(--border-color);
             padding: 0.5rem;
-            border-radius: 0.5rem;
+            border-radius: var(--element-border-radius);
             background: var(--input-bg);
           }
         }
@@ -1329,7 +1415,7 @@ body[data-theme='white'] {
           background: var(--primary-blue);
           color: white;
           border: none;
-          border-radius: 0.75rem;
+          border-radius: var(--button-border-radius);
           font-size: 0.95rem;
           font-weight: 600;
           cursor: pointer;
@@ -1352,7 +1438,7 @@ body[data-theme='white'] {
         margin-bottom: 1rem;
         padding: 1rem;
         background: var(--input-bg);
-        border-radius: 0.75rem;
+        border-radius: var(--element-border-radius);
         border-left: 4px solid var(--primary-blue);
 
         p {
@@ -1379,7 +1465,7 @@ body[data-theme='white'] {
             code {
               background: rgba(114, 173, 243, 0.1);
               padding: 0.2rem 0.4rem;
-              border-radius: 0.25rem;
+              border-radius: var(--small-border-radius);
               font-family: 'Consolas', 'Monaco', 'Courier New', monospace;
               font-size: 0.8rem;
             }
@@ -1393,7 +1479,7 @@ body[data-theme='white'] {
         background: var(--primary-blue);
         color: white;
         border: none;
-        border-radius: 0.75rem;
+        border-radius: var(--button-border-radius);
         font-size: 0.95rem;
         font-weight: 600;
         cursor: pointer;
@@ -1425,7 +1511,7 @@ body[data-theme='white'] {
             padding: 0.5rem 0.75rem;
             background: var(--input-bg);
             border: 1px solid var(--border-color);
-            border-radius: 0.5rem;
+            border-radius: var(--element-border-radius);
             font-size: 0.85rem;
             cursor: pointer;
             transition: all 0.2s ease;
@@ -1443,7 +1529,7 @@ body[data-theme='white'] {
           background: #e74c3c;
           color: white;
           border: none;
-          border-radius: 0.5rem;
+          border-radius: var(--button-border-radius);
           font-size: 0.85rem;
           cursor: pointer;
           transition: all 0.2s ease;
@@ -1458,7 +1544,7 @@ body[data-theme='white'] {
         max-height: 400px;
         overflow-y: auto;
         border: 1px solid var(--border-color);
-        border-radius: 0.75rem;
+        border-radius: var(--element-border-radius);
         padding: 1rem;
         background: var(--input-bg);
 
@@ -1473,7 +1559,7 @@ body[data-theme='white'] {
             align-items: center;
             padding: 0.75rem;
             border: 1px solid var(--border-color);
-            border-radius: 0.5rem;
+            border-radius: var(--element-border-radius);
             background: white;
             transition: all 0.2s ease;
             position: relative;
@@ -1515,7 +1601,7 @@ body[data-theme='white'] {
               width: 1.25rem;
               height: 1.25rem;
               border: 1px solid var(--checkbox-border-unchecked);
-              border-radius: 0.25rem;
+              border-radius: var(--small-border-radius);
               background: var(--checkbox-bg-unchecked);
               cursor: pointer;
               @include transition-smooth;

@@ -65,7 +65,7 @@
   right: 0.75rem;
   display: flex;
   align-items: flex-end;
-  gap: 0.75rem;
+  gap: 0.5rem;
 }
 
 .moments-user-name {
@@ -74,28 +74,32 @@
   font-weight: bold;
   text-shadow: 0 0.0625rem 0.1875rem rgba(0, 0, 0, 0.5);
   position: relative;
-  bottom: 1.375rem;
+  bottom: 1.75rem;
   cursor: pointer;
 }
 
 .moments-user-avatar {
-  width: 3.9375rem;
-  height: 3.9375rem;
+  width: 4.25rem;
+  height: 4.25rem;
   border-radius: 0.5rem;
   object-fit: cover;
   cursor: pointer;
+  border: 2px solid #fff;
+  box-shadow: 0 1px 3px rgba(0, 0, 0, 0.2);
 }
 
 .user-signature {
   position: absolute;
-  top: 4.25rem;
-  right: 0;
-  width: 14.0625rem;
+  bottom: -2.5rem;
+  right: 0.75rem;
+  width: 12rem;
   text-align: right;
   word-wrap: break-word;
   line-height: 1.4;
   color: #8a8a8a;
   font-size: 0.8em;
+  cursor: pointer;
+  margin-top: 0.5rem;
 }
 
 .moments-feed-list {

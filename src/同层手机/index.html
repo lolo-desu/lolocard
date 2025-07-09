@@ -205,6 +205,33 @@
               </div>
             </div>
 
+            <!-- 使用说明卡片 -->
+            <div class="settings-card" style="margin-top: 1rem; padding: 0">
+              <div style="padding: 1rem; border-bottom: 1px solid #efefef">
+                <h3 style="margin: 0; font-size: 1rem; color: var(--text-primary)">💡 使用说明</h3>
+              </div>
+              <div style="padding: 1rem">
+                <div style="margin-bottom: 0.75rem">
+                  <h4 style="margin: 0 0 0.5rem 0; font-size: 0.9rem; color: var(--text-primary); font-weight: 600">
+                    📱 消息撤回功能
+                  </h4>
+                  <p style="margin: 0; font-size: 0.85rem; color: var(--text-secondary); line-height: 1.4">
+                    <strong>长按撤回：</strong>长按自己发送的消息气泡600毫秒即可撤回<br />
+                    <strong>双击撤回：</strong>快速双击自己的消息气泡也可以撤回（全屏模式推荐）<br />
+                    <span style="color: var(--primary-blue)">💡 提示：全屏模式下长按可能失效，建议使用双击撤回</span>
+                  </p>
+                </div>
+                <div style="margin-bottom: 0.75rem">
+                  <h4 style="margin: 0 0 0.5rem 0; font-size: 0.9rem; color: var(--text-primary); font-weight: 600">
+                    🎨 主题自定义
+                  </h4>
+                  <p style="margin: 0; font-size: 0.85rem; color: var(--text-secondary); line-height: 1.4">
+                    选择预设主题后点击"自定义主题"按钮，可以基于当前主题进行个性化调整
+                  </p>
+                </div>
+              </div>
+            </div>
+
             <div class="settings-card" style="margin-top: 1rem; padding: 1rem">
               <p style="font-weight: 500; margin: 0 0 0.75rem 0.25rem; color: var(--text-primary); font-size: 0.9em">
                 调试工具
@@ -271,6 +298,28 @@
                 </div>
                 <div style="font-size: 0.8em; color: var(--text-secondary); text-align: center">
                   选择适合您屏幕的手机尺寸
+                </div>
+              </div>
+            </div>
+
+            <!-- 字体设置卡片 -->
+            <div class="settings-card" style="margin-top: 1rem; padding: 1rem">
+              <p style="font-weight: 500; margin: 0 0 0.75rem 0.25rem; color: var(--text-primary); font-size: 0.9em">
+                字体设置
+              </p>
+              <div style="display: flex; flex-direction: column; gap: 0.75rem">
+                <div style="display: flex; justify-content: space-between; align-items: center; gap: 0.5rem">
+                  <button id="font-default" class="font-btn font-active">
+                    <span class="font-icon">🎨</span>
+                    <span class="font-label">自定义字体</span>
+                  </button>
+                  <button id="font-system" class="font-btn">
+                    <span class="font-icon">📱</span>
+                    <span class="font-label">系统字体</span>
+                  </button>
+                </div>
+                <div style="font-size: 0.8rem; color: var(--text-secondary); text-align: center; margin-top: 0.25rem">
+                  选择应用使用的字体样式
                 </div>
               </div>
             </div>
@@ -358,7 +407,7 @@
                   id="moments-user-avatar"
                 />
               </div>
-              <div class="user-signature" id="user-signature">这里是个性签名...</div>
+              <div class="user-signature" id="user-signature-display">这里是个性签名...</div>
             </div>
             <ul class="moments-feed-list" id="moments-feed-list"></ul>
           </main>
@@ -628,8 +677,28 @@
 
           <div style="margin-bottom: 20px">
             <h3 style="margin: 0 0 10px 0; color: var(--text-primary); font-size: 1rem">主题模式</h3>
-            <div style="display: flex; align-items: center">
-              <input type="checkbox" id="dark-mode-toggle" style="margin-right: 10px; width: 18px; height: 18px" />
+            <div style="display: flex; align-items: center; position: relative">
+              <input
+                type="checkbox"
+                id="dark-mode-toggle"
+                class="sticker-checkbox"
+                style="position: absolute; opacity: 0; width: 0; height: 0; pointer-events: none"
+              />
+              <div
+                class="sticker-checkbox-button"
+                id="dark-mode-checkbox-button"
+                style="
+                  position: relative;
+                  width: 18px;
+                  height: 18px;
+                  margin-left: 2px;
+                  margin-right: 12px;
+                  display: block;
+                  border: 1px solid #ccc;
+                  background: white;
+                  cursor: pointer;
+                "
+              ></div>
               <label for="dark-mode-toggle" style="color: var(--text-primary); font-size: 0.9rem">启用夜间模式</label>
             </div>
             <div style="font-size: 0.8rem; color: var(--text-secondary); margin-top: 5px">
@@ -639,12 +708,28 @@
 
           <div style="margin-bottom: 20px">
             <h3 style="margin: 0 0 10px 0; color: var(--text-primary); font-size: 1rem">图标样式</h3>
-            <div style="display: flex; align-items: center">
+            <div style="display: flex; align-items: center; position: relative">
               <input
                 type="checkbox"
                 id="single-color-icons-toggle"
-                style="margin-right: 10px; width: 18px; height: 18px"
+                class="sticker-checkbox"
+                style="position: absolute; opacity: 0; width: 0; height: 0; pointer-events: none"
               />
+              <div
+                class="sticker-checkbox-button"
+                id="single-color-icons-checkbox-button"
+                style="
+                  position: relative;
+                  width: 18px;
+                  height: 18px;
+                  margin-left: 2px;
+                  margin-right: 12px;
+                  display: block;
+                  border: 1px solid #ccc;
+                  background: white;
+                  cursor: pointer;
+                "
+              ></div>
               <label for="single-color-icons-toggle" style="color: var(--text-primary); font-size: 0.9rem"
                 >使用单一颜色图标</label
               >
@@ -653,6 +738,50 @@
               启用后，微信图标和设置图标将使用主题色，而不是默认的绿色和灰色
             </div>
           </div>
+        </div>
+
+        <!-- 导入导出按钮组 -->
+        <div
+          style="
+            display: flex;
+            gap: 10px;
+            justify-content: center;
+            margin-top: 15px;
+            padding: 15px;
+            background: #f8f9fa;
+            border-radius: 8px;
+          "
+        >
+          <button
+            id="import-theme-btn"
+            style="
+              padding: 10px 20px;
+              background: var(--primary-blue);
+              color: white;
+              border: none;
+              border-radius: 5px;
+              cursor: pointer;
+              font-weight: 500;
+            "
+            title="导入JSON主题文件"
+          >
+            导入
+          </button>
+          <button
+            id="export-json-btn"
+            style="
+              padding: 10px 20px;
+              background: var(--primary-blue);
+              color: white;
+              border: none;
+              border-radius: 5px;
+              cursor: pointer;
+              font-weight: 500;
+            "
+            title="导出为JSON格式"
+          >
+            导出
+          </button>
         </div>
 
         <div style="display: flex; justify-content: space-between; margin-top: 20px">

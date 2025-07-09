@@ -39,7 +39,7 @@
 
 .settings-card {
   background-color: var(--settings-card-bg-color);
-  border-radius: 0.75rem;
+  border-radius: var(--element-border-radius);
   padding: 1rem;
   box-shadow: 0 2px 8px rgba(0, 0, 0, 0.05);
 
@@ -142,11 +142,12 @@ body.dark-mode #show-last-sent-prompt-btn {
   justify-content: center;
   background-color: var(--settings-card-bg-color);
   border: 1px solid var(--border-color);
-  border-radius: 0.75rem;
+  border-radius: var(--element-border-radius);
   padding: 0.75rem 0.5rem;
   cursor: pointer;
   @include transition-smooth;
   gap: 0.5rem;
+  color: var(--text-primary);
 
   &:hover {
     transform: translateY(-2px);
@@ -160,14 +161,128 @@ body.dark-mode #show-last-sent-prompt-btn {
   }
 }
 
+// 夜间主题特殊适配
+body.dark-mode .phone-size-btn {
+  background-color: #3c3c3c;
+  border-color: #505050;
+  color: #c0c0c0;
+
+  &:hover {
+    background-color: #4a4a4a;
+    border-color: #606060;
+  }
+
+  &.phone-size-active {
+    background-color: #505050;
+    border-color: var(--primary-blue);
+    color: #e0e0e0;
+  }
+}
+
+// 自定义主题适配
+body[data-theme='custom'] .phone-size-btn {
+  // 确保使用主题变量
+  background-color: var(--settings-card-bg-color);
+  border-color: var(--border-color);
+  color: var(--text-primary);
+
+  &:hover {
+    background-color: var(--ultra-light-blue);
+    border-color: var(--primary-blue);
+  }
+
+  &.phone-size-active {
+    background-color: rgba(var(--shadow-r), var(--shadow-g), var(--shadow-b), 0.1);
+    border-color: var(--primary-blue);
+    color: var(--primary-blue);
+  }
+}
+
 .size-icon {
   width: 10px;
   background-color: var(--primary-blue);
-  border-radius: 2px;
+  border-radius: var(--small-border-radius);
+}
+
+// 夜间主题下的图标适配
+body.dark-mode .size-icon {
+  background-color: #c0c0c0;
+}
+
+body.dark-mode .phone-size-active .size-icon {
+  background-color: var(--primary-blue);
+}
+
+// 自定义主题下的图标适配
+body[data-theme='custom'] .size-icon {
+  background-color: var(--text-secondary);
+}
+
+body[data-theme='custom'] .phone-size-active .size-icon {
+  background-color: var(--primary-blue);
 }
 
 .size-label {
   font-size: 0.8em;
   color: var(--text-primary);
   font-weight: 500;
+}
+
+// 字体选择按钮样式
+.font-btn {
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 0.5rem;
+  padding: 0.75rem 0.5rem;
+  border: 2px solid #e0e0e0;
+  border-radius: var(--element-border-radius);
+  background: #f8f9fa;
+  cursor: pointer;
+  transition: all 0.3s ease;
+  min-height: 4rem;
+
+  &:hover {
+    border-color: var(--primary-blue);
+    background: #f0f7ff;
+  }
+
+  &.font-active {
+    border-color: var(--primary-blue);
+    background: #e8f4fd;
+
+    .font-label {
+      color: var(--primary-blue);
+      font-weight: 600;
+    }
+  }
+}
+
+.font-icon {
+  font-size: 1.2em;
+  margin-bottom: 0.25rem;
+}
+
+.font-label {
+  font-size: 0.8em;
+  color: var(--text-primary);
+  font-weight: 500;
+  text-align: center;
+}
+
+// 夜间模式下的字体按钮适配
+body.dark-mode .font-btn {
+  background: #2a2a2a;
+  border-color: #404040;
+
+  &:hover {
+    background: #333;
+    border-color: var(--primary-blue);
+  }
+
+  &.font-active {
+    background: #1a3a5c;
+    border-color: var(--primary-blue);
+  }
 }

@@ -1,0 +1,46 @@
+{
+  "name": "purple-dream",
+  "displayName": "紫色主题",
+  "version": "1.0",
+  "exportDate": "2025-01-08T00:00:00.000Z",
+  "colors": {
+    "phoneFrame": "#9b59b6",
+    "phoneFrameGradient": [
+      "#8e44ad",
+      "#9b59b6",
+      "#bb6bd9",
+      "#8e44ad"
+    ],
+    "primary": "#9b59b6",
+    "light": "#bb6bd9",
+    "ultraLight": "#f4ecf7",
+    "soft": "#d7bde2",
+    "deep": "#6c3483",
+    "gradientStart": "#bb6bd9",
+    "gradientEnd": "#d7bde2",
+    "textColor": "#ffffff",
+    "textPrimary": "#8e44ad",
+    "textSecondary": "#6c3483",
+    "borderColor": "#d7bde2",
+    "bubbleShadow": "0 2px 8px rgba(155, 89, 182, 0.15)",
+    "bubbleThemBg": "#ffffff",
+    "bubbleMeBg": "#bb6bd9",
+    "bubbleThemText": "#9b59b6",
+    "bubbleMeText": "#ffffff",
+    "headerBg": "linear-gradient(315deg, #f4ecf7 0%, #faf5fc 100%)",
+    "statusBarColor": "#8e44ad",
+    "dynamicIslandColor": "#bb6bd9",
+    "appBgColor": "#ffffff",
+    "settingsBgColor": "#f4ecf7",
+    "settingsCardBgColor": "#ffffff",
+    "shadowColor": "#9b59b6",
+    "shadowColorRgba": "rgba(155, 89, 182, 0.3)",
+    "isDarkMode": false,
+    "defaultWallpapers": {
+      "chat": "https://gitgud.io/lolodesu/lolobabytutorial/-/raw/master/lologame/素材/wallpaper/蓝色_3.jpg",
+      "home": "https://gitgud.io/lolodesu/lolobabytutorial/-/raw/master/lologame/素材/wallpaper/蓝色_2.jpg",
+      "settings": "#f4ecf7"
+    },
+    "useSingleColorIcons": true
+  }
+}

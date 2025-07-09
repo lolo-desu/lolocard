@@ -22,7 +22,7 @@ input[type='checkbox'] {
   padding: 0.75rem 1.25rem;
   margin: 0.25rem;
   border: 1px solid var(--checkbox-border-unchecked);
-  border-radius: 1rem; // 与对话框圆角一致
+  border-radius: var(--dialog-border-radius); // 与对话框圆角一致
   background: var(--checkbox-bg-unchecked);
   color: var(--checkbox-text-unchecked);
   font-size: 0.9rem;
@@ -104,7 +104,7 @@ input[type='checkbox'] {
     min-height: 36px;
     padding: 0.5rem 1rem;
     font-size: 0.8rem;
-    border-radius: 0.5rem;
+    border-radius: var(--element-border-radius);
   }
 
   // 大尺寸
@@ -112,7 +112,7 @@ input[type='checkbox'] {
     min-height: 52px;
     padding: 1rem 1.5rem;
     font-size: 1rem;
-    border-radius: 1rem;
+    border-radius: var(--dialog-border-radius);
   }
 
   // 全宽
@@ -224,15 +224,56 @@ body.dark-mode[data-theme='white'] .checkbox-button {
 
 // 表情包checkbox的主题适配
 .sticker-checkbox-button {
-  // 继承基础checkbox的主题变量
-  border-color: var(--checkbox-border-unchecked);
-  background: var(--checkbox-bg-unchecked);
+  // 基础样式（适用于所有使用场景）
+  border: 1px solid var(--checkbox-border-unchecked, #e0e0e0);
+  border-radius: var(--element-border-radius);
+  background: var(--checkbox-bg-unchecked, #ffffff);
+  cursor: pointer;
+  @include transition-smooth;
+  display: inline-block;
+
+  // 确保可点击
+  pointer-events: auto;
+  user-select: none;
+
+  // 为微信主题定义CSS变量
+  body[data-theme='white'] & {
+    --checkbox-border-checked: #666666;
+    --checkbox-border-unchecked: #e0e0e0;
+    --checkbox-bg-unchecked: #ffffff;
+    --checkbox-hover-bg: #f8f8f8;
+  }
+
+  // 为粉色主题定义CSS变量
+  body[data-theme='pink'] & {
+    --checkbox-border-checked: #f372ad;
+    --checkbox-border-unchecked: #e1cbd5;
+    --checkbox-bg-unchecked: #ffffff;
+    --checkbox-hover-bg: #fde8f4;
+  }
+
+  // 为自定义主题定义CSS变量
+  body[data-theme='custom'] & {
+    --checkbox-border-checked: var(--primary-blue);
+    --checkbox-border-unchecked: var(--border-color);
+    --checkbox-bg-unchecked: #ffffff;
+    --checkbox-hover-bg: var(--ultra-light-blue);
+  }
 
   &.checked {
-    border-color: var(--checkbox-border-checked);
+    border: 2px solid var(--checkbox-border-checked, #007aff);
+    background: var(--checkbox-bg-unchecked, #ffffff);
 
+    // 选中图标
     &::after {
-      color: var(--checkbox-border-checked);
+      content: '✓';
+      position: absolute;
+      top: 50%;
+      left: 50%;
+      transform: translate(-50%, -50%);
+      font-size: 0.75rem;
+      font-weight: bold;
+      color: var(--checkbox-border-checked, #007aff);
     }
   }
 

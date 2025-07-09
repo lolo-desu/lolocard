@@ -2,6 +2,9 @@
 body.dark-mode {
   background-color: transparent;
 
+  // 夜间模式下的输入框背景色
+  --input-bg: #2a2a2a;
+
   .app-view {
     background-color: var(--app-bg-color);
   }

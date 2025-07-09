@@ -195,11 +195,17 @@ export class AppController implements IAppController {
       // 初始化UI后设置主题选择器
       this.setupThemeSelector();
 
+      // 确保自定义主题按钮显示正确的信息
+      this.themeEditor.updateCustomThemeButton();
+
       // 初始化手机尺寸调整功能
       this.uiManager.setupPhoneSizeAdjustment();
 
       // 初始化表情包尺寸控制
       this.uiManager.setupStickerSizeControl();
+
+      // 初始化字体设置功能
+      this.uiManager.setupFontSelection();
 
       // 显示当前版本
       this.uiManager.displayAppVersion();
@@ -433,23 +439,140 @@ export class AppController implements IAppController {
     const currentUrl = config.avatars[avatarType] || '';
     const displayName = this.getDisplayName(avatarType);
 
-    const newUrl = await this.dialogManager.showInputDialog(
-      '更换头像',
-      `${displayName}头像URL`,
-      currentUrl,
-      '请输入头像图片链接',
-      'url',
-    );
+    if (avatarType === 'user') {
+      // 用户头像：显示头像和个性签名设置对话框
+      await this.showUserProfileDialog(currentUrl);
+    } else {
+      // 角色头像：只设置头像
+      const newUrl = await this.dialogManager.showInputDialog(
+        '更换头像',
+        `${displayName}头像URL`,
+        currentUrl,
+        '请输入头像图片链接',
+        'url',
+      );
 
-    if (newUrl) {
-      this.configManager.updateAvatar(avatarType, newUrl);
-      await this.dialogManager.alert('头像已更新！', '更新成功');
-      this.renderChatHistory();
-      this.renderMomentsFeed();
-      if (avatarType === 'user') {
-        $('#moments-user-avatar').attr('src', newUrl);
+      if (newUrl) {
+        this.configManager.updateAvatar(avatarType, newUrl);
+        await this.dialogManager.alert('头像已更新！', '更新成功');
+        this.renderChatHistory();
+        this.renderMomentsFeed();
       }
     }
+  }
+
+  // 显示用户资料设置对话框（头像+个性签名）
+  private async showUserProfileDialog(currentAvatarUrl: string): Promise<void> {
+    const currentSignature = this.configManager.getSavedSignature();
+
+    return new Promise(resolve => {
+      // 创建对话框HTML，使用与现有对话框完全一致的样式
+      const dialogHtml = `
+        <div class="custom-dialog-overlay" id="user-profile-dialog-overlay">
+          <div class="custom-dialog user-profile-dialog">
+            <div class="dialog-header">
+              <h3 class="dialog-title">个人资料设置</h3>
+            </div>
+            <div class="dialog-body">
+              <div class="dialog-input-container">
+                <input type="url" id="avatar-url-input" value="${currentAvatarUrl}" placeholder="请输入头像图片链接">
+              </div>
+              <div class="dialog-input-container">
+                <input type="text" id="signature-input" value="${currentSignature}" placeholder="请输入个性签名">
+              </div>
+            </div>
+            <div class="dialog-footer">
+              <button class="dialog-button cancel-button" id="user-profile-cancel">取消</button>
+              <button class="dialog-button primary-button" id="user-profile-confirm">确定</button>
+            </div>
+          </div>
+        </div>
+      `;
+
+      // 添加到手机屏幕容器内，与其他对话框保持一致
+      const $phoneScreen = $('.phone-screen');
+      if ($phoneScreen.length) {
+        $phoneScreen.append(dialogHtml);
+      } else {
+        // 如果找不到手机屏幕容器，回退到body
+        $('body').append(dialogHtml);
+      }
+      const $overlay = $('#user-profile-dialog-overlay');
+
+      // 显示对话框
+      $overlay.show();
+
+      // 绑定事件
+      $('#user-profile-cancel').on('click', () => {
+        $overlay.remove();
+        resolve();
+      });
+
+      $('#user-profile-confirm').on('click', async () => {
+        const newAvatarUrl = ($('#avatar-url-input').val() as string).trim();
+        const newSignature = ($('#signature-input').val() as string).trim();
+
+        let hasChanges = false;
+
+        // 更新头像
+        if (newAvatarUrl && newAvatarUrl !== currentAvatarUrl) {
+          this.configManager.updateAvatar('user', newAvatarUrl);
+          $('#moments-user-avatar').attr('src', newAvatarUrl);
+          hasChanges = true;
+        }
+
+        // 更新个性签名
+        if (newSignature !== currentSignature) {
+          this.configManager.setSignature(newSignature);
+          $('#user-signature-display').text(newSignature);
+          hasChanges = true;
+
+          // 询问是否发送朋友圈通知
+          if (newSignature !== currentSignature) {
+            const shouldNotify = await this.dialogManager.confirm(
+              '是否要发送朋友圈动态通知AI你更改了个性签名？',
+              '朋友圈通知',
+            );
+            if (shouldNotify) {
+              this.momentsManager.notifyMomentChange('signature', currentSignature, newSignature);
+              this.eventHandler.setHasPendingNotifications(true);
+            }
+          }
+        }
+
+        $overlay.remove();
+
+        if (hasChanges) {
+          this.renderChatHistory();
+          this.renderMomentsFeed();
+          await this.dialogManager.alert('个人资料已更新！', '更新成功');
+        }
+
+        resolve();
+      });
+
+      // ESC键关闭
+      $(document).on('keydown.userProfile', e => {
+        if (e.key === 'Escape') {
+          $overlay.remove();
+          $(document).off('keydown.userProfile');
+          resolve();
+        }
+      });
+
+      // 点击遮罩关闭
+      $overlay.on('click', e => {
+        if (e.target === $overlay[0]) {
+          $overlay.remove();
+          resolve();
+        }
+      });
+
+      // 聚焦到头像输入框
+      setTimeout(() => {
+        $('#avatar-url-input').focus();
+      }, 100);
+    });
   }
 
   async updateCharRemark(): Promise<void> {
@@ -500,30 +623,7 @@ export class AppController implements IAppController {
     }
   }
 
-  async updateSignature(): Promise<void> {
-    const currentSignature = this.configManager.getSavedSignature();
-    const newSignature = await this.dialogManager.showInputDialog(
-      '个性签名',
-      '请输入你的个性签名',
-      currentSignature,
-      '输入个性签名...',
-    );
-
-    if (newSignature !== null && newSignature !== currentSignature) {
-      this.configManager.setSignature(newSignature);
-      $('#user-signature-display').text(newSignature);
-
-      // 询问用户是否要发送朋友圈通知AI
-      const shouldNotify = await this.dialogManager.confirm(
-        '是否要发送朋友圈动态通知AI你更改了个性签名？',
-        '朋友圈通知',
-      );
-      if (shouldNotify) {
-        this.momentsManager.notifyMomentChange('signature', currentSignature, newSignature);
-        this.eventHandler.setHasPendingNotifications(true);
-      }
-    }
-  }
+  // updateSignature方法已移除，个性签名设置已整合到用户头像设置对话框中
 
   async updateCoverPhoto(): Promise<void> {
     const currentCover = this.configManager.getSavedCoverPhoto() || '';
@@ -560,7 +660,7 @@ export class AppController implements IAppController {
     try {
       // 只允许撤回文字消息
       if (entry.type !== 'message') {
-        console.warn('只能撤回文字消息，当前消息类型:', entry.type);
+        // 只能撤回文字消息
         return;
       }
 
@@ -568,7 +668,7 @@ export class AppController implements IAppController {
       const queueIndex = this.userMessageQueue.findIndex(queueEntry => queueEntry.id === entry.id);
 
       if (queueIndex === -1) {
-        console.warn('未找到要撤回的消息:', entry.id);
+        // 未找到要撤回的消息
         return;
       }
 
@@ -612,6 +712,7 @@ export class AppController implements IAppController {
   // 主题管理协调
   setupThemeSelector(): void {
     this.themeEditor.setupThemeSelector();
+    this.themeEditor.addCustomThemeEditButton();
     this.setupThemeEditorEvents();
   }
 
@@ -620,6 +721,8 @@ export class AppController implements IAppController {
     const saveBtn = document.getElementById('save-theme-btn');
     const resetBtn = document.getElementById('reset-theme-btn');
     const customThemeBtn = document.getElementById('custom-theme-btn');
+    const importBtn = document.getElementById('import-theme-btn');
+    const exportJsonBtn = document.getElementById('export-json-btn');
 
     if (closeBtn) {
       closeBtn.addEventListener('click', () => this.themeEditor.closeThemeEditor());
@@ -635,6 +738,14 @@ export class AppController implements IAppController {
 
     if (customThemeBtn) {
       customThemeBtn.addEventListener('click', () => this.themeEditor.openThemeEditor());
+    }
+
+    if (importBtn) {
+      importBtn.addEventListener('click', () => this.themeEditor.importTheme());
+    }
+
+    if (exportJsonBtn) {
+      exportJsonBtn.addEventListener('click', () => this.themeEditor.exportThemeAsJSON());
     }
   }
 

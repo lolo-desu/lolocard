@@ -90,11 +90,12 @@ body.dark-mode .message-row.them .voice-bubble .voice-icon {
   padding: 0.5rem 0.625rem;
   border-radius: 0.3125rem;
   border: 0.0625rem solid #e5e5e5;
-  max-width: 65%;
+  max-width: 75%;
   font-size: 0.9em;
   line-height: 1.4;
   color: var(--text-primary);
-  word-wrap: break-word;
+  word-wrap: normal;
+  overflow-wrap: break-word;
   user-select: text;
   margin-top: 0.3125rem;
   box-shadow: 0 0.0625rem 0.125rem rgba(0, 0, 0, 0.1);

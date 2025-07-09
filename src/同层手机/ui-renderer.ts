@@ -166,10 +166,7 @@ export class UIRenderer {
             targetPost.comments.push({ ...(entry as any), originalLogIndex: index });
           }
         } else {
-          console.warn(
-            `[BLMX] Could not find target post for interaction. target_post_id: ${(entry as any).data.target_post_id}`,
-            entry,
-          );
+          // 目标帖子未找到，跳过交互渲染
         }
       }
     });
@@ -1010,7 +1007,7 @@ export class UIRenderer {
     }, 100);
   }
 
-  // 为USER消息设置长按撤回功能 - 移动端优化版本
+  // 为USER消息设置长按撤回功能 - 移动端优化版本，支持双击备用方案
   private setupUserMessageLongPress(messageRow: HTMLElement, entry: ChatEntry): void {
     const $messageRow = $(messageRow);
     const $messageBubble = $messageRow.find('.message-bubble');
@@ -1205,6 +1202,9 @@ export class UIRenderer {
       '-webkit-user-select': 'none',
       '-webkit-tap-highlight-color': 'transparent',
     });
+
+    // 添加双击撤回功能作为备用方案（特别是在全屏模式下长按可能失效时）
+    this.setupDoubleClickRecall($targetElement, entry);
   }
 
   // 处理USER消息撤回
@@ -1230,6 +1230,70 @@ export class UIRenderer {
       }
     } catch (error) {
       console.error('撤回消息时出错:', error);
+    }
+  }
+
+  // 设置双击撤回功能 - 作为长按撤回的备用方案
+  private setupDoubleClickRecall($targetElement: JQuery, entry: ChatEntry): void {
+    let clickCount = 0;
+    let clickTimer: number;
+    const doubleClickDelay = 300; // 300ms内的两次点击视为双击
+
+    $targetElement.on('click.doubleClickRecall', e => {
+      // 阻止事件冒泡，避免干扰其他点击事件
+      e.stopPropagation();
+
+      clickCount++;
+
+      if (clickCount === 1) {
+        // 第一次点击，启动定时器
+        clickTimer = window.setTimeout(() => {
+          // 超时后重置点击计数
+          clickCount = 0;
+        }, doubleClickDelay);
+      } else if (clickCount === 2) {
+        // 双击检测到，清除定时器并执行撤回
+        clearTimeout(clickTimer);
+        clickCount = 0;
+
+        // 添加视觉反馈
+        $targetElement.addClass('double-click-active');
+        setTimeout(() => {
+          $targetElement.removeClass('double-click-active');
+        }, 200);
+
+        // 添加触觉反馈（移动端）
+        if ('vibrate' in navigator) {
+          navigator.vibrate([30, 50, 30]); // 双击振动模式
+        }
+
+        // 执行撤回操作
+        this.handleDoubleClickRecall(entry);
+      }
+    });
+  }
+
+  // 处理双击撤回
+  private async handleDoubleClickRecall(entry: ChatEntry): Promise<void> {
+    try {
+      // 检查消息是否可以撤回
+      if (this.options.isMessageInQueue && this.options.isMessageInQueue(entry.id)) {
+        await this.handleUserMessageRecall(entry);
+      } else {
+        // 使用jQuery UI的效果显示无法撤回
+        const $messageElement = $(`[data-message-id="${entry.id}"]`);
+        $messageElement.effect('shake', { times: 2, distance: 5 }, 300);
+
+        const { DialogManager } = await import('./dialog-manager');
+        const dialogManager = DialogManager.getInstance();
+        await dialogManager.alert('消息已合并发送，无法撤回。', '无法撤回');
+      }
+    } catch (error) {
+      console.error('双击撤回失败:', error);
+
+      // 显示错误反馈
+      const $messageElement = $(`[data-message-id="${entry.id}"]`);
+      $messageElement.effect('shake', { times: 2, distance: 5 }, 300);
     }
   }
 

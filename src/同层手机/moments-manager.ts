@@ -315,7 +315,7 @@ export class MomentsManager {
 
     // 使用jQuery更新个性签名
     const savedSignature = this.configManager.getSavedSignature();
-    $('#user-signature-display').text(savedSignature);
+    $('#user-signature-display').text(savedSignature || '点击头像设置个性签名');
 
     // 清除朋友圈通知
     this.setMomentNotification(false);

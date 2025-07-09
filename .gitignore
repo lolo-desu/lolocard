@@ -9,3 +9,7 @@ npm-debug.log*
 yarn-debug.log*
 yarn-error.log*
 pnpm-debug.log*
+dist/同层手机/index.html
+dist/同层手机/index.js.LICENSE.txt
+dist/圣约与静默/游戏界面/index.html
+dist/圣约与静默/游戏界面/index.js.LICENSE.txt

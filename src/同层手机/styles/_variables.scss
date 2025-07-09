@@ -68,6 +68,16 @@
   --settings-bg-color: #f2f2f7;
   --settings-card-bg-color: #ffffff;
 
+  // 输入框背景色
+  --input-bg: #ffffff;
+
+  // 统一圆角变量
+  --dialog-border-radius: 1rem; // 对话框主体圆角
+  --input-border-radius: 0.5rem; // 输入框圆角
+  --button-border-radius: 0.5rem; // 按钮圆角
+  --element-border-radius: 0.5rem; // 一般元素圆角
+  --small-border-radius: 0.25rem; // 小元素圆角
+
   // 阴影颜色
   --shadow-color: #4a90e2;
   --shadow-color-rgba: rgba(74, 144, 226, 0.3);

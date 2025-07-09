@@ -13,7 +13,6 @@ export interface IAppController {
   updateAvatar(avatarType: 'user' | 'char'): void;
   updateCharRemark(): void;
   updateUserName(): void;
-  updateSignature(): void;
   updateCoverPhoto(): void;
   changeWallpaper(viewType: 'chat' | 'home' | 'settings' | 'music' | 'pureChat'): void;
   getLatestAiRawResponse(): string;

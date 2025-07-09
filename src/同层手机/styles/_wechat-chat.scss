@@ -148,6 +148,50 @@
       border-top: 0.25rem solid rgba(0, 0, 0, 0.9);
     }
   }
+
+  // 双击撤回视觉反馈 - 备用方案
+  &.double-click-active {
+    transform: scale(1.05);
+    transition: all 0.1s ease-out;
+    z-index: 100;
+
+    .message-bubble {
+      box-shadow: 0 0 0 2px var(--primary-blue), 0 4px 15px rgba(114, 173, 243, 0.3);
+      background: linear-gradient(135deg, rgba(114, 173, 243, 0.1) 0%, rgba(114, 173, 243, 0.05) 100%);
+      animation: doubleClickPulse 0.2s ease-in-out;
+    }
+  }
+
+  // USER文字消息双击撤回提示
+  &.me.double-click-active::after {
+    content: '🔄 双击撤回';
+    position: absolute;
+    top: -2.5rem;
+    right: 0;
+    background: linear-gradient(135deg, rgba(114, 173, 243, 0.95) 0%, rgba(114, 173, 243, 0.85) 100%);
+    color: white;
+    padding: 0.4rem 0.6rem;
+    border-radius: 0.4rem;
+    font-size: 0.75rem;
+    font-weight: 600;
+    white-space: nowrap;
+    z-index: 1000;
+    box-shadow: 0 2px 8px rgba(114, 173, 243, 0.4);
+    animation: doubleClickTooltip 0.2s ease-out;
+
+    // 添加小箭头
+    &::before {
+      content: '';
+      position: absolute;
+      bottom: -0.2rem;
+      right: 0.8rem;
+      width: 0;
+      height: 0;
+      border-left: 0.2rem solid transparent;
+      border-right: 0.2rem solid transparent;
+      border-top: 0.2rem solid rgba(114, 173, 243, 0.95);
+    }
+  }
 }
 
 // 长按相关动画
@@ -475,5 +519,29 @@
   &.expanded {
     display: block;
     white-space: normal; /* 展开后允许自然换行 */
+  }
+}
+
+// 双击撤回相关动画
+@keyframes doubleClickPulse {
+  0% {
+    transform: scale(1);
+  }
+  50% {
+    transform: scale(1.03);
+  }
+  100% {
+    transform: scale(1);
+  }
+}
+
+@keyframes doubleClickTooltip {
+  0% {
+    opacity: 0;
+    transform: translateY(0.3rem) scale(0.9);
+  }
+  100% {
+    opacity: 1;
+    transform: translateY(0) scale(1);
   }
 }

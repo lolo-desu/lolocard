@@ -42,9 +42,7 @@ export class DialogManager {
    * HTML转义辅助方法
    */
   private escapeHtml(text: string): string {
-    const div = document.createElement('div');
-    div.textContent = text;
-    return div.innerHTML;
+    return $('<div>').text(text).html();
   }
 
   /**
@@ -58,17 +56,25 @@ export class DialogManager {
   }
 
   /**
+   * 创建基础对话框元素
+   */
+  private createBaseDialogElements(dialogClass: string): void {
+    this.activeOverlay = $('<div>').addClass('dialog-overlay mobile-dialog-overlay')[0] as HTMLElement;
+    this.activeDialog = $('<div>').addClass(`dialog ${dialogClass} mobile-dialog`)[0] as HTMLElement;
+  }
+
+  /**
    * 将对话框添加到页面中
    */
   private appendDialogToPage(): void {
     if (!this.activeOverlay) return;
 
-    const phoneScreen = document.querySelector('.phone-screen');
-    if (phoneScreen) {
-      phoneScreen.appendChild(this.activeOverlay);
+    const $phoneScreen = $('.phone-screen');
+    if ($phoneScreen.length) {
+      $phoneScreen.append(this.activeOverlay);
     } else {
       // 如果找不到手机屏幕容器，回退到body
-      document.body.appendChild(this.activeOverlay);
+      $('body').append(this.activeOverlay);
     }
   }
 
@@ -78,54 +84,58 @@ export class DialogManager {
   private initializeCheckboxButtons(): void {
     if (!this.activeDialog) return;
 
-    const checkboxButtons = this.activeDialog.querySelectorAll('.checkbox-button');
+    $(this.activeDialog)
+      .find('.checkbox-button')
+      .each((_, button) => {
+        const $button = $(button);
+        const $checkbox = $button.find('input[type="checkbox"]');
+        if (!$checkbox.length) return;
 
-    checkboxButtons.forEach(button => {
-      const checkbox = button.querySelector('input[type="checkbox"]') as HTMLInputElement;
-      if (!checkbox) return;
+        const checkbox = $checkbox[0] as HTMLInputElement;
 
-      // 设置初始状态
-      this.updateCheckboxButtonState(button as HTMLElement, checkbox.checked);
-
-      // 添加点击事件
-      button.addEventListener('click', e => {
-        e.preventDefault();
-
-        if (checkbox.disabled) return;
-
-        // 切换状态
-        checkbox.checked = !checkbox.checked;
+        // 设置初始状态
         this.updateCheckboxButtonState(button as HTMLElement, checkbox.checked);
 
-        // 触发change事件
-        const changeEvent = new Event('change', { bubbles: true });
-        checkbox.dispatchEvent(changeEvent);
-      });
+        // 检查是否是label元素且有for属性
+        const isLabelWithFor = button.tagName.toLowerCase() === 'label' && $button.attr('for');
 
-      // 监听外部状态变化
-      checkbox.addEventListener('change', () => {
-        this.updateCheckboxButtonState(button as HTMLElement, checkbox.checked);
-      });
+        if (!isLabelWithFor) {
+          // 只有在不是带for属性的label时才添加点击事件
+          $button.on('click', e => {
+            e.preventDefault();
 
-      // 设置可访问性属性
-      button.setAttribute('role', 'checkbox');
-      button.setAttribute('tabindex', '0');
-      button.setAttribute('aria-checked', checkbox.checked.toString());
-    });
+            if (checkbox.disabled) return;
+
+            // 切换状态
+            checkbox.checked = !checkbox.checked;
+            this.updateCheckboxButtonState(button as HTMLElement, checkbox.checked);
+
+            // 触发change事件
+            $checkbox.trigger('change');
+          });
+        }
+
+        // 监听外部状态变化（包括label自动触发的变化）
+        $checkbox.on('change', () => {
+          this.updateCheckboxButtonState(button as HTMLElement, checkbox.checked);
+        });
+
+        // 设置可访问性属性
+        $button.attr({
+          role: 'checkbox',
+          tabindex: '0',
+          'aria-checked': checkbox.checked.toString(),
+        });
+      });
   }
 
   /**
    * 更新checkbox按钮状态
    */
   private updateCheckboxButtonState(button: HTMLElement, checked: boolean): void {
-    if (checked) {
-      button.classList.add('checked');
-    } else {
-      button.classList.remove('checked');
-    }
-
-    // 更新aria属性
-    button.setAttribute('aria-checked', checked.toString());
+    const $button = $(button);
+    $button.toggleClass('checked', checked);
+    $button.attr('aria-checked', checked.toString());
   }
 
   /**
@@ -192,16 +202,11 @@ export class DialogManager {
     return this.safeShowDialog(
       () =>
         new Promise(resolve => {
-          // 创建遮罩层
-          this.activeOverlay = document.createElement('div');
-          this.activeOverlay.className = 'dialog-overlay mobile-dialog-overlay';
-
-          // 创建对话框
-          this.activeDialog = document.createElement('div');
-          this.activeDialog.className = 'dialog scrollable-text-dialog mobile-dialog';
+          // 创建基础对话框元素
+          this.createBaseDialogElements('scrollable-text-dialog');
 
           // 设置对话框内容
-          this.activeDialog.innerHTML = `
+          this.activeDialog!.innerHTML = `
           <div class="dialog-header">
             <h3>${title}</h3>
           </div>
@@ -214,25 +219,25 @@ export class DialogManager {
           </div>
         `;
 
-          const copyBtn = this.activeDialog.querySelector('.copy-btn') as HTMLButtonElement;
-          const confirmBtn = this.activeDialog.querySelector('.primary-button') as HTMLButtonElement;
+          const $copyBtn = $(this.activeDialog!).find('.copy-btn');
+          const $confirmBtn = $(this.activeDialog!).find('.primary-button');
 
           const handleCopy = async () => {
             try {
               await navigator.clipboard.writeText(content);
               // 临时改变按钮文字提示复制成功
-              const originalText = copyBtn.textContent;
-              copyBtn.textContent = '已复制';
+              const originalText = $copyBtn.text();
+              $copyBtn.text('已复制');
               setTimeout(() => {
-                copyBtn.textContent = originalText;
+                $copyBtn.text(originalText);
               }, 1000);
             } catch (error) {
               console.error('复制失败:', error);
               // 降级方案：选择文本
-              const textElement = this.activeDialog!.querySelector('.scrollable-text') as HTMLElement;
-              if (textElement) {
+              const $textElement = $(this.activeDialog!).find('.scrollable-text');
+              if ($textElement.length) {
                 const range = document.createRange();
-                range.selectNodeContents(textElement);
+                range.selectNodeContents($textElement[0]);
                 const selection = window.getSelection();
                 if (selection) {
                   selection.removeAllRanges();
@@ -252,20 +257,19 @@ export class DialogManager {
             resolve();
           };
 
-          copyBtn.addEventListener('click', handleCopy);
-          confirmBtn.addEventListener('click', handleConfirm);
+          $copyBtn.on('click', handleCopy);
+          $confirmBtn.on('click', handleConfirm);
 
           // ESC键关闭
-          const handleKeyDown = (e: KeyboardEvent) => {
+          $(document).on('keydown.dialog', (e: any) => {
             if (e.key === 'Escape') {
               handleCancel();
-              document.removeEventListener('keydown', handleKeyDown);
+              $(document).off('keydown.dialog');
             }
-          };
-          document.addEventListener('keydown', handleKeyDown);
+          });
 
           // 添加到手机屏幕容器内
-          this.activeOverlay.appendChild(this.activeDialog);
+          $(this.activeOverlay!).append(this.activeDialog!);
           this.appendDialogToPage();
         }),
     );
@@ -287,9 +291,9 @@ export class DialogManager {
 
     // 处理输入框自动聚焦
     if (options.type === 'prompt') {
-      const inputEl = dialog.querySelector('input, textarea') as HTMLInputElement;
-      if (inputEl) {
-        setTimeout(() => inputEl.focus(), 100);
+      const $inputEl = $(dialog).find('input, textarea');
+      if ($inputEl.length) {
+        setTimeout(() => $inputEl.trigger('focus'), 100);
       }
     }
 
@@ -363,77 +367,69 @@ export class DialogManager {
    */
   private createDialogElements(options: DialogOptions): { overlay: HTMLElement; dialog: HTMLElement } {
     // 创建遮罩层
-    const overlay = document.createElement('div');
-    overlay.className = 'custom-dialog-overlay';
+    const $overlay = $('<div>').addClass('custom-dialog-overlay');
 
     // 创建对话框
-    const dialog = document.createElement('div');
-    dialog.className = `custom-dialog ${options.className || ''}`;
+    const $dialog = $('<div>').addClass(`custom-dialog ${options.className || ''}`);
 
     // 创建标题
-    const header = document.createElement('div');
-    header.className = 'dialog-header';
-    const title = document.createElement('h3');
-    title.className = 'dialog-title';
-    title.textContent = options.title || '';
-    header.appendChild(title);
-    dialog.appendChild(header);
+    const $header = $('<div>').addClass('dialog-header');
+    const $title = $('<h3>')
+      .addClass('dialog-title')
+      .text(options.title || '');
+    $header.append($title);
+    $dialog.append($header);
 
     // 创建内容
-    const body = document.createElement('div');
-    body.className = 'dialog-body';
+    const $body = $('<div>').addClass('dialog-body');
 
     // 添加消息
-    const message = document.createElement('div');
-    message.textContent = options.message;
-    body.appendChild(message);
+    const $message = $('<div>').text(options.message);
+    $body.append($message);
 
     // 如果是prompt，添加输入框
     if (options.type === 'prompt') {
-      const inputContainer = document.createElement('div');
-      inputContainer.className = 'dialog-input-container';
-
-      const input = document.createElement(options.inputType === 'textarea' ? 'textarea' : 'input');
+      const $inputContainer = $('<div>').addClass('dialog-input-container');
+      const $input = $(options.inputType === 'textarea' ? '<textarea>' : '<input>');
 
       if (options.inputType !== 'textarea') {
-        (input as HTMLInputElement).type = options.inputType || 'text';
+        $input.attr('type', options.inputType || 'text');
       }
 
       if (options.inputValue) {
-        (input as HTMLInputElement).value = options.inputValue;
+        $input.val(options.inputValue);
       }
 
       if (options.inputPlaceholder) {
-        input.setAttribute('placeholder', options.inputPlaceholder);
+        $input.attr('placeholder', options.inputPlaceholder);
       }
 
-      inputContainer.appendChild(input);
-      body.appendChild(inputContainer);
+      $inputContainer.append($input);
+      $body.append($inputContainer);
     }
 
-    dialog.appendChild(body);
+    $dialog.append($body);
 
     // 创建按钮区域
-    const footer = document.createElement('div');
-    footer.className = 'dialog-footer';
+    const $footer = $('<div>').addClass('dialog-footer');
 
     // 根据类型添加不同的按钮
     if (options.type === 'confirm' || options.type === 'prompt') {
-      const cancelButton = document.createElement('button');
-      cancelButton.className = 'dialog-button cancel-button';
-      cancelButton.textContent = options.cancelText || '取消';
-      footer.appendChild(cancelButton);
+      const $cancelButton = $('<button>')
+        .addClass('dialog-button cancel-button')
+        .text(options.cancelText || '取消');
+      $footer.append($cancelButton);
     }
 
-    const confirmButton = document.createElement('button');
-    confirmButton.className = 'dialog-button primary-button';
-    confirmButton.textContent = options.confirmText || '确定';
-    footer.appendChild(confirmButton);
+    const $confirmButton = $('<button>')
+      .addClass('dialog-button primary-button')
+      .text(options.confirmText || '确定');
+    $footer.append($confirmButton);
 
-    dialog.appendChild(footer);
-    overlay.appendChild(dialog);
+    $dialog.append($footer);
+    $overlay.append($dialog);
 
-    return { overlay, dialog };
+    return { overlay: $overlay[0], dialog: $dialog[0] };
   }
 
   /**
@@ -443,15 +439,10 @@ export class DialogManager {
     return this.safeShowDialog(
       () =>
         new Promise(resolve => {
-          // 创建遮罩层
-          this.activeOverlay = document.createElement('div');
-          this.activeOverlay.className = 'dialog-overlay mobile-dialog-overlay';
+          // 创建基础对话框元素
+          this.createBaseDialogElements('comment-dialog');
 
-          // 创建对话框
-          this.activeDialog = document.createElement('div');
-          this.activeDialog.className = 'dialog comment-dialog mobile-dialog';
-
-          this.activeDialog.innerHTML = `
+          this.activeDialog!.innerHTML = `
         <div class="dialog-header">
           <h3>互动</h3>
         </div>
@@ -468,10 +459,11 @@ export class DialogManager {
         </div>
       `;
 
-          const cancelBtn = this.activeDialog.querySelector('.cancel-btn') as HTMLButtonElement;
-          const likeBtn = this.activeDialog.querySelector('.like-btn') as HTMLButtonElement;
-          const confirmBtn = this.activeDialog.querySelector('.confirm-btn') as HTMLButtonElement;
-          const commentText = this.activeDialog.querySelector('#comment-text') as HTMLTextAreaElement;
+          const $dialog = $(this.activeDialog!);
+          const $cancelBtn = $dialog.find('.cancel-btn');
+          const $likeBtn = $dialog.find('.like-btn');
+          const $confirmBtn = $dialog.find('.confirm-btn');
+          const $commentText = $dialog.find('#comment-text');
 
           const handleCancel = () => {
             this.closeDialog();
@@ -484,21 +476,21 @@ export class DialogManager {
           };
 
           const handleComment = () => {
-            const content = commentText.value.trim();
+            const content = $commentText.val() as string;
             if (!content) {
               // 在输入框上显示错误提示，而不是弹出新的alert
-              commentText.style.borderColor = '#ff4444';
-              commentText.placeholder = '请输入评论内容';
-              commentText.focus();
+              $commentText.css('borderColor', '#ff4444');
+              $commentText.attr('placeholder', '请输入评论内容');
+              $commentText.trigger('focus');
               return;
             }
             this.closeDialog();
             resolve({ type: 'comment', content });
           };
 
-          cancelBtn.addEventListener('click', handleCancel);
-          likeBtn.addEventListener('click', handleLike);
-          confirmBtn.addEventListener('click', handleComment);
+          $cancelBtn.on('click', handleCancel);
+          $likeBtn.on('click', handleLike);
+          $confirmBtn.on('click', handleComment);
 
           // 键盘事件处理
           const handleKeyDown = (e: KeyboardEvent) => {
@@ -514,12 +506,12 @@ export class DialogManager {
           document.addEventListener('keydown', handleKeyDown);
 
           // 添加到手机屏幕容器内
-          this.activeOverlay.appendChild(this.activeDialog);
+          this.activeOverlay!.appendChild(this.activeDialog!);
           this.appendDialogToPage();
 
           // 聚焦到文本框
           setTimeout(() => {
-            commentText.focus();
+            $commentText.focus();
           }, 100);
         }),
     );
@@ -532,15 +524,10 @@ export class DialogManager {
     return this.safeShowDialog(
       () =>
         new Promise(resolve => {
-          // 创建遮罩层
-          this.activeOverlay = document.createElement('div');
-          this.activeOverlay.className = 'dialog-overlay mobile-dialog-overlay';
+          // 创建基础对话框元素
+          this.createBaseDialogElements('transfer-dialog');
 
-          // 创建对话框
-          this.activeDialog = document.createElement('div');
-          this.activeDialog.className = 'dialog transfer-dialog mobile-dialog';
-
-          this.activeDialog.innerHTML = `
+          this.activeDialog!.innerHTML = `
         <div class="dialog-header">
           <h3>转账</h3>
         </div>
@@ -560,10 +547,11 @@ export class DialogManager {
         </div>
       `;
 
-          const cancelBtn = this.activeDialog.querySelector('.cancel-btn') as HTMLButtonElement;
-          const confirmBtn = this.activeDialog.querySelector('.confirm-btn') as HTMLButtonElement;
-          const amountInput = this.activeDialog.querySelector('#transfer-amount') as HTMLInputElement;
-          const noteInput = this.activeDialog.querySelector('#transfer-note') as HTMLInputElement;
+          const $dialog = $(this.activeDialog!);
+          const $cancelBtn = $dialog.find('.cancel-btn');
+          const $confirmBtn = $dialog.find('.confirm-btn');
+          const $amountInput = $dialog.find('#transfer-amount');
+          const $noteInput = $dialog.find('#transfer-note');
 
           const handleCancel = () => {
             this.closeDialog();
@@ -571,14 +559,14 @@ export class DialogManager {
           };
 
           const handleConfirm = () => {
-            const amount = amountInput.value.trim();
-            const note = noteInput.value.trim();
+            const amount = $amountInput.val() as string;
+            const note = $noteInput.val() as string;
 
             if (!amount || parseFloat(amount) <= 0) {
               // 在输入框上显示错误提示，而不是弹出新的alert
-              amountInput.style.borderColor = '#ff4444';
-              amountInput.placeholder = '请输入有效的转账金额';
-              amountInput.focus();
+              $amountInput.css('borderColor', '#ff4444');
+              $amountInput.attr('placeholder', '请输入有效的转账金额');
+              $amountInput.trigger('focus');
               return;
             }
 
@@ -586,27 +574,26 @@ export class DialogManager {
             resolve({ amount: parseFloat(amount).toFixed(2), note: note || '' });
           };
 
-          cancelBtn.addEventListener('click', handleCancel);
-          confirmBtn.addEventListener('click', handleConfirm);
+          $cancelBtn.on('click', handleCancel);
+          $confirmBtn.on('click', handleConfirm);
 
           // 回车键确认
-          const handleKeyDown = (e: KeyboardEvent) => {
+          $(document).on('keydown.transfer-dialog', (e: any) => {
             if (e.key === 'Enter') {
               handleConfirm();
             } else if (e.key === 'Escape') {
               handleCancel();
-              document.removeEventListener('keydown', handleKeyDown);
+              $(document).off('keydown.transfer-dialog');
             }
-          };
-          document.addEventListener('keydown', handleKeyDown);
+          });
 
           // 添加到手机屏幕容器内
-          this.activeOverlay.appendChild(this.activeDialog);
+          $(this.activeOverlay!).append(this.activeDialog!);
           this.appendDialogToPage();
 
           // 聚焦到金额输入框
           setTimeout(() => {
-            amountInput.focus();
+            $amountInput.trigger('focus');
           }, 100);
         }),
     );
@@ -619,15 +606,10 @@ export class DialogManager {
     return this.safeShowDialog(
       () =>
         new Promise(resolve => {
-          // 创建遮罩层
-          this.activeOverlay = document.createElement('div');
-          this.activeOverlay.className = 'dialog-overlay mobile-dialog-overlay';
+          // 创建基础对话框元素
+          this.createBaseDialogElements('red-packet-dialog');
 
-          // 创建对话框
-          this.activeDialog = document.createElement('div');
-          this.activeDialog.className = 'dialog red-packet-dialog mobile-dialog';
-
-          this.activeDialog.innerHTML = `
+          this.activeDialog!.innerHTML = `
         <div class="dialog-header">
           <h3>🧧 发送红包</h3>
         </div>
@@ -647,10 +629,11 @@ export class DialogManager {
         </div>
       `;
 
-          const cancelBtn = this.activeDialog.querySelector('.cancel-btn') as HTMLButtonElement;
-          const confirmBtn = this.activeDialog.querySelector('.confirm-btn') as HTMLButtonElement;
-          const amountInput = this.activeDialog.querySelector('#red-packet-amount') as HTMLInputElement;
-          const noteInput = this.activeDialog.querySelector('#red-packet-note') as HTMLInputElement;
+          const $dialog = $(this.activeDialog!);
+          const $cancelBtn = $dialog.find('.cancel-btn');
+          const $confirmBtn = $dialog.find('.confirm-btn');
+          const $amountInput = $dialog.find('#red-packet-amount');
+          const $noteInput = $dialog.find('#red-packet-note');
 
           const handleCancel = () => {
             this.closeDialog();
@@ -658,14 +641,14 @@ export class DialogManager {
           };
 
           const handleConfirm = () => {
-            const amount = amountInput.value.trim();
-            const note = noteInput.value.trim();
+            const amount = $amountInput.val() as string;
+            const note = $noteInput.val() as string;
 
             if (!amount || parseFloat(amount) <= 0) {
               // 在输入框上显示错误提示，而不是弹出新的alert
-              amountInput.style.borderColor = '#ff4444';
-              amountInput.placeholder = '请输入有效的红包金额';
-              amountInput.focus();
+              $amountInput.css('borderColor', '#ff4444');
+              $amountInput.attr('placeholder', '请输入有效的红包金额');
+              $amountInput.trigger('focus');
               return;
             }
 
@@ -673,27 +656,26 @@ export class DialogManager {
             resolve({ amount: parseFloat(amount).toFixed(2), note: note || '恭喜发财，大吉大利！' });
           };
 
-          cancelBtn.addEventListener('click', handleCancel);
-          confirmBtn.addEventListener('click', handleConfirm);
+          $cancelBtn.on('click', handleCancel);
+          $confirmBtn.on('click', handleConfirm);
 
           // 回车键确认
-          const handleKeyDown = (e: KeyboardEvent) => {
+          $(document).on('keydown.red-packet-dialog', (e: any) => {
             if (e.key === 'Enter') {
               handleConfirm();
             } else if (e.key === 'Escape') {
               handleCancel();
-              document.removeEventListener('keydown', handleKeyDown);
+              $(document).off('keydown.red-packet-dialog');
             }
-          };
-          document.addEventListener('keydown', handleKeyDown);
+          });
 
           // 添加到手机屏幕容器内
-          this.activeOverlay.appendChild(this.activeDialog);
+          $(this.activeOverlay!).append(this.activeDialog!);
           this.appendDialogToPage();
 
           // 聚焦到金额输入框
           setTimeout(() => {
-            amountInput.focus();
+            $amountInput.trigger('focus');
           }, 100);
         }),
     );
@@ -706,15 +688,10 @@ export class DialogManager {
     return this.safeShowDialog(
       () =>
         new Promise(resolve => {
-          // 创建遮罩层
-          this.activeOverlay = document.createElement('div');
-          this.activeOverlay.className = 'dialog-overlay mobile-dialog-overlay';
+          // 创建基础对话框元素
+          this.createBaseDialogElements('gift-dialog');
 
-          // 创建对话框
-          this.activeDialog = document.createElement('div');
-          this.activeDialog.className = 'dialog gift-dialog mobile-dialog';
-
-          this.activeDialog.innerHTML = `
+          this.activeDialog!.innerHTML = `
         <div class="dialog-header">
           <h3>🎁 发送礼物</h3>
         </div>
@@ -734,10 +711,10 @@ export class DialogManager {
         </div>
       `;
 
-          const cancelBtn = this.activeDialog.querySelector('.cancel-btn') as HTMLButtonElement;
-          const confirmBtn = this.activeDialog.querySelector('.confirm-btn') as HTMLButtonElement;
-          const nameInput = this.activeDialog.querySelector('#gift-name') as HTMLInputElement;
-          const priceInput = this.activeDialog.querySelector('#gift-price') as HTMLInputElement;
+          const cancelBtn = this.activeDialog!.querySelector('.cancel-btn') as HTMLButtonElement;
+          const confirmBtn = this.activeDialog!.querySelector('.confirm-btn') as HTMLButtonElement;
+          const nameInput = this.activeDialog!.querySelector('#gift-name') as HTMLInputElement;
+          const priceInput = this.activeDialog!.querySelector('#gift-price') as HTMLInputElement;
 
           const handleCancel = () => {
             this.closeDialog();
@@ -778,7 +755,7 @@ export class DialogManager {
           document.addEventListener('keydown', handleKeyDown);
 
           // 添加到手机屏幕容器内
-          this.activeOverlay.appendChild(this.activeDialog);
+          this.activeOverlay!.appendChild(this.activeDialog!);
           this.appendDialogToPage();
 
           // 聚焦到名称输入框
@@ -802,15 +779,10 @@ export class DialogManager {
     return this.safeShowDialog(
       () =>
         new Promise(resolve => {
-          // 创建遮罩层
-          this.activeOverlay = document.createElement('div');
-          this.activeOverlay.className = 'dialog-overlay mobile-dialog-overlay';
+          // 创建基础对话框元素
+          this.createBaseDialogElements('input-dialog');
 
-          // 创建对话框
-          this.activeDialog = document.createElement('div');
-          this.activeDialog.className = 'dialog input-dialog mobile-dialog';
-
-          this.activeDialog.innerHTML = `
+          this.activeDialog!.innerHTML = `
             <div class="dialog-header">
               <h3>${title}</h3>
             </div>
@@ -826,9 +798,10 @@ export class DialogManager {
             </div>
           `;
 
-          const cancelBtn = this.activeDialog.querySelector('.cancel-btn') as HTMLButtonElement;
-          const confirmBtn = this.activeDialog.querySelector('.confirm-btn') as HTMLButtonElement;
-          const inputField = this.activeDialog.querySelector('#input-field') as HTMLInputElement;
+          const $dialog = $(this.activeDialog!);
+          const $cancelBtn = $dialog.find('.cancel-btn');
+          const $confirmBtn = $dialog.find('.confirm-btn');
+          const $inputField = $dialog.find('#input-field');
 
           const handleCancel = () => {
             this.closeDialog();
@@ -836,13 +809,13 @@ export class DialogManager {
           };
 
           const handleConfirm = () => {
-            const value = inputField.value.trim();
+            const value = $inputField.val() as string;
             this.closeDialog();
             resolve(value);
           };
 
-          cancelBtn.addEventListener('click', handleCancel);
-          confirmBtn.addEventListener('click', handleConfirm);
+          $cancelBtn.on('click', handleCancel);
+          $confirmBtn.on('click', handleConfirm);
 
           // 回车键确认
           const handleKeyDown = (e: KeyboardEvent) => {
@@ -856,14 +829,14 @@ export class DialogManager {
           document.addEventListener('keydown', handleKeyDown);
 
           // 添加到手机屏幕容器内
-          this.activeOverlay.appendChild(this.activeDialog);
+          this.activeOverlay!.appendChild(this.activeDialog!);
           this.appendDialogToPage();
 
           // 聚焦到输入框并选中默认值
           setTimeout(() => {
-            inputField.focus();
+            $inputField.focus();
             if (defaultValue) {
-              inputField.select();
+              $inputField.select();
             }
           }, 100);
         }),
@@ -877,15 +850,10 @@ export class DialogManager {
     return this.safeShowDialog(
       () =>
         new Promise(resolve => {
-          // 创建遮罩层
-          this.activeOverlay = document.createElement('div');
-          this.activeOverlay.className = 'dialog-overlay mobile-dialog-overlay';
+          // 创建基础对话框元素
+          this.createBaseDialogElements('voice-dialog');
 
-          // 创建对话框
-          this.activeDialog = document.createElement('div');
-          this.activeDialog.className = 'dialog voice-dialog mobile-dialog';
-
-          this.activeDialog.innerHTML = `
+          this.activeDialog!.innerHTML = `
         <div class="dialog-header">
           <h3>🎤 语音消息</h3>
         </div>
@@ -905,10 +873,10 @@ export class DialogManager {
         </div>
       `;
 
-          const cancelBtn = this.activeDialog.querySelector('.cancel-btn') as HTMLButtonElement;
-          const confirmBtn = this.activeDialog.querySelector('.confirm-btn') as HTMLButtonElement;
-          const textArea = this.activeDialog.querySelector('#voice-text') as HTMLTextAreaElement;
-          const durationInput = this.activeDialog.querySelector('#voice-duration') as HTMLInputElement;
+          const cancelBtn = this.activeDialog!.querySelector('.cancel-btn') as HTMLButtonElement;
+          const confirmBtn = this.activeDialog!.querySelector('.confirm-btn') as HTMLButtonElement;
+          const textArea = this.activeDialog!.querySelector('#voice-text') as HTMLTextAreaElement;
+          const durationInput = this.activeDialog!.querySelector('#voice-duration') as HTMLInputElement;
 
           const handleCancel = () => {
             this.closeDialog();
@@ -956,7 +924,7 @@ export class DialogManager {
           document.addEventListener('keydown', handleKeyDown);
 
           // 添加到手机屏幕容器内
-          this.activeOverlay.appendChild(this.activeDialog);
+          this.activeOverlay!.appendChild(this.activeDialog!);
           this.appendDialogToPage();
 
           // 聚焦到文本框
@@ -974,13 +942,8 @@ export class DialogManager {
     return this.safeShowDialog(
       () =>
         new Promise(resolve => {
-          // 创建遮罩层
-          this.activeOverlay = document.createElement('div');
-          this.activeOverlay.className = 'dialog-overlay mobile-dialog-overlay';
-
-          // 创建对话框
-          this.activeDialog = document.createElement('div');
-          this.activeDialog.className = 'dialog receive-dialog mobile-dialog';
+          // 创建基础对话框元素
+          this.createBaseDialogElements('receive-dialog');
 
           const isGift = type === 'gift';
           const title = isGift ? '收到礼物' : '收到转账';
@@ -1011,7 +974,7 @@ export class DialogManager {
         `;
           }
 
-          this.activeDialog.innerHTML = `
+          this.activeDialog!.innerHTML = `
         <div class="dialog-header">
           <h3>${title}</h3>
         </div>
@@ -1024,8 +987,8 @@ export class DialogManager {
         </div>
       `;
 
-          const rejectBtn = this.activeDialog.querySelector('.reject-btn') as HTMLButtonElement;
-          const acceptBtn = this.activeDialog.querySelector('.accept-btn') as HTMLButtonElement;
+          const rejectBtn = this.activeDialog!.querySelector('.reject-btn') as HTMLButtonElement;
+          const acceptBtn = this.activeDialog!.querySelector('.accept-btn') as HTMLButtonElement;
 
           const handleReject = () => {
             this.closeDialog();
@@ -1059,7 +1022,7 @@ export class DialogManager {
           document.addEventListener('keydown', handleKeyDown);
 
           // 添加到手机屏幕容器内
-          this.activeOverlay.appendChild(this.activeDialog);
+          this.activeOverlay!.appendChild(this.activeDialog!);
           this.appendDialogToPage();
         }),
     );
@@ -1090,15 +1053,10 @@ export class DialogManager {
               .toString()
               .padStart(2, '0')}`;
 
-          // 创建遮罩层 - 限制在手机屏幕内
-          this.activeOverlay = document.createElement('div');
-          this.activeOverlay.className = 'dialog-overlay mobile-dialog-overlay';
+          // 创建基础对话框元素
+          this.createBaseDialogElements('moment-dialog');
 
-          // 创建对话框
-          this.activeDialog = document.createElement('div');
-          this.activeDialog.className = 'dialog moment-dialog mobile-dialog';
-
-          this.activeDialog.innerHTML = `
+          this.activeDialog!.innerHTML = `
         <div class="dialog-header">
           <h3>发布朋友圈</h3>
         </div>
@@ -1149,14 +1107,14 @@ export class DialogManager {
       `;
 
           // 添加事件监听器
-          const attachImageCheckbox = this.activeDialog.querySelector('#attach-image') as HTMLInputElement;
-          const imageOptions = this.activeDialog.querySelector('.image-options') as HTMLElement;
-          const imageTypeRadios = this.activeDialog.querySelectorAll(
+          const attachImageCheckbox = this.activeDialog!.querySelector('#attach-image') as HTMLInputElement;
+          const imageOptions = this.activeDialog!.querySelector('.image-options') as HTMLElement;
+          const imageTypeRadios = this.activeDialog!.querySelectorAll(
             'input[name="image-type"]',
           ) as NodeListOf<HTMLInputElement>;
-          const imageContentLabel = this.activeDialog.querySelector('#image-content-label') as HTMLElement;
-          const imageContentInput = this.activeDialog.querySelector('#image-content') as HTMLInputElement;
-          const urlDescGroup = this.activeDialog.querySelector('.url-desc-group') as HTMLElement;
+          const imageContentLabel = this.activeDialog!.querySelector('#image-content-label') as HTMLElement;
+          const imageContentInput = this.activeDialog!.querySelector('#image-content') as HTMLInputElement;
+          const urlDescGroup = this.activeDialog!.querySelector('.url-desc-group') as HTMLElement;
 
           // 初始化checkbox按钮样式
           this.initializeCheckboxButtons();
@@ -1177,8 +1135,8 @@ export class DialogManager {
           });
 
           // 按钮事件
-          const cancelBtn = this.activeDialog.querySelector('.dialog-btn-cancel') as HTMLElement;
-          const confirmBtn = this.activeDialog.querySelector('.dialog-btn-confirm') as HTMLElement;
+          const cancelBtn = this.activeDialog!.querySelector('.dialog-btn-cancel') as HTMLElement;
+          const confirmBtn = this.activeDialog!.querySelector('.dialog-btn-confirm') as HTMLElement;
 
           const handleCancel = () => {
             this.closeDialog();
@@ -1191,14 +1149,14 @@ export class DialogManager {
               return;
             }
 
-            const textArea = this.activeDialog.querySelector('#moment-text') as HTMLTextAreaElement;
-            const attachImageInput = this.activeDialog.querySelector('#attach-image') as HTMLInputElement;
-            const imageTypeInput = this.activeDialog.querySelector(
+            const textArea = this.activeDialog!.querySelector('#moment-text') as HTMLTextAreaElement;
+            const attachImageInput = this.activeDialog!.querySelector('#attach-image') as HTMLInputElement;
+            const imageTypeInput = this.activeDialog!.querySelector(
               'input[name="image-type"]:checked',
             ) as HTMLInputElement;
-            const imageContentField = this.activeDialog.querySelector('#image-content') as HTMLInputElement;
-            const imageDescField = this.activeDialog.querySelector('#image-desc') as HTMLInputElement;
-            const datetimeInput = this.activeDialog.querySelector('#moment-datetime') as HTMLInputElement;
+            const imageContentField = this.activeDialog!.querySelector('#image-content') as HTMLInputElement;
+            const imageDescField = this.activeDialog!.querySelector('#image-desc') as HTMLInputElement;
+            const datetimeInput = this.activeDialog!.querySelector('#moment-datetime') as HTMLInputElement;
 
             if (!textArea || !attachImageInput || !datetimeInput) {
               return;
@@ -1258,7 +1216,7 @@ export class DialogManager {
           document.addEventListener('keydown', handleKeyDown);
 
           // 添加到手机屏幕容器内
-          this.activeOverlay.appendChild(this.activeDialog);
+          this.activeOverlay!.appendChild(this.activeDialog!);
           this.appendDialogToPage();
 
           // 聚焦到文本框
@@ -1296,15 +1254,10 @@ export class DialogManager {
               .toString()
               .padStart(2, '0')}`;
 
-          // 创建遮罩层 - 限制在手机屏幕内
-          this.activeOverlay = document.createElement('div');
-          this.activeOverlay.className = 'dialog-overlay mobile-dialog-overlay';
+          // 创建基础对话框元素
+          this.createBaseDialogElements('time-jump-dialog');
 
-          // 创建对话框
-          this.activeDialog = document.createElement('div');
-          this.activeDialog.className = 'dialog time-jump-dialog mobile-dialog';
-
-          this.activeDialog.innerHTML = `
+          this.activeDialog!.innerHTML = `
         <div class="dialog-header">
           <h3>时间跳跃</h3>
         </div>
@@ -1337,8 +1290,8 @@ export class DialogManager {
       `;
 
           // 添加事件监听器
-          const addDescriptionCheckbox = this.activeDialog.querySelector('#add-description') as HTMLInputElement;
-          const descriptionGroup = this.activeDialog.querySelector('.description-group') as HTMLElement;
+          const addDescriptionCheckbox = this.activeDialog!.querySelector('#add-description') as HTMLInputElement;
+          const descriptionGroup = this.activeDialog!.querySelector('.description-group') as HTMLElement;
 
           // 初始化checkbox按钮样式
           this.initializeCheckboxButtons();
@@ -1349,8 +1302,8 @@ export class DialogManager {
           });
 
           // 按钮事件
-          const cancelBtn = this.activeDialog.querySelector('.dialog-btn-cancel') as HTMLElement;
-          const confirmBtn = this.activeDialog.querySelector('.dialog-btn-confirm') as HTMLElement;
+          const cancelBtn = this.activeDialog!.querySelector('.dialog-btn-cancel') as HTMLElement;
+          const confirmBtn = this.activeDialog!.querySelector('.dialog-btn-confirm') as HTMLElement;
 
           const handleCancel = () => {
             this.closeDialog();
@@ -1363,9 +1316,9 @@ export class DialogManager {
               return;
             }
 
-            const datetimeInput = this.activeDialog.querySelector('#jump-datetime') as HTMLInputElement;
-            const addDescriptionInput = this.activeDialog.querySelector('#add-description') as HTMLInputElement;
-            const descriptionInput = this.activeDialog.querySelector('#event-description') as HTMLTextAreaElement;
+            const datetimeInput = this.activeDialog!.querySelector('#jump-datetime') as HTMLInputElement;
+            const addDescriptionInput = this.activeDialog!.querySelector('#add-description') as HTMLInputElement;
+            const descriptionInput = this.activeDialog!.querySelector('#event-description') as HTMLTextAreaElement;
 
             if (!datetimeInput) {
               return;
@@ -1417,7 +1370,7 @@ export class DialogManager {
           document.addEventListener('keydown', handleKeyDown);
 
           // 添加到手机屏幕容器内
-          this.activeOverlay.appendChild(this.activeDialog);
+          this.activeOverlay!.appendChild(this.activeDialog!);
           this.appendDialogToPage();
 
           // 聚焦到时间输入框
@@ -1439,7 +1392,7 @@ export class DialogManager {
    */
   private forceCleanupDialogs(): void {
     // 清理所有可能残留的对话框元素
-    const container = document.querySelector('.phone-screen') || document.body;
+    const $container = $('.phone-screen').length ? $('.phone-screen') : $('body');
 
     // 使用通用选择器清理所有对话框相关元素
     const selectors = [
@@ -1452,12 +1405,9 @@ export class DialogManager {
     ];
 
     selectors.forEach(selector => {
-      const elements = container.querySelectorAll(selector);
-      elements.forEach(element => {
+      $container.find(selector).each((_, element) => {
         try {
-          if (element.parentNode) {
-            element.parentNode.removeChild(element);
-          }
+          $(element).remove();
         } catch (error) {
           console.warn('移除对话框元素时出错:', error);
         }

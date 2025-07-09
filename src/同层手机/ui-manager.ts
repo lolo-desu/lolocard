@@ -293,4 +293,50 @@ export class UIManager {
       }
     }, 300);
   }
+
+  // 设置字体选择功能
+  setupFontSelection(): void {
+    const $customFontBtn = $('#font-default');
+    const $systemFontBtn = $('#font-system');
+
+    if (!$customFontBtn.length || !$systemFontBtn.length) {
+      console.error('[BLMX] Font selection elements not found');
+      return;
+    }
+
+    // 从localStorage读取保存的字体设置
+    const savedFont = localStorage.getItem('blmx_font_setting') || 'custom';
+    this.applyFontSetting(savedFont as 'custom' | 'system');
+
+    // 绑定点击事件
+    $customFontBtn.on('click', () => {
+      this.applyFontSetting('custom');
+      localStorage.setItem('blmx_font_setting', 'custom');
+    });
+
+    $systemFontBtn.on('click', () => {
+      this.applyFontSetting('system');
+      localStorage.setItem('blmx_font_setting', 'system');
+    });
+  }
+
+  // 应用字体设置
+  private applyFontSetting(fontType: 'custom' | 'system'): void {
+    const $body = $('body');
+    const $customBtn = $('#font-default');
+    const $systemBtn = $('#font-system');
+
+    // 移除所有按钮的激活状态
+    $('.font-btn').removeClass('font-active');
+
+    if (fontType === 'custom') {
+      // 使用自定义字体
+      $body.css('font-family', "'MyCustomFont', sans-serif");
+      $customBtn.addClass('font-active');
+    } else {
+      // 使用系统字体
+      $body.css('font-family', 'system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif');
+      $systemBtn.addClass('font-active');
+    }
+  }
 }
