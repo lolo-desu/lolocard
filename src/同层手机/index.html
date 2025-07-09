@@ -276,7 +276,7 @@
               </ul>
             </div>
 
-            <!-- 新增手机尺寸调整卡片 -->
+            <!-- 手机尺寸调整设置卡片 -->
             <div class="settings-card" style="margin-top: 1rem; padding: 1rem">
               <p style="font-weight: 500; margin: 0 0 0.75rem 0.25rem; color: var(--text-primary); font-size: 0.9em">
                 手机尺寸调整
@@ -297,7 +297,73 @@
                   </button>
                 </div>
                 <div style="font-size: 0.8em; color: var(--text-secondary); text-align: center">
-                  选择适合您屏幕的手机尺寸
+                  调整手机屏幕的高度大小
+                </div>
+              </div>
+            </div>
+
+            <!-- 全屏模式手机大小设置卡片 -->
+            <div class="settings-card" style="margin-top: 1rem; padding: 1rem">
+              <p style="font-weight: 500; margin: 0 0 0.75rem 0.25rem; color: var(--text-primary); font-size: 0.9em">
+                全屏模式手机大小
+              </p>
+              <div style="display: flex; flex-direction: column; gap: 0.75rem">
+                <!-- 滑块和数字输入 -->
+                <div style="display: flex; flex-direction: column; gap: 0.5rem">
+                  <div style="display: flex; justify-content: space-between; align-items: center">
+                    <span style="font-size: 0.9em; color: var(--text-secondary)">小</span>
+                    <input
+                      type="range"
+                      id="fullscreen-size-slider"
+                      min="50"
+                      max="200"
+                      step="5"
+                      value="100"
+                      style="flex-grow: 1; margin: 0 10px; accent-color: var(--primary-blue)"
+                    />
+                    <span style="font-size: 0.9em; color: var(--text-secondary)">大</span>
+                  </div>
+                  <div style="display: flex; justify-content: center; align-items: center; gap: 0.5rem">
+                    <input
+                      type="number"
+                      id="fullscreen-size-input"
+                      value="100"
+                      min="50"
+                      max="200"
+                      step="5"
+                      style="
+                        width: 70px;
+                        padding: 0.25rem 0.5rem;
+                        border: 1px solid var(--border-color);
+                        border-radius: var(--element-border-radius);
+                        text-align: center;
+                        font-size: 0.85em;
+                        background: var(--settings-card-bg-color);
+                        color: var(--text-primary);
+                      "
+                    />
+                    <span style="font-size: 0.85em; color: var(--text-secondary)">%</span>
+                  </div>
+                </div>
+
+                <!-- 预设按钮 -->
+                <div style="display: flex; justify-content: space-between; gap: 0.5rem; margin-top: 0.5rem">
+                  <button id="fullscreen-size-default" class="fullscreen-size-btn fullscreen-size-active">
+                    <span class="fullscreen-size-icon">📲</span>
+                    <span class="fullscreen-size-label">默认 (100%)</span>
+                  </button>
+                  <button id="fullscreen-size-large" class="fullscreen-size-btn">
+                    <span class="fullscreen-size-icon">📺</span>
+                    <span class="fullscreen-size-label">大 (130%)</span>
+                  </button>
+                  <button id="fullscreen-size-xlarge" class="fullscreen-size-btn">
+                    <span class="fullscreen-size-icon">🖥️</span>
+                    <span class="fullscreen-size-label">超大 (160%)</span>
+                  </button>
+                </div>
+
+                <div style="font-size: 0.8em; color: var(--text-secondary); text-align: center">
+                  调整全屏模式下手机的显示大小
                 </div>
               </div>
             </div>
@@ -365,13 +431,13 @@
 
                 <!-- 预设按钮 -->
                 <div style="display: flex; justify-content: space-between; gap: 0.5rem; margin-top: 0.5rem">
-                  <button id="sticker-size-small" class="phone-size-btn">
-                    <span class="size-icon" style="height: 16px"></span>
-                    <span class="size-label">小 (80px)</span>
+                  <button id="sticker-size-small" class="sticker-size-btn">
+                    <span class="sticker-size-icon" style="height: 16px"></span>
+                    <span class="sticker-size-label">小 (80px)</span>
                   </button>
-                  <button id="sticker-size-medium" class="phone-size-btn phone-size-active">
-                    <span class="size-icon" style="height: 20px"></span>
-                    <span class="size-label">中 (120px)</span>
+                  <button id="sticker-size-medium" class="sticker-size-btn sticker-size-active">
+                    <span class="sticker-size-icon" style="height: 20px"></span>
+                    <span class="sticker-size-label">中 (120px)</span>
                   </button>
                 </div>
 

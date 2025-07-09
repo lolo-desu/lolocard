@@ -197,10 +197,10 @@
 :-webkit-full-screen .phone-frame,
 :-moz-full-screen .phone-frame,
 :-ms-fullscreen .phone-frame {
-  // 计算基于高度的最大宽度，保持手机比例（约9:19.5）
+  // 使用浏览器级别缩放，保持原始尺寸计算的简洁性
   max-height: calc(100vh - 2rem);
   max-width: calc((100vh - 2rem) * 0.46);
-  width: max(480px, calc((100vh - 2rem) * 0.46)); // PC端最小宽度480px
+  width: max(480px, calc((100vh - 2rem) * 0.46)); // PC端最小宽度
   height: auto;
   margin: 1rem auto;
 }
@@ -229,7 +229,7 @@
   min-height: 100vh;
 }
 
-// PC端大屏幕优化
+// PC端大屏幕优化（缩放通过transform处理）
 @media (min-width: 1920px) and (min-height: 1080px) {
   :fullscreen .phone-frame,
   :-webkit-full-screen .phone-frame,
@@ -261,12 +261,6 @@
 :-webkit-full-screen .phone-frame,
 :-moz-full-screen .phone-frame,
 :-ms-fullscreen .phone-frame {
-  // 计算基于高度的最大宽度，保持手机比例（约9:19.5）
-  max-height: calc(100vh - 2rem);
-  max-width: calc((100vh - 2rem) * 0.46);
-  width: max(480px, calc((100vh - 2rem) * 0.46)); // PC端最小宽度480px
-  height: auto;
-  margin: 1rem auto;
   border-radius: 3.125rem; // 保持完整圆角
   padding: 0.6rem; // 保持完整内边距
 }

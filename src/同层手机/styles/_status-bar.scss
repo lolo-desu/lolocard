@@ -18,28 +18,29 @@
   align-items: center;
   gap: 0.4rem;
   color: var(--status-bar-color);
-  font-size: 0.95em;
+  font-size: 0.9em; // 统一字体大小
   font-weight: 600;
 }
 
 .status-right {
   display: flex;
   align-items: center;
-  gap: 0.35rem;
+  gap: 0.4rem; // 统一间距
   color: var(--status-bar-color);
-  font-size: 0.9em;
+  font-size: 0.9em; // 统一字体大小
   font-weight: 600;
 }
 
-.moon-icon {
-  font-size: 0.8em;
-  opacity: 0.9;
-}
-
+.moon-icon,
 .signal-bars,
 .wifi-icon,
 .battery-icon {
-  font-size: 0.85em;
+  font-size: 0.85em; // 统一所有图标大小
+  display: flex; // 添加flex布局确保图标垂直对齐
+  align-items: center;
+  justify-content: center;
+  height: 1em; // 设置固定高度以确保垂直对齐
+  line-height: 1; // 确保行高一致
 }
 
 // 隐藏触发器
@@ -61,15 +62,5 @@
   width: 60px; // 覆盖时间和月亮区域
   height: 2rem;
   z-index: 103; // 在状态栏之上
-  cursor: pointer;
-}
-
-#delete-mode-trigger {
-  position: absolute;
-  top: 0.625rem;
-  left: 1rem;
-  width: 60px;
-  height: 2rem;
-  z-index: 103;
   cursor: pointer;
 }

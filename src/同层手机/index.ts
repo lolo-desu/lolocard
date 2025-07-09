@@ -16,8 +16,6 @@ import { styleManager } from './style-manager';
 // 使用jQuery的$(async () => {})语法
 $(async () => {
   try {
-    console.log('[BLMX] 初始化微信模拟器...');
-
     // 重置全局标志，确保页面刷新时不会保留旧的状态
     (window as any).BLMX_PROCESSING_AI_RESPONSE = false;
 

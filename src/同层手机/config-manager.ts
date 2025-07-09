@@ -28,6 +28,7 @@ export const STORAGE_KEYS = {
   GLOBAL_STICKER: 'blmx_wechat_stickers_global',
   CHAR_STICKER_PREFIX: 'blmx_char_stickers_',
   PHONE_SIZE: 'blmx_phone_size',
+  FULLSCREEN_SIZE: 'blmx_fullscreen_size',
   STICKER_SIZE: 'blmx_sticker_size',
   MOMENT_NOTIFICATION: 'blmx_moment_notification',
   MOMENT_LAST_VIEW: 'blmx_moment_last_view',
@@ -46,6 +47,13 @@ export const PHONE_SIZES = {
   default: '48.75rem', // 默认尺寸: 48.75rem (780px)
   medium: '42rem', // 中等尺寸: 42rem (672px)
   small: '36rem', // 小尺寸: 36rem (576px)
+} as const;
+
+// 全屏模式手机大小常量（缩放比例）
+export const FULLSCREEN_SIZES = {
+  default: 100, // 默认：100%
+  large: 130, // 大：130%
+  xlarge: 160, // 超大：160%
 } as const;
 
 // 配置管理器类
@@ -199,6 +207,21 @@ export class ConfigManager {
   // 设置手机尺寸
   setPhoneSize(size: 'default' | 'medium' | 'small'): void {
     localStorage.setItem(STORAGE_KEYS.PHONE_SIZE, size);
+  }
+
+  // 获取全屏模式手机大小设置（百分比）
+  getFullscreenSize(): number {
+    const savedSize = localStorage.getItem(STORAGE_KEYS.FULLSCREEN_SIZE) || '100';
+    const size = parseInt(savedSize, 10);
+    // 确保在有效范围内
+    return Math.max(50, Math.min(200, size));
+  }
+
+  // 设置全屏模式手机大小（百分比）
+  setFullscreenSize(size: number): void {
+    // 确保在有效范围内
+    const clampedSize = Math.max(50, Math.min(200, size));
+    localStorage.setItem(STORAGE_KEYS.FULLSCREEN_SIZE, clampedSize.toString());
   }
 
   // 获取表情包尺寸设置

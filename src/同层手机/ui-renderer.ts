@@ -720,7 +720,7 @@ export class UIRenderer {
 
     // 确保eventData具有必要的字段
     if (!eventData || !eventData.date || !eventData.time) {
-      console.error('[BLMX] 事件日志数据不完整:', eventData);
+      console.error('事件日志数据不完整:', eventData);
       return;
     }
 
@@ -759,17 +759,8 @@ export class UIRenderer {
 
       if (timeEl && descEl) {
         timeEl.addEventListener('click', () => {
-          // 简单切换显示/隐藏状态，不使用动画
-          const isExpanded = descEl.classList.toggle('expanded');
-          const descHtmlEl = descEl as HTMLElement;
-
-          if (isExpanded) {
-            // 显示描述
-            descHtmlEl.style.display = 'block';
-          } else {
-            // 直接隐藏，不使用动画
-            descHtmlEl.style.display = 'none';
-          }
+          // 只使用CSS类来控制显示/隐藏，不手动设置display属性
+          descEl.classList.toggle('expanded');
         });
       }
     }
@@ -1007,204 +998,85 @@ export class UIRenderer {
     }, 100);
   }
 
-  // 为USER消息设置长按撤回功能 - 移动端优化版本，支持双击备用方案
+  // 为USER消息设置长按撤回功能 - 完全照抄原版逻辑
   private setupUserMessageLongPress(messageRow: HTMLElement, entry: ChatEntry): void {
     const $messageRow = $(messageRow);
     const $messageBubble = $messageRow.find('.message-bubble');
     const $targetElement = $messageBubble.length ? $messageBubble : $messageRow;
 
-    let longPressTimer: number;
-    const startCoords = { x: 0, y: 0 };
-    let isLongPressing = false;
-    let hasTriggered = false;
-
-    // 移动端优化的长按开始处理
-    const startLongPress = (e: TouchEvent | MouseEvent) => {
-      // 重置状态
-      hasTriggered = false;
-      isLongPressing = true;
-
-      // 安全地阻止默认行为 - 检查事件是否可取消
-      if (e.cancelable !== false) {
-        e.preventDefault();
-      }
-      e.stopPropagation();
-
-      // 获取坐标 - 兼容触摸和鼠标事件
-      const originalEvent = e;
-      if (originalEvent.type === 'touchstart') {
-        const touch = (originalEvent as TouchEvent).touches[0];
-        startCoords.x = touch.clientX;
-        startCoords.y = touch.clientY;
-      } else {
-        const mouse = originalEvent as MouseEvent;
-        if (mouse.button !== 0) return; // 只处理左键
-        startCoords.x = mouse.clientX;
-        startCoords.y = mouse.clientY;
-      }
-
-      // 添加视觉反馈 - 使用jQuery
-      $targetElement.addClass('long-press-active');
-
-      // 防止页面滚动和文本选择 - 使用jQuery
-      $('body').css({
-        overflow: 'hidden',
-        'user-select': 'none',
-        '-webkit-user-select': 'none',
-        '-moz-user-select': 'none',
-        '-ms-user-select': 'none',
-        '-webkit-touch-callout': 'none',
-        '-webkit-tap-highlight-color': 'transparent',
-      });
-
-      // 设置长按定时器
-      longPressTimer = setTimeout(async () => {
-        if (isLongPressing && !hasTriggered) {
-          hasTriggered = true;
-
-          // 移除视觉反馈
-          $targetElement.removeClass('long-press-active');
-
-          // 恢复页面状态
-          $('body').css({
-            overflow: '',
-            'user-select': '',
-            '-webkit-user-select': '',
-            '-moz-user-select': '',
-            '-ms-user-select': '',
-            '-webkit-touch-callout': '',
-            '-webkit-tap-highlight-color': '',
-          });
-
-          // 添加触觉反馈（移动端）
-          if ('vibrate' in navigator) {
-            navigator.vibrate(50);
-          }
-
-          // 执行撤回操作
-          try {
-            if (this.options.isMessageInQueue && this.options.isMessageInQueue(entry.id)) {
-              await this.handleUserMessageRecall(entry);
-            } else {
-              // 使用jQuery UI的效果显示无法撤回
-              $targetElement.effect('shake', { times: 2, distance: 5 }, 300);
-
-              const { DialogManager } = await import('./dialog-manager');
-              const dialogManager = DialogManager.getInstance();
-              await dialogManager.alert('消息已合并发送，无法撤回。', '无法撤回');
-            }
-          } catch (error) {
-            // 使用jQuery UI的效果
-            $targetElement.effect('shake', { times: 2, distance: 5 }, 300);
-            console.error('撤回失败:', error);
-          }
-
-          isLongPressing = false;
-        }
-      }, 600); // 600ms长按时间
-    };
-
-    // 移动端优化的长按取消处理
-    const cancelLongPress = (e?: TouchEvent | MouseEvent) => {
-      if (longPressTimer) {
-        clearTimeout(longPressTimer);
-      }
-
-      // 检查是否移动过多（超过20px取消长按，增加移动端容忍度）
-      if (e && isLongPressing && !hasTriggered) {
-        let currentX: number, currentY: number;
-
-        const originalEvent = e;
-        if (originalEvent.type.startsWith('touch')) {
-          const touchEvent = originalEvent as TouchEvent;
-          if (touchEvent.touches.length > 0) {
-            currentX = touchEvent.touches[0].clientX;
-            currentY = touchEvent.touches[0].clientY;
-          } else {
-            // touchend事件，使用changedTouches
-            currentX = touchEvent.changedTouches[0].clientX;
-            currentY = touchEvent.changedTouches[0].clientY;
-          }
-        } else {
-          const mouseEvent = originalEvent as MouseEvent;
-          currentX = mouseEvent.clientX;
-          currentY = mouseEvent.clientY;
-        }
-
-        // 使用lodash计算距离
-        const moveDistance = Math.sqrt(Math.pow(currentX - startCoords.x, 2) + Math.pow(currentY - startCoords.y, 2));
-
-        if (moveDistance > 20) {
-          // 增加移动容忍度到20px，适合移动端
-          isLongPressing = false;
-        }
-      }
-
-      // 清理状态 - 使用jQuery
-      $targetElement.removeClass('long-press-active');
-      $('body').css({
-        overflow: '',
-        'user-select': '',
-        '-webkit-user-select': '',
-        '-moz-user-select': '',
-        '-ms-user-select': '',
-        '-webkit-touch-callout': '',
-        '-webkit-tap-highlight-color': '',
-      });
-      isLongPressing = false;
-    };
-
-    // 使用原生事件绑定避免jQuery的preventDefault问题
-    const targetElement = $targetElement[0];
-
-    // 鼠标事件
-    targetElement.addEventListener('mousedown', startLongPress as any, { passive: false });
-    targetElement.addEventListener('mouseup', cancelLongPress as any, { passive: true });
-    targetElement.addEventListener('mouseleave', cancelLongPress as any, { passive: true });
-
-    // 使用简单的节流优化mousemove性能
-    let mouseMoveTimer: number;
-    targetElement.addEventListener(
-      'mousemove',
-      e => {
-        if (mouseMoveTimer) clearTimeout(mouseMoveTimer);
-        mouseMoveTimer = setTimeout(() => cancelLongPress(e as any), 50);
-      },
-      { passive: true },
-    );
-
-    // 触摸事件 - 移动端核心功能，使用passive避免控制台警告
-    targetElement.addEventListener('touchstart', startLongPress as any, { passive: false });
-    targetElement.addEventListener('touchend', cancelLongPress as any, { passive: true });
-    targetElement.addEventListener('touchcancel', cancelLongPress as any, { passive: true });
-
-    // 使用简单的节流优化touchmove性能
-    let touchMoveTimer: number;
-    targetElement.addEventListener(
-      'touchmove',
-      e => {
-        if (touchMoveTimer) clearTimeout(touchMoveTimer);
-        touchMoveTimer = setTimeout(() => cancelLongPress(e as any), 50);
-      },
-      { passive: true },
-    );
-
-    // 阻止上下文菜单、文本选择和拖拽 - 使用jQuery
-    $targetElement.on('contextmenu selectstart dragstart', e => {
-      e.preventDefault();
-      e.stopPropagation();
-    });
-
-    // 移动端特殊处理 - 阻止双击缩放
-    $targetElement.css({
-      'touch-action': 'manipulation',
-      '-webkit-touch-callout': 'none',
-      '-webkit-user-select': 'none',
-      '-webkit-tap-highlight-color': 'transparent',
+    // 原版长按监听器实现
+    this.addLongPressListener($targetElement[0], () => {
+      this.handleLongPressRecall(entry);
     });
 
     // 添加双击撤回功能作为备用方案（特别是在全屏模式下长按可能失效时）
     this.setupDoubleClickRecall($targetElement, entry);
+  }
+
+  // 原版长按监听器实现 - 完全照抄原版逻辑
+  private addLongPressListener(
+    element: HTMLElement,
+    callback: () => void,
+    options = { duration: 600, preventDefault: true },
+  ): void {
+    let timer: number;
+    let startX: number, startY: number;
+
+    const onStart = (e: PointerEvent) => {
+      if (e.pointerType === 'mouse' && e.button !== 0) return;
+      startX = e.clientX;
+      startY = e.clientY;
+      if (options.preventDefault) e.preventDefault();
+      clearTimeout(timer);
+      timer = setTimeout(() => {
+        timer = 0;
+        callback();
+      }, options.duration);
+    };
+
+    const onMove = (e: PointerEvent) => {
+      if (!timer) return;
+      const moveX = e.clientX;
+      const moveY = e.clientY;
+      if (Math.abs(moveX - startX) > 10 || Math.abs(moveY - startY) > 10) {
+        clearTimeout(timer);
+      }
+    };
+
+    const onEnd = () => clearTimeout(timer);
+
+    element.addEventListener('pointerdown', onStart);
+    element.addEventListener('pointermove', onMove);
+    element.addEventListener('pointerup', onEnd);
+    element.addEventListener('pointerleave', onEnd);
+
+    if (options.preventDefault) {
+      element.addEventListener('contextmenu', e => e.preventDefault());
+    }
+  }
+
+  // 处理长按撤回 - 先检查消息是否可以撤回
+  private async handleLongPressRecall(entry: ChatEntry): Promise<void> {
+    try {
+      // 检查消息是否可以撤回
+      if (this.options.isMessageInQueue && this.options.isMessageInQueue(entry.id)) {
+        await this.handleUserMessageRecall(entry);
+      } else {
+        // 使用jQuery UI的效果显示无法撤回
+        const $messageElement = $(`[data-message-id="${entry.id}"]`);
+        $messageElement.effect('shake', { times: 2, distance: 5 }, 300);
+
+        const { DialogManager } = await import('./dialog-manager');
+        const dialogManager = DialogManager.getInstance();
+        await dialogManager.alert('消息已合并发送，无法撤回。', '无法撤回');
+      }
+    } catch (error) {
+      console.error('长按撤回失败:', error);
+
+      // 显示错误反馈
+      const $messageElement = $(`[data-message-id="${entry.id}"]`);
+      $messageElement.effect('shake', { times: 2, distance: 5 }, 300);
+    }
   }
 
   // 处理USER消息撤回

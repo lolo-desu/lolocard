@@ -463,8 +463,6 @@ export class ThemeManager {
     Object.entries(preservedData).forEach(([key, value]) => {
       localStorage.setItem(key, value);
     });
-
-    console.log('数据清理完成，保留了用户个人设置');
   }
 
   // 获取当前主题
@@ -691,24 +689,24 @@ export class ThemeManager {
     if (phoneFrame) {
       phoneFrame.style.background = colors.phoneFrame;
 
-      // 更新手机边框渐变
+      // 更新手机边框渐变 - 原子性更新避免闪烁
       const gradientColors = colors.phoneFrameGradient.join(', ');
-      const phoneFrameBefore = document.createElement('style');
-      phoneFrameBefore.textContent = `
+
+      // 检查是否已存在样式元素
+      let phoneFrameStyle = document.getElementById('phone-frame-style') as HTMLStyleElement;
+      if (!phoneFrameStyle) {
+        phoneFrameStyle = document.createElement('style');
+        phoneFrameStyle.id = 'phone-frame-style';
+        document.head.appendChild(phoneFrameStyle);
+      }
+
+      // 直接更新样式内容，避免移除和重新添加造成的闪烁
+      phoneFrameStyle.textContent = `
         .phone-frame::before {
           background: linear-gradient(45deg, ${gradientColors});
           background-size: 400% 400%;
         }
       `;
-
-      // 移除旧样式并添加新样式
-      const oldStyle = document.getElementById('phone-frame-style');
-      if (oldStyle) {
-        oldStyle.remove();
-      }
-
-      phoneFrameBefore.id = 'phone-frame-style';
-      document.head.appendChild(phoneFrameBefore);
     }
 
     // 更新动态岛颜色

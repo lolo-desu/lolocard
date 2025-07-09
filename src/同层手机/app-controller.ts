@@ -207,6 +207,9 @@ export class AppController implements IAppController {
       // 初始化字体设置功能
       this.uiManager.setupFontSelection();
 
+      // 初始化全屏模式手机大小设置功能
+      this.uiManager.setupFullscreenSizeAdjustment();
+
       // 显示当前版本
       this.uiManager.displayAppVersion();
 
@@ -313,7 +316,6 @@ export class AppController implements IAppController {
       if ('sender' in entry && entry.sender === 'me') {
         this.userMessageQueue.push(entry as ChatEntry);
         this.eventHandler.setHasPendingNotifications(true);
-        // console.log('[BLMX] 用户发送了消息，添加到队列');
 
         // 渲染条目（使用队列中的索引）
         const queueIndex = this.userMessageQueue.length - 1;
@@ -685,8 +687,6 @@ export class AppController implements IAppController {
 
       // 重新渲染聊天历史
       this.renderChatHistory();
-
-      // console.log('[BLMX] 文字消息已撤回:', entry.id);
     } catch (error) {
       console.error('撤回消息时出错:', error);
     }

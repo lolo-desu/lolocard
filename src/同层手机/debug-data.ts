@@ -579,6 +579,36 @@ export function addTestEntry(blmxManager: any, entryType: string): void {
         },
       };
       break;
+    case 'event-short':
+      entry = {
+        type: 'event',
+        content: {
+          date: getCurrentDate(),
+          time: getCurrentTime(),
+          description: '这是一个简短的事件日志测试',
+        },
+      };
+      break;
+    case 'event-long':
+      entry = {
+        type: 'event',
+        content: {
+          date: getCurrentDate(),
+          time: getCurrentTime(),
+          description:
+            '这是一个非常长的事件日志测试，用来验证长文本的显示效果。在物语世界的深处，隐藏着无数的秘密和传说。每当夜幕降临，星光洒向大地，那些古老的故事便会在风中轻声诉说。主角踏上了寻找真相的旅程，穿越了森林、山川和海洋，遇到了各种各样的人物和挑战。这段旅程不仅是对外在世界的探索，更是对内心深处的自我发现。',
+        },
+      };
+      break;
+    case 'time':
+      entry = {
+        type: 'time',
+        content: {
+          date: getCurrentDate(),
+          time: getCurrentTime(),
+        },
+      };
+      break;
     default:
       console.error('[DEBUG] 未知的测试数据类型:', entryType);
       return;
@@ -594,21 +624,21 @@ export function addTestEntry(blmxManager: any, entryType: string): void {
 // 显示测试条目类型
 export function showTestEntryTypes(): void {
   console.log('[BLMX Debug] 可用的测试条目类型:');
-  console.log('- message: 文本消息');
-  console.log('- sticker: 表情消息');
-  console.log('- image: 图片消息');
-  console.log('- voice: 语音消息');
-  console.log('- location: 位置消息');
-  console.log('- transfer: 转账消息');
-  console.log('- file: 文件消息');
-  console.log('- gift: 礼物消息');
-  console.log('- moment: 朋友圈动态');
-  console.log('- comment: 朋友圈评论');
-  console.log('- like: 朋友圈点赞');
-  console.log('- recall: 消息撤回');
-  console.log('- system: 系统消息');
+  console.log('- text-user: 用户文本消息');
+  console.log('- text-char: AI文本消息');
+  console.log('- sticker-user: 用户表情消息');
+  console.log('- sticker-char: AI表情消息');
+  console.log('- image-user: 用户图片消息');
+  console.log('- image-char: AI图片消息');
+  console.log('- voice-user: 用户语音消息');
+  console.log('- voice-char: AI语音消息');
+  console.log('- transfer-user: 用户转账消息');
+  console.log('- gift-user: 用户礼物消息');
+  console.log('- moment-user: 用户朋友圈动态');
+  console.log('- moment-char: AI朋友圈动态');
+  console.log('- event-short: 短事件日志');
+  console.log('- event-long: 长事件日志（测试长文本显示）');
   console.log('- time: 时间戳');
-  console.log('- event: 事件日志');
 }
 
 // 显示调试信息

@@ -139,23 +139,3 @@
     cursor: pointer;
   }
 }
-
-.event-description {
-  color: #888;
-  font-size: 0.75em;
-  padding: 0;
-  max-height: 0;
-  overflow: hidden;
-  transition: max-height 0.3s ease-out, padding 0.3s ease-out;
-  margin-top: 0.3rem;
-
-  &.expanded {
-    max-height: 6.25rem;
-    padding: 0.5rem 0.8rem;
-    background-color: rgba(255, 255, 255, 0.9);
-    border-radius: 0.8rem;
-    box-shadow: 0 1px 4px rgba(0, 0, 0, 0.1);
-    color: var(--text-primary);
-    font-weight: 500;
-  }
-}

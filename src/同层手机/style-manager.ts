@@ -33,13 +33,13 @@ export class StyleManager {
    */
   private initializeStyles(): void {
     console.log('[StyleManager] 正在加载样式文件...');
-    
+
     // 标记主样式已加载
     this.loadedStyles.add('main');
-    
+
     // 添加样式加载完成的标记到body
     document.body.classList.add('styles-loaded');
-    
+
     console.log('[StyleManager] 样式文件加载完成');
   }
 
@@ -55,13 +55,13 @@ export class StyleManager {
    */
   public toggleTheme(theme: 'light' | 'dark'): void {
     const body = document.body;
-    
+
     if (theme === 'dark') {
       body.classList.add('dark-mode');
     } else {
       body.classList.remove('dark-mode');
     }
-    
+
     console.log(`[StyleManager] 主题已切换到: ${theme}`);
   }
 
@@ -102,19 +102,17 @@ export class StyleManager {
     // 移除所有自定义设置的CSS变量
     const style = document.documentElement.style;
     const propertiesToRemove: string[] = [];
-    
+
     for (let i = 0; i < style.length; i++) {
       const property = style[i];
       if (property.startsWith('--')) {
         propertiesToRemove.push(property);
       }
     }
-    
+
     propertiesToRemove.forEach(property => {
       style.removeProperty(property);
     });
-    
-    console.log('[StyleManager] CSS变量已重置');
   }
 
   /**
@@ -156,7 +154,7 @@ export class StyleManager {
     return {
       loadedStyles: Array.from(this.loadedStyles),
       currentTheme: this.getCurrentTheme(),
-      stylesLoaded: document.body.classList.contains('styles-loaded')
+      stylesLoaded: document.body.classList.contains('styles-loaded'),
     };
   }
 }

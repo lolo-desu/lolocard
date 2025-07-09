@@ -274,7 +274,6 @@ export class MessageHandler {
                       }) as ChatEntry;
 
                     if (entryToRecall) {
-                      console.log('[BLMX] 找到要撤回的消息:', entryToRecall);
                       // 创建一个"指令"条目给动画函数处理
                       entriesForAnimation.push({
                         type: 'recall_instruction',
@@ -526,7 +525,7 @@ export class MessageHandler {
       // 刷新所有时间戳的显示，确保AI回复的时间戳正确展示
       this.uiRenderer.refreshAllTimestamps();
     } catch (error) {
-      console.error('[BLMX] Error in triggerAiResponse:', error);
+      console.error('Error in triggerAiResponse:', error);
     } finally {
       // 无论成功失败，都重置处理标志
       this.isGenerating = false;
@@ -538,8 +537,6 @@ export class MessageHandler {
   async displayAiEntriesSequentially(entries: LogEntry[]): Promise<void> {
     // 定义哪些类型是"消息"，需要播放输入动画
     const messageLikeTypes = ['message', 'sticker', 'voice', 'image', 'location', 'transfer', 'file', 'gift'];
-
-    console.log('[BLMX] 开始顺序显示AI条目，总数:', entries.length);
 
     // 增强去重：首先对entries数组进行去重处理
     const uniqueEntries: LogEntry[] = [];
@@ -667,8 +664,6 @@ export class MessageHandler {
       // 在所有条目之间都增加一个短暂的停顿，让节奏更舒适
       await new Promise(resolve => setTimeout(resolve, 800));
     }
-
-    console.log('[BLMX] 完成顺序显示AI条目');
 
     // 显示完所有条目后刷新时间戳，确保日期格式正确
     this.uiRenderer.refreshAllTimestamps();

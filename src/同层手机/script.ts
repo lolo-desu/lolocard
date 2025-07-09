@@ -256,7 +256,7 @@ export class BLMX_Protocol {
 
       await getTavernHelper().setChatMessage(fullText.trim(), this.messageId, { refresh: 'none' });
     } catch (error) {
-      console.error('[BLMX] Failed to save narrative log to text box:', error); // 保留重要错误
+      console.error('Failed to save narrative log to text box:', error);
     }
   }
 

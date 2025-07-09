@@ -402,7 +402,8 @@
   flex-direction: column;
   align-items: center;
   width: 100%; /* 使用固定宽度而非自适应 */
-  max-width: 80%; /* 限制最大宽度 */
+  max-width: 90%; /* 增加最大宽度以适应更长的文本 */
+  margin: 0 auto; /* 居中显示 */
 }
 
 .event-time-text {
@@ -501,25 +502,50 @@
   margin-top: 0.25rem;
   width: 100%; /* 确保宽度一致 */
   max-width: 100%; /* 使用100%宽度 */
-  text-align: center;
-  line-height: 1.4;
+  text-align: left; /* 改为左对齐，便于阅读长文本 */
+  line-height: 1.5; /* 增加行高，提高可读性 */
   box-shadow: 0 1px 3px rgba(0, 0, 0, 0.1);
   display: none;
   position: relative; /* 确保位置稳定 */
   z-index: 1; /* 确保描述在时间戳下层 */
-  white-space: nowrap; /* 尽量保持单行显示 */
-  text-overflow: ellipsis; /* 超出部分显示省略号 */
-  overflow: hidden;
+  white-space: normal; /* 允许自然换行 */
+  word-wrap: break-word; /* 长单词自动换行 */
+  word-break: break-word; /* 确保长文本能够换行 */
+  overflow-wrap: break-word; /* 现代浏览器的换行属性 */
 
-  /* 当内容超过最大宽度时允许换行 */
-  @media (max-width: 500px) {
-    white-space: normal;
-  }
+  /* 移除文本截断，让内容完整显示 */
+  overflow: visible;
+  text-overflow: unset;
 
   &.expanded {
     display: block;
-    white-space: normal; /* 展开后允许自然换行 */
   }
+}
+
+// 自定义主题下的event-description适配
+body[data-theme='custom'] .event-description {
+  background: var(--settings-card-bg-color);
+  color: var(--text-primary);
+  border: 1px solid var(--border-color);
+
+  // 确保在自定义主题下也有良好的可读性
+  backdrop-filter: blur(2px);
+
+  // 自定义主题下的阴影效果
+  box-shadow: 0 2px 8px var(--shadow-color-rgba);
+}
+
+// 夜间模式下的自定义主题适配
+body.dark-mode[data-theme='custom'] .event-description {
+  background: var(--settings-card-bg-color);
+  color: var(--text-primary);
+  border: 1px solid var(--border-color);
+
+  // 夜间模式下增强背景模糊效果
+  backdrop-filter: blur(4px);
+
+  // 夜间模式下的阴影效果
+  box-shadow: 0 2px 8px var(--shadow-color-rgba);
 }
 
 // 双击撤回相关动画

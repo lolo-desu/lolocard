@@ -1,7 +1,7 @@
 // 用户界面管理模块
 // 负责导航、面板切换、尺寸调整、版本显示等UI相关功能
 
-import { ConfigManager, PHONE_SIZES } from './config-manager';
+import { ConfigManager } from './config-manager';
 import { LogEntry } from './script';
 import { APP_VERSION } from './theme-manager';
 
@@ -70,13 +70,6 @@ export class UIManager {
     // 使用jQuery方法更新显示状态
     $sendBtn.css('display', shouldShowSendBtn ? 'flex' : 'none');
     $plusBtn.css('display', hasText ? 'none' : 'inline-block');
-
-    // 调试信息
-    console.log('[BLMX] 更新按钮状态:', {
-      hasText,
-      hasPendingNotifications: hasNotifications,
-      shouldShowSendBtn,
-    });
   }
 
   // 切换面板
@@ -163,7 +156,6 @@ export class UIManager {
     const mediumSizeBtn = document.getElementById('sticker-size-medium');
 
     if (!sizeSlider || !sizeInput || !smallSizeBtn || !mediumSizeBtn) {
-      console.error('[BLMX] Sticker size control elements not found');
       return;
     }
 
@@ -176,14 +168,14 @@ export class UIManager {
 
     // 设置初始按钮状态
     if (savedSize === 80) {
-      smallSizeBtn.classList.add('phone-size-active');
-      mediumSizeBtn.classList.remove('phone-size-active');
+      smallSizeBtn.classList.add('sticker-size-active');
+      mediumSizeBtn.classList.remove('sticker-size-active');
     } else if (savedSize === 120) {
-      smallSizeBtn.classList.remove('phone-size-active');
-      mediumSizeBtn.classList.add('phone-size-active');
+      smallSizeBtn.classList.remove('sticker-size-active');
+      mediumSizeBtn.classList.add('sticker-size-active');
     } else {
-      smallSizeBtn.classList.remove('phone-size-active');
-      mediumSizeBtn.classList.remove('phone-size-active');
+      smallSizeBtn.classList.remove('sticker-size-active');
+      mediumSizeBtn.classList.remove('sticker-size-active');
     }
 
     // 设置CSS变量
@@ -230,6 +222,13 @@ export class UIManager {
 
   // 应用手机尺寸设置
   private applyPhoneSize(size: 'default' | 'medium' | 'small', phoneScreen: HTMLElement, buttons: HTMLElement[]): void {
+    // 手机尺寸常量
+    const PHONE_SIZES = {
+      default: '48.75rem', // 默认尺寸: 48.75rem (780px)
+      medium: '42rem', // 中等尺寸: 42rem (672px)
+      small: '36rem', // 小尺寸: 36rem (576px)
+    };
+
     // 设置屏幕高度
     phoneScreen.style.height = PHONE_SIZES[size];
 
@@ -273,14 +272,14 @@ export class UIManager {
   // 更新表情包尺寸按钮状态
   private updateStickerSizeButtonState(size: number, smallSizeBtn: HTMLElement, mediumSizeBtn: HTMLElement): void {
     if (size === 80) {
-      smallSizeBtn.classList.add('phone-size-active');
-      mediumSizeBtn.classList.remove('phone-size-active');
+      smallSizeBtn.classList.add('sticker-size-active');
+      mediumSizeBtn.classList.remove('sticker-size-active');
     } else if (size === 120) {
-      smallSizeBtn.classList.remove('phone-size-active');
-      mediumSizeBtn.classList.add('phone-size-active');
+      smallSizeBtn.classList.remove('sticker-size-active');
+      mediumSizeBtn.classList.add('sticker-size-active');
     } else {
-      smallSizeBtn.classList.remove('phone-size-active');
-      mediumSizeBtn.classList.remove('phone-size-active');
+      smallSizeBtn.classList.remove('sticker-size-active');
+      mediumSizeBtn.classList.remove('sticker-size-active');
     }
   }
 
@@ -300,7 +299,6 @@ export class UIManager {
     const $systemFontBtn = $('#font-system');
 
     if (!$customFontBtn.length || !$systemFontBtn.length) {
-      console.error('[BLMX] Font selection elements not found');
       return;
     }
 
@@ -330,13 +328,344 @@ export class UIManager {
     $('.font-btn').removeClass('font-active');
 
     if (fontType === 'custom') {
-      // 使用自定义字体
-      $body.css('font-family', "'MyCustomFont', sans-serif");
+      // 使用自定义字体 - 改进兼容性
+      this.applyCustomFont();
       $customBtn.addClass('font-active');
     } else {
-      // 使用系统字体
-      $body.css('font-family', 'system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif');
+      // 使用系统字体 - 改进兼容性
+      this.applySystemFont();
       $systemBtn.addClass('font-active');
     }
+  }
+
+  // 应用自定义字体的兼容性方法
+  private applyCustomFont(): void {
+    const $body = $('body');
+
+    // 检测特殊WebView环境
+    const isIOSWebView = /iPhone|iPad|iPod/.test(navigator.userAgent) && /WebKit/.test(navigator.userAgent);
+    const isHuaweiWebView = /HUAWEI/.test(navigator.userAgent);
+
+    if (isIOSWebView || isHuaweiWebView) {
+      // 对于问题WebView，使用更简单的方法
+      // 直接设置字体，不依赖Font Loading API
+      const fontStack =
+        "'MyCustomFont', 'Noto Sans SC', -apple-system, BlinkMacSystemFont, 'Segoe UI', 'Helvetica Neue', Arial, sans-serif";
+      $body.css('font-family', fontStack);
+
+      // 强制重新渲染
+      $body.addClass('force-font-refresh');
+      setTimeout(() => {
+        $body.removeClass('force-font-refresh');
+      }, 50);
+
+      // 延迟再次应用，确保生效
+      setTimeout(() => {
+        $body.css('font-family', fontStack);
+      }, 100);
+
+      return;
+    }
+
+    // 对于正常浏览器，使用标准方法
+    this.checkFontLoaded('MyCustomFont').then(loaded => {
+      if (loaded) {
+        // 字体已加载，直接应用
+        $body.css('font-family', "'MyCustomFont', 'Noto Sans SC', sans-serif");
+      } else {
+        // 字体未加载，尝试加载后再应用
+        this.loadCustomFont()
+          .then(() => {
+            $body.css('font-family', "'MyCustomFont', 'Noto Sans SC', sans-serif");
+          })
+          .catch(() => {
+            // 加载失败，使用备用字体
+            $body.css('font-family', "'Noto Sans SC', sans-serif");
+          });
+      }
+    });
+  }
+
+  // 应用系统字体的兼容性方法
+  private applySystemFont(): void {
+    const $body = $('body');
+
+    // 检测特殊WebView环境
+    const isIOSWebView = /iPhone|iPad|iPod/.test(navigator.userAgent) && /WebKit/.test(navigator.userAgent);
+    const isHuaweiWebView = /HUAWEI/.test(navigator.userAgent);
+
+    let fontStack: string;
+
+    if (isIOSWebView) {
+      // iOS WebView 优化字体栈
+      fontStack = '-apple-system, "SF Pro Display", "SF Pro Text", "Helvetica Neue", Helvetica, Arial, sans-serif';
+    } else if (isHuaweiWebView) {
+      // 华为 WebView 优化字体栈
+      fontStack = '"HarmonyOS Sans", "Noto Sans SC", "Microsoft YaHei", Arial, sans-serif';
+    } else {
+      // 通用系统字体栈
+      fontStack =
+        '-apple-system, BlinkMacSystemFont, "Segoe UI", "Helvetica Neue", Arial, "Noto Sans", "Liberation Sans", sans-serif, "Apple Color Emoji", "Segoe UI Emoji", "Segoe UI Symbol", "Noto Color Emoji"';
+    }
+
+    $body.css('font-family', fontStack);
+
+    // 对于问题WebView，强制重新渲染
+    if (isIOSWebView || isHuaweiWebView) {
+      $body.addClass('force-font-refresh');
+      setTimeout(() => {
+        $body.removeClass('force-font-refresh');
+      }, 50);
+    }
+  }
+
+  // 检查字体是否已加载
+  private checkFontLoaded(fontFamily: string): Promise<boolean> {
+    return new Promise(resolve => {
+      if (!document.fonts) {
+        // 不支持Font Loading API，假设已加载
+        resolve(true);
+        return;
+      }
+
+      document.fonts.ready
+        .then(() => {
+          const fontFace = Array.from(document.fonts).find(
+            font => font.family === fontFamily || font.family === `'${fontFamily}'`,
+          );
+          resolve(!!fontFace && fontFace.status === 'loaded');
+        })
+        .catch(() => {
+          resolve(false);
+        });
+    });
+  }
+
+  // 加载自定义字体
+  private loadCustomFont(): Promise<void> {
+    return new Promise((resolve, reject) => {
+      if (!document.fonts) {
+        // 不支持Font Loading API，使用传统方法
+        const testElement = $('<div>')
+          .css({
+            position: 'absolute',
+            left: '-9999px',
+            top: '-9999px',
+            fontSize: '72px',
+            fontFamily: "'MyCustomFont', monospace",
+            visibility: 'hidden',
+          })
+          .text('test')
+          .appendTo('body');
+
+        // 等待一段时间后检查
+        setTimeout(() => {
+          testElement.remove();
+          resolve();
+        }, 1000);
+        return;
+      }
+
+      const fontFace = new FontFace('MyCustomFont', 'url(https://files.catbox.moe/er4wsg.ttf)');
+
+      fontFace
+        .load()
+        .then(loadedFace => {
+          document.fonts.add(loadedFace);
+          resolve();
+        })
+        .catch(error => {
+          reject(error);
+        });
+    });
+  }
+
+  // 设置全屏模式手机大小调整
+  setupFullscreenSizeAdjustment(): void {
+    // 等待DOM完全加载
+    setTimeout(() => {
+      const $defaultBtn = $('#fullscreen-size-default');
+      const $largeBtn = $('#fullscreen-size-large');
+      const $xlargeBtn = $('#fullscreen-size-xlarge');
+      const $slider = $('#fullscreen-size-slider');
+      const $input = $('#fullscreen-size-input');
+
+      if (!$defaultBtn.length || !$largeBtn.length || !$xlargeBtn.length || !$slider.length || !$input.length) {
+        return;
+      }
+
+      this.initializeFullscreenSizeControls($defaultBtn, $largeBtn, $xlargeBtn, $slider, $input);
+    }, 100);
+  }
+
+  // 初始化全屏大小控件
+  private initializeFullscreenSizeControls(
+    $defaultBtn: JQuery,
+    $largeBtn: JQuery,
+    $xlargeBtn: JQuery,
+    $slider: JQuery,
+    $input: JQuery,
+  ): void {
+    // 从localStorage读取保存的全屏大小设置
+    const savedSize = this.configManager.getFullscreenSize();
+
+    // 初始化控件值
+    $slider.val(savedSize);
+    $input.val(savedSize);
+    this.applyFullscreenSize(savedSize);
+    this.updateFullscreenSizeButtonState(savedSize);
+
+    // 预设按钮点击事件
+    $defaultBtn.off('click').on('click', e => {
+      e.preventDefault();
+      e.stopPropagation();
+      this.setFullscreenSize(100);
+    });
+
+    $largeBtn.off('click').on('click', e => {
+      e.preventDefault();
+      e.stopPropagation();
+      this.setFullscreenSize(130);
+    });
+
+    $xlargeBtn.off('click').on('click', e => {
+      e.preventDefault();
+      e.stopPropagation();
+      this.setFullscreenSize(160);
+    });
+
+    // 滑块事件
+    $slider.off('input').on('input', e => {
+      const newSize = parseInt($(e.target).val() as string);
+      $input.val(newSize);
+      this.setFullscreenSize(newSize);
+    });
+
+    // 数字输入框事件
+    $input.off('change').on('change', e => {
+      let newSize = parseInt($(e.target).val() as string);
+      // 限制范围
+      if (newSize < 50) newSize = 50;
+      if (newSize > 200) newSize = 200;
+
+      $input.val(newSize);
+      $slider.val(newSize);
+      this.setFullscreenSize(newSize);
+    });
+
+    // 监听全屏状态变化
+    this.setupFullscreenListener();
+  }
+
+  // 设置全屏状态监听器
+  private setupFullscreenListener(): void {
+    const handleFullscreenChange = () => {
+      const isFullscreen = !!(
+        document.fullscreenElement ||
+        (document as any).webkitFullscreenElement ||
+        (document as any).mozFullScreenElement ||
+        (document as any).msFullscreenElement
+      );
+
+      if (!isFullscreen) {
+        // 退出全屏时重置缩放
+        this.resetBrowserZoom();
+      } else {
+        // 进入全屏时应用当前设置
+        const currentSize = this.configManager.getFullscreenSize();
+        this.applyBrowserLikeZoom(currentSize / 100);
+      }
+    };
+
+    // 绑定全屏状态变化事件
+    document.addEventListener('fullscreenchange', handleFullscreenChange);
+    document.addEventListener('webkitfullscreenchange', handleFullscreenChange);
+    document.addEventListener('mozfullscreenchange', handleFullscreenChange);
+    document.addEventListener('MSFullscreenChange', handleFullscreenChange);
+  }
+
+  // 重置浏览器缩放
+  private resetBrowserZoom(): void {
+    const body = document.body;
+
+    // 重置所有缩放相关样式
+    body.style.transform = '';
+    body.style.transformOrigin = '';
+    body.style.position = '';
+    body.style.width = '';
+    body.style.height = '';
+    body.style.margin = '';
+  }
+
+  // 设置全屏大小并更新UI
+  private setFullscreenSize(size: number): void {
+    // 保存设置
+    this.configManager.setFullscreenSize(size);
+
+    // 更新滑块和输入框
+    $('#fullscreen-size-slider').val(size);
+    $('#fullscreen-size-input').val(size);
+
+    // 应用设置
+    this.applyFullscreenSize(size);
+
+    // 更新按钮状态
+    this.updateFullscreenSizeButtonState(size);
+  }
+
+  // 应用全屏模式手机大小设置
+  private applyFullscreenSize(size: number): void {
+    const scale = size / 100;
+
+    // 检查当前是否在全屏模式
+    const isFullscreen = !!(
+      document.fullscreenElement ||
+      (document as any).webkitFullscreenElement ||
+      (document as any).mozFullScreenElement ||
+      (document as any).msFullscreenElement
+    );
+
+    if (isFullscreen) {
+      // 在全屏模式下应用浏览器级别的缩放
+      this.applyBrowserLikeZoom(scale);
+    }
+    // 删除非全屏模式下的临时预览功能
+  }
+
+  // 应用类似浏览器的缩放效果
+  private applyBrowserLikeZoom(scale: number): void {
+    const body = document.body;
+
+    if (scale !== 1) {
+      body.style.transform = `scale(${scale})`;
+      body.style.transformOrigin = 'center center';
+      body.style.position = 'relative';
+      body.style.width = `${100 / scale}%`;
+      body.style.height = `${100 / scale}%`;
+      body.style.margin = '0 auto';
+    } else {
+      body.style.transform = '';
+      body.style.transformOrigin = '';
+      body.style.position = '';
+      body.style.width = '';
+      body.style.height = '';
+      body.style.margin = '';
+    }
+  }
+
+  // 更新按钮状态
+  private updateFullscreenSizeButtonState(size: number): void {
+    // 移除所有按钮的激活状态
+    $('.fullscreen-size-btn').removeClass('fullscreen-size-active');
+
+    // 根据大小激活对应按钮
+    if (size === 100) {
+      $('#fullscreen-size-default').addClass('fullscreen-size-active');
+    } else if (size === 130) {
+      $('#fullscreen-size-large').addClass('fullscreen-size-active');
+    } else if (size === 160) {
+      $('#fullscreen-size-xlarge').addClass('fullscreen-size-active');
+    }
+    // 自定义大小不激活任何预设按钮
   }
 }

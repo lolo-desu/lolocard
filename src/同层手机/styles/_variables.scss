@@ -2,10 +2,13 @@
 @import url('https://fonts.googleapis.com/css2?family=Noto+Sans+SC:wght@300;400;500;700&display=swap');
 @import url('https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.2/css/all.min.css');
 
-// 自定义字体
+// 自定义字体 - 改进兼容性
 @font-face {
   font-family: 'MyCustomFont';
-  src: url('https://files.catbox.moe/er4wsg.ttf');
+  src: url('https://files.catbox.moe/er4wsg.ttf') format('truetype');
+  font-display: swap; /* 改善字体加载体验 */
+  font-weight: normal;
+  font-style: normal;
 }
 
 // 全局颜色和尺寸变量定义
