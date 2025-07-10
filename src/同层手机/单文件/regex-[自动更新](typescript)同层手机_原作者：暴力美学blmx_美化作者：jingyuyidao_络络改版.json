@@ -1,0 +1,17 @@
+{
+    "id": "2f5326a6-4290-46bf-826a-86a303062501",
+    "scriptName": "[自动更新](typescript)同层手机 原作者：暴力美学BLMX 美化作者：jingyuyidao 络络改版",
+    "findRegex": "/===BLMX_LOG_BEGIN===.*===BLMX_LOG_END===/gsi",
+    "replaceString": "```html\n<body>\n<script>\n$('body').load('https://fastly.jsdelivr.net/gh/lolo-desu/lolocard/dist/同层手机/index.html')\n</script>\n</body>\n```",
+    "trimStrings": [],
+    "placement": [
+        2
+    ],
+    "disabled": false,
+    "markdownOnly": true,
+    "promptOnly": false,
+    "runOnEdit": true,
+    "substituteRegex": 0,
+    "minDepth": null,
+    "maxDepth": null
+}
