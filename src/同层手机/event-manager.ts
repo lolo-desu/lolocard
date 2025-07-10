@@ -42,7 +42,7 @@ export class EventManager {
     element: Element | Window | Document,
     event: string,
     handler: EventListener,
-    options?: boolean | AddEventListenerOptions
+    options?: boolean | AddEventListenerOptions,
   ): void {
     if (this.isDestroyed) {
       console.warn('[EventManager] 尝试在已销毁的管理器上添加DOM监听器');
@@ -50,12 +50,12 @@ export class EventManager {
     }
 
     element.addEventListener(event, handler, options);
-    
+
     // 创建清理函数
     const cleanup = () => {
       element.removeEventListener(event, handler, options);
     };
-    
+
     this.listeners.push(cleanup);
   }
 
@@ -161,7 +161,7 @@ export class EventManager {
     this.intervals.clear();
 
     this.isDestroyed = true;
-    console.log('[EventManager] 所有资源已清理');
+    //console.log('[EventManager] 所有资源已清理');
   }
 
   /**

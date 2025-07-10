@@ -96,26 +96,23 @@ export class DialogManager {
         // 设置初始状态
         this.updateCheckboxButtonState(button as HTMLElement, checkbox.checked);
 
-        // 检查是否是label元素且有for属性
-        const isLabelWithFor = button.tagName.toLowerCase() === 'label' && $button.attr('for');
+        // 添加点击事件
+        $button.on('click', e => {
+          e.preventDefault();
+          e.stopPropagation();
 
-        if (!isLabelWithFor) {
-          // 只有在不是带for属性的label时才添加点击事件
-          $button.on('click', e => {
-            e.preventDefault();
+          if (checkbox.disabled) return;
 
-            if (checkbox.disabled) return;
+          // 切换状态
+          checkbox.checked = !checkbox.checked;
+          this.updateCheckboxButtonState(button as HTMLElement, checkbox.checked);
 
-            // 切换状态
-            checkbox.checked = !checkbox.checked;
-            this.updateCheckboxButtonState(button as HTMLElement, checkbox.checked);
+          // 触发change事件 - 使用原生事件确保兼容性
+          const changeEvent = new Event('change', { bubbles: true });
+          checkbox.dispatchEvent(changeEvent);
+        });
 
-            // 触发change事件
-            $checkbox.trigger('change');
-          });
-        }
-
-        // 监听外部状态变化（包括label自动触发的变化）
+        // 监听外部状态变化
         $checkbox.on('change', () => {
           this.updateCheckboxButtonState(button as HTMLElement, checkbox.checked);
         });
@@ -511,7 +508,7 @@ export class DialogManager {
 
           // 聚焦到文本框
           setTimeout(() => {
-            $commentText.focus();
+            $commentText.trigger('focus');
           }, 100);
         }),
     );
@@ -727,9 +724,9 @@ export class DialogManager {
 
             if (!name) {
               // 在输入框上显示错误提示，而不是弹出新的alert
-              nameInput.style.borderColor = '#ff4444';
-              nameInput.placeholder = '请输入礼物名称';
-              nameInput.focus();
+              $(nameInput).css('borderColor', '#ff4444');
+              $(nameInput).attr('placeholder', '请输入礼物名称');
+              $(nameInput).trigger('focus');
               return;
             }
 
@@ -760,7 +757,7 @@ export class DialogManager {
 
           // 聚焦到名称输入框
           setTimeout(() => {
-            nameInput.focus();
+            $(nameInput).trigger('focus');
           }, 100);
         }),
     );
@@ -834,9 +831,9 @@ export class DialogManager {
 
           // 聚焦到输入框并选中默认值
           setTimeout(() => {
-            $inputField.focus();
+            $inputField.trigger('focus');
             if (defaultValue) {
-              $inputField.select();
+              $inputField.trigger('select');
             }
           }, 100);
         }),
@@ -889,18 +886,18 @@ export class DialogManager {
 
             if (!text) {
               // 在文本框上显示错误提示，而不是弹出新的alert
-              textArea.style.borderColor = '#ff4444';
-              textArea.placeholder = '请输入语音内容';
-              textArea.focus();
+              $(textArea).css('borderColor', '#ff4444');
+              $(textArea).attr('placeholder', '请输入语音内容');
+              $(textArea).trigger('focus');
               return;
             }
 
             const duration = parseInt(durationStr, 10);
             if (!durationStr || isNaN(duration) || duration <= 0 || duration > 60) {
               // 在输入框上显示错误提示，而不是弹出新的alert
-              durationInput.style.borderColor = '#ff4444';
-              durationInput.placeholder = '请输入有效的语音时长（1-60秒）';
-              durationInput.focus();
+              $(durationInput).css('borderColor', '#ff4444');
+              $(durationInput).attr('placeholder', '请输入有效的语音时长（1-60秒）');
+              $(durationInput).trigger('focus');
               return;
             }
 
@@ -929,7 +926,7 @@ export class DialogManager {
 
           // 聚焦到文本框
           setTimeout(() => {
-            textArea.focus();
+            $(textArea).trigger('focus');
           }, 100);
         }),
     );
@@ -1068,10 +1065,10 @@ export class DialogManager {
 
           <div class="form-group">
             <div class="checkbox-group vertical">
-              <label class="checkbox-button full-width" for="attach-image">
+              <div class="checkbox-button full-width">
                 <input type="checkbox" id="attach-image">
                 📷 添加图片
-              </label>
+              </div>
             </div>
           </div>
 
@@ -1172,9 +1169,9 @@ export class DialogManager {
             // 验证输入
             if ((!text || text.trim() === '') && (!imageContent || imageContent.trim() === '')) {
               // 在文本框上显示错误提示，而不是弹出新的alert
-              textArea.style.borderColor = '#ff4444';
-              textArea.placeholder = '请输入朋友圈内容或添加图片';
-              textArea.focus();
+              $(textArea).css('borderColor', '#ff4444');
+              $(textArea).attr('placeholder', '请输入朋友圈内容或添加图片');
+              $(textArea).trigger('focus');
               return;
             }
 
@@ -1182,9 +1179,9 @@ export class DialogManager {
             const datetimeMatch = datetime.match(/^(\d{4}-\d{2}-\d{2})\s+(\d{2}:\d{2})$/);
             if (!datetimeMatch) {
               // 在时间输入框上显示错误提示，而不是弹出新的alert
-              datetimeInput.style.borderColor = '#ff4444';
-              datetimeInput.placeholder = '格式：YYYY-MM-DD HH:MM';
-              datetimeInput.focus();
+              $(datetimeInput).css('borderColor', '#ff4444');
+              $(datetimeInput).attr('placeholder', '格式：YYYY-MM-DD HH:MM');
+              $(datetimeInput).trigger('focus');
               return;
             }
 
@@ -1222,9 +1219,9 @@ export class DialogManager {
           // 聚焦到文本框
           setTimeout(() => {
             if (this.activeDialog) {
-              const textArea = this.activeDialog.querySelector('#moment-text') as HTMLTextAreaElement;
-              if (textArea) {
-                textArea.focus();
+              const $textArea = $(this.activeDialog).find('#moment-text');
+              if ($textArea.length) {
+                $textArea.trigger('focus');
               }
             }
           }, 100);
@@ -1269,10 +1266,10 @@ export class DialogManager {
 
           <div class="form-group">
             <div class="checkbox-group vertical">
-              <label class="checkbox-button full-width" for="add-description">
+              <div class="checkbox-button full-width">
                 <input type="checkbox" id="add-description">
                 📝 记录这段时间发生了什么
-              </label>
+              </div>
             </div>
           </div>
 
@@ -1332,9 +1329,9 @@ export class DialogManager {
             const datetimeMatch = datetime.match(/^(\d{4}-\d{2}-\d{2})\s+(\d{2}:\d{2})$/);
             if (!datetimeMatch) {
               // 在时间输入框上显示错误提示，而不是弹出新的alert
-              datetimeInput.style.borderColor = '#ff4444';
-              datetimeInput.placeholder = '格式：YYYY-MM-DD HH:MM';
-              datetimeInput.focus();
+              $(datetimeInput).css('borderColor', '#ff4444');
+              $(datetimeInput).attr('placeholder', '格式：YYYY-MM-DD HH:MM');
+              $(datetimeInput).trigger('focus');
               return;
             }
 
@@ -1376,10 +1373,10 @@ export class DialogManager {
           // 聚焦到时间输入框
           setTimeout(() => {
             if (this.activeDialog) {
-              const timeInput = this.activeDialog.querySelector('#jump-datetime') as HTMLInputElement;
-              if (timeInput) {
-                timeInput.focus();
-                timeInput.select();
+              const $timeInput = $(this.activeDialog).find('#jump-datetime');
+              if ($timeInput.length) {
+                $timeInput.trigger('focus');
+                $timeInput.trigger('select');
               }
             }
           }, 100);

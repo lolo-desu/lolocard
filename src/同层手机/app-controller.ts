@@ -64,7 +64,6 @@ export class AppController implements IAppController {
   // 初始化应用
   async initialize(): Promise<void> {
     try {
-      // console.log('[BLMX] Fetching SillyTavern info...');
       window.currentGameDate = new Date();
 
       // 初始化主题管理器
@@ -220,8 +219,6 @@ export class AppController implements IAppController {
       // 通知状态由 MomentsManager 管理
 
       // 事件监听器现在由 AiResponseManager 管理
-
-      // console.log('[BLMX] Initialization complete!');
     } catch (error) {
       // console.error('[BLMX] Failed to initialize:', error);
     }
@@ -261,10 +258,12 @@ export class AppController implements IAppController {
 
     // 再渲染队列中的消息（模拟原版机制）
     this.userMessageQueue.forEach((entry, queueIndex) => {
+      // 队列中的消息索引应该是主日志长度 + 队列索引
+      const actualIndex = this.blmxManager.logEntries.length + queueIndex;
       if (entry.recalled) {
-        this.uiRenderer.renderRecallNotice(entry, null, queueIndex);
+        this.uiRenderer.renderRecallNotice(entry, null, actualIndex);
       } else {
-        this.uiRenderer.renderEntry(entry, queueIndex, false);
+        this.uiRenderer.renderEntry(entry, actualIndex, false);
       }
     });
 
@@ -317,9 +316,10 @@ export class AppController implements IAppController {
         this.userMessageQueue.push(entry as ChatEntry);
         this.eventHandler.setHasPendingNotifications(true);
 
-        // 渲染条目（使用队列中的索引）
+        // 渲染条目（使用全局索引：主日志长度 + 队列索引）
         const queueIndex = this.userMessageQueue.length - 1;
-        this.uiRenderer.renderEntry(entry as ChatEntry, queueIndex, true);
+        const globalIndex = this.blmxManager.logEntries.length + queueIndex;
+        this.uiRenderer.renderEntry(entry as ChatEntry, globalIndex, true);
       } else {
         // 非用户消息直接添加到主日志
         this.blmxManager.addEntry(entry as ChatEntry);
@@ -342,8 +342,6 @@ export class AppController implements IAppController {
 
     // 在触发AI响应前，将队列中的消息移到主日志（模拟原版机制）
     if (hasQueuedMessages) {
-      // console.log('[BLMX] 将队列中的消息移到主日志，队列长度:', this.userMessageQueue.length);
-
       // 复制队列中的消息
       const messagesToProcess = [...this.userMessageQueue];
 
@@ -358,8 +356,6 @@ export class AppController implements IAppController {
 
       // 清空队列（模拟原版的 userMessageQueue = []）
       this.userMessageQueue = [];
-
-      // console.log('[BLMX] 队列已清空，消息已移到主日志');
     }
 
     await this.aiResponseManager.triggerAiResponse(immediate);
@@ -389,18 +385,12 @@ export class AppController implements IAppController {
         // 使用jQuery隐藏所有视图并显示目标视图
         $('.app-view').removeClass('active');
         $(views[viewName]).addClass('active');
-
-        // console.log(`[BLMX] 使用jQuery导航到: ${viewName}`);
       } else {
-        // 备用方案：使用原生DOM API
-        // console.log(`[BLMX] jQuery未加载，使用原生DOM API导航到: ${viewName}`);
-        document.querySelectorAll('.app-view').forEach(view => {
-          (view as HTMLElement).classList.remove('active');
-        });
-
-        const targetView = document.querySelector(views[viewName]);
-        if (targetView) {
-          (targetView as HTMLElement).classList.add('active');
+        // 备用方案：使用jQuery（应该总是可用的）
+        $('.app-view').removeClass('active');
+        const $targetView = $(views[viewName]);
+        if ($targetView.length) {
+          $targetView.addClass('active');
         } else {
           console.error(`[BLMX] 找不到目标视图: ${views[viewName]}`);
         }
@@ -417,18 +407,12 @@ export class AppController implements IAppController {
     } catch (error) {
       console.error(`[BLMX] 导航错误:`, error);
 
-      // 最后的备用方案，使用最基本的DOM操作
+      // 最后的备用方案，使用jQuery
       try {
-        const allViews = document.querySelectorAll('.app-view');
-        for (let i = 0; i < allViews.length; i++) {
-          (allViews[i] as HTMLElement).classList.remove('active');
-        }
-
-        const selector = views[viewName];
-        const targetElement = document.querySelector(selector);
-        if (targetElement) {
-          (targetElement as HTMLElement).classList.add('active');
-          // console.log(`[BLMX] 使用基本DOM API导航到: ${viewName}`);
+        $('.app-view').removeClass('active');
+        const $targetElement = $(views[viewName]);
+        if ($targetElement.length) {
+          $targetElement.addClass('active');
         }
       } catch (e) {
         console.error(`[BLMX] 最终导航失败:`, e);
@@ -657,6 +641,13 @@ export class AppController implements IAppController {
     return this.userMessageQueue.some(entry => entry.id === messageId);
   }
 
+  // 从用户消息队列中移除指定索引的消息
+  removeFromUserMessageQueue(index: number): void {
+    if (index >= 0 && index < this.userMessageQueue.length) {
+      this.userMessageQueue.splice(index, 1);
+    }
+  }
+
   // 处理消息撤回（仅限文字消息）
   async handleMessageRecall(entry: ChatEntry): Promise<void> {
     try {
@@ -717,36 +708,13 @@ export class AppController implements IAppController {
   }
 
   private setupThemeEditorEvents(): void {
-    const closeBtn = document.getElementById('close-theme-editor');
-    const saveBtn = document.getElementById('save-theme-btn');
-    const resetBtn = document.getElementById('reset-theme-btn');
-    const customThemeBtn = document.getElementById('custom-theme-btn');
-    const importBtn = document.getElementById('import-theme-btn');
-    const exportJsonBtn = document.getElementById('export-json-btn');
-
-    if (closeBtn) {
-      closeBtn.addEventListener('click', () => this.themeEditor.closeThemeEditor());
-    }
-
-    if (saveBtn) {
-      saveBtn.addEventListener('click', () => this.themeEditor.saveCustomTheme());
-    }
-
-    if (resetBtn) {
-      resetBtn.addEventListener('click', () => this.themeEditor.resetThemeEditor());
-    }
-
-    if (customThemeBtn) {
-      customThemeBtn.addEventListener('click', () => this.themeEditor.openThemeEditor());
-    }
-
-    if (importBtn) {
-      importBtn.addEventListener('click', () => this.themeEditor.importTheme());
-    }
-
-    if (exportJsonBtn) {
-      exportJsonBtn.addEventListener('click', () => this.themeEditor.exportThemeAsJSON());
-    }
+    // 使用jQuery进行事件绑定
+    $('#close-theme-editor').on('click', () => this.themeEditor.closeThemeEditor());
+    $('#save-theme-btn').on('click', () => this.themeEditor.saveCustomTheme());
+    $('#reset-theme-btn').on('click', () => this.themeEditor.resetThemeEditor());
+    $('#custom-theme-btn').on('click', () => this.themeEditor.openThemeEditor());
+    $('#import-theme-btn').on('click', () => this.themeEditor.importTheme());
+    $('#export-json-btn').on('click', () => this.themeEditor.exportThemeAsJSON());
   }
 
   openThemeEditor(): void {
@@ -796,8 +764,6 @@ export class AppController implements IAppController {
    * 清理所有资源，防止内存泄漏
    */
   cleanup(): void {
-    // console.log('[AppController] 开始清理资源...');
-
     // 清理各个管理器的资源
     if (this.aiResponseManager && typeof this.aiResponseManager.cleanup === 'function') {
       this.aiResponseManager.cleanup();
@@ -806,7 +772,5 @@ export class AppController implements IAppController {
     if (this.uiRenderer && typeof this.uiRenderer.cleanup === 'function') {
       this.uiRenderer.cleanup();
     }
-
-    // console.log('[AppController] 资源清理完成');
   }
 }

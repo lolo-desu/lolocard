@@ -39,6 +39,24 @@ body {
   transition-timing-function: ease;
 }
 
+// 性能优化：减少不必要的重绘和回流
+.performance-optimized {
+  will-change: transform, opacity;
+  transform: translateZ(0); // 启用硬件加速
+  backface-visibility: hidden;
+}
+
+// 减少动画在低性能设备上的负担
+@media (prefers-reduced-motion: reduce) {
+  *,
+  *::before,
+  *::after {
+    animation-duration: 0.01ms !important;
+    animation-iteration-count: 1 !important;
+    transition-duration: 0.01ms !important;
+  }
+}
+
 // 通用动画
 @keyframes fadeIn {
   from {

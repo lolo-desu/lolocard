@@ -390,13 +390,39 @@ export const debugData: LogEntry[] = [
   },
 ];
 
-// 加载调试数据的函数
+// 加载调试数据的函数 - 优化版本，减少性能消耗
 export function loadDebugData(blmxManager: any): void {
+  // 检查是否在开发模式
+  const isDevelopment = window.location.hostname === 'localhost' || window.location.search.includes('debug=true');
+
+  if (!isDevelopment) {
+    console.log('[DEBUG] 生产模式，跳过调试数据加载');
+    return;
+  }
+
   console.log('[DEBUG] 正在加载调试数据...');
-  debugData.forEach(entry => {
-    blmxManager.addEntry(entry);
-  });
-  console.log('[DEBUG] 调试数据加载完成，共加载', debugData.length, '条数据');
+
+  // 批量添加，减少单次操作
+  const batchSize = 10;
+  let index = 0;
+
+  const addBatch = () => {
+    const batch = debugData.slice(index, index + batchSize);
+    batch.forEach(entry => {
+      blmxManager.addEntry(entry);
+    });
+
+    index += batchSize;
+
+    if (index < debugData.length) {
+      // 使用requestAnimationFrame避免阻塞UI
+      requestAnimationFrame(addBatch);
+    } else {
+      console.log('[DEBUG] 调试数据加载完成，共加载', debugData.length, '条数据');
+    }
+  };
+
+  addBatch();
 }
 
 // 清除调试数据的函数

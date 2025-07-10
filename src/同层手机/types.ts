@@ -15,6 +15,7 @@ export interface IAppController {
   updateUserName(): void;
   updateCoverPhoto(): void;
   changeWallpaper(viewType: 'chat' | 'home' | 'settings' | 'music' | 'pureChat'): void;
+  removeFromUserMessageQueue(index: number): void;
   getLatestAiRawResponse(): string;
   getLatestSentPrompt(): string;
   getRawAiResponse(): string;

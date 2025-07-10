@@ -35,8 +35,6 @@ $(async () => {
       console.log('  window.blmxApp.addTestEntry(类型) - 添加指定类型的测试数据');
       console.log('  window.blmxApp.clearDebugData() - 清除所有数据');
     }
-
-    console.log('[BLMX] 微信模拟器初始化完成！');
   } catch (error) {
     console.error('[BLMX] 初始化失败:', error);
 

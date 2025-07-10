@@ -215,8 +215,8 @@ export class EventHandler implements IEventHandler {
 
   // 设置事件监听器
   private setupEventListeners(): void {
-    // 发送按钮点击事件
-    this.sendBtn.addEventListener('click', () => {
+    // 发送按钮点击事件 - 使用jQuery
+    $(this.sendBtn).on('click', () => {
       const text = this.wechatInput.value.trim();
       if (text) {
         this.options.stageAndDisplayEntry({
@@ -239,7 +239,8 @@ export class EventHandler implements IEventHandler {
       this.renderStickerFeatures();
     });
 
-    this.plusBtn.addEventListener('click', () => {
+    // Plus按钮点击事件 - 使用jQuery
+    $(this.plusBtn).on('click', () => {
       this.options.togglePanel('plus');
       this.renderPlusFeatures();
     });
@@ -256,21 +257,19 @@ export class EventHandler implements IEventHandler {
       }
     });
 
-    // 输入框键盘事件
-    this.wechatInput.addEventListener('keydown', e => {
+    // 输入框事件 - 使用jQuery
+    $(this.wechatInput).on('keydown', (e: JQuery.KeyDownEvent) => {
       if (e.key === 'Enter' && !e.shiftKey) {
         e.preventDefault();
-        this.sendBtn.click();
+        $(this.sendBtn).trigger('click');
       }
     });
 
-    // 输入框内容变化事件
-    this.wechatInput.addEventListener('input', () => {
+    $(this.wechatInput).on('input', () => {
       this.options.updateFooterButtonsState();
     });
 
-    // 输入框聚焦事件
-    this.wechatInput.addEventListener('focus', () => {
+    $(this.wechatInput).on('focus', () => {
       this.options.togglePanel(null);
     });
 
@@ -289,9 +288,9 @@ export class EventHandler implements IEventHandler {
     // 各种点击事件监听
     this.setupClickListeners();
 
-    // 输入框长按事件
+    // 输入框长按事件 - 使用jQuery获取元素
     this.addLongPressListener(
-      document.getElementById('wechat-input-field')!,
+      $('#wechat-input-field')[0] as HTMLElement,
       async () => {
         // 使用自定义对话框来更新输入框提示文字
         const currentPlaceholder = $('#wechat-input-field').attr('placeholder') || '';
@@ -365,7 +364,6 @@ export class EventHandler implements IEventHandler {
 
       // 添加到日志
       this.blmxManager.addEntry(momentEntry);
-      // console.log(`[BLMX] 发布朋友圈，ID: ${momentId}, 内容: ${momentData.text}, 图片类型: ${momentData.image_type}`);
 
       // 检查是否需要推进时间
       const momentDateTime = `${momentData.date} ${momentData.time}`;
@@ -416,8 +414,6 @@ export class EventHandler implements IEventHandler {
 
               // 重新渲染朋友圈以反映时间变化
               this.options.renderMomentsFeed();
-
-              // console.log(`[BLMX] 通过朋友圈推进时间到: ${momentData.date} ${momentData.time}`);
             }
           }
         }, 300);
@@ -431,9 +427,7 @@ export class EventHandler implements IEventHandler {
       this.options.updateFooterButtonsState();
 
       // 在后台进行数据持久化，不阻塞UI更新
-      this.blmxManager.persistLogToStorage().then(() => {
-        // console.log('[BLMX] 朋友圈数据已持久化');
-      });
+      this.blmxManager.persistLogToStorage().then(() => {});
     });
 
     const momentsFeedList = $('#moments-feed-list');
@@ -585,22 +579,20 @@ export class EventHandler implements IEventHandler {
           '删除记录',
         );
         if (confirmed) {
-          this.blmxManager.logEntries.splice(indexToDelete, 1);
-          try {
+          const mainLogLength = this.blmxManager.logEntries.length;
+
+          if (indexToDelete < mainLogLength) {
+            // 删除主日志中的消息
+            this.blmxManager.logEntries.splice(indexToDelete, 1);
             await this.blmxManager.persistLogToStorage();
-            this.options.renderChatHistory();
-            this.options.renderMomentsFeed();
-          } catch (error) {
-            console.error('[BLMX] 删除记录时保存失败:', error);
-            // 显示用户友好的错误信息
-            try {
-              const dialogManager = DialogManager.getInstance();
-              await dialogManager.alert('删除失败，请重试', '操作失败');
-            } catch {
-              // 如果自定义对话框也失败，使用console.error而不是alert
-              console.error('删除失败，请重试');
-            }
+          } else {
+            // 删除队列中的消息
+            const queueIndex = indexToDelete - mainLogLength;
+            this.appController.removeFromUserMessageQueue(queueIndex);
           }
+
+          this.options.renderChatHistory();
+          this.options.renderMomentsFeed();
         }
         return;
       }
@@ -665,6 +657,7 @@ export class EventHandler implements IEventHandler {
     // 灵动岛全屏功能
     $('.dynamic-island').on('click', async () => {
       try {
+        // 使用jQuery检查全屏状态，但仍需要使用原生API进行全屏操作
         if (!document.fullscreenElement) {
           // 进入全屏
           await document.documentElement.requestFullscreen();

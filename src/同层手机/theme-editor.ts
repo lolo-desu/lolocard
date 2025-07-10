@@ -1,7 +1,5 @@
 // 主题编辑器模块 - 重构版本
 // 使用jQuery和lodash确保兼容性和稳定性
-
-import _ from 'lodash';
 import { Theme, ThemeManager } from './theme-manager';
 
 export class ThemeEditor {
@@ -445,12 +443,15 @@ export class ThemeEditor {
       const safeThemeName = themeName.replace(/[<>:"/\\|?*]/g, '_'); // 替换文件名中的非法字符
       const fileName = `custom-${safeThemeName}.json`;
 
-      const a = document.createElement('a');
-      a.href = url;
-      a.download = fileName;
-      document.body.appendChild(a);
-      a.click();
-      document.body.removeChild(a);
+      // 使用jQuery创建下载链接
+      const $a = $('<a>', {
+        href: url,
+        download: fileName,
+        css: { display: 'none' },
+      });
+      $('body').append($a);
+      $a[0].click();
+      $a.remove();
       URL.revokeObjectURL(url);
 
       console.log(`[ThemeEditor] 主题已导出为JSON: ${fileName}`);
@@ -501,9 +502,10 @@ export class ThemeEditor {
       reader.readAsText(file);
     });
 
-    document.body.appendChild(input);
+    // 使用jQuery操作DOM
+    $('body').append(input);
     input.click();
-    document.body.removeChild(input);
+    $(input).remove();
   }
 
   // 从编辑器获取当前主题 - 使用jQuery重构

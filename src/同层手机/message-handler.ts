@@ -123,7 +123,7 @@ export class MessageHandler {
 
       while (attempt <= MAX_RETRIES && !success) {
         if (attempt > 0) {
-          console.log(`[BLMX] AI response was empty. Retrying, attempt ${attempt + 1}/${MAX_RETRIES + 1}...`);
+          //console.log(`[BLMX] AI response was empty. Retrying, attempt ${attempt + 1}/${MAX_RETRIES + 1}...`);
           await new Promise(resolve => setTimeout(resolve, 1000 * attempt));
         }
 
@@ -435,9 +435,9 @@ export class MessageHandler {
 
                     if (!isDuplicate) {
                       entriesForAnimation.push(newEntry);
-                      console.log(`[BLMX] 添加${newEntry.type}条目到动画队列:`, newEntry);
+                      //console.log(`[BLMX] 添加${newEntry.type}条目到动画队列:`, newEntry);
                     } else {
-                      console.log('[BLMX] 跳过添加重复的动画条目:', newEntry);
+                      //console.log('[BLMX] 跳过添加重复的动画条目:', newEntry);
                     }
                   }
                 }
@@ -567,11 +567,11 @@ export class MessageHandler {
         seenEntrySignatures.add(signature);
         uniqueEntries.push(entry);
       } else if (signature) {
-        console.log('[BLMX] 跳过重复条目:', entry);
+        //console.log('[BLMX] 跳过重复条目:', entry);
       }
     }
 
-    console.log(`[BLMX] 去重后的条目数量: ${uniqueEntries.length} (原始: ${entries.length})`);
+    //console.log(`[BLMX] 去重后的条目数量: ${uniqueEntries.length} (原始: ${entries.length})`);
 
     // 使用去重后的条目数组
     for (const entry of uniqueEntries) {
@@ -621,7 +621,7 @@ export class MessageHandler {
       });
 
       if (entryIndex !== -1) {
-        console.log(`[BLMX] 找到已存在的条目，索引: ${entryIndex}`, entry);
+        //console.log(`[BLMX] 找到已存在的条目，索引: ${entryIndex}`, entry);
       }
 
       // 判断条目类型是否是需要动画的"消息"
@@ -774,6 +774,6 @@ export class MessageHandler {
    */
   cleanup(): void {
     this.eventManager.cleanup();
-    console.log('[MessageHandler] 资源已清理');
+    //console.log('[MessageHandler] 资源已清理');
   }
 }

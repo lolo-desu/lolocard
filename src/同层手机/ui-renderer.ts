@@ -12,9 +12,6 @@ import {
   TransferMessage,
   VoiceMessage,
 } from './script';
-// 移除lodash导入，因为我们可以直接使用全局的_
-// import _ from 'lodash';
-// jQuery已全局可用，无需导入
 
 // 类型定义
 interface Avatars {
@@ -39,6 +36,11 @@ export class UIRenderer {
   private avatars: Avatars;
   private eventManager: EventManager;
 
+  // 性能优化：添加渲染节流
+  private renderQueue: LogEntry[] = [];
+  private isRendering: boolean = false;
+  private renderThrottle: number = 16; // 60fps
+
   constructor(wechatBodySelector: string, avatars: Avatars, options: UIRendererOptions) {
     const $wechatBody = $(wechatBodySelector);
     if (!$wechatBody.length) {
@@ -48,6 +50,38 @@ export class UIRenderer {
     this.avatars = avatars;
     this.options = options;
     this.eventManager = new EventManager();
+
+    // 启动渲染队列处理
+    this.startRenderLoop();
+  }
+
+  /**
+   * 性能优化：批量渲染队列处理
+   */
+  private startRenderLoop(): void {
+    const processQueue = () => {
+      if (this.renderQueue.length > 0 && !this.isRendering) {
+        this.isRendering = true;
+        const batch = this.renderQueue.splice(0, 5); // 每次处理5个
+
+        batch.forEach(entry => {
+          this.renderEntry(entry, undefined, false);
+        });
+
+        this.isRendering = false;
+      }
+
+      setTimeout(processQueue, this.renderThrottle);
+    };
+
+    processQueue();
+  }
+
+  /**
+   * 添加到渲染队列而不是立即渲染
+   */
+  private queueRender(entry: LogEntry): void {
+    this.renderQueue.push(entry);
   }
 
   // 清除聊天界面
@@ -73,7 +107,6 @@ export class UIRenderer {
           this.addTimestampToWeChat(entry.content.date, entry.content.time, true, index);
           break;
         case 'event':
-          // console.log('[BLMX] 渲染EVENT_LOG到UI:', entry.content, 'index:', index);
           this.addEventLogToWeChat(entry.content, index);
           break;
         default:
@@ -133,7 +166,7 @@ export class UIRenderer {
     getDisplayName: (type: 'user' | 'char') => string,
     avatars: { user: string; char: string },
   ): void {
-    const momentsFeedList = document.getElementById('moments-feed-list') as HTMLUListElement;
+    const momentsFeedList = $('#moments-feed-list')[0] as HTMLUListElement;
     if (!momentsFeedList) return;
 
     momentsFeedList.innerHTML = '';
@@ -266,8 +299,8 @@ export class UIRenderer {
   showGeneratingIndicator(): void {
     this.hideGeneratingIndicator(); // 确保只有一个
 
-    // 获取灵动岛元素
-    const dynamicIsland = document.querySelector('.dynamic-island') as HTMLElement;
+    // 获取灵动岛元素 - 使用jQuery
+    const dynamicIsland = $('.dynamic-island')[0] as HTMLElement;
     if (!dynamicIsland) return;
 
     // 创建加载动画容器
@@ -716,8 +749,6 @@ export class UIRenderer {
 
   // 添加事件日志到微信界面
   private addEventLogToWeChat(eventData: EventLogEntry['content'], index?: number): void {
-    // console.log('[BLMX] addEventLogToWeChat被调用:', eventData, 'index:', index);
-
     // 确保eventData具有必要的字段
     if (!eventData || !eventData.date || !eventData.time) {
       console.error('事件日志数据不完整:', eventData);
@@ -1174,6 +1205,5 @@ export class UIRenderer {
    */
   cleanup(): void {
     this.eventManager.cleanup();
-    // console.log('[UIRenderer] 资源已清理');
   }
 }

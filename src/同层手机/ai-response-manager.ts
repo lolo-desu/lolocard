@@ -242,27 +242,18 @@ export class AiResponseManager {
             }
             break;
 
-          case 'message':
-            try {
-              // 尝试解析JSON
-              newEntry = {
-                id: `ai-${Date.now()}-${Math.random()}`,
-                type: 'message',
-                sender: 'them',
-                content: safeJsonParse(value),
-              } as any;
-            } catch (e) {
-              // 如果JSON解析失败，则直接使用字符串
-              newEntry = {
-                id: `ai-${Date.now()}-${Math.random()}`,
-                type: 'message',
-                sender: 'them',
-                content: value,
-              } as any;
-            }
+          case 'message': {
+            const parsedMessageContent = safeJsonParse(value);
+            newEntry = {
+              id: `ai-${Date.now()}-${Math.random()}`,
+              type: 'message',
+              sender: 'them',
+              content: parsedMessageContent !== null ? parsedMessageContent : value,
+            } as any;
             this.blmxManager.addEntry(newEntry);
             if (newEntry) entriesForAnimation.push(newEntry);
             break;
+          }
 
           case 'CHAR':
             // 兼容原始的CHAR格式
@@ -275,16 +266,13 @@ export class AiResponseManager {
             giftMatch = value.match(/^\[礼物:\s*(.*)\]/);
 
             if (voiceMatch) {
-              try {
-                newEntry = {
-                  id,
-                  type: 'voice',
-                  sender: 'them',
-                  content: safeJsonParse(voiceMatch[1]) || { text: '', duration: 0 },
-                };
-              } catch (e) {
-                console.error('Failed to parse voice data:', voiceMatch[1], e);
-              }
+              const parsedVoiceData = safeJsonParse(voiceMatch[1]);
+              newEntry = {
+                id,
+                type: 'voice',
+                sender: 'them',
+                content: parsedVoiceData || { text: '', duration: 0 },
+              };
             } else if (stickerMatch) {
               newEntry = {
                 id,
@@ -293,14 +281,17 @@ export class AiResponseManager {
                 content: stickerMatch[1],
               };
             } else if (imageMatch) {
-              try {
+              const parsedImageData = safeJsonParse(imageMatch[1]);
+              if (parsedImageData !== null) {
+                // 成功解析JSON格式的图片数据
                 newEntry = {
                   id,
                   type: 'image',
                   sender: 'them',
-                  content: safeJsonParse(imageMatch[1]) || { type: 'url', value: '' },
+                  content: parsedImageData,
                 };
-              } catch (e) {
+              } else {
+                // 解析失败，说明是纯文本描述
                 newEntry = {
                   id,
                   type: 'image',
@@ -367,16 +358,18 @@ export class AiResponseManager {
             }
             break;
 
-          case 'sticker':
+          case 'sticker': {
+            const parsedStickerContent = safeJsonParse(value);
             newEntry = {
               id: `ai-sticker-${Date.now()}-${Math.random()}`,
               type: 'sticker',
               sender: 'them',
-              content: safeJsonParse(value),
+              content: parsedStickerContent !== null ? parsedStickerContent : value,
             } as any;
             this.blmxManager.addEntry(newEntry);
             if (newEntry) entriesForAnimation.push(newEntry);
             break;
+          }
 
           case 'voice':
             newEntry = {
@@ -637,7 +630,6 @@ export class AiResponseManager {
    */
   cleanup(): void {
     this.eventManager.cleanup();
-    console.log('[AiResponseManager] 资源已清理');
   }
 
   // 获取最新的AI原始响应

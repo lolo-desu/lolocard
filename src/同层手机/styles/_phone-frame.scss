@@ -43,6 +43,14 @@
   }
 }
 
+// 性能优化：在低性能设备上禁用复杂动画
+@media (max-width: 480px), (prefers-reduced-motion: reduce) {
+  .phone-frame::before {
+    animation: none !important;
+    background: var(--primary-blue) !important;
+  }
+}
+
 // 手机屏幕样式
 .phone-screen {
   height: 48.75rem;
