@@ -43,3 +43,4 @@ declare global {
 $(document).ready(() => {
   new GameController();
 });
+
