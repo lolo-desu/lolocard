@@ -1,0 +1,726 @@
+// MVU JSON Editor - 文件夹风格
+// 使用宽度和aspect-ratio而不是vh
+
+.mvu-editor {
+  width: 100%;
+  max-width: 1000px;
+  margin: 0 auto;
+  background: #ffffff;
+  border-radius: 8px;
+  box-shadow: 0 2px 12px rgba(0, 0, 0, 0.08);
+  overflow: hidden;
+  font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+  border: 1px solid #e1e5e9;
+}
+
+.mvu-header {
+  background: #f8f9fa;
+  border-bottom: 1px solid #e1e5e9;
+  padding: 16px 20px;
+
+  .mvu-title {
+    margin: 0 0 4px 0;
+    font-size: 18px;
+    font-weight: 600;
+    color: #2c3e50;
+    display: flex;
+    align-items: center;
+    gap: 8px;
+  }
+
+  .mvu-subtitle {
+    margin: 0 0 16px 0;
+    font-size: 13px;
+    color: #6c757d;
+    font-weight: 400;
+  }
+
+  .mvu-toolbar {
+    display: flex;
+    gap: 8px;
+    flex-wrap: wrap;
+  }
+}
+
+.mvu-btn {
+  padding: 8px 14px;
+  border: 1px solid #d1d5db;
+  border-radius: 6px;
+  font-size: 13px;
+  font-weight: 500;
+  cursor: pointer;
+  transition: all 0.15s ease;
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  background: white;
+  color: #374151;
+
+  &:hover {
+    background: #f9fafb;
+    border-color: #9ca3af;
+    box-shadow: 0 1px 3px rgba(0, 0, 0, 0.1);
+  }
+
+  &:active {
+    background: #f3f4f6;
+    transform: translateY(1px);
+  }
+
+  i {
+    font-size: 12px;
+  }
+}
+
+.mvu-btn-primary {
+  background: #3b82f6;
+  color: white;
+  border-color: #3b82f6;
+
+  &:hover {
+    background: #2563eb;
+    border-color: #2563eb;
+  }
+
+  &:active {
+    background: #1d4ed8;
+  }
+}
+
+.mvu-btn-secondary {
+  background: #6b7280;
+  color: white;
+  border-color: #6b7280;
+
+  &:hover {
+    background: #4b5563;
+    border-color: #4b5563;
+  }
+
+  &:active {
+    background: #374151;
+  }
+}
+
+.mvu-btn-icon {
+  width: 28px;
+  aspect-ratio: 1;
+  padding: 0;
+  border: none;
+  border-radius: 4px;
+  background: transparent;
+  color: #6b7280;
+  cursor: pointer;
+  transition: all 0.15s ease;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 12px;
+
+  &:hover {
+    background: #f3f4f6;
+    color: #374151;
+  }
+
+  &.mvu-btn-edit {
+    &:hover {
+      background: #dbeafe;
+      color: #3b82f6;
+    }
+  }
+
+  &.mvu-btn-delete {
+    &:hover {
+      background: #fee2e2;
+      color: #dc2626;
+    }
+  }
+
+  &.mvu-btn-add {
+    &:hover {
+      background: #dcfce7;
+      color: #16a34a;
+    }
+  }
+}
+
+.mvu-content {
+  width: 100%;
+  aspect-ratio: 16 / 10;
+  overflow: auto;
+  background: #fafbfc;
+}
+
+.mvu-editor-panel {
+  padding: 16px;
+  width: 100%;
+  min-height: 100%;
+}
+
+.mvu-tree {
+  width: 100%;
+  background: white;
+  border-radius: 6px;
+  border: 1px solid #e1e5e9;
+  overflow: hidden;
+}
+
+.mvu-item {
+  border-bottom: 1px solid #f1f3f4;
+  background: white;
+  transition: all 0.15s ease;
+
+  &:hover {
+    background: #f8f9fa;
+  }
+
+  &:last-child {
+    border-bottom: none;
+  }
+
+  &.mvu-nested-object {
+    background: #fafbfc;
+
+    &:hover {
+      background: #f5f6f7;
+    }
+  }
+}
+
+.mvu-item-header {
+  display: flex;
+  align-items: center;
+  padding: 12px 16px;
+  gap: 10px;
+  min-height: 44px;
+
+  .mvu-key {
+    font-weight: 500;
+    color: #2c3e50;
+    flex: 1;
+    font-size: 14px;
+    display: flex;
+    align-items: center;
+    gap: 8px;
+
+    &::before {
+      content: '📄';
+      font-size: 16px;
+    }
+  }
+
+  .mvu-actions {
+    display: flex;
+    gap: 4px;
+    opacity: 0;
+    transition: opacity 0.2s ease;
+  }
+}
+
+.mvu-nested-object .mvu-item-header .mvu-key::before {
+  content: '📁';
+}
+
+.mvu-item:hover .mvu-actions {
+  opacity: 1;
+}
+
+.mvu-toggle {
+  width: 20px;
+  aspect-ratio: 1;
+  border: none;
+  background: none;
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  border-radius: 3px;
+  transition: all 0.15s ease;
+  margin-right: 4px;
+
+  &:hover {
+    background: #f3f4f6;
+  }
+
+  i {
+    color: #6b7280;
+    font-size: 10px;
+    transition: transform 0.15s ease;
+  }
+}
+
+.mvu-value-content {
+  padding: 12px 16px 16px 16px;
+  background: #fafbfc;
+  border-top: 1px solid #f1f3f4;
+}
+
+.mvu-value-display {
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+
+  .mvu-value {
+    font-family: 'SF Mono', Monaco, 'Cascadia Code', monospace;
+    font-size: 13px;
+    color: #1f2937;
+    font-weight: 500;
+    background: #e5f3ff;
+    padding: 6px 10px;
+    border-radius: 4px;
+    display: inline-block;
+    border: 1px solid #bfdbfe;
+    max-width: fit-content;
+  }
+
+  .mvu-description {
+    font-size: 12px;
+    color: #6b7280;
+    line-height: 1.5;
+    background: white;
+    padding: 10px 12px;
+    border-radius: 4px;
+    border: 1px solid #e5e7eb;
+    border-left: 3px solid #3b82f6;
+  }
+}
+
+.mvu-children {
+  background: white;
+  border-left: 2px solid #e5e7eb;
+  margin-left: 20px;
+  overflow: hidden;
+  transition: all 0.3s ease;
+}
+
+.mvu-nested-object .mvu-children {
+  display: block;
+}
+
+.mvu-footer {
+  background: #f8f9fa;
+  padding: 10px 16px;
+  border-top: 1px solid #e1e5e9;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
+
+.mvu-status {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  font-size: 12px;
+  color: #6b7280;
+
+  #statusIcon {
+    color: #10b981;
+    font-size: 10px;
+  }
+
+  .mvu-dirty {
+    color: #f59e0b;
+    font-size: 11px;
+    font-weight: 500;
+    background: #fef3c7;
+    padding: 2px 6px;
+    border-radius: 3px;
+  }
+}
+
+// 对话框样式
+.ui-dialog {
+  border-radius: 8px !important;
+  border: 1px solid #e1e5e9 !important;
+  box-shadow: 0 4px 20px rgba(0, 0, 0, 0.15) !important;
+
+  .ui-dialog-titlebar {
+    background: #f8f9fa !important;
+    color: #374151 !important;
+    border: none !important;
+    border-bottom: 1px solid #e1e5e9 !important;
+    border-radius: 8px 8px 0 0 !important;
+    padding: 14px 16px !important;
+
+    .ui-dialog-title {
+      font-weight: 600 !important;
+      font-size: 15px !important;
+    }
+
+    .ui-dialog-titlebar-close {
+      background: #e5e7eb !important;
+      border: none !important;
+      border-radius: 4px !important;
+      color: #6b7280 !important;
+      width: 24px !important;
+      height: 24px !important;
+
+      &:hover {
+        background: #d1d5db !important;
+        color: #374151 !important;
+      }
+    }
+  }
+
+  .ui-dialog-content {
+    padding: 16px !important;
+    background: white !important;
+  }
+
+  .ui-dialog-buttonpane {
+    background: #f8f9fa !important;
+    border-top: 1px solid #e1e5e9 !important;
+    padding: 12px 16px !important;
+
+    .ui-dialog-buttonset {
+      display: flex !important;
+      gap: 8px !important;
+      justify-content: flex-end !important;
+
+      button {
+        padding: 8px 14px !important;
+        border: 1px solid #d1d5db !important;
+        border-radius: 6px !important;
+        font-weight: 500 !important;
+        cursor: pointer !important;
+        transition: all 0.15s ease !important;
+        font-size: 13px !important;
+
+        &:first-child {
+          background: #3b82f6 !important;
+          color: white !important;
+          border-color: #3b82f6 !important;
+
+          &:hover {
+            background: #2563eb !important;
+            border-color: #2563eb !important;
+          }
+        }
+
+        &:last-child {
+          background: white !important;
+          color: #6b7280 !important;
+
+          &:hover {
+            background: #f9fafb !important;
+            color: #374151 !important;
+          }
+        }
+      }
+    }
+  }
+}
+
+// 表单样式
+.mvu-form-group {
+  margin-bottom: 16px;
+
+  label {
+    display: block;
+    margin-bottom: 6px;
+    font-weight: 500;
+    color: #374151;
+    font-size: 13px;
+  }
+
+  .mvu-hint {
+    display: block;
+    margin-top: 4px;
+    font-size: 11px;
+    color: #6b7280;
+    line-height: 1.4;
+
+    &::before {
+      margin-right: 4px;
+    }
+  }
+}
+
+.mvu-input,
+.mvu-textarea {
+  width: 100%;
+  padding: 8px 12px;
+  border: 1px solid #d1d5db;
+  border-radius: 6px;
+  font-size: 13px;
+  font-family: inherit;
+  transition: all 0.15s ease;
+  background: white;
+
+  &:focus {
+    outline: none;
+    border-color: #3b82f6;
+    box-shadow: 0 0 0 3px rgba(59, 130, 246, 0.1);
+  }
+
+  &::placeholder {
+    color: #9ca3af;
+  }
+}
+
+.mvu-textarea {
+  resize: vertical;
+  min-height: 70px;
+  font-family: inherit;
+  line-height: 1.4;
+}
+
+.mvu-radio-group {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+
+  label {
+    display: flex !important;
+    align-items: center;
+    gap: 8px;
+    font-weight: normal !important;
+    cursor: pointer;
+
+    input[type='radio'] {
+      width: auto !important;
+      margin: 0 !important;
+    }
+  }
+}
+
+// 动画效果
+@keyframes fadeIn {
+  from {
+    opacity: 0;
+    transform: translateY(10px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+@keyframes slideDown {
+  from {
+    max-height: 0;
+    opacity: 0;
+  }
+  to {
+    max-height: 500px;
+    opacity: 1;
+  }
+}
+
+@keyframes slideUp {
+  from {
+    max-height: 500px;
+    opacity: 1;
+  }
+  to {
+    max-height: 0;
+    opacity: 0;
+  }
+}
+
+.mvu-item {
+  animation: fadeIn 0.3s ease;
+}
+
+.mvu-children {
+  overflow: hidden;
+  transition: all 0.3s ease;
+}
+
+// 空状态样式
+.mvu-empty-state {
+  text-align: center;
+  padding: 40px 20px;
+  color: #6b7280;
+  background: white;
+  border-radius: 6px;
+  border: 1px solid #e1e5e9;
+
+  .mvu-empty-icon {
+    font-size: 40px;
+    color: #d1d5db;
+    margin-bottom: 16px;
+  }
+
+  .mvu-empty-title {
+    font-size: 16px;
+    font-weight: 600;
+    margin-bottom: 8px;
+    color: #374151;
+  }
+
+  .mvu-empty-description {
+    font-size: 13px;
+    line-height: 1.5;
+    margin-bottom: 24px;
+    color: #6b7280;
+  }
+
+  .mvu-empty-actions {
+    display: flex;
+    gap: 10px;
+    justify-content: center;
+    flex-wrap: wrap;
+  }
+}
+
+// 加载状态
+.mvu-loading {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 40px;
+
+  .mvu-spinner {
+    width: 32px;
+    aspect-ratio: 1;
+    border: 3px solid #f0f0f0;
+    border-top: 3px solid #007aff;
+    border-radius: 50%;
+    animation: spin 1s linear infinite;
+  }
+}
+
+@keyframes spin {
+  0% {
+    transform: rotate(0deg);
+  }
+  100% {
+    transform: rotate(360deg);
+  }
+}
+
+// 工具提示
+.mvu-tooltip {
+  position: relative;
+
+  &:hover::after {
+    content: attr(data-tooltip);
+    position: absolute;
+    bottom: 100%;
+    left: 50%;
+    transform: translateX(-50%);
+    background: rgba(0, 0, 0, 0.8);
+    color: white;
+    padding: 6px 10px;
+    border-radius: 6px;
+    font-size: 12px;
+    white-space: nowrap;
+    z-index: 1000;
+    margin-bottom: 5px;
+  }
+
+  &:hover::before {
+    content: '';
+    position: absolute;
+    bottom: 100%;
+    left: 50%;
+    transform: translateX(-50%);
+    border: 5px solid transparent;
+    border-top-color: rgba(0, 0, 0, 0.8);
+    z-index: 1000;
+  }
+}
+
+// 文件夹展开/收起动画
+.mvu-children {
+  &.collapsed {
+    max-height: 0;
+    opacity: 0;
+  }
+
+  &.expanded {
+    max-height: 1000px;
+    opacity: 1;
+  }
+}
+
+// 文件夹图标旋转动画
+.mvu-toggle i {
+  &.rotated {
+    transform: rotate(90deg);
+  }
+}
+
+// 选中状态
+.mvu-item {
+  &.selected {
+    background: #e0f2fe !important;
+    border-left: 3px solid #3b82f6;
+  }
+}
+
+// 响应式设计
+@media (max-width: 768px) {
+  .mvu-editor {
+    margin: 8px;
+    border-radius: 6px;
+  }
+
+  .mvu-header {
+    padding: 12px 16px;
+
+    .mvu-title {
+      font-size: 16px;
+    }
+
+    .mvu-subtitle {
+      font-size: 12px;
+    }
+
+    .mvu-toolbar {
+      gap: 6px;
+    }
+  }
+
+  .mvu-btn {
+    padding: 6px 10px;
+    font-size: 12px;
+  }
+
+  .mvu-content {
+    aspect-ratio: 4 / 5;
+  }
+
+  .mvu-editor-panel {
+    padding: 12px;
+  }
+
+  .mvu-children {
+    margin-left: 16px;
+  }
+
+  .ui-dialog {
+    width: 90% !important;
+    max-width: 400px !important;
+  }
+
+  .mvu-empty-state {
+    padding: 30px 16px;
+
+    .mvu-empty-icon {
+      font-size: 32px;
+    }
+
+    .mvu-empty-title {
+      font-size: 15px;
+    }
+
+    .mvu-empty-description {
+      font-size: 12px;
+    }
+  }
+
+  .mvu-item-header {
+    padding: 10px 12px;
+    min-height: 40px;
+
+    .mvu-key {
+      font-size: 13px;
+    }
+  }
+
+  .mvu-value-content {
+    padding: 10px 12px 12px 12px;
+  }
+}
