@@ -1064,32 +1064,21 @@ export class DialogManager {
           </div>
 
           <div class="form-group">
-            <div class="checkbox-group vertical">
-              <div class="checkbox-button full-width">
-                <input type="checkbox" id="attach-image">
-                📷 添加图片
-              </div>
+            <label>📷 图片类型</label>
+            <div class="radio-group">
+              <label><input type="radio" name="image-type" value="desc" checked> 图片描述</label>
+              <label><input type="radio" name="image-type" value="url"> 图片链接</label>
             </div>
           </div>
 
-          <div class="image-options" style="display: none;">
-            <div class="form-group">
-              <label>图片类型</label>
-              <div class="radio-group">
-                <label><input type="radio" name="image-type" value="desc" checked> 图片描述</label>
-                <label><input type="radio" name="image-type" value="url"> 图片链接</label>
-              </div>
-            </div>
+          <div class="form-group">
+            <label for="image-content" id="image-content-label">图片描述（可选）</label>
+            <input type="text" id="image-content" placeholder="请输入图片描述...（可选）">
+          </div>
 
-            <div class="form-group">
-              <label for="image-content" id="image-content-label">图片描述</label>
-              <input type="text" id="image-content" placeholder="请输入图片描述">
-            </div>
-
-            <div class="form-group url-desc-group" style="display: none;">
-              <label for="image-desc">图片描述（供AI识别）</label>
-              <input type="text" id="image-desc" placeholder="描述图片内容，仅供AI识别">
-            </div>
+          <div class="form-group url-desc-group" style="display: none;">
+            <label for="image-desc">图片描述（供AI识别，可选）</label>
+            <input type="text" id="image-desc" placeholder="描述图片内容，仅供AI识别...（可选）">
           </div>
 
           <div class="form-group">
@@ -1104,8 +1093,6 @@ export class DialogManager {
       `;
 
           // 添加事件监听器
-          const attachImageCheckbox = this.activeDialog!.querySelector('#attach-image') as HTMLInputElement;
-          const imageOptions = this.activeDialog!.querySelector('.image-options') as HTMLElement;
           const imageTypeRadios = this.activeDialog!.querySelectorAll(
             'input[name="image-type"]',
           ) as NodeListOf<HTMLInputElement>;
@@ -1113,20 +1100,15 @@ export class DialogManager {
           const imageContentInput = this.activeDialog!.querySelector('#image-content') as HTMLInputElement;
           const urlDescGroup = this.activeDialog!.querySelector('.url-desc-group') as HTMLElement;
 
-          // 初始化checkbox按钮样式
+          // 初始化checkbox按钮样式（如果有其他checkbox的话）
           this.initializeCheckboxButtons();
-
-          // 图片选项切换
-          attachImageCheckbox.addEventListener('change', () => {
-            imageOptions.style.display = attachImageCheckbox.checked ? 'block' : 'none';
-          });
 
           // 图片类型切换
           imageTypeRadios.forEach(radio => {
             radio.addEventListener('change', () => {
               const isDesc = radio.value === 'desc';
-              imageContentLabel.textContent = isDesc ? '图片描述' : '图片链接';
-              imageContentInput.placeholder = isDesc ? '请输入图片描述' : '请输入图片链接';
+              imageContentLabel.textContent = isDesc ? '图片描述（可选）' : '图片链接（可选）';
+              imageContentInput.placeholder = isDesc ? '请输入图片描述...（可选）' : '请输入图片链接...（可选）';
               urlDescGroup.style.display = isDesc ? 'none' : 'block';
             });
           });
@@ -1147,7 +1129,6 @@ export class DialogManager {
             }
 
             const textArea = this.activeDialog!.querySelector('#moment-text') as HTMLTextAreaElement;
-            const attachImageInput = this.activeDialog!.querySelector('#attach-image') as HTMLInputElement;
             const imageTypeInput = this.activeDialog!.querySelector(
               'input[name="image-type"]:checked',
             ) as HTMLInputElement;
@@ -1155,15 +1136,15 @@ export class DialogManager {
             const imageDescField = this.activeDialog!.querySelector('#image-desc') as HTMLInputElement;
             const datetimeInput = this.activeDialog!.querySelector('#moment-datetime') as HTMLInputElement;
 
-            if (!textArea || !attachImageInput || !datetimeInput) {
+            if (!textArea || !datetimeInput) {
               return;
             }
 
             const text = textArea.value;
-            const attachImage = attachImageInput.checked;
-            const imageType = attachImage && imageTypeInput ? (imageTypeInput.value as 'url' | 'desc') : 'none';
-            const imageContent = attachImage && imageContentField ? imageContentField.value : '';
-            const imageDesc = imageType === 'url' && imageDescField ? imageDescField.value : imageContent;
+            const imageContent = imageContentField ? imageContentField.value.trim() : '';
+            const hasImage = imageContent !== '';
+            const imageType = hasImage && imageTypeInput ? (imageTypeInput.value as 'url' | 'desc') : 'none';
+            const imageDesc = imageType === 'url' && imageDescField ? imageDescField.value.trim() : imageContent;
             const datetime = datetimeInput.value;
 
             // 验证输入
@@ -1265,19 +1246,8 @@ export class DialogManager {
           </div>
 
           <div class="form-group">
-            <div class="checkbox-group vertical">
-              <div class="checkbox-button full-width">
-                <input type="checkbox" id="add-description">
-                📝 记录这段时间发生了什么
-              </div>
-            </div>
-          </div>
-
-          <div class="description-group" style="display: none;">
-            <div class="form-group">
-              <label for="event-description">事件描述</label>
-              <textarea id="event-description" placeholder="描述这段时间发生的事情..." rows="3"></textarea>
-            </div>
+            <label for="event-description">📝 记录这段时间发生了什么</label>
+            <textarea id="event-description" placeholder="描述这段时间发生的事情...（可选）" rows="3"></textarea>
           </div>
         </div>
         <div class="dialog-footer">
@@ -1286,17 +1256,8 @@ export class DialogManager {
         </div>
       `;
 
-          // 添加事件监听器
-          const addDescriptionCheckbox = this.activeDialog!.querySelector('#add-description') as HTMLInputElement;
-          const descriptionGroup = this.activeDialog!.querySelector('.description-group') as HTMLElement;
-
-          // 初始化checkbox按钮样式
+          // 初始化checkbox按钮样式（如果有其他checkbox的话）
           this.initializeCheckboxButtons();
-
-          // 描述选项切换
-          addDescriptionCheckbox.addEventListener('change', () => {
-            descriptionGroup.style.display = addDescriptionCheckbox.checked ? 'block' : 'none';
-          });
 
           // 按钮事件
           const cancelBtn = this.activeDialog!.querySelector('.dialog-btn-cancel') as HTMLElement;
@@ -1314,7 +1275,6 @@ export class DialogManager {
             }
 
             const datetimeInput = this.activeDialog!.querySelector('#jump-datetime') as HTMLInputElement;
-            const addDescriptionInput = this.activeDialog!.querySelector('#add-description') as HTMLInputElement;
             const descriptionInput = this.activeDialog!.querySelector('#event-description') as HTMLTextAreaElement;
 
             if (!datetimeInput) {
@@ -1322,8 +1282,7 @@ export class DialogManager {
             }
 
             const datetime = datetimeInput.value;
-            const addDescription = addDescriptionInput ? addDescriptionInput.checked : false;
-            const description = addDescription && descriptionInput ? descriptionInput.value : '';
+            const description = descriptionInput ? descriptionInput.value.trim() : '';
 
             // 解析时间
             const datetimeMatch = datetime.match(/^(\d{4}-\d{2}-\d{2})\s+(\d{2}:\d{2})$/);
@@ -1339,7 +1298,7 @@ export class DialogManager {
             resolve({
               date: datetimeMatch[1],
               time: datetimeMatch[2],
-              description: description.trim(),
+              description: description, // 可以为空字符串
             });
           };
 

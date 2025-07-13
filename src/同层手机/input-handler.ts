@@ -88,7 +88,7 @@ export class InputHandler {
     this.onUpdateFooterButtonsState();
   }
 
-  // 发送表情包
+  // 发送表情包 - 简化数据结构
   sendSticker(stickerName: string): void {
     const stickerUrl = this.configManager.findStickerUrlByName(stickerName);
     if (!stickerUrl) {
@@ -96,11 +96,12 @@ export class InputHandler {
       return;
     }
 
+    // 使用简单的数据结构，与原版保持一致
     const stickerEntry: LogEntry = {
       type: 'sticker',
       sender: 'me',
-      content: stickerName, // 表情包内容是名称，不是对象
-      id: `sticker-${Date.now()}-${Math.random()}`,
+      content: stickerName, // 直接存储表情包名称
+      id: `sticker-${Date.now()}-${Math.random()}`, // 恢复原来的ID格式以保持兼容性
       timestamp: Date.now(),
     } as any;
 
@@ -343,13 +344,31 @@ export class InputHandler {
     });
   }
 
-  // 获取表情包列表
+  // 获取表情包列表 - 增加向后兼容性
   getStickerList(): Sticker[] {
-    // 从localStorage获取表情包
-    const globalStickers = JSON.parse(localStorage.getItem('blmx_wechat_stickers_global') || '[]');
-    const charStickers = JSON.parse(
-      localStorage.getItem(`blmx_char_stickers_${this.configManager.getConfig().currentCharId}`) || '[]',
+    // 尝试从新的存储键读取
+    let globalStickers = JSON.parse(localStorage.getItem('blmx_wechat_stickers_global_blmx') || '[]');
+    let charStickers = JSON.parse(
+      localStorage.getItem(`blmx_char_stickers_blmx_${this.configManager.getConfig().currentCharId}`) || '[]',
     );
+
+    // 如果新存储键没有数据，尝试从旧存储键读取
+    if (globalStickers.length === 0) {
+      const oldGlobalStickers = JSON.parse(localStorage.getItem('blmx_wechat_stickers_global') || '[]');
+      if (oldGlobalStickers.length > 0) {
+        globalStickers = oldGlobalStickers;
+      }
+    }
+
+    if (charStickers.length === 0) {
+      const oldCharStickers = JSON.parse(
+        localStorage.getItem(`blmx_char_stickers_${this.configManager.getConfig().currentCharId}`) || '[]',
+      );
+      if (oldCharStickers.length > 0) {
+        charStickers = oldCharStickers;
+      }
+    }
+
     return [...globalStickers, ...charStickers];
   }
 

@@ -98,11 +98,13 @@ export type ChatEntry =
 export interface TimeLogEntry extends BaseLogEntry {
   type: 'time';
   content: { date: string; time: string };
+  id?: string; // 添加可选的id字段
 }
 
 export interface EventLogEntry extends BaseLogEntry {
   type: 'event';
   content: { date: string; time: string; description?: string };
+  id?: string; // 添加可选的id字段
 }
 
 export type SystemEntry = TimeLogEntry | EventLogEntry;
@@ -586,10 +588,16 @@ export class BLMX_Protocol {
     return [allEntriesString, ...recallCommands].filter(Boolean).join('\n');
   }
 
-  // 修改addEntry方法
+  // 简化的addEntry方法 - 对表情包消息不进行重复检查
   addEntry(entry: LogEntry | null): void {
     if (entry) {
-      // 检查是否已存在相同的条目
+      // 对于表情包消息，直接添加，不进行重复检查
+      if ('type' in entry && entry.type === 'sticker') {
+        this.logEntries.push(entry);
+        return;
+      }
+
+      // 对于其他类型的条目，进行重复检查
       const isDuplicate = this.logEntries.some(existingEntry => {
         // 检查朋友圈相关条目
         if ('key' in entry && 'key' in existingEntry) {
@@ -630,10 +638,7 @@ export class BLMX_Protocol {
 
             // 对于消息类型条目，比较发送者和内容
             if (
-              (entry.type === 'message' ||
-                entry.type === 'sticker' ||
-                entry.type === 'location' ||
-                entry.type === 'file') &&
+              (entry.type === 'message' || entry.type === 'location' || entry.type === 'file') &&
               'sender' in entry &&
               'sender' in existingEntry &&
               'content' in entry &&
@@ -670,7 +675,7 @@ export class BLMX_Protocol {
 
       this.logEntries.push(entry);
 
-      // 添加时间更新逻辑
+      // 添加时间更新逻辑 - 参考原版简化
       if ('type' in entry && (entry.type === 'time' || entry.type === 'event')) {
         const data = entry.content;
         const timeDate = new Date(`${data.date} ${data.time}`);

@@ -407,8 +407,9 @@ export class EventHandler implements IEventHandler {
                 content: {
                   date: momentData.date,
                   time: momentData.time,
-                  description: `通过发布朋友圈推进时间到 ${momentData.date} ${momentData.time}`,
+                  description: `时间来到了 ${momentData.date} ${momentData.time}`,
                 },
+                id: `event-${Date.now()}`,
               };
               this.blmxManager.addEntry(timeAdvanceEvent);
 
@@ -715,12 +716,26 @@ export class EventHandler implements IEventHandler {
             time: timeJumpData.time,
             description: timeJumpData.description,
           };
+
+          // 按照原版逻辑：发送eventlog时立即更新游戏时间
+          const [newDate, newTime] = [timeJumpData.date, timeJumpData.time];
+          window.currentGameDate = new Date(`${newDate} ${newTime}`.replace(' ', 'T'));
+
+          // 更新状态栏时间显示
+          const $timeElement = $('#current-time');
+          if ($timeElement.length) {
+            const formattedTime = `${window.currentGameDate
+              .getHours()
+              .toString()
+              .padStart(2, '0')}:${window.currentGameDate.getMinutes().toString().padStart(2, '0')}`;
+            $timeElement.text(formattedTime);
+          }
+
           this.options.stageAndDisplayEntry({
             type: 'event',
-            sender: 'me',
             content: eventData,
             id: `event-${Date.now()}`,
-          } as import('./script').ChatEntry & { type: 'event' });
+          } as import('./script').EventLogEntry);
           this.options.togglePanel(null);
         },
       },
@@ -851,8 +866,8 @@ export class EventHandler implements IEventHandler {
     // 定义默认表情包
     const defaultGlobalStickers = [{ label: '好的', url: 'https://files.catbox.moe/3j0tpc.jpeg' }];
 
-    // 读取全局表情包
-    const GLOBAL_STICKER_STORAGE_KEY = 'blmx_wechat_stickers_global';
+    // 读取全局表情包 - 使用与原版一致的存储键
+    const GLOBAL_STICKER_STORAGE_KEY = 'blmx_wechat_stickers_global_blmx';
     const customStickers = SafeStorage.getItem(GLOBAL_STICKER_STORAGE_KEY, []) || [];
     const allStickers = [...defaultGlobalStickers, ...customStickers];
 
@@ -1048,7 +1063,7 @@ export class EventHandler implements IEventHandler {
         return;
       }
 
-      const GLOBAL_STICKER_STORAGE_KEY = 'blmx_wechat_stickers_global';
+      const GLOBAL_STICKER_STORAGE_KEY = 'blmx_wechat_stickers_global_blmx';
       const existingStickers = SafeStorage.getItem<any[]>(GLOBAL_STICKER_STORAGE_KEY, []) || [];
 
       const newSticker = { label, url };
@@ -1061,6 +1076,9 @@ export class EventHandler implements IEventHandler {
       labelInput.value = '';
       urlInput.value = '';
       previewImg.style.display = 'none';
+
+      // 刷新表情包菜单
+      this.renderStickerFeatures();
     });
 
     // 批量添加表情包
@@ -1071,7 +1089,7 @@ export class EventHandler implements IEventHandler {
         return;
       }
 
-      const GLOBAL_STICKER_STORAGE_KEY = 'blmx_wechat_stickers_global';
+      const GLOBAL_STICKER_STORAGE_KEY = 'blmx_wechat_stickers_global_blmx';
       const pairs = input.split(',');
       const newStickers = [];
 
@@ -1101,6 +1119,9 @@ export class EventHandler implements IEventHandler {
         SafeStorage.setItem(GLOBAL_STICKER_STORAGE_KEY, updatedStickers);
         alert(`${newStickers.length} 个表情包已添加！`);
         batchTextarea.value = '';
+
+        // 刷新表情包菜单
+        this.renderStickerFeatures();
       } else {
         alert('未找到有效的表情包格式。请按照上方的格式说明输入。');
       }
@@ -1108,7 +1129,7 @@ export class EventHandler implements IEventHandler {
 
     // 渲染删除管理的表情包列表
     const renderDeleteStickerList = () => {
-      const GLOBAL_STICKER_STORAGE_KEY = 'blmx_wechat_stickers_global';
+      const GLOBAL_STICKER_STORAGE_KEY = 'blmx_wechat_stickers_global_blmx';
       const stickers = SafeStorage.getItem<any[]>(GLOBAL_STICKER_STORAGE_KEY, []) || [];
 
       deleteStickerGrid.innerHTML = '';
@@ -1212,7 +1233,7 @@ export class EventHandler implements IEventHandler {
       }
 
       if (confirm(`确定要删除选中的 ${checkboxes.length} 个表情包吗？`)) {
-        const GLOBAL_STICKER_STORAGE_KEY = 'blmx_wechat_stickers_global';
+        const GLOBAL_STICKER_STORAGE_KEY = 'blmx_wechat_stickers_global_blmx';
         const stickers = SafeStorage.getItem<any[]>(GLOBAL_STICKER_STORAGE_KEY, []) || [];
 
         // 获取要删除的索引（从大到小排序，避免删除时索引变化）
@@ -1232,6 +1253,9 @@ export class EventHandler implements IEventHandler {
 
         // 重新渲染列表
         renderDeleteStickerList();
+
+        // 刷新表情包菜单
+        this.renderStickerFeatures();
       }
     });
 

@@ -25,8 +25,8 @@ export interface Sticker {
 
 // 常量定义
 export const STORAGE_KEYS = {
-  GLOBAL_STICKER: 'blmx_wechat_stickers_global',
-  CHAR_STICKER_PREFIX: 'blmx_char_stickers_',
+  GLOBAL_STICKER: 'blmx_wechat_stickers_global_blmx', // 修改为与原版一致
+  CHAR_STICKER_PREFIX: 'blmx_char_stickers_blmx_', // 修改为与原版一致
   PHONE_SIZE: 'blmx_phone_size',
   FULLSCREEN_SIZE: 'blmx_fullscreen_size',
   STICKER_SIZE: 'blmx_sticker_size',
@@ -111,14 +111,35 @@ export class ConfigManager {
     localStorage.setItem(`${STORAGE_KEYS.USER_NAME_PREFIX}${this.config.currentCharId}`, newName);
   }
 
-  // 查找表情包URL
+  // 查找表情包URL - 增加向后兼容性
   findStickerUrlByName(name: string): string | undefined {
-    const globalStickers = [
-      ...this.defaultGlobalStickers,
-      ...(SafeStorage.getItem<any[]>(STORAGE_KEYS.GLOBAL_STICKER, []) || []),
-    ];
-    const charStickers =
+    // 尝试从新的存储键读取
+    let customGlobalStickers = SafeStorage.getItem<any[]>(STORAGE_KEYS.GLOBAL_STICKER, []) || [];
+    let charStickers =
       SafeStorage.getItem<any[]>(`${STORAGE_KEYS.CHAR_STICKER_PREFIX}${this.config.currentCharId}`, []) || [];
+
+    // 如果新存储键没有数据，尝试从旧存储键迁移
+    if (customGlobalStickers.length === 0) {
+      const oldGlobalStickers = SafeStorage.getItem<any[]>('blmx_wechat_stickers_global', []) || [];
+      if (oldGlobalStickers.length > 0) {
+        // 迁移数据到新存储键
+        SafeStorage.setItem(STORAGE_KEYS.GLOBAL_STICKER, oldGlobalStickers);
+        customGlobalStickers = oldGlobalStickers;
+        console.log('[BLMX] 已迁移全局表情包数据到新存储键');
+      }
+    }
+
+    if (charStickers.length === 0) {
+      const oldCharStickers = SafeStorage.getItem<any[]>(`blmx_char_stickers_${this.config.currentCharId}`, []) || [];
+      if (oldCharStickers.length > 0) {
+        // 迁移数据到新存储键
+        SafeStorage.setItem(`${STORAGE_KEYS.CHAR_STICKER_PREFIX}${this.config.currentCharId}`, oldCharStickers);
+        charStickers = oldCharStickers;
+        console.log('[BLMX] 已迁移角色表情包数据到新存储键');
+      }
+    }
+
+    const globalStickers = [...this.defaultGlobalStickers, ...customGlobalStickers];
     return [...globalStickers, ...charStickers].find((s: Sticker) => s.label === name)?.url;
   }
 
