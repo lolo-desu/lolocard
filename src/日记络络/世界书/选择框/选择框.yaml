@@ -1,7 +1,7 @@
 ---
 选择框:
   rule:
-    - you must output the roleplay options wrapped in <roleplay_options> tags into a code block at the bottom of each reply
+    - you must output the roleplay options wrapped in <roleplay_options> tags at the bottom of each reply
     - you can only output 100 to 200 Chinese words in total for roleplay options
     - each option inside the roleplay options must completely differ from others in titles and contents, leading to various creative plot directions
     - you should use option types listed below averagely
@@ -9,12 +9,12 @@
     - 绝对禁止出现任何<user>不知道的事情，禁止出现和童年回忆相关的事情，<user>绝对不会自己想起来任何回忆
   format:
     basic: |-
-      ```yaml
       <roleplay_options>
+      ```
       ${按照content而非type拟定标题标题}:${content，必须以第三人称输出行为的主语}
       .../*generate {{random::4::5::6}} options based on option type below*/
-      </roleplay_options>
       ```
+      </roleplay_options>
     option type: [
         {
           type: '普通发展',

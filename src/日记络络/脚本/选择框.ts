@@ -4,7 +4,7 @@ import default_css from './选择框默认样式.css?raw';
 
 const lorebook_name = '上锁的日记本' as const;
 const roleplay_options_tag = '<roleplay_options>' as const;
-const roleplay_options_regex = /```\S*\s*<roleplay_options>(.*)<\/roleplay_options>\s*```/is;
+const roleplay_options_regex = /<roleplay_options>\s*(?:```.*\n)?([\s\S]*?)(?:\n```)?\s*<\/roleplay_options>/im;
 
 //----------------------------------------------------------------------------------------------------------------------
 namespace option_section {
