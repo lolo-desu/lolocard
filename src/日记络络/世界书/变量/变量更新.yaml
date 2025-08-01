@@ -12,9 +12,7 @@
   当前主线事件ID: # :{{get_message_variable::stat_data.世界.当前主线事件ID}} # 事件的唯一标识符, "无"表示没有事件
   当前主线事件阶段: # :{{get_message_variable::stat_data.世界.当前主线事件阶段}} # 事件进行阶段 (0:无, 1:引入, 2:发展, 3:高潮, 4:解决)
 # :</status_current_variables>
-rule:
-  - you must output variable update analysis in the end of the next reply
-  - if dest element is an array, only update and only output the first element, not `[]` block
+rule: you must output variable update analysis in the end of the next reply
 check list:
   - update '亲密度' by ±(1~4) according to characters' attitudes towards <user>'s behavior respectively only if they're currently aware of it
   - update '下次响应界面选择判断' to 1, 2, or 3 ONLY when the storyline progresses to specific points:
