@@ -9,11 +9,11 @@ const Dialog = z.object({
   text: z.string(),
   background: z.string(),
   characters: z.union([
-    z.literal('narrator'), // 旁白
-    z.literal('protagonist'), // 第一人称独白
+    z.literal('narrator'),
+    z.literal('protagonist'),
     z.object({
       left: z.object({
-        id: z.string(),
+        id: z.literal('络络'),
         expression: z.string(),
         costume: z.string(),
       }),
