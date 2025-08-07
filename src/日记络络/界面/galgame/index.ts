@@ -1,11 +1,35 @@
 // @ts-nocheck
 import './index.scss';
 
+import * as z from 'zod';
+
+type Dialog = z.infer<typeof Dialog>;
+const Dialog = z.object({
+  name: z.string(),
+  text: z.string(),
+  background: z.string(),
+  characters: z.union([
+    z.literal('narrator'), // 旁白
+    z.literal('protagonist'), // 第一人称独白
+    z.object({
+      left: z.object({
+        id: z.string(),
+        expression: z.string(),
+        costume: z.string(),
+      }),
+      right: z.object({
+        id: z.literal('络络'),
+        expression: z.string(),
+        costume: z.string(),
+      }),
+    }),
+  ]),
+});
+
 /**
  * 对话界面核心功能
  * 提供简单的对话显示和点击/空格下一步功能
  */
-
 class GalgameEngine {
   constructor() {
     this.currentIndex = 0;
@@ -227,7 +251,7 @@ class GalgameEngine {
 
     try {
       const message = SillyTavern.chat[getCurrentMessageId()].mes;
-      const gameDataString = message.match(/<galgame>\s*```(?:json|yaml)?(.*)```\s*<\/galgame>/si)[1]; // 获取数据并去除首尾空格
+      const gameDataString = message.match(/<galgame>\s*```(?:json|yaml)?(.*)```\s*<\/galgame>/is)[1]; // 获取数据并去除首尾空格
 
       if (!gameDataString) {
         throw new Error('游戏数据 <Galgame> 为空。');
@@ -253,14 +277,7 @@ class GalgameEngine {
         }
       }
 
-      // 检查解析后的数据是否有效（例如，是否为数组且不为空）
-      if (!Array.isArray(parsedData) || parsedData.length === 0) {
-        console.warn('加载的对话数据为空或格式无效 (预期为非空数组)，将加载默认提示信息。');
-        this.dialogData = [{ name: '系统提示', text: '加载的对话数据为空或格式无效。', characters: 'narrator' }];
-      } else {
-        this.dialogData = parsedData;
-        console.log('最终使用的游戏数据:', this.dialogData);
-      }
+      this.dialogData = z.array(Dialog).min(1).parse(parsedData);
     } catch (error) {
       // 捕获所有加载/解析过程中的错误
       console.error('加载或解析游戏数据时出错:', error);
