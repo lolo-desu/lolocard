@@ -3,6 +3,33 @@ import './index.scss';
 
 import * as z from 'zod';
 
+const id = z.literal('络络').catch('络络');
+const Expression = z
+  .enum([
+    '微笑',
+    '浅笑',
+    '生气',
+    '惊讶',
+    '害羞',
+    '稍微脸红',
+    '手托下巴思考',
+    '看透一切的坏笑',
+    '邪恶的坏笑',
+    '星星眼',
+    '晕晕眼',
+    '猫爪生气',
+    '流口水',
+    '哭泣',
+    '擦眼泪',
+    '等待吻',
+    '性高潮',
+    '眼神空洞的催眠状态',
+    '无表情',
+    '无人',
+  ])
+  .catch('无人'); // 如果都不匹配, 默认为无人
+const Costume = z.enum(['水手服', '格纹衫', '开衫', '睡衣']).catch('水手服'); // 如果都不匹配, 默认为水手服
+
 type Dialog = z.infer<typeof Dialog>;
 const Dialog = z.object({
   name: z.string(),
@@ -13,14 +40,14 @@ const Dialog = z.object({
     z.literal('protagonist'),
     z.object({
       left: z.object({
-        id: z.literal('络络'),
-        expression: z.string(),
-        costume: z.string(),
+        id: z.literal('络络').catch('络络'),
+        expression: Expression,
+        costume: Costume,
       }),
       right: z.object({
-        id: z.literal('络络'),
-        expression: z.string(),
-        costume: z.string(),
+        id: z.literal('络络').catch('络络'),
+        expression: Expression,
+        costume: Costume,
       }),
     }),
   ]),
