@@ -1,1 +1,1 @@
-import 'https://fastly.jsdelivr.net/gh/MagicalAstrogy/MagVarUpdate@master/artifact/bundle.js';
+import 'https://testingcf.jsdelivr.net/gh/MagicalAstrogy/MagVarUpdate@master/artifact/bundle.js';
