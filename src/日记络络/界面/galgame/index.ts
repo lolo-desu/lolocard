@@ -28,7 +28,8 @@ const Expression = z
     '无人',
   ])
   .catch('无人'); // 如果都不匹配, 默认为无人
-const Costume = z.enum(['水手服', '格纹衫', '开衫', '睡衣']).catch('水手服'); // 如果都不匹配, 默认为水手服
+const Costume
+  = z.enum(['水手服', '格纹衫', '开衫', '睡衣', '全裸']).catch('水手服'); // 如果都不匹配, 默认为水手服
 
 type Dialog = z.infer<typeof Dialog>;
 const Dialog = z.object({
