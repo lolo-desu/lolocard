@@ -33,7 +33,7 @@
 # :`;
 # :      }
 # :      if (getvar('stat_data.世界.主线事件冷却计数') > 0) {
-# :        const cleanup_commands = '';
+# :        let cleanup_commands = '';
 # :        if (getvar('stat_data.世界.当前主线事件ID') !== '无') {
 # :          cleanup_commands += `\n    - 你必须在本次<update>中输出以下内容来清除当前主线事件ID: _.set('世界.当前主线事件ID', '无');`;
 # :        }
