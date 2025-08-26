@@ -41,10 +41,63 @@
       "isBackground": true
     },
     {
+<<<<<<< HEAD
       "label": "结束监听源代码并编译",
       "command": "echo ${input:terminate}",
       "type": "shell",
     }
+=======
+      "label": "启用网页MCP",
+      "type": "shell",
+      "command": "pnpx",
+      "args": [
+        "@agentdeskai/browser-tools-server@latest"
+      ],
+      "problemMatcher": [
+        {
+          "pattern": [
+            {
+              "regexp": ".*",
+              "file": 1,
+              "location": 2,
+              "message": 3
+            }
+          ],
+          "background": {
+            "activeOnStart": true,
+            "beginsPattern": ".*",
+            "endsPattern": "For local access use.*"
+          }
+        }
+      ],
+      "group": {
+        "kind": "build",
+        "isDefault": true
+      },
+      "presentation": {
+        "echo": true,
+        "reveal": "always",
+        "focus": false,
+        "panel": "shared",
+        "showReuseMessage": true,
+        "clear": true,
+        "revealProblems": "never"
+      },
+      "isBackground": true
+    },
+    {
+      "label": "开始任务",
+      "dependsOn": [
+        "开始监听源代码并编译",
+        "启用网页MCP"
+      ]
+    },
+    {
+      "label": "结束任务",
+      "command": "echo ${input:terminate}",
+      "type": "shell"
+    },
+>>>>>>> 51c8494e1322133b5570fd99925242e70ef3413e
   ],
   "inputs": [
     {
@@ -54,4 +107,8 @@
       "args": "terminateAll"
     }
   ]
+<<<<<<< HEAD
 }
+=======
+}
+>>>>>>> 51c8494e1322133b5570fd99925242e70ef3413e

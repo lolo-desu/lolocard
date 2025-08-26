@@ -3,4 +3,7 @@
 *.{bat,[bB][aA][tT]} text eol=crlf
 
 dist/** merge=ours
+<<<<<<< HEAD
 
+=======
+>>>>>>> 51c8494e1322133b5570fd99925242e70ef3413e

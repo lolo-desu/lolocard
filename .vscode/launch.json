@@ -5,17 +5,50 @@
       "name": "调试酒馆网页(Chrome)",
       "type": "chrome",
       "request": "launch",
+<<<<<<< HEAD
       "preLaunchTask": "开始监听源代码并编译",
       "postDebugTask": "结束监听源代码并编译",
       "url": "https://localhost:8000",
+=======
+      "preLaunchTask": "开始任务",
+      "postDebugTask": "结束任务",
+      "url": "http://localhost:8000",
+>>>>>>> 51c8494e1322133b5570fd99925242e70ef3413e
       "disableNetworkCache": true,
       "internalConsoleOptions": "openOnSessionStart",
       "cwd": "${workspaceFolder}",
       "sourceMapPathOverrides": {
         "webpack://tavern_helper_template/*": "${workspaceFolder}/*",
         "webpack-internal:///*": "${webRoot}/scripts/extensions/third-party/*",
+<<<<<<< HEAD
         "webpack:/*": "${webRoot}/scripts/extensions/third-party/*"
       }
+=======
+        "webpack:/*": "${webRoot}/scripts/extensions/third-party/*",
+      },
+      "skipFiles": [
+        "**/jquery*.min.js"
+      ],
+    },
+    {
+      "name": "调试酒馆网页(Edge)",
+      "type": "msedge",
+      "request": "launch",
+      "preLaunchTask": "开始任务",
+      "postDebugTask": "结束任务",
+      "url": "http://localhost:8000",
+      "disableNetworkCache": true,
+      "internalConsoleOptions": "openOnSessionStart",
+      "cwd": "${workspaceFolder}",
+      "sourceMapPathOverrides": {
+        "webpack://tavern_helper_template/*": "${workspaceFolder}/*",
+        "webpack-internal:///*": "${webRoot}/scripts/extensions/third-party/*",
+        "webpack:/*": "${webRoot}/scripts/extensions/third-party/*",
+      },
+      "skipFiles": [
+        "**/jquery*.min.js"
+      ],
+>>>>>>> 51c8494e1322133b5570fd99925242e70ef3413e
     }
   ]
 }
