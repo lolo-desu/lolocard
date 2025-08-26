@@ -116,6 +116,7 @@ function parse_configuration(entry: Entry): (_env: any, argv: any) => webpack.Co
               loader: 'ts-loader',
               options: {
                 transpileOnly: true,
+                onlyCompileBundledFiles: true,
                 compilerOptions: {
                   noUnusedLocals: false,
                   noUnusedParameters: false,
