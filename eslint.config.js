@@ -28,7 +28,7 @@ export default [
       'no-lonely-if': 'error',
       'no-multi-spaces': 'error',
       'no-redeclare': 'off',
-      'no-shadow': ['error', { allow: ['err', 'resolve', 'reject'] }],
+      'no-shadow': ['warn', { allow: ['err', 'resolve', 'reject'] }],
       'no-undef': 'off',
       'no-unused-vars': 'off',
       'no-var': 'error',
@@ -37,5 +37,11 @@ export default [
     },
   },
   eslintConfigPrettier,
-  globalIgnores(['dist/**', 'node_modules/**', 'tavern_helper/**', 'eslint.config.js', 'webpack.config.ts']),
+  globalIgnores([
+    'dist/**',
+    'node_modules/**',
+    'tavern_helper/**',
+    'eslint.config.js',
+    'webpack.config.ts',
+  ]),
 ];
