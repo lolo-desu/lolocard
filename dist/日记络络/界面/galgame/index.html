@@ -1,2 +1,991 @@
-<html><head><script type="module">const t=z,e=(t.literal('络络').catch('络络'),t.enum(['微笑','浅笑','生气','惊讶','害羞','稍微脸红','手托下巴思考','看透一切的坏笑','邪恶的坏笑','星星眼','晕晕眼','猫爪生气','流口水','哭泣','擦眼泪','等待吻','性高潮','眼神空洞的催眠状态','无表情','无人']).catch('无人')),o=t.enum(['水手服','格纹衫','开衫','睡衣','全裸']).catch('水手服'),a=t.object({name:t.string(),text:t.string(),background:t.string(),characters:t.union([t.literal('narrator'),t.literal('protagonist'),t.object({left:t.object({id:t.literal('络络').catch('络络'),expression:e,costume:o}),right:t.object({id:t.literal('络络').catch('络络'),expression:e,costume:o})})])});class s{constructor(){this.currentIndex=0,this.isAnimating=!1,this.activeCharacters={},this.isTransitioning=!1,this.currentBgPath='',this.dialogHistory=[],this.dialogBox=document.getElementById('dialog-box'),this.characterName=document.getElementById('character-name'),this.dialogText=document.getElementById('dialog-text'),this.currentImage=document.getElementById('background-image-current'),this.nextImage=document.getElementById('background-image-next'),this.characterContainer=document.getElementById('character-container'),this.historyPanel=document.getElementById('history-panel'),this.historyContent=document.getElementById('history-content'),this.imageBaseUrl='https://gitgud.io/lolodesu/lolocard/-/raw/ebf826c38410ee0b35111f9a982063ab291b88c9/src/日记络络/图片/背景/';try{const e=SillyTavern.chat[getCurrentMessageId()].mes.match(/<galgame>\s*```(?:json|yaml)?(.*)```\s*<\/galgame>/is)[1];if(!e)throw new Error('游戏数据 <Galgame> 为空。');let o=null;try{o=JSON.parse(e),console.log('游戏数据加载成功 (JSON 格式)')}catch(t){console.warn('JSON 解析失败，尝试解析为 YAML:',t.message);try{o=YAML.parse(e)}catch(e){throw console.error('YAML 解析也失败:',e),new Error(`数据解析失败：既不是有效的 JSON 也不是有效的 YAML。JSON 错误: ${t.message} | YAML 错误: ${e.message}`)}}this.dialogData=t.array(a).min(1).parse(o)}catch(t){console.error('加载或解析游戏数据时出错:',t),this.dialogData=[{name:'系统提示',text:`加载对话数据失败：${t.message}`,characters:'narrator'}]}this.characterSprites={络络:{水手服:{'微笑.png':'https://gitgud.io/lolodesu/lolocard/-/raw/ebf826c38410ee0b35111f9a982063ab291b88c9/src/日记络络/图片/立绘/水手服/微笑.png','浅笑.png':'https://gitgud.io/lolodesu/lolocard/-/raw/ebf826c38410ee0b35111f9a982063ab291b88c9/src/日记络络/图片/立绘/水手服/浅笑.png','生气.png':'https://gitgud.io/lolodesu/lolocard/-/raw/ebf826c38410ee0b35111f9a982063ab291b88c9/src/日记络络/图片/立绘/水手服/生气.png','惊讶.png':'https://gitgud.io/lolodesu/lolocard/-/raw/ebf826c38410ee0b35111f9a982063ab291b88c9/src/日记络络/图片/立绘/水手服/惊讶.png','害羞.png':'https://gitgud.io/lolodesu/lolocard/-/raw/ebf826c38410ee0b35111f9a982063ab291b88c9/src/日记络络/图片/立绘/水手服/害羞.png','稍微脸红.png':'https://gitgud.io/lolodesu/lolocard/-/raw/ebf826c38410ee0b35111f9a982063ab291b88c9/src/日记络络/图片/立绘/水手服/稍微脸红.png','手托下巴思考.png':'https://gitgud.io/lolodesu/lolocard/-/raw/ebf826c38410ee0b35111f9a982063ab291b88c9/src/日记络络/图片/立绘/水手服/手托下巴思考.png','看透一切的坏笑.png':'https://gitgud.io/lolodesu/lolocard/-/raw/ebf826c38410ee0b35111f9a982063ab291b88c9/src/日记络络/图片/立绘/水手服/看透一切的坏笑.png','邪恶的坏笑.png':'https://gitgud.io/lolodesu/lolocard/-/raw/ebf826c38410ee0b35111f9a982063ab291b88c9/src/日记络络/图片/立绘/水手服/邪恶的坏笑.png','星星眼.png':'https://gitgud.io/lolodesu/lolocard/-/raw/ebf826c38410ee0b35111f9a982063ab291b88c9/src/日记络络/图片/立绘/水手服/星星眼.png','晕晕眼.png':'https://gitgud.io/lolodesu/lolocard/-/raw/ebf826c38410ee0b35111f9a982063ab291b88c9/src/日记络络/图片/立绘/水手服/晕晕眼.png','猫爪生气.png':'https://gitgud.io/lolodesu/lolocard/-/raw/ebf826c38410ee0b35111f9a982063ab291b88c9/src/日记络络/图片/立绘/水手服/猫爪生气.png','流口水.png':'https://gitgud.io/lolodesu/lolocard/-/raw/ebf826c38410ee0b35111f9a982063ab291b88c9/src/日记络络/图片/立绘/水手服/流口水.png','哭泣.png':'https://gitgud.io/lolodesu/lolocard/-/raw/ebf826c38410ee0b35111f9a982063ab291b88c9/src/日记络络/图片/立绘/水手服/哭泣.png','擦眼泪.png':'https://gitgud.io/lolodesu/lolocard/-/raw/ebf826c38410ee0b35111f9a982063ab291b88c9/src/日记络络/图片/立绘/水手服/擦眼泪.png','等待吻.png':'https://gitgud.io/lolodesu/lolocard/-/raw/ebf826c38410ee0b35111f9a982063ab291b88c9/src/日记络络/图片/立绘/水手服/等待吻.png','性高潮.png':'https://gitgud.io/lolodesu/lolocard/-/raw/ebf826c38410ee0b35111f9a982063ab291b88c9/src/日记络络/图片/立绘/水手服/性高潮.png','眼神空洞的催眠状态.png':'https://gitgud.io/lolodesu/lolocard/-/raw/ebf826c38410ee0b35111f9a982063ab291b88c9/src/日记络络/图片/立绘/水手服/眼神空洞的催眠状态.png','无表情.png':'https://gitgud.io/lolodesu/lolocard/-/raw/ebf826c38410ee0b35111f9a982063ab291b88c9/src/日记络络/图片/立绘/水手服/无表情.png','无人.png':'https://gitgud.io/lolodesu/lolocard/-/raw/ebf826c38410ee0b35111f9a982063ab291b88c9/src/日记络络/图片/立绘/水手服/无人.png'},格纹衫:{'微笑.png':'https://gitgud.io/lolodesu/lolocard/-/raw/ebf826c38410ee0b35111f9a982063ab291b88c9/src/日记络络/图片/立绘/格纹衫/微笑.png','浅笑.png':'https://gitgud.io/lolodesu/lolocard/-/raw/ebf826c38410ee0b35111f9a982063ab291b88c9/src/日记络络/图片/立绘/格纹衫/浅笑.png','生气.png':'https://gitgud.io/lolodesu/lolocard/-/raw/ebf826c38410ee0b35111f9a982063ab291b88c9/src/日记络络/图片/立绘/格纹衫/生气.png','惊讶.png':'https://gitgud.io/lolodesu/lolocard/-/raw/ebf826c38410ee0b35111f9a982063ab291b88c9/src/日记络络/图片/立绘/格纹衫/惊讶.png','害羞.png':'https://gitgud.io/lolodesu/lolocard/-/raw/ebf826c38410ee0b35111f9a982063ab291b88c9/src/日记络络/图片/立绘/格纹衫/害羞.png','稍微脸红.png':'https://gitgud.io/lolodesu/lolocard/-/raw/ebf826c38410ee0b35111f9a982063ab291b88c9/src/日记络络/图片/立绘/格纹衫/稍微脸红.png','手托下巴思考.png':'https://gitgud.io/lolodesu/lolocard/-/raw/ebf826c38410ee0b35111f9a982063ab291b88c9/src/日记络络/图片/立绘/格纹衫/手托下巴思考.png','看透一切的坏笑.png':'https://gitgud.io/lolodesu/lolocard/-/raw/ebf826c38410ee0b35111f9a982063ab291b88c9/src/日记络络/图片/立绘/格纹衫/看透一切的坏笑.png','邪恶的坏笑.png':'https://gitgud.io/lolodesu/lolocard/-/raw/ebf826c38410ee0b35111f9a982063ab291b88c9/src/日记络络/图片/立绘/格纹衫/邪恶的坏笑.png','星星眼.png':'https://gitgud.io/lolodesu/lolocard/-/raw/ebf826c38410ee0b35111f9a982063ab291b88c9/src/日记络络/图片/立绘/格纹衫/星星眼.png','晕晕眼.png':'https://gitgud.io/lolodesu/lolocard/-/raw/ebf826c38410ee0b35111f9a982063ab291b88c9/src/日记络络/图片/立绘/格纹衫/晕晕眼.png','猫爪生气.png':'https://gitgud.io/lolodesu/lolocard/-/raw/ebf826c38410ee0b35111f9a982063ab291b88c9/src/日记络络/图片/立绘/格纹衫/猫爪生气.png','流口水.png':'https://gitgud.io/lolodesu/lolocard/-/raw/ebf826c38410ee0b35111f9a982063ab291b88c9/src/日记络络/图片/立绘/格纹衫/流口水.png','哭泣.png':'https://gitgud.io/lolodesu/lolocard/-/raw/ebf826c38410ee0b35111f9a982063ab291b88c9/src/日记络络/图片/立绘/格纹衫/哭泣.png','擦眼泪.png':'https://gitgud.io/lolodesu/lolocard/-/raw/ebf826c38410ee0b35111f9a982063ab291b88c9/src/日记络络/图片/立绘/格纹衫/擦眼泪.png','等待吻.png':'https://gitgud.io/lolodesu/lolocard/-/raw/ebf826c38410ee0b35111f9a982063ab291b88c9/src/日记络络/图片/立绘/格纹衫/等待吻.png','性高潮.png':'https://gitgud.io/lolodesu/lolocard/-/raw/ebf826c38410ee0b35111f9a982063ab291b88c9/src/日记络络/图片/立绘/格纹衫/性高潮.png','眼神空洞的催眠状态.png':'https://gitgud.io/lolodesu/lolocard/-/raw/ebf826c38410ee0b35111f9a982063ab291b88c9/src/日记络络/图片/立绘/格纹衫/眼神空洞的催眠状态.png','无人.png':'https://gitgud.io/lolodesu/lolocard/-/raw/ebf826c38410ee0b35111f9a982063ab291b88c9/src/日记络络/图片/立绘/格纹衫/无人.png'},开衫:{'微笑.png':'https://gitgud.io/lolodesu/lolocard/-/raw/ebf826c38410ee0b35111f9a982063ab291b88c9/src/日记络络/图片/立绘/开衫/微笑.png','浅笑.png':'https://gitgud.io/lolodesu/lolocard/-/raw/ebf826c38410ee0b35111f9a982063ab291b88c9/src/日记络络/图片/立绘/开衫/浅笑.png','生气.png':'https://gitgud.io/lolodesu/lolocard/-/raw/ebf826c38410ee0b35111f9a982063ab291b88c9/src/日记络络/图片/立绘/开衫/生气.png','惊讶.png':'https://gitgud.io/lolodesu/lolocard/-/raw/ebf826c38410ee0b35111f9a982063ab291b88c9/src/日记络络/图片/立绘/开衫/惊讶.png','害羞.png':'https://gitgud.io/lolodesu/lolocard/-/raw/ebf826c38410ee0b35111f9a982063ab291b88c9/src/日记络络/图片/立绘/开衫/害羞.png','稍微脸红.png':'https://gitgud.io/lolodesu/lolocard/-/raw/ebf826c38410ee0b35111f9a982063ab291b88c9/src/日记络络/图片/立绘/开衫/稍微脸红.png','手托下巴思考.png':'https://gitgud.io/lolodesu/lolocard/-/raw/ebf826c38410ee0b35111f9a982063ab291b88c9/src/日记络络/图片/立绘/开衫/手托下巴思考.png','看透一切的坏笑.png':'https://gitgud.io/lolodesu/lolocard/-/raw/ebf826c38410ee0b35111f9a982063ab291b88c9/src/日记络络/图片/立绘/开衫/看透一切的坏笑.png','邪恶的笑容.png':'https://gitgud.io/lolodesu/lolocard/-/raw/ebf826c38410ee0b35111f9a982063ab291b88c9/src/日记络络/图片/立绘/开衫/邪恶的笑容.png','星星眼.png':'https://gitgud.io/lolodesu/lolocard/-/raw/ebf826c38410ee0b35111f9a982063ab291b88c9/src/日记络络/图片/立绘/开衫/星星眼.png','晕晕眼.png':'https://gitgud.io/lolodesu/lolocard/-/raw/ebf826c38410ee0b35111f9a982063ab291b88c9/src/日记络络/图片/立绘/开衫/晕晕眼.png','猫爪生气.png':'https://gitgud.io/lolodesu/lolocard/-/raw/ebf826c38410ee0b35111f9a982063ab291b88c9/src/日记络络/图片/立绘/开衫/猫爪生气.png','流口水.png':'https://gitgud.io/lolodesu/lolocard/-/raw/ebf826c38410ee0b35111f9a982063ab291b88c9/src/日记络络/图片/立绘/开衫/流口水.png','哭泣.png':'https://gitgud.io/lolodesu/lolocard/-/raw/ebf826c38410ee0b35111f9a982063ab291b88c9/src/日记络络/图片/立绘/开衫/哭泣.png','擦眼泪.png':'https://gitgud.io/lolodesu/lolocard/-/raw/ebf826c38410ee0b35111f9a982063ab291b88c9/src/日记络络/图片/立绘/开衫/擦眼泪.png','等待吻.png':'https://gitgud.io/lolodesu/lolocard/-/raw/ebf826c38410ee0b35111f9a982063ab291b88c9/src/日记络络/图片/立绘/开衫/等待吻.png','性高潮.png':'https://gitgud.io/lolodesu/lolocard/-/raw/ebf826c38410ee0b35111f9a982063ab291b88c9/src/日记络络/图片/立绘/开衫/性高潮.png','无表情.png':'https://gitgud.io/lolodesu/lolocard/-/raw/ebf826c38410ee0b35111f9a982063ab291b88c9/src/日记络络/图片/立绘/开衫/无表情.png','无人.png':'https://gitgud.io/lolodesu/lolocard/-/raw/ebf826c38410ee0b35111f9a982063ab291b88c9/src/日记络络/图片/立绘/开衫/无人.png'},睡衣:{'微笑.png':'https://gitgud.io/lolodesu/lolocard/-/raw/ebf826c38410ee0b35111f9a982063ab291b88c9/src/日记络络/图片/立绘/睡衣/微笑.png','浅笑.png':'https://gitgud.io/lolodesu/lolocard/-/raw/ebf826c38410ee0b35111f9a982063ab291b88c9/src/日记络络/图片/立绘/睡衣/浅笑.png','生气.png':'https://gitgud.io/lolodesu/lolocard/-/raw/ebf826c38410ee0b35111f9a982063ab291b88c9/src/日记络络/图片/立绘/睡衣/生气.png','惊讶.png':'https://gitgud.io/lolodesu/lolocard/-/raw/ebf826c38410ee0b35111f9a982063ab291b88c9/src/日记络络/图片/立绘/睡衣/惊讶.png','害羞.png':'https://gitgud.io/lolodesu/lolocard/-/raw/ebf826c38410ee0b35111f9a982063ab291b88c9/src/日记络络/图片/立绘/睡衣/害羞.png','稍微脸红.png':'https://gitgud.io/lolodesu/lolocard/-/raw/ebf826c38410ee0b35111f9a982063ab291b88c9/src/日记络络/图片/立绘/睡衣/稍微脸红.png','看透一切的坏笑.png':'https://gitgud.io/lolodesu/lolocard/-/raw/ebf826c38410ee0b35111f9a982063ab291b88c9/src/日记络络/图片/立绘/睡衣/看透一切的坏笑.png','邪恶的坏笑.png':'https://gitgud.io/lolodesu/lolocard/-/raw/ebf826c38410ee0b35111f9a982063ab291b88c9/src/日记络络/图片/立绘/睡衣/邪恶的坏笑.png','星星眼.png':'https://gitgud.io/lolodesu/lolocard/-/raw/ebf826c38410ee0b35111f9a982063ab291b88c9/src/日记络络/图片/立绘/睡衣/星星眼.png','晕晕眼.png':'https://gitgud.io/lolodesu/lolocard/-/raw/ebf826c38410ee0b35111f9a982063ab291b88c9/src/日记络络/图片/立绘/睡衣/晕晕眼.png','猫爪生气.png':'https://gitgud.io/lolodesu/lolocard/-/raw/ebf826c38410ee0b35111f9a982063ab291b88c9/src/日记络络/图片/立绘/睡衣/猫爪生气.png','流口水.png':'https://gitgud.io/lolodesu/lolocard/-/raw/ebf826c38410ee0b35111f9a982063ab291b88c9/src/日记络络/图片/立绘/睡衣/流口水.png','哭泣.png':'https://gitgud.io/lolodesu/lolocard/-/raw/ebf826c38410ee0b35111f9a982063ab291b88c9/src/日记络络/图片/立绘/睡衣/哭泣.png','等待吻.png':'https://gitgud.io/lolodesu/lolocard/-/raw/ebf826c38410ee0b35111f9a982063ab291b88c9/src/日记络络/图片/立绘/睡衣/等待吻.png','性高潮.png':'https://gitgud.io/lolodesu/lolocard/-/raw/ebf826c38410ee0b35111f9a982063ab291b88c9/src/日记络络/图片/立绘/睡衣/性高潮.png','眼神空洞的催眠状态.png':'https://gitgud.io/lolodesu/lolocard/-/raw/ebf826c38410ee0b35111f9a982063ab291b88c9/src/日记络络/图片/立绘/睡衣/眼神空洞的催眠状态.png','无人.png':'https://gitgud.io/lolodesu/lolocard/-/raw/ebf826c38410ee0b35111f9a982063ab291b88c9/src/日记络络/图片/立绘/睡衣/无人.png'},全裸:{'浅笑.png':'https://gitgud.io/lolodesu/lolocard/-/raw/ebf826c38410ee0b35111f9a982063ab291b88c9/src/日记络络/图片/立绘/全裸/浅笑.png','生气.png':'https://gitgud.io/lolodesu/lolocard/-/raw/ebf826c38410ee0b35111f9a982063ab291b88c9/src/日记络络/图片/立绘/全裸/生气.png','惊讶.png':'https://gitgud.io/lolodesu/lolocard/-/raw/ebf826c38410ee0b35111f9a982063ab291b88c9/src/日记络络/图片/立绘/全裸/惊讶.png','害羞.png':'https://gitgud.io/lolodesu/lolocard/-/raw/ebf826c38410ee0b35111f9a982063ab291b88c9/src/日记络络/图片/立绘/全裸/害羞.png','稍微脸红.png':'https://gitgud.io/lolodesu/lolocard/-/raw/ebf826c38410ee0b35111f9a982063ab291b88c9/src/日记络络/图片/立绘/全裸/稍微脸红.png','看透一切的坏笑.png':'https://gitgud.io/lolodesu/lolocard/-/raw/ebf826c38410ee0b35111f9a982063ab291b88c9/src/日记络络/图片/立绘/全裸/看透一切的坏笑.png','邪恶的坏笑.png':'https://gitgud.io/lolodesu/lolocard/-/raw/ebf826c38410ee0b35111f9a982063ab291b88c9/src/日记络络/图片/立绘/全裸/邪恶的坏笑.png','星星眼.png':'https://gitgud.io/lolodesu/lolocard/-/raw/ebf826c38410ee0b35111f9a982063ab291b88c9/src/日记络络/图片/立绘/全裸/星星眼.png','晕晕眼.png':'https://gitgud.io/lolodesu/lolocard/-/raw/ebf826c38410ee0b35111f9a982063ab291b88c9/src/日记络络/图片/立绘/全裸/晕晕眼.png','流口水.png':'https://gitgud.io/lolodesu/lolocard/-/raw/ebf826c38410ee0b35111f9a982063ab291b88c9/src/日记络络/图片/立绘/全裸/流口水.png','哭泣.png':'https://gitgud.io/lolodesu/lolocard/-/raw/ebf826c38410ee0b35111f9a982063ab291b88c9/src/日记络络/图片/立绘/全裸/哭泣.png','性高潮.png':'https://gitgud.io/lolodesu/lolocard/-/raw/ebf826c38410ee0b35111f9a982063ab291b88c9/src/日记络络/图片/立绘/全裸/性高潮.png','眼神空洞的催眠状态.png':'https://gitgud.io/lolodesu/lolocard/-/raw/ebf826c38410ee0b35111f9a982063ab291b88c9/src/日记络络/图片/立绘/全裸/眼神空洞的催眠状态.png','无人.png':'https://gitgud.io/lolodesu/lolocard/-/raw/ebf826c38410ee0b35111f9a982063ab291b88c9/src/日记络络/图片/立绘/全裸/无人.png'}}},this.initEventListeners(),this.initializeBackground(),this.showDialog(0)}initializeBackground(){if(this.dialogData&&this.dialogData.length>0&&this.dialogData[0].background){const t=this.dialogData[0].background,e=this.getFullImageUrl(t);if(console.log('初始化背景图片:',e),!this.currentImage)return void console.error('背景图片元素不存在!');this.currentBgPath=t,this.currentImage.src=e,this.currentImage.style.opacity='1',this.currentImage.onerror=()=>{console.error('背景图片加载失败:',e),this.currentImage.src='https://gitgud.io/lolodesu/lolocard/-/raw/ebf826c38410ee0b35111f9a982063ab291b88c9/src/日记络络/图片/背景/商店街/黄昏.jpg'},this.currentImage.complete?console.log('背景图片已加载完成'):this.currentImage.onload=()=>{console.log('背景图片加载完成')}}}getFullImageUrl(t){if(!t)return'';if('商店街/黄昏.jpg'===t)return'https://gitgud.io/lolodesu/lolocard/-/raw/ebf826c38410ee0b35111f9a982063ab291b88c9/src/日记络络/图片/背景/商店街/黄昏.jpg';if('商店街/夜晚开灯.jpg'===t)return'https://gitgud.io/lolodesu/lolocard/-/raw/ebf826c38410ee0b35111f9a982063ab291b88c9/src/日记络络/图片/背景/商店街/夜晚开灯.jpg';try{const e=t.split('/'),o=e.map(t=>encodeURIComponent(t)).join('/');return this.imageBaseUrl+o}catch(e){return console.error('URL编码失败:',e,'原始路径:',t),''}}initEventListeners(){document.addEventListener('click',()=>{this.nextDialog()}),document.addEventListener('keydown',t=>{'Space'===t.code&&(t.preventDefault(),this.nextDialog())})}showDialog(t){if(t>=this.dialogData.length)return console.log('对话结束，重新开始'),this.currentIndex=0,void this.showDialog(0);this.currentIndex=t;const e=this.dialogData[t];if(!e)return void console.error('对话数据不存在:',t);const o=e.background||'',a=o&&this.currentBgPath!==o;if(console.log(`显示对话 #${t}`,e.name,'当前背景:',this.currentBgPath||'(无)','新背景:',o||'(无)','需要转场:',a),a){if(console.log('执行背景转场 - 从',this.currentBgPath||'(无)','到',o),'narrator'===e.characters||'protagonist'===e.characters||!e.characters){for(const t in this.activeCharacters)this.hideCharacter(t);this.activeCharacters={}}this.currentBgPath=o,this.fadeOutIn(()=>o,e)}else this.updateDialogContent(e)}updateDialogContent(t){t?(console.log('更新对话内容:',t.name,t.text),this.updateCharacters(t),this.characterName.textContent=t.name,this.applyTypingEffect(t.text),this.addToHistory(t)):console.error('更新对话内容失败: 对话数据为空')}applyTypingEffect(t){this.isAnimating=!0,this.dialogText.textContent='',document.getElementById('next-hint').style.opacity='0';const e=Math.max(.5,Math.min(1.5,300/t.length)),o=Math.floor(30*e);let a=0;const s=()=>{if(a<t.length&&this.isAnimating){const e=t.charAt(a);this.dialogText.textContent+=e,a++,setTimeout(s,o)}else this.isAnimating=!1,document.getElementById('next-hint').style.opacity='1'};s()}updateCharacters(t){if(this.isTransitioning)return void console.log('正在转场中，延迟更新角色显示');const e={};if(document.body.classList.remove('narrator-mode','protagonist-mode'),t.characters)if('narrator'!==t.characters)if('protagonist'!==t.characters){if('object'!=typeof t.characters||!t.characters.id||t.characters.left||t.characters.right){if('object'==typeof t.characters){const o=!!t.characters.left,a=!!t.characters.right;if(o&&!a){const o=t.characters.left.id,a=t.characters.left.expression||'默认.png',s=t.characters.left.costume||'水手服';e[o]={position:'center',expression:a,costume:s},this.showCharacter(o,'center',t.name===o,a,s)}else if(!o&&a){const o=t.characters.right.id,a=t.characters.right.expression||'默认.png',s=t.characters.right.costume||'水手服';e[o]={position:'center',expression:a,costume:s},this.showCharacter(o,'center',t.name===o,a,s)}else{if(t.characters.left&&t.characters.left.id){const o=t.characters.left.id,a=t.characters.left.expression||'默认.png',s=t.characters.left.costume||'水手服';e[o]={position:'left',expression:a,costume:s},this.showCharacter(o,'left',t.name===o,a,s)}if(t.characters.right&&t.characters.right.id){const o=t.characters.right.id,a=t.characters.right.expression||'默认.png',s=t.characters.right.costume||'水手服';e[o]={position:'right',expression:a,costume:s},this.showCharacter(o,'right',t.name===o,a,s)}}}}else{const o=t.characters.id,a=t.characters.expression||'默认.png',s=t.characters.costume||'水手服';e[o]={position:'center',expression:a,costume:s},this.showCharacter(o,'center',t.name===o,a,s)}for(const t in this.activeCharacters)e[t]||this.hideCharacter(t);this.activeCharacters=e}else{document.body.classList.add('protagonist-mode');for(const t in this.activeCharacters)this.hideCharacter(t);this.activeCharacters={}}else{document.body.classList.add('narrator-mode');for(const t in this.activeCharacters)this.hideCharacter(t);this.activeCharacters={}}else{for(const t in this.activeCharacters)this.hideCharacter(t);this.activeCharacters={}}}showCharacter(t,e,o,a='默认',s='水手服'){if(this.isTransitioning)return void console.log('正在转场中，跳过显示角色:',t);if(!this.characterSprites[t])return;const r=this.characterSprites[t];let c=s;r[c]||(c=Object.keys(r)[0]);const i=r[c];let n=a;i[n]||(n=Object.keys(i)[0]||'默认.png');const l=i[n];if(!l)return;const g=`character-${t}`,d=this.activeCharacters[t]?.position;let h=document.getElementById(g);h?(h.dataset.expression!==n&&(h.src=l,h.dataset.expression=n),h.dataset.position!==e&&setTimeout(()=>{this.isTransitioning||(h.classList.remove(`character-${h.dataset.position}`),h.classList.add(`character-${e}`),h.dataset.position=e,this.applyPositionStyle(h,e))},50)):(h=document.createElement('img'),h.id=g,h.className='character-sprite character-enter',h.src=l,h.dataset.expression=n,h.dataset.position=e,h.alt=`${t}的立绘`,d&&d!==e?h.classList.add(`character-${d}`):h.classList.add(`character-${e}`),this.characterContainer.appendChild(h),setTimeout(()=>{this.isTransitioning?h&&h.parentNode&&h.parentNode.removeChild(h):(h.classList.remove('character-enter'),h.classList.add('character-active'),d&&d!==e&&setTimeout(()=>{h.classList.remove(`character-${d}`),h.classList.add(`character-${e}`),h.dataset.position=e},50),this.applyPositionStyle(h,e))},50)),o?(h.classList.add('character-speaking'),h.classList.remove('character-dimmed'),h.style.opacity='1',h.style.zIndex='10'):(h.classList.remove('character-speaking'),h.classList.add('character-dimmed'),h.style.opacity='1',h.style.zIndex='5')}applyPositionStyle(t,e){'center'===e?(t.style.left='50%',t.style.right='auto',t.style.transform='translateX(-50%)',t.style.bottom='0',t.style.height='98%',t.style.maxHeight='98%'):'left'===e?(t.style.left='30%',t.style.right='auto',t.style.transform='translateX(-50%)',t.style.bottom='0',t.style.height='95%',t.style.maxHeight='95%'):'right'===e&&(t.style.right='30%',t.style.left='auto',t.style.transform='translateX(50%)',t.style.bottom='0',t.style.height='95%',t.style.maxHeight='95%')}hideCharacter(t){const e=document.getElementById(`character-${t}`);if(e){if(e.classList.contains('character-exit'))return;e.classList.add('character-exit'),e.classList.remove('character-active','character-speaking'),setTimeout(()=>{e&&e.parentNode&&e.parentNode.removeChild(e)},800)}}nextDialog(){if(this.isAnimating){this.isAnimating=!1;const t=this.dialogData[this.currentIndex];return this.dialogText.textContent=t.text,void(document.getElementById('next-hint').style.opacity='1')}if(this.currentIndex++,this.currentIndex>=this.dialogData.length){console.log('对话已全部播放完毕。'),this.currentIndex=this.dialogData.length-1;const t=document.getElementById('next-hint');t&&(t.style.display='none');const e=document.getElementById('restart-btn');return void(e&&(e.style.display='block'))}this.showDialog(this.currentIndex)}restartDialog(){console.log('重新开始对话播放'),this.currentIndex=0;for(const t in this.activeCharacters)this.hideCharacter(t);if(this.activeCharacters={},this.dialogData&&this.dialogData.length>0&&this.dialogData[0].background){this.currentBgPath=this.dialogData[0].background;const t=this.getFullImageUrl(this.currentBgPath);this.currentImage.src=t}const t=document.getElementById('next-hint');t&&(t.style.display='block',t.style.opacity='1');const e=document.getElementById('restart-btn');e&&(e.style.display='none'),this.showDialog(0)}fadeOutIn(t,e){if(this.isTransitioning)return void console.log('已在转场中，忽略新的转场请求');this.isTransitioning=!0,console.log('开始背景转场');const o=t();if(!o)return console.log('背景路径为空，跳过转场'),this.isTransitioning=!1,void(e&&this.updateDialogContent(e));const a=this.getFullImageUrl(o);if(console.log('切换背景图片:',o,'->',a),!a||a===this.currentImage.src)return console.log('跳过背景转场: URL为空或相同'),this.isTransitioning=!1,void(e&&this.updateDialogContent(e));const s=()=>{console.log('执行背景转场动画'),document.body.classList.add('transitioning'),this.nextImage.style.opacity='1',setTimeout(()=>{this.currentImage.src=this.nextImage.src,console.log('背景转场完成，当前背景:',this.currentImage.src),this.nextImage.style.opacity='0',document.body.classList.remove('transitioning'),this.isTransitioning=!1,e&&(console.log('转场完成，更新对话内容:',e.name),setTimeout(()=>{this.updateDialogContent(e)},50))},1200)};this.nextImage.src=a,this.nextImage.onerror=()=>{console.error('背景图片加载失败:',a),this.isTransitioning=!1,e&&this.updateDialogContent(e)},this.nextImage.onload=()=>{console.log('背景图片加载完成'),s()}}addToHistory(t){this.dialogHistory.some(e=>e.name===t.name&&e.text===t.text)||(this.dialogHistory.push({name:t.name,text:t.text,background:t.background||''}),this.updateHistoryPanel())}updateHistoryPanel(){if(this.historyContent.innerHTML='',0===this.dialogHistory.length){const t=document.createElement('div');return t.textContent='暂无对话历史',t.style.textAlign='center',t.style.color='#7D5B65',t.style.padding='20px',void this.historyContent.appendChild(t)}this.dialogHistory.forEach((t,e)=>{const o=document.createElement('div');if(o.className='history-item',o.style.marginBottom='15px',o.style.padding='15px',o.style.borderRadius='12px',o.style.background='rgba(255, 255, 255, 0.5)',o.style.boxShadow='0 2px 8px rgba(0,0,0,0.05), 0 0 0 1px rgba(255,255,255,0.7) inset',o.style.transition='transform 0.2s ease, box-shadow 0.2s ease',o.onmouseover=function(){this.style.transform='translateY(-2px)',this.style.boxShadow='0 4px 12px rgba(0,0,0,0.08), 0 0 0 1px rgba(255,255,255,0.8) inset'},o.onmouseout=function(){this.style.transform='none',this.style.boxShadow='0 2px 8px rgba(0,0,0,0.05), 0 0 0 1px rgba(255,255,255,0.7) inset'},t.name&&'旁白'!==t.name){const e=document.createElement('div');e.className='history-name',e.textContent=t.name,e.style.fontWeight='bold',e.style.color='#C18E98',e.style.marginBottom='8px',e.style.position='relative',e.style.paddingLeft='15px';const a=document.createElement('span');a.textContent='❀',a.style.position='absolute',a.style.left='0',a.style.top='50%',a.style.transform='translateY(-50%)',a.style.color='#FFB0C0',a.style.fontSize='12px',e.appendChild(a),o.appendChild(e)}else'旁白'===t.name&&(o.style.fontStyle='italic',o.style.background='rgba(245, 235, 235, 0.7)',o.style.borderLeft='3px solid #FFCAD5');const a=document.createElement('div');a.className='history-text',a.textContent=t.text,a.style.color='#4D2B35',a.style.lineHeight='1.5',a.style.letterSpacing='0.3px',o.appendChild(a),this.historyContent.appendChild(o)}),setTimeout(()=>{this.historyContent.scrollTop=this.historyContent.scrollHeight},100)}toggleHistoryPanel(t){t?(this.updateHistoryPanel(),this.historyPanel.style.display='block',this.historyPanel.style.opacity='0',this.historyPanel.style.transition='opacity 0.3s ease',setTimeout(()=>{this.historyPanel.style.opacity='1'},10)):(this.historyPanel.style.opacity='0',setTimeout(()=>{this.historyPanel.style.display='none'},300))}}$(()=>{const t=new s;!function(){const e=document.getElementById('toggle-ui-btn');e&&(e.addEventListener('click',function(o){if(o.stopPropagation(),document.body.classList.toggle('ui-hidden'),document.body.classList.contains('ui-hidden')){e.textContent='💬',e.title='显示界面';document.querySelectorAll('.character-sprite').forEach(t=>{t.classList.remove('character-speaking','character-dimmed')})}else e.textContent='💭',e.title='隐藏界面',t.updateCharacters(t.dialogData[t.currentIndex])}),e.textContent='💭',e.title='隐藏界面')}();const e=document.getElementById('history-btn'),o=document.getElementById('close-history');e&&o&&(e.addEventListener('click',function(e){e.stopPropagation(),t.toggleHistoryPanel(!0)}),o.addEventListener('click',function(e){e.stopPropagation(),t.toggleHistoryPanel(!1)}),document.getElementById('history-panel').addEventListener('click',function(t){t.stopPropagation()}),document.addEventListener('keydown',function(e){'Escape'===e.key&&'block'===t.historyPanel.style.display&&t.toggleHistoryPanel(!1)}));const a=document.getElementById('restart-btn');a&&(a.addEventListener('click',function(e){e.stopPropagation(),t.restartDialog()}),a.title='重新开始')});</script><style>*{-webkit-tap-highlight-color:rgba(0,0,0,0);margin:0;padding:0;box-sizing:border-box;font-family:"Microsoft YaHei","Hiragino Sans GB",sans-serif;scrollbar-width:none !important;user-select:none !important;-webkit-user-select:none !important;-moz-user-select:none !important;-ms-user-select:none !important}::-webkit-scrollbar{width:0 !important;display:none !important}body,html{width:100%;aspect-ratio:16/9;overflow:hidden;background-color:rgba(1,1,1,0);margin:0 !important;padding:0 !important;-ms-overflow-style:none !important;scrollbar-width:none !important}.main-container{width:100%;max-width:1200px;aspect-ratio:16/9;position:relative;margin:0 auto;background:linear-gradient(135deg,#fff0f3,#ffe5ea);border:1px solid #fff;border-radius:12px;box-shadow:0 0 20px rgba(145,125,138,.15);overflow:hidden;position:absolute;top:50%;left:50%;transform:translate(-50%,-50%);max-height:95%;display:flex;flex-direction:column;box-sizing:border-box}.main-container::after{content:"";position:absolute;top:0;left:0;right:0;bottom:0;border:1px solid #fff;border-radius:12px;pointer-events:none;z-index:100;box-sizing:border-box}.inner-container{position:relative;width:97%;height:97%;margin:1.5% auto;background:#fff;border-radius:8px;box-shadow:0 5px 15px rgba(145,125,138,.15);overflow:hidden;display:flex;flex-direction:column;flex:1;box-sizing:border-box}.title-bar{position:relative;height:5.5%;background:linear-gradient(to right,#ffd0d8,#ffbbc8);display:flex;align-items:center;justify-content:center;color:#7d6b6e;font-weight:bold;font-size:clamp(10px,1.5vw,16px);text-shadow:0px 1px 1px hsla(0,0%,100%,.5);border-radius:8px 8px 0 0}.icon-left{position:absolute;left:15px;font-size:18px;color:#c18e98}.icon-right{position:absolute;right:15px;font-size:14px;color:#c18e98}.scene-area{position:relative;flex:1;overflow:hidden;background-color:#000;min-height:0}#cg-container{position:absolute;top:0;left:0;width:100%;height:100%;z-index:1;display:flex;align-items:center;justify-content:center}.background-image{position:absolute;top:0;left:0;width:100%;height:100%;object-fit:cover;transition:opacity 1.2s cubic-bezier(0.4,0,0.2,1);z-index:2;background-color:#000}#background-image-current{opacity:1;z-index:3}#background-image-next{opacity:0;z-index:4}#character-container{position:absolute;width:100%;height:100%;z-index:2;pointer-events:none;overflow:hidden}.character-sprite{position:absolute;bottom:0;height:95%;max-height:95%;width:auto;object-fit:contain;transition:opacity .8s ease,transform .5s ease,filter .5s ease,left .8s ease,right .8s ease;filter:drop-shadow(0 0 5px rgba(0,0,0,0.2));transform-origin:bottom center}.character-left{left:30%;transform:translateX(-50%)}.character-right{right:30%;transform:translateX(50%)}.character-center{position:absolute;left:50%;transform:translateX(-50%);bottom:0;height:98%;max-height:98%;width:auto;object-fit:contain}.character-enter{transform:scale(0.95);filter:blur(2px)}.character-exit{transform:scale(0.9);filter:blur(3px);transition:transform .5s ease,filter .5s ease}.character-active{opacity:1;transform:scale(1)}.character-speaking{filter:drop-shadow(0 0 8px rgba(0,0,0,0.3));transform:scale(1.05);z-index:3}.character-dimmed{filter:brightness(0.85) contrast(0.95)}#dialog-box{position:absolute;bottom:4%;left:50%;transform:translateX(-50%);width:50%;max-width:600px;background:linear-gradient(135deg,rgba(255,235,240,0.8),rgba(255,202,215,0.8));backdrop-filter:blur(8px);border-radius:10px;padding:clamp(6px,1.5%,12px) clamp(10px,2%,20px);color:#7d5b65;z-index:10;box-shadow:0 4px 12px rgba(145,125,138,.15),0 0 0 1px hsla(0,0%,100%,.4) inset;border:1px solid hsla(0,0%,100%,.7);transition:transform .3s ease,opacity .3s ease}#dialog-box:hover{transform:translateX(-50%) translateY(-2px);box-shadow:0 6px 15px rgba(145,125,138,.2),0 0 0 1px hsla(0,0%,100%,.5) inset}#character-name{font-size:16px;font-weight:bold;color:#c18e98;margin-bottom:4px;text-shadow:0 0 5px hsla(0,0%,100%,.7);position:relative;display:inline-block;padding-right:16px}#character-name:after{content:"❀";position:absolute;right:0;top:50%;transform:translateY(-50%);font-size:14px;color:#ffb0c0}#dialog-text{font-size:14px;line-height:1.4;min-height:50px;margin-bottom:8px;color:#4d2b35;text-shadow:0 1px 1px hsla(0,0%,100%,.9);letter-spacing:.2px;position:relative;padding:0 2px}#dialog-text:before,#dialog-text:after{content:"";position:absolute;height:80%;width:1px;background:linear-gradient(to bottom,rgba(255,180,190,0),rgba(255,180,190,0.5),rgba(255,180,190,0));top:10%}#dialog-text:before{left:0}#dialog-text:after{right:0}#next-hint{text-align:right;font-size:12px;color:rgba(193,142,152,.8);animation:pulse 1.5s infinite;position:relative;padding-right:16px}#next-hint:after{content:"✿";position:absolute;right:0;top:50%;transform:translateY(-50%) rotate(5deg);font-size:14px;animation:float 2s ease-in-out infinite}@keyframes pulse{0%{opacity:.4}50%{opacity:1}100%{opacity:.4}}@keyframes float{0%,100%{transform:translateY(-50%) rotate(5deg)}50%{transform:translateY(-65%) rotate(10deg)}}.bottom-area{position:absolute;bottom:15px;right:15px;display:flex;align-items:center;z-index:900}.sweet-memories{display:flex;align-items:center}.history-button{display:flex;align-items:center;justify-content:center;background:linear-gradient(135deg,#ffb5c5,#ffd6e0);border:none;padding:10px;border-radius:50%;color:#7d5b65;font-size:16px;cursor:pointer;margin-right:10px;width:40px;height:40px;transition:transform .3s ease,opacity .3s ease,background .3s ease;box-shadow:0 2px 5px rgba(0,0,0,.1)}.history-button:hover{transform:scale(1.1);opacity:.9;background:linear-gradient(135deg,#ffd6e0,#ffb5c5)}.restart-button{display:flex;align-items:center;justify-content:center;background:linear-gradient(135deg,#ffb5c5,#ffd6e0);border:none;padding:10px;border-radius:50%;color:#7d5b65;font-size:16px;cursor:pointer;margin-right:10px;width:40px;height:40px;transition:transform .3s ease,opacity .3s ease,background .3s ease;box-shadow:0 2px 5px rgba(0,0,0,.1);line-height:1;text-align:center;padding:0}.restart-button:hover{transform:scale(1.1);opacity:.9;background:linear-gradient(135deg,#ffd6e0,#ffb5c5)}#toggle-ui-btn{display:flex;align-items:center;justify-content:center;background:linear-gradient(135deg,#ffb5c5,#ffd6e0);border:none;padding:10px;border-radius:50%;color:#7d5b65;font-size:16px;cursor:pointer;width:40px;height:40px;transition:transform .3s ease,opacity .3s ease,background .3s ease;box-shadow:0 2px 5px rgba(0,0,0,.1)}#toggle-ui-btn:hover{transform:scale(1.1);opacity:.9;background:linear-gradient(135deg,#ffd6e0,#ffb5c5)}body.ui-hidden #dialog-box{display:none !important}body.ui-hidden #toggle-ui-btn{background:linear-gradient(135deg,#ffadc0,#ff8da0) !important}body.ui-hidden .restart-button{opacity:1;visibility:visible}body.ui-hidden #character-container{z-index:3}body.ui-hidden .character-dimmed{filter:none !important}.decoration-sticker{position:absolute;width:50px;height:50px;background-size:contain;background-repeat:no-repeat;z-index:15;opacity:.8;pointer-events:none}.sticker-1{top:15px;right:15px;transform:rotate(10deg);font-size:24px;color:#ffb0c0;display:flex;align-items:center;justify-content:center}.sticker-2{bottom:80px;left:15px;transform:rotate(-5deg);font-size:24px;color:#ffb0c0;display:flex;align-items:center;justify-content:center}body.transitioning .character-sprite{transition:opacity 1s ease,transform 1s ease,filter 1s ease,left 1s ease,right 1s ease}body.transitioning #next-hint{opacity:0;transition:opacity .6s ease}body.transitioning #dialog-box{opacity:.7;transition:opacity 1.2s ease,transform 1.2s ease}body.transitioning .decoration-sticker{opacity:.5;transition:opacity 1.2s ease}.narrator-mode #character-container,.protagonist-mode #character-container{opacity:0;pointer-events:none}.narrator-mode #dialog-box{background:linear-gradient(135deg,rgba(255,235,254,0.895),rgba(250,222,255,0.9))}.protagonist-mode #dialog-box{background:linear-gradient(135deg,rgba(245,225,235,0.9),rgba(235,215,230,0.9))}.narrator-mode #character-name{opacity:0;height:0;margin:0;overflow:hidden}@media (max-width:768px){body,html{aspect-ratio:3/4}#dialog-box{position:absolute;left:50%;bottom:-100%;width:100%;max-width:none;z-index:25;transition:none}#dialog-box:hover{box-shadow:0 4px 12px rgba(145,125,138,.15),0 0 0 1px hsla(0,0%,100%,.4) inset}body.transitioning #dialog-box{opacity:1;transition:none;transform:translateX(-50%)}.main-container{top:25%;overflow:visible}.inner-container{overflow:visible}.scene-area{overflow:visible}.title-bar{height:20px}.bottom-area{z-index:15;bottom:10px;right:10px}.decoration-sticker{display:none}#toggle-ui-btn{display:none !important}.history-button,#toggle-ui-btn{width:35px;height:35px;font-size:14px}#history-panel{width:96%;height:240% !important;max-height:300% !important;top:120% !important;border-radius:12px}#history-header{padding:12px 15px;font-size:16px;border-radius:12px 12px 0 0}#close-history{font-size:22px}#history-content::-webkit-scrollbar{width:6px !important}#history-content::-webkit-scrollbar-thumb{border:none}.history-item{padding:12px !important;margin-bottom:12px !important;border-radius:10px}.history-name{font-size:14px !important;margin-bottom:6px !important;padding-left:16px}.history-name::before{font-size:12px}.history-text{font-size:13px !important;line-height:1.5}}#history-panel{position:fixed;top:25%;left:5%;width:90%;height:90%;max-height:90%;background:linear-gradient(135deg,rgba(255,240,245,0.95),rgba(255,225,235,0.95));backdrop-filter:blur(10px);border-radius:15px;box-shadow:0 8px 30px rgba(145,125,138,.25),0 0 0 1px hsla(0,0%,100%,.6) inset;border:1px solid hsla(0,0%,100%,.8);z-index:1000;display:none;flex-direction:column;box-sizing:border-box;transform:none;margin:0;overflow:hidden}#history-header{flex-shrink:0;display:flex;justify-content:space-between;align-items:center;padding:15px 20px;background:linear-gradient(to right,rgba(255,208,216,0.8),rgba(255,187,200,0.8));border-bottom:1px solid hsla(0,0%,100%,.5);border-radius:15px 15px 0 0;color:#7d5b65;font-weight:bold;font-size:clamp(14px,1.8vw,18px);text-shadow:0 1px 1px hsla(0,0%,100%,.6)}#close-history{background:none;border:none;font-size:24px;color:#c18e98;cursor:pointer;padding:5px;line-height:1;transition:color .2s ease,transform .2s ease}#close-history:hover{color:#a16e78;transform:scale(1.1)}#history-content{flex-grow:1;overflow-y:auto;padding:20px;color:#4d2b35;scrollbar-width:thin;scrollbar-color:#ffb0c0 #fff0f3}#history-content::-webkit-scrollbar{width:8px !important;display:block !important}#history-content::-webkit-scrollbar-track{background:rgba(255,240,243,.5);border-radius:4px}#history-content::-webkit-scrollbar-thumb{background-color:rgba(255,176,192,.8);border-radius:4px;border:1px solid hsla(0,0%,100%,.3)}#history-content::-webkit-scrollbar-thumb:hover{background-color:#ffa0b4}.history-item{margin-bottom:15px;padding:15px;border-radius:12px;background:hsla(0,0%,100%,.6);box-shadow:0 2px 8px rgba(0,0,0,.05),0 0 0 1px hsla(0,0%,100%,.7) inset;transition:transform .2s ease,box-shadow .2s ease}.history-item:hover{transform:translateY(-2px);box-shadow:0 4px 12px rgba(0,0,0,.08),0 0 0 1px hsla(0,0%,100%,.8) inset}.history-name{font-weight:bold;color:#c18e98;margin-bottom:8px;position:relative;padding-left:18px;font-size:15px}.history-name::before{content:"❀";position:absolute;left:0;top:50%;transform:translateY(-50%);color:#ffb0c0;font-size:13px}.history-text{line-height:1.6;letter-spacing:.3px;font-size:14px;color:#4d2b35}.history-item.narrator{font-style:italic;background:rgba(245,235,235,.8);border-left:3px solid #ffcad5}
+<html><head><script type="module">;// external "z"
+const external_z_namespaceObject = z;
+;// ./src/日记络络/界面/galgame/index.ts
+// @ts-nocheck
+
+
+const id = external_z_namespaceObject.literal('络络').catch('络络');
+const Expression = external_z_namespaceObject["enum"]([
+    '微笑',
+    '浅笑',
+    '生气',
+    '惊讶',
+    '害羞',
+    '稍微脸红',
+    '手托下巴思考',
+    '看透一切的坏笑',
+    '邪恶的坏笑',
+    '星星眼',
+    '晕晕眼',
+    '猫爪生气',
+    '流口水',
+    '哭泣',
+    '擦眼泪',
+    '等待吻',
+    '性高潮',
+    '眼神空洞的催眠状态',
+    '无表情',
+    '无人',
+])
+    .catch('无人'); // 如果都不匹配, 默认为无人
+const Costume = external_z_namespaceObject["enum"](['水手服', '格纹衫', '开衫', '睡衣', '全裸']).catch('水手服'); // 如果都不匹配, 默认为水手服
+const Dialog = external_z_namespaceObject.object({
+    name: external_z_namespaceObject.string(),
+    text: external_z_namespaceObject.string(),
+    background: external_z_namespaceObject.string(),
+    characters: external_z_namespaceObject.union([
+        external_z_namespaceObject.literal('narrator'),
+        external_z_namespaceObject.literal('protagonist'),
+        external_z_namespaceObject.object({
+            left: external_z_namespaceObject.object({
+                id: external_z_namespaceObject.literal('络络').catch('络络'),
+                expression: Expression,
+                costume: Costume,
+            }),
+            right: external_z_namespaceObject.object({
+                id: external_z_namespaceObject.literal('络络').catch('络络'),
+                expression: Expression,
+                costume: Costume,
+            }),
+        }),
+    ]),
+});
+/**
+ * 对话界面核心功能
+ * 提供简单的对话显示和点击/空格下一步功能
+ */
+class GalgameEngine {
+    constructor() {
+        this.currentIndex = 0;
+        this.isAnimating = false;
+        this.activeCharacters = {}; // 存储当前活动的角色
+        this.isTransitioning = false; // 防止动画重叠
+        this.currentBgPath = ''; // 当前显示的背景路径
+        this.dialogHistory = []; // 存储对话历史
+        // 获取DOM元素
+        this.dialogBox = document.getElementById('dialog-box');
+        this.characterName = document.getElementById('character-name');
+        this.dialogText = document.getElementById('dialog-text');
+        this.currentImage = document.getElementById('background-image-current');
+        this.nextImage = document.getElementById('background-image-next');
+        this.characterContainer = document.getElementById('character-container');
+        this.historyPanel = document.getElementById('history-panel');
+        this.historyContent = document.getElementById('history-content');
+        // ===== 可自定义背景图片基础 URL =====
+        this.imageBaseUrl =
+            'https://gitgud.io/lolodesu/lolocard/-/raw/ebf826c38410ee0b35111f9a982063ab291b88c9/src/日记络络/图片/背景/';
+        // ===== 新增可自定义：角色立绘链接 =====
+        // 角色立绘图片URL对象
+        // 键名作为角色的标识符，值是包含不同服装的对象，每种服装包含不同表情的立绘URL
+        const characterSprites = {
+            络络: {
+                水手服: {
+                    '微笑.png': 'https://gitgud.io/lolodesu/lolocard/-/raw/ebf826c38410ee0b35111f9a982063ab291b88c9/src/日记络络/图片/立绘/水手服/微笑.png',
+                    '浅笑.png': 'https://gitgud.io/lolodesu/lolocard/-/raw/ebf826c38410ee0b35111f9a982063ab291b88c9/src/日记络络/图片/立绘/水手服/浅笑.png',
+                    '生气.png': 'https://gitgud.io/lolodesu/lolocard/-/raw/ebf826c38410ee0b35111f9a982063ab291b88c9/src/日记络络/图片/立绘/水手服/生气.png',
+                    '惊讶.png': 'https://gitgud.io/lolodesu/lolocard/-/raw/ebf826c38410ee0b35111f9a982063ab291b88c9/src/日记络络/图片/立绘/水手服/惊讶.png',
+                    '害羞.png': 'https://gitgud.io/lolodesu/lolocard/-/raw/ebf826c38410ee0b35111f9a982063ab291b88c9/src/日记络络/图片/立绘/水手服/害羞.png',
+                    '稍微脸红.png': 'https://gitgud.io/lolodesu/lolocard/-/raw/ebf826c38410ee0b35111f9a982063ab291b88c9/src/日记络络/图片/立绘/水手服/稍微脸红.png',
+                    '手托下巴思考.png': 'https://gitgud.io/lolodesu/lolocard/-/raw/ebf826c38410ee0b35111f9a982063ab291b88c9/src/日记络络/图片/立绘/水手服/手托下巴思考.png',
+                    '看透一切的坏笑.png': 'https://gitgud.io/lolodesu/lolocard/-/raw/ebf826c38410ee0b35111f9a982063ab291b88c9/src/日记络络/图片/立绘/水手服/看透一切的坏笑.png',
+                    '邪恶的坏笑.png': 'https://gitgud.io/lolodesu/lolocard/-/raw/ebf826c38410ee0b35111f9a982063ab291b88c9/src/日记络络/图片/立绘/水手服/邪恶的坏笑.png',
+                    '星星眼.png': 'https://gitgud.io/lolodesu/lolocard/-/raw/ebf826c38410ee0b35111f9a982063ab291b88c9/src/日记络络/图片/立绘/水手服/星星眼.png',
+                    '晕晕眼.png': 'https://gitgud.io/lolodesu/lolocard/-/raw/ebf826c38410ee0b35111f9a982063ab291b88c9/src/日记络络/图片/立绘/水手服/晕晕眼.png',
+                    '猫爪生气.png': 'https://gitgud.io/lolodesu/lolocard/-/raw/ebf826c38410ee0b35111f9a982063ab291b88c9/src/日记络络/图片/立绘/水手服/猫爪生气.png',
+                    '流口水.png': 'https://gitgud.io/lolodesu/lolocard/-/raw/ebf826c38410ee0b35111f9a982063ab291b88c9/src/日记络络/图片/立绘/水手服/流口水.png',
+                    '哭泣.png': 'https://gitgud.io/lolodesu/lolocard/-/raw/ebf826c38410ee0b35111f9a982063ab291b88c9/src/日记络络/图片/立绘/水手服/哭泣.png',
+                    '擦眼泪.png': 'https://gitgud.io/lolodesu/lolocard/-/raw/ebf826c38410ee0b35111f9a982063ab291b88c9/src/日记络络/图片/立绘/水手服/擦眼泪.png',
+                    '等待吻.png': 'https://gitgud.io/lolodesu/lolocard/-/raw/ebf826c38410ee0b35111f9a982063ab291b88c9/src/日记络络/图片/立绘/水手服/等待吻.png',
+                    '性高潮.png': 'https://gitgud.io/lolodesu/lolocard/-/raw/ebf826c38410ee0b35111f9a982063ab291b88c9/src/日记络络/图片/立绘/水手服/性高潮.png',
+                    '眼神空洞的催眠状态.png': 'https://gitgud.io/lolodesu/lolocard/-/raw/ebf826c38410ee0b35111f9a982063ab291b88c9/src/日记络络/图片/立绘/水手服/眼神空洞的催眠状态.png',
+                    '无表情.png': 'https://gitgud.io/lolodesu/lolocard/-/raw/ebf826c38410ee0b35111f9a982063ab291b88c9/src/日记络络/图片/立绘/水手服/无表情.png',
+                    '无人.png': 'https://gitgud.io/lolodesu/lolocard/-/raw/ebf826c38410ee0b35111f9a982063ab291b88c9/src/日记络络/图片/立绘/水手服/无人.png',
+                },
+                格纹衫: {
+                    '微笑.png': 'https://gitgud.io/lolodesu/lolocard/-/raw/ebf826c38410ee0b35111f9a982063ab291b88c9/src/日记络络/图片/立绘/格纹衫/微笑.png',
+                    '浅笑.png': 'https://gitgud.io/lolodesu/lolocard/-/raw/ebf826c38410ee0b35111f9a982063ab291b88c9/src/日记络络/图片/立绘/格纹衫/浅笑.png',
+                    '生气.png': 'https://gitgud.io/lolodesu/lolocard/-/raw/ebf826c38410ee0b35111f9a982063ab291b88c9/src/日记络络/图片/立绘/格纹衫/生气.png',
+                    '惊讶.png': 'https://gitgud.io/lolodesu/lolocard/-/raw/ebf826c38410ee0b35111f9a982063ab291b88c9/src/日记络络/图片/立绘/格纹衫/惊讶.png',
+                    '害羞.png': 'https://gitgud.io/lolodesu/lolocard/-/raw/ebf826c38410ee0b35111f9a982063ab291b88c9/src/日记络络/图片/立绘/格纹衫/害羞.png',
+                    '稍微脸红.png': 'https://gitgud.io/lolodesu/lolocard/-/raw/ebf826c38410ee0b35111f9a982063ab291b88c9/src/日记络络/图片/立绘/格纹衫/稍微脸红.png',
+                    '手托下巴思考.png': 'https://gitgud.io/lolodesu/lolocard/-/raw/ebf826c38410ee0b35111f9a982063ab291b88c9/src/日记络络/图片/立绘/格纹衫/手托下巴思考.png',
+                    '看透一切的坏笑.png': 'https://gitgud.io/lolodesu/lolocard/-/raw/ebf826c38410ee0b35111f9a982063ab291b88c9/src/日记络络/图片/立绘/格纹衫/看透一切的坏笑.png',
+                    '邪恶的坏笑.png': 'https://gitgud.io/lolodesu/lolocard/-/raw/ebf826c38410ee0b35111f9a982063ab291b88c9/src/日记络络/图片/立绘/格纹衫/邪恶的坏笑.png',
+                    '星星眼.png': 'https://gitgud.io/lolodesu/lolocard/-/raw/ebf826c38410ee0b35111f9a982063ab291b88c9/src/日记络络/图片/立绘/格纹衫/星星眼.png',
+                    '晕晕眼.png': 'https://gitgud.io/lolodesu/lolocard/-/raw/ebf826c38410ee0b35111f9a982063ab291b88c9/src/日记络络/图片/立绘/格纹衫/晕晕眼.png',
+                    '猫爪生气.png': 'https://gitgud.io/lolodesu/lolocard/-/raw/ebf826c38410ee0b35111f9a982063ab291b88c9/src/日记络络/图片/立绘/格纹衫/猫爪生气.png',
+                    '流口水.png': 'https://gitgud.io/lolodesu/lolocard/-/raw/ebf826c38410ee0b35111f9a982063ab291b88c9/src/日记络络/图片/立绘/格纹衫/流口水.png',
+                    '哭泣.png': 'https://gitgud.io/lolodesu/lolocard/-/raw/ebf826c38410ee0b35111f9a982063ab291b88c9/src/日记络络/图片/立绘/格纹衫/哭泣.png',
+                    '擦眼泪.png': 'https://gitgud.io/lolodesu/lolocard/-/raw/ebf826c38410ee0b35111f9a982063ab291b88c9/src/日记络络/图片/立绘/格纹衫/擦眼泪.png',
+                    '等待吻.png': 'https://gitgud.io/lolodesu/lolocard/-/raw/ebf826c38410ee0b35111f9a982063ab291b88c9/src/日记络络/图片/立绘/格纹衫/等待吻.png',
+                    '性高潮.png': 'https://gitgud.io/lolodesu/lolocard/-/raw/ebf826c38410ee0b35111f9a982063ab291b88c9/src/日记络络/图片/立绘/格纹衫/性高潮.png',
+                    '眼神空洞的催眠状态.png': 'https://gitgud.io/lolodesu/lolocard/-/raw/ebf826c38410ee0b35111f9a982063ab291b88c9/src/日记络络/图片/立绘/格纹衫/眼神空洞的催眠状态.png',
+                    '无人.png': 'https://gitgud.io/lolodesu/lolocard/-/raw/ebf826c38410ee0b35111f9a982063ab291b88c9/src/日记络络/图片/立绘/格纹衫/无人.png',
+                },
+                开衫: {
+                    '微笑.png': 'https://gitgud.io/lolodesu/lolocard/-/raw/ebf826c38410ee0b35111f9a982063ab291b88c9/src/日记络络/图片/立绘/开衫/微笑.png',
+                    '浅笑.png': 'https://gitgud.io/lolodesu/lolocard/-/raw/ebf826c38410ee0b35111f9a982063ab291b88c9/src/日记络络/图片/立绘/开衫/浅笑.png',
+                    '生气.png': 'https://gitgud.io/lolodesu/lolocard/-/raw/ebf826c38410ee0b35111f9a982063ab291b88c9/src/日记络络/图片/立绘/开衫/生气.png',
+                    '惊讶.png': 'https://gitgud.io/lolodesu/lolocard/-/raw/ebf826c38410ee0b35111f9a982063ab291b88c9/src/日记络络/图片/立绘/开衫/惊讶.png',
+                    '害羞.png': 'https://gitgud.io/lolodesu/lolocard/-/raw/ebf826c38410ee0b35111f9a982063ab291b88c9/src/日记络络/图片/立绘/开衫/害羞.png',
+                    '稍微脸红.png': 'https://gitgud.io/lolodesu/lolocard/-/raw/ebf826c38410ee0b35111f9a982063ab291b88c9/src/日记络络/图片/立绘/开衫/稍微脸红.png',
+                    '手托下巴思考.png': 'https://gitgud.io/lolodesu/lolocard/-/raw/ebf826c38410ee0b35111f9a982063ab291b88c9/src/日记络络/图片/立绘/开衫/手托下巴思考.png',
+                    '看透一切的坏笑.png': 'https://gitgud.io/lolodesu/lolocard/-/raw/ebf826c38410ee0b35111f9a982063ab291b88c9/src/日记络络/图片/立绘/开衫/看透一切的坏笑.png',
+                    '邪恶的笑容.png': 'https://gitgud.io/lolodesu/lolocard/-/raw/ebf826c38410ee0b35111f9a982063ab291b88c9/src/日记络络/图片/立绘/开衫/邪恶的笑容.png',
+                    '星星眼.png': 'https://gitgud.io/lolodesu/lolocard/-/raw/ebf826c38410ee0b35111f9a982063ab291b88c9/src/日记络络/图片/立绘/开衫/星星眼.png',
+                    '晕晕眼.png': 'https://gitgud.io/lolodesu/lolocard/-/raw/ebf826c38410ee0b35111f9a982063ab291b88c9/src/日记络络/图片/立绘/开衫/晕晕眼.png',
+                    '猫爪生气.png': 'https://gitgud.io/lolodesu/lolocard/-/raw/ebf826c38410ee0b35111f9a982063ab291b88c9/src/日记络络/图片/立绘/开衫/猫爪生气.png',
+                    '流口水.png': 'https://gitgud.io/lolodesu/lolocard/-/raw/ebf826c38410ee0b35111f9a982063ab291b88c9/src/日记络络/图片/立绘/开衫/流口水.png',
+                    '哭泣.png': 'https://gitgud.io/lolodesu/lolocard/-/raw/ebf826c38410ee0b35111f9a982063ab291b88c9/src/日记络络/图片/立绘/开衫/哭泣.png',
+                    '擦眼泪.png': 'https://gitgud.io/lolodesu/lolocard/-/raw/ebf826c38410ee0b35111f9a982063ab291b88c9/src/日记络络/图片/立绘/开衫/擦眼泪.png',
+                    '等待吻.png': 'https://gitgud.io/lolodesu/lolocard/-/raw/ebf826c38410ee0b35111f9a982063ab291b88c9/src/日记络络/图片/立绘/开衫/等待吻.png',
+                    '性高潮.png': 'https://gitgud.io/lolodesu/lolocard/-/raw/ebf826c38410ee0b35111f9a982063ab291b88c9/src/日记络络/图片/立绘/开衫/性高潮.png',
+                    '无表情.png': 'https://gitgud.io/lolodesu/lolocard/-/raw/ebf826c38410ee0b35111f9a982063ab291b88c9/src/日记络络/图片/立绘/开衫/无表情.png',
+                    '无人.png': 'https://gitgud.io/lolodesu/lolocard/-/raw/ebf826c38410ee0b35111f9a982063ab291b88c9/src/日记络络/图片/立绘/开衫/无人.png',
+                },
+                睡衣: {
+                    '微笑.png': 'https://gitgud.io/lolodesu/lolocard/-/raw/ebf826c38410ee0b35111f9a982063ab291b88c9/src/日记络络/图片/立绘/睡衣/微笑.png',
+                    '浅笑.png': 'https://gitgud.io/lolodesu/lolocard/-/raw/ebf826c38410ee0b35111f9a982063ab291b88c9/src/日记络络/图片/立绘/睡衣/浅笑.png',
+                    '生气.png': 'https://gitgud.io/lolodesu/lolocard/-/raw/ebf826c38410ee0b35111f9a982063ab291b88c9/src/日记络络/图片/立绘/睡衣/生气.png',
+                    '惊讶.png': 'https://gitgud.io/lolodesu/lolocard/-/raw/ebf826c38410ee0b35111f9a982063ab291b88c9/src/日记络络/图片/立绘/睡衣/惊讶.png',
+                    '害羞.png': 'https://gitgud.io/lolodesu/lolocard/-/raw/ebf826c38410ee0b35111f9a982063ab291b88c9/src/日记络络/图片/立绘/睡衣/害羞.png',
+                    '稍微脸红.png': 'https://gitgud.io/lolodesu/lolocard/-/raw/ebf826c38410ee0b35111f9a982063ab291b88c9/src/日记络络/图片/立绘/睡衣/稍微脸红.png',
+                    '看透一切的坏笑.png': 'https://gitgud.io/lolodesu/lolocard/-/raw/ebf826c38410ee0b35111f9a982063ab291b88c9/src/日记络络/图片/立绘/睡衣/看透一切的坏笑.png',
+                    '邪恶的坏笑.png': 'https://gitgud.io/lolodesu/lolocard/-/raw/ebf826c38410ee0b35111f9a982063ab291b88c9/src/日记络络/图片/立绘/睡衣/邪恶的坏笑.png',
+                    '星星眼.png': 'https://gitgud.io/lolodesu/lolocard/-/raw/ebf826c38410ee0b35111f9a982063ab291b88c9/src/日记络络/图片/立绘/睡衣/星星眼.png',
+                    '晕晕眼.png': 'https://gitgud.io/lolodesu/lolocard/-/raw/ebf826c38410ee0b35111f9a982063ab291b88c9/src/日记络络/图片/立绘/睡衣/晕晕眼.png',
+                    '猫爪生气.png': 'https://gitgud.io/lolodesu/lolocard/-/raw/ebf826c38410ee0b35111f9a982063ab291b88c9/src/日记络络/图片/立绘/睡衣/猫爪生气.png',
+                    '流口水.png': 'https://gitgud.io/lolodesu/lolocard/-/raw/ebf826c38410ee0b35111f9a982063ab291b88c9/src/日记络络/图片/立绘/睡衣/流口水.png',
+                    '哭泣.png': 'https://gitgud.io/lolodesu/lolocard/-/raw/ebf826c38410ee0b35111f9a982063ab291b88c9/src/日记络络/图片/立绘/睡衣/哭泣.png',
+                    '等待吻.png': 'https://gitgud.io/lolodesu/lolocard/-/raw/ebf826c38410ee0b35111f9a982063ab291b88c9/src/日记络络/图片/立绘/睡衣/等待吻.png',
+                    '性高潮.png': 'https://gitgud.io/lolodesu/lolocard/-/raw/ebf826c38410ee0b35111f9a982063ab291b88c9/src/日记络络/图片/立绘/睡衣/性高潮.png',
+                    '眼神空洞的催眠状态.png': 'https://gitgud.io/lolodesu/lolocard/-/raw/ebf826c38410ee0b35111f9a982063ab291b88c9/src/日记络络/图片/立绘/睡衣/眼神空洞的催眠状态.png',
+                    '无人.png': 'https://gitgud.io/lolodesu/lolocard/-/raw/ebf826c38410ee0b35111f9a982063ab291b88c9/src/日记络络/图片/立绘/睡衣/无人.png',
+                },
+                全裸: {
+                    '浅笑.png': 'https://gitgud.io/lolodesu/lolocard/-/raw/ebf826c38410ee0b35111f9a982063ab291b88c9/src/日记络络/图片/立绘/全裸/浅笑.png',
+                    '生气.png': 'https://gitgud.io/lolodesu/lolocard/-/raw/ebf826c38410ee0b35111f9a982063ab291b88c9/src/日记络络/图片/立绘/全裸/生气.png',
+                    '惊讶.png': 'https://gitgud.io/lolodesu/lolocard/-/raw/ebf826c38410ee0b35111f9a982063ab291b88c9/src/日记络络/图片/立绘/全裸/惊讶.png',
+                    '害羞.png': 'https://gitgud.io/lolodesu/lolocard/-/raw/ebf826c38410ee0b35111f9a982063ab291b88c9/src/日记络络/图片/立绘/全裸/害羞.png',
+                    '稍微脸红.png': 'https://gitgud.io/lolodesu/lolocard/-/raw/ebf826c38410ee0b35111f9a982063ab291b88c9/src/日记络络/图片/立绘/全裸/稍微脸红.png',
+                    '看透一切的坏笑.png': 'https://gitgud.io/lolodesu/lolocard/-/raw/ebf826c38410ee0b35111f9a982063ab291b88c9/src/日记络络/图片/立绘/全裸/看透一切的坏笑.png',
+                    '邪恶的坏笑.png': 'https://gitgud.io/lolodesu/lolocard/-/raw/ebf826c38410ee0b35111f9a982063ab291b88c9/src/日记络络/图片/立绘/全裸/邪恶的坏笑.png',
+                    '星星眼.png': 'https://gitgud.io/lolodesu/lolocard/-/raw/ebf826c38410ee0b35111f9a982063ab291b88c9/src/日记络络/图片/立绘/全裸/星星眼.png',
+                    '晕晕眼.png': 'https://gitgud.io/lolodesu/lolocard/-/raw/ebf826c38410ee0b35111f9a982063ab291b88c9/src/日记络络/图片/立绘/全裸/晕晕眼.png',
+                    '流口水.png': 'https://gitgud.io/lolodesu/lolocard/-/raw/ebf826c38410ee0b35111f9a982063ab291b88c9/src/日记络络/图片/立绘/全裸/流口水.png',
+                    '哭泣.png': 'https://gitgud.io/lolodesu/lolocard/-/raw/ebf826c38410ee0b35111f9a982063ab291b88c9/src/日记络络/图片/立绘/全裸/哭泣.png',
+                    '性高潮.png': 'https://gitgud.io/lolodesu/lolocard/-/raw/ebf826c38410ee0b35111f9a982063ab291b88c9/src/日记络络/图片/立绘/全裸/性高潮.png',
+                    '眼神空洞的催眠状态.png': 'https://gitgud.io/lolodesu/lolocard/-/raw/ebf826c38410ee0b35111f9a982063ab291b88c9/src/日记络络/图片/立绘/全裸/眼神空洞的催眠状态.png',
+                    '无人.png': 'https://gitgud.io/lolodesu/lolocard/-/raw/ebf826c38410ee0b35111f9a982063ab291b88c9/src/日记络络/图片/立绘/全裸/无人.png',
+                },
+            },
+        };
+        try {
+            const message = SillyTavern.chat[getCurrentMessageId()].mes;
+            const gameDataString = message.match(/<galgame>\s*```(?:json|yaml)?(.*)```\s*<\/galgame>/is)[1]; // 获取数据并去除首尾空格
+            if (!gameDataString) {
+                throw new Error('游戏数据 <Galgame> 为空。');
+            }
+            let parsedData = null;
+            // 尝试解析为 JSON
+            try {
+                parsedData = JSON.parse(gameDataString);
+                console.log('游戏数据加载成功 (JSON 格式)');
+            }
+            catch (jsonError) {
+                console.warn('JSON 解析失败，尝试解析为 YAML:', jsonError.message);
+                // 如果 JSON 解析失败，尝试解析为 YAML
+                try {
+                    parsedData = YAML.parse(gameDataString);
+                }
+                catch (yamlError) {
+                    console.error('YAML 解析也失败:', yamlError);
+                    // 如果两种解析都失败，抛出合并的错误信息
+                    throw new Error(`数据解析失败：既不是有效的 JSON 也不是有效的 YAML。JSON 错误: ${jsonError.message} | YAML 错误: ${yamlError.message}`);
+                }
+            }
+            this.dialogData = external_z_namespaceObject.array(Dialog).min(1).parse(parsedData);
+        }
+        catch (error) {
+            // 捕获所有加载/解析过程中的错误
+            console.error('加载或解析游戏数据时出错:', error);
+            this.dialogData = [{ name: '系统提示', text: `加载对话数据失败：${error.message}`, characters: 'narrator' }];
+        }
+        // ===== 数据加载结束 =====
+        // 设置角色立绘
+        this.characterSprites = characterSprites;
+        // 初始化事件监听
+        this.initEventListeners();
+        // 显示第一条对话前，确保背景和界面已正确设置
+        this.initializeBackground();
+        // 显示第一条对话
+        this.showDialog(0);
+    }
+    // 初始化背景图片
+    initializeBackground() {
+        if (this.dialogData && this.dialogData.length > 0 && this.dialogData[0].background) {
+            // 设置初始背景
+            const initialBgPath = this.dialogData[0].background;
+            const initialBgUrl = this.getFullImageUrl(initialBgPath);
+            console.log('初始化背景图片:', initialBgUrl);
+            // 先检查元素是否存在
+            if (!this.currentImage) {
+                console.error('背景图片元素不存在!');
+                return;
+            }
+            // 记录当前显示的背景，方便后续比较
+            this.currentBgPath = initialBgPath;
+            // 直接设置当前背景图片
+            this.currentImage.src = initialBgUrl;
+            this.currentImage.style.opacity = '1';
+            this.currentImage.onerror = () => {
+                console.error('背景图片加载失败:', initialBgUrl);
+                // 尝试使用预设的CG URL
+                this.currentImage.src =
+                    'https://gitgud.io/lolodesu/lolocard/-/raw/ebf826c38410ee0b35111f9a982063ab291b88c9/src/日记络络/图片/背景/商店街/黄昏.jpg';
+            };
+            // 检查图片是否已经加载完成
+            if (this.currentImage.complete) {
+                console.log('背景图片已加载完成');
+            }
+            else {
+                this.currentImage.onload = () => {
+                    console.log('背景图片加载完成');
+                };
+            }
+        }
+    }
+    // 获取完整的图片URL，处理URL编码问题
+    getFullImageUrl(relativePath) {
+        if (!relativePath)
+            return '';
+        // 使用预定义的硬编码URL
+        if (relativePath === '商店街/黄昏.jpg') {
+            return 'https://gitgud.io/lolodesu/lolocard/-/raw/ebf826c38410ee0b35111f9a982063ab291b88c9/src/日记络络/图片/背景/商店街/黄昏.jpg';
+        }
+        else if (relativePath === '商店街/夜晚开灯.jpg') {
+            return 'https://gitgud.io/lolodesu/lolocard/-/raw/ebf826c38410ee0b35111f9a982063ab291b88c9/src/日记络络/图片/背景/商店街/夜晚开灯.jpg';
+        }
+        // 如果不是硬编码的图片，则尝试构建URL
+        // 拆分路径以便正确编码每个部分
+        try {
+            const pathParts = relativePath.split('/');
+            const encodedParts = pathParts.map(part => encodeURIComponent(part));
+            const encodedPath = encodedParts.join('/');
+            return this.imageBaseUrl + encodedPath;
+        }
+        catch (error) {
+            console.error('URL编码失败:', error, '原始路径:', relativePath);
+            return '';
+        }
+    }
+    initEventListeners() {
+        // 点击屏幕任意位置进入下一步
+        document.addEventListener('click', () => {
+            this.nextDialog();
+        });
+        // 按空格键进入下一步
+        document.addEventListener('keydown', event => {
+            if (event.code === 'Space') {
+                event.preventDefault();
+                this.nextDialog();
+            }
+        });
+    }
+    showDialog(index) {
+        if (index >= this.dialogData.length) {
+            // 对话结束，可以添加结束画面或循环播放
+            console.log('对话结束，重新开始');
+            this.currentIndex = 0;
+            this.showDialog(0);
+            return;
+        }
+        // 更新当前对话索引 - 非常重要
+        this.currentIndex = index;
+        const dialog = this.dialogData[index];
+        if (!dialog) {
+            console.error('对话数据不存在:', index);
+            return;
+        }
+        // 检查是否需要背景转场 - 比较当前背景与目标背景
+        const newBgPath = dialog.background || '';
+        const needBackgroundTransition = newBgPath && this.currentBgPath !== newBgPath;
+        console.log(`显示对话 #${index}`, dialog.name, '当前背景:', this.currentBgPath || '(无)', '新背景:', newBgPath || '(无)', '需要转场:', needBackgroundTransition);
+        // 如果需要背景转场，先执行背景转场
+        if (needBackgroundTransition) {
+            console.log('执行背景转场 - 从', this.currentBgPath || '(无)', '到', newBgPath);
+            // 修复：检查是否切换到CG（没有角色的情况），如果是，先隐藏所有当前角色
+            if (dialog.characters === 'narrator' || dialog.characters === 'protagonist' || !dialog.characters) {
+                // 先移除所有当前角色，再进行背景转场
+                for (const characterId in this.activeCharacters) {
+                    this.hideCharacter(characterId);
+                }
+                // 清空活动角色记录
+                this.activeCharacters = {};
+            }
+            // 更新当前背景记录
+            this.currentBgPath = newBgPath;
+            this.fadeOutIn(() => {
+                return newBgPath;
+            }, dialog); // 传递当前对话以便在转场完成后更新
+        }
+        else {
+            // 否则直接更新角色和对话
+            this.updateDialogContent(dialog);
+        }
+    }
+    // 更新对话内容
+    updateDialogContent(dialog) {
+        if (!dialog) {
+            console.error('更新对话内容失败: 对话数据为空');
+            return;
+        }
+        console.log('更新对话内容:', dialog.name, dialog.text);
+        // 更新角色立绘
+        this.updateCharacters(dialog);
+        // 应用打字机效果
+        this.characterName.textContent = dialog.name;
+        this.applyTypingEffect(dialog.text);
+        // 添加到对话历史
+        this.addToHistory(dialog);
+    }
+    applyTypingEffect(text) {
+        this.isAnimating = true;
+        this.dialogText.textContent = '';
+        document.getElementById('next-hint').style.opacity = '0'; // 隐藏提示
+        // 计算打字速度 - 根据文本长度动态调整
+        const baseSpeed = 30;
+        const speedModifier = Math.max(0.5, Math.min(1.5, 300 / text.length));
+        const speed = Math.floor(baseSpeed * speedModifier);
+        let i = 0;
+        // --- 修改点：移除了 lastPunctuation 变量 ---
+        // let lastPunctuation = 0; // 上一个标点符号的位置
+        // --- 修改结束 ---
+        const typeWriter = () => {
+            if (i < text.length && this.isAnimating) {
+                const char = text.charAt(i);
+                this.dialogText.textContent += char;
+                i++;
+                // --- 修改点：移除了标点符号的特殊停顿判断 ---
+                // 不再检查是否为标点符号，统一使用计算出的 speed
+                setTimeout(typeWriter, speed);
+                // --- 修改结束 ---
+                // --- 移除的代码块 ---
+                // const isPunctuation = /[，。？！、：；]/.test(char);
+                // if (isPunctuation) {
+                //   lastPunctuation = i;
+                //   setTimeout(typeWriter, speed * 5); // 标点符号后停顿更长时间
+                // } else if (i - lastPunctuation <= 2) {
+                //   // 标点符号后的前两个字符也稍微慢一点
+                //   setTimeout(typeWriter, speed * 1.5);
+                // } else {
+                //   setTimeout(typeWriter, speed);
+                // }
+                // --- 移除结束 ---
+            }
+            else {
+                this.isAnimating = false;
+                document.getElementById('next-hint').style.opacity = '1'; // 显示提示
+            }
+        };
+        // 开始打字效果
+        typeWriter();
+    }
+    // 更新角色立绘显示
+    updateCharacters(dialog) {
+        // 转场中不更新角色显示，避免冲突
+        if (this.isTransitioning) {
+            console.log('正在转场中，延迟更新角色显示');
+            return;
+        }
+        // 记录新的角色显示状态
+        const newActiveCharacters = {};
+        // 处理特殊视角模式
+        document.body.classList.remove('narrator-mode', 'protagonist-mode');
+        // 处理角色立绘配置
+        if (dialog.characters) {
+            // 旁白模式
+            if (dialog.characters === 'narrator') {
+                document.body.classList.add('narrator-mode');
+                // 旁白模式下清空所有角色
+                for (const characterId in this.activeCharacters) {
+                    this.hideCharacter(characterId);
+                }
+                this.activeCharacters = {};
+                return;
+            }
+            // 主角视角模式
+            else if (dialog.characters === 'protagonist') {
+                document.body.classList.add('protagonist-mode');
+                // 主角视角下清空所有角色
+                for (const characterId in this.activeCharacters) {
+                    this.hideCharacter(characterId);
+                }
+                this.activeCharacters = {};
+                return;
+            }
+            // 单个居中角色（新格式）
+            else if (typeof dialog.characters === 'object' &&
+                dialog.characters.id &&
+                !dialog.characters.left &&
+                !dialog.characters.right) {
+                const characterId = dialog.characters.id;
+                const expression = dialog.characters.expression || '默认.png';
+                const costume = dialog.characters.costume || '水手服'; // 默认使用水手服
+                newActiveCharacters[characterId] = {
+                    position: 'center',
+                    expression: expression,
+                    costume: costume, // 记录服装信息
+                };
+                this.showCharacter(characterId, 'center', dialog.name === characterId, expression, costume);
+            }
+            // 左右两个角色（新格式）
+            else if (typeof dialog.characters === 'object') {
+                // 如果只有一个角色，则居中显示
+                const hasLeftChar = !!dialog.characters.left;
+                const hasRightChar = !!dialog.characters.right;
+                if (hasLeftChar && !hasRightChar) {
+                    // 只有左边角色，居中显示
+                    const characterId = dialog.characters.left.id;
+                    const expression = dialog.characters.left.expression || '默认.png';
+                    const costume = dialog.characters.left.costume || '水手服'; // 默认使用水手服
+                    newActiveCharacters[characterId] = {
+                        position: 'center',
+                        expression: expression,
+                        costume: costume,
+                    };
+                    this.showCharacter(characterId, 'center', dialog.name === characterId, expression, costume);
+                }
+                else if (!hasLeftChar && hasRightChar) {
+                    // 只有右边角色，居中显示
+                    const characterId = dialog.characters.right.id;
+                    const expression = dialog.characters.right.expression || '默认.png';
+                    const costume = dialog.characters.right.costume || '水手服'; // 默认使用水手服
+                    newActiveCharacters[characterId] = {
+                        position: 'center',
+                        expression: expression,
+                        costume: costume,
+                    };
+                    this.showCharacter(characterId, 'center', dialog.name === characterId, expression, costume);
+                }
+                else {
+                    // 两个角色都有，左右显示
+                    if (dialog.characters.left && dialog.characters.left.id) {
+                        const characterId = dialog.characters.left.id;
+                        const expression = dialog.characters.left.expression || '默认.png';
+                        const costume = dialog.characters.left.costume || '水手服'; // 默认使用水手服
+                        newActiveCharacters[characterId] = {
+                            position: 'left',
+                            expression: expression,
+                            costume: costume,
+                        };
+                        this.showCharacter(characterId, 'left', dialog.name === characterId, expression, costume);
+                    }
+                    if (dialog.characters.right && dialog.characters.right.id) {
+                        const characterId = dialog.characters.right.id;
+                        const expression = dialog.characters.right.expression || '默认.png';
+                        const costume = dialog.characters.right.costume || '水手服'; // 默认使用水手服
+                        newActiveCharacters[characterId] = {
+                            position: 'right',
+                            expression: expression,
+                            costume: costume,
+                        };
+                        this.showCharacter(characterId, 'right', dialog.name === characterId, expression, costume);
+                    }
+                }
+            }
+        }
+        else {
+            // 没有角色配置时，隐藏所有角色
+            for (const characterId in this.activeCharacters) {
+                this.hideCharacter(characterId);
+            }
+            this.activeCharacters = {};
+            return;
+        }
+        // 移除不在新配置中的角色
+        for (const characterId in this.activeCharacters) {
+            if (!newActiveCharacters[characterId]) {
+                this.hideCharacter(characterId);
+            }
+        }
+        // 更新活动角色列表
+        this.activeCharacters = newActiveCharacters;
+    }
+    // 显示角色立绘
+    showCharacter(characterId, position, isSpeaking, expression = '默认', costume = '水手服') {
+        // 转场中不更新角色显示，避免冲突
+        if (this.isTransitioning) {
+            console.log('正在转场中，跳过显示角色:', characterId);
+            return;
+        }
+        // 获取角色的服装和表情立绘URL
+        if (!this.characterSprites[characterId])
+            return;
+        // 指定角色的服装，如果不存在则使用默认服装
+        const characterCostumes = this.characterSprites[characterId];
+        let costumeToUse = costume;
+        // 如果指定的服装不存在，则使用第一个可用的服装
+        if (!characterCostumes[costumeToUse]) {
+            costumeToUse = Object.keys(characterCostumes)[0];
+        }
+        // 获取指定服装下的表情
+        const costumeExpressions = characterCostumes[costumeToUse];
+        // 如果指定的表情不存在，则使用默认表情
+        let expressionToUse = expression;
+        if (!costumeExpressions[expressionToUse]) {
+            expressionToUse = Object.keys(costumeExpressions)[0] || '默认.png';
+        }
+        const spriteUrl = costumeExpressions[expressionToUse];
+        // 如果没有找到有效的立绘URL，则退出
+        if (!spriteUrl)
+            return;
+        // 获取角色ID和表情的组合ID
+        const characterElementId = `character-${characterId}`;
+        const oldPosition = this.activeCharacters[characterId]?.position;
+        // 检查角色立绘是否已存在
+        let characterElement = document.getElementById(characterElementId);
+        // 如果不存在则创建新的立绘元素
+        if (!characterElement) {
+            characterElement = document.createElement('img');
+            characterElement.id = characterElementId;
+            characterElement.className = 'character-sprite character-enter';
+            characterElement.src = spriteUrl;
+            characterElement.dataset.expression = expressionToUse;
+            characterElement.dataset.position = position;
+            characterElement.alt = `${characterId}的立绘`;
+            // 过渡前准备 - 如果是从一侧切换到另一侧，先使用原来的位置
+            if (oldPosition && oldPosition !== position) {
+                characterElement.classList.add(`character-${oldPosition}`);
+            }
+            else {
+                characterElement.classList.add(`character-${position}`);
+            }
+            this.characterContainer.appendChild(characterElement);
+            // 图片加载完成后添加激活类
+            setTimeout(() => {
+                // 再次检查是否在转场中，如果是则不显示
+                if (this.isTransitioning) {
+                    if (characterElement && characterElement.parentNode) {
+                        characterElement.parentNode.removeChild(characterElement);
+                    }
+                    return;
+                }
+                characterElement.classList.remove('character-enter');
+                characterElement.classList.add('character-active');
+                // 如果位置改变，延迟后更新位置
+                if (oldPosition && oldPosition !== position) {
+                    setTimeout(() => {
+                        characterElement.classList.remove(`character-${oldPosition}`);
+                        characterElement.classList.add(`character-${position}`);
+                        characterElement.dataset.position = position;
+                    }, 50);
+                }
+                // 单人居中显示时的特殊处理
+                this.applyPositionStyle(characterElement, position);
+            }, 50);
+        }
+        // 如果已存在但表情或位置不同
+        else {
+            // 表情变化
+            if (characterElement.dataset.expression !== expressionToUse) {
+                characterElement.src = spriteUrl;
+                characterElement.dataset.expression = expressionToUse;
+            }
+            // 位置变化
+            if (characterElement.dataset.position !== position) {
+                // 使用过渡动画平滑切换位置
+                setTimeout(() => {
+                    // 再次检查是否在转场中
+                    if (this.isTransitioning)
+                        return;
+                    characterElement.classList.remove(`character-${characterElement.dataset.position}`);
+                    characterElement.classList.add(`character-${position}`);
+                    characterElement.dataset.position = position;
+                    // 更新定位样式
+                    this.applyPositionStyle(characterElement, position);
+                }, 50);
+            }
+        }
+        // 应用说话/不说话状态 - 只用滤镜区分，不用透明度
+        if (isSpeaking) {
+            characterElement.classList.add('character-speaking');
+            characterElement.classList.remove('character-dimmed');
+            characterElement.style.opacity = '1'; // 确保完全不透明
+            characterElement.style.zIndex = '10'; // 确保说话角色在前面
+        }
+        else {
+            characterElement.classList.remove('character-speaking');
+            characterElement.classList.add('character-dimmed');
+            characterElement.style.opacity = '1'; // 确保完全不透明
+            characterElement.style.zIndex = '5'; // 非说话角色在后面
+        }
+    }
+    // 应用位置样式的辅助函数
+    applyPositionStyle(element, position) {
+        // 单人居中显示时的特殊处理
+        if (position === 'center') {
+            // 确保完全居中且底部不露出背景
+            element.style.left = '50%';
+            element.style.right = 'auto';
+            element.style.transform = 'translateX(-50%)';
+            element.style.bottom = '0';
+            element.style.height = '98%';
+            element.style.maxHeight = '98%';
+        }
+        else if (position === 'left') {
+            // 左侧定位 - 调整为更靠近中心
+            element.style.left = '30%';
+            element.style.right = 'auto';
+            element.style.transform = 'translateX(-50%)';
+            element.style.bottom = '0';
+            element.style.height = '95%';
+            element.style.maxHeight = '95%';
+        }
+        else if (position === 'right') {
+            // 右侧定位 - 调整为更靠近中心
+            element.style.right = '30%';
+            element.style.left = 'auto';
+            element.style.transform = 'translateX(50%)';
+            element.style.bottom = '0';
+            element.style.height = '95%';
+            element.style.maxHeight = '95%';
+        }
+    }
+    // 隐藏角色立绘
+    hideCharacter(characterId) {
+        const characterElement = document.getElementById(`character-${characterId}`);
+        if (characterElement) {
+            // 防止重复触发淡出动画
+            if (characterElement.classList.contains('character-exit'))
+                return;
+            characterElement.classList.add('character-exit');
+            characterElement.classList.remove('character-active', 'character-speaking');
+            // 动画结束后移除元素
+            setTimeout(() => {
+                if (characterElement && characterElement.parentNode) {
+                    characterElement.parentNode.removeChild(characterElement);
+                }
+            }, 800); // 增加延迟以配合CSS过渡时间
+        }
+    }
+    nextDialog() {
+        // 如果正在动画中，则跳过打字效果直接显示全部文本
+        if (this.isAnimating) {
+            this.isAnimating = false;
+            const currentDialog = this.dialogData[this.currentIndex];
+            this.dialogText.textContent = currentDialog.text;
+            document.getElementById('next-hint').style.opacity = '1'; // 显示提示
+            return;
+        }
+        // 增加对话索引
+        this.currentIndex++;
+        // --- 修改点：检查是否超出对话数据范围 ---
+        if (this.currentIndex >= this.dialogData.length) {
+            console.log('对话已全部播放完毕。');
+            // 将索引退回到最后一条，防止后续可能的错误引用
+            this.currentIndex = this.dialogData.length - 1;
+            // 可选：隐藏"下一步"提示，明确告知用户对话结束
+            const nextHint = document.getElementById('next-hint');
+            if (nextHint) {
+                nextHint.style.display = 'none';
+            }
+            // 显示重新播放按钮
+            const restartBtn = document.getElementById('restart-btn');
+            if (restartBtn) {
+                restartBtn.style.display = 'block';
+            }
+            // 阻止进一步的操作，不再调用 showDialog
+            return;
+        }
+        // --- 修改结束 ---
+        // 如果索引有效，则显示下一条对话
+        this.showDialog(this.currentIndex);
+    }
+    // 重新开始对话播放
+    restartDialog() {
+        console.log('重新开始对话播放');
+        // 重置索引
+        this.currentIndex = 0;
+        // 重置角色立绘
+        for (const characterId in this.activeCharacters) {
+            this.hideCharacter(characterId);
+        }
+        this.activeCharacters = {};
+        // 重置背景到初始状态
+        if (this.dialogData && this.dialogData.length > 0 && this.dialogData[0].background) {
+            this.currentBgPath = this.dialogData[0].background;
+            const initialBgUrl = this.getFullImageUrl(this.currentBgPath);
+            this.currentImage.src = initialBgUrl;
+        }
+        // 重置对话界面状态
+        const nextHint = document.getElementById('next-hint');
+        if (nextHint) {
+            nextHint.style.display = 'block';
+            nextHint.style.opacity = '1';
+        }
+        // 隐藏重新播放按钮
+        const restartBtn = document.getElementById('restart-btn');
+        if (restartBtn) {
+            restartBtn.style.display = 'none';
+        }
+        // 显示第一条对话
+        this.showDialog(0);
+    }
+    fadeOutIn(callback, dialogToUpdate) {
+        // 如果已经在转场，则忽略
+        if (this.isTransitioning) {
+            console.log('已在转场中，忽略新的转场请求');
+            return;
+        }
+        this.isTransitioning = true;
+        console.log('开始背景转场');
+        // 获取下一张图片的URL
+        const relativeImagePath = callback(); // 获取 JSON 中定义的相对路径 (例如 "教室/白天.jpg")
+        if (!relativeImagePath) {
+            console.log('背景路径为空，跳过转场');
+            this.isTransitioning = false;
+            if (dialogToUpdate) {
+                this.updateDialogContent(dialogToUpdate);
+            }
+            return;
+        }
+        const nextImageUrl = this.getFullImageUrl(relativeImagePath);
+        console.log('切换背景图片:', relativeImagePath, '->', nextImageUrl);
+        // 如果URL获取失败或与当前图片相同，则不执行转场
+        if (!nextImageUrl || nextImageUrl === this.currentImage.src) {
+            console.log('跳过背景转场: URL为空或相同');
+            this.isTransitioning = false;
+            // 即使没有转场，也要更新对话内容
+            if (dialogToUpdate) {
+                this.updateDialogContent(dialogToUpdate);
+            }
+            return;
+        }
+        // 执行转场动画
+        const executeTransition = () => {
+            console.log('执行背景转场动画');
+            // 添加转场动画类
+            document.body.classList.add('transitioning');
+            // 淡入下一张图片
+            this.nextImage.style.opacity = '1';
+            // 转场完成后的处理
+            setTimeout(() => {
+                // 将下一张图片的URL复制到当前图片
+                this.currentImage.src = this.nextImage.src;
+                console.log('背景转场完成，当前背景:', this.currentImage.src);
+                // 重置下一张图片的不透明度
+                this.nextImage.style.opacity = '0';
+                // 移除转场动画类
+                document.body.classList.remove('transitioning');
+                // 重置转场状态
+                this.isTransitioning = false;
+                // 转场完成后更新对话内容
+                if (dialogToUpdate) {
+                    console.log('转场完成，更新对话内容:', dialogToUpdate.name);
+                    // 修复：确保转场完全结束后再更新对话内容和角色
+                    setTimeout(() => {
+                        this.updateDialogContent(dialogToUpdate);
+                    }, 50);
+                }
+            }, 1200); // 与CSS过渡时间匹配
+        };
+        // 设置下一张图片的URL
+        this.nextImage.src = nextImageUrl;
+        // 添加错误处理
+        this.nextImage.onerror = () => {
+            console.error('背景图片加载失败:', nextImageUrl);
+            this.isTransitioning = false;
+            // 即使加载失败，也要尝试更新对话内容
+            if (dialogToUpdate) {
+                this.updateDialogContent(dialogToUpdate);
+            }
+        };
+        this.nextImage.onload = () => {
+            console.log('背景图片加载完成');
+            executeTransition();
+        };
+    }
+    // 添加对话到历史记录
+    addToHistory(dialog) {
+        // 检查是否已经存在相同的对话（避免重复添加）
+        const isDuplicate = this.dialogHistory.some(item => item.name === dialog.name && item.text === dialog.text);
+        if (!isDuplicate) {
+            this.dialogHistory.push({
+                name: dialog.name,
+                text: dialog.text,
+                background: dialog.background || '',
+            });
+            // 更新历史面板内容
+            this.updateHistoryPanel();
+        }
+    }
+    // 更新历史面板内容
+    updateHistoryPanel() {
+        // 清空当前内容
+        this.historyContent.innerHTML = '';
+        // 如果没有历史记录，显示提示信息
+        if (this.dialogHistory.length === 0) {
+            const emptyMsg = document.createElement('div');
+            emptyMsg.textContent = '暂无对话历史';
+            emptyMsg.style.textAlign = 'center';
+            emptyMsg.style.color = '#7D5B65';
+            emptyMsg.style.padding = '20px';
+            this.historyContent.appendChild(emptyMsg);
+            return;
+        }
+        // 为每条历史记录创建元素
+        this.dialogHistory.forEach((dialog, index) => {
+            const historyItem = document.createElement('div');
+            historyItem.className = 'history-item';
+            historyItem.style.marginBottom = '15px';
+            historyItem.style.padding = '15px';
+            historyItem.style.borderRadius = '12px';
+            historyItem.style.background = 'rgba(255, 255, 255, 0.5)';
+            historyItem.style.boxShadow = '0 2px 8px rgba(0,0,0,0.05), 0 0 0 1px rgba(255,255,255,0.7) inset';
+            historyItem.style.transition = 'transform 0.2s ease, box-shadow 0.2s ease';
+            // 鼠标悬停效果
+            historyItem.onmouseover = function () {
+                this.style.transform = 'translateY(-2px)';
+                this.style.boxShadow = '0 4px 12px rgba(0,0,0,0.08), 0 0 0 1px rgba(255,255,255,0.8) inset';
+            };
+            historyItem.onmouseout = function () {
+                this.style.transform = 'none';
+                this.style.boxShadow = '0 2px 8px rgba(0,0,0,0.05), 0 0 0 1px rgba(255,255,255,0.7) inset';
+            };
+            // 如果有角色名，则显示
+            if (dialog.name && dialog.name !== '旁白') {
+                const nameElem = document.createElement('div');
+                nameElem.className = 'history-name';
+                nameElem.textContent = dialog.name;
+                nameElem.style.fontWeight = 'bold';
+                nameElem.style.color = '#C18E98';
+                nameElem.style.marginBottom = '8px';
+                nameElem.style.position = 'relative';
+                nameElem.style.paddingLeft = '15px';
+                // 添加装饰元素
+                const decorElem = document.createElement('span');
+                decorElem.textContent = '❀';
+                decorElem.style.position = 'absolute';
+                decorElem.style.left = '0';
+                decorElem.style.top = '50%';
+                decorElem.style.transform = 'translateY(-50%)';
+                decorElem.style.color = '#FFB0C0';
+                decorElem.style.fontSize = '12px';
+                nameElem.appendChild(decorElem);
+                historyItem.appendChild(nameElem);
+            }
+            else if (dialog.name === '旁白') {
+                // 旁白样式特殊处理
+                historyItem.style.fontStyle = 'italic';
+                historyItem.style.background = 'rgba(245, 235, 235, 0.7)';
+                historyItem.style.borderLeft = '3px solid #FFCAD5';
+            }
+            // 添加对话文本
+            const textElem = document.createElement('div');
+            textElem.className = 'history-text';
+            textElem.textContent = dialog.text;
+            textElem.style.color = '#4D2B35';
+            textElem.style.lineHeight = '1.5';
+            textElem.style.letterSpacing = '0.3px';
+            historyItem.appendChild(textElem);
+            // 添加到历史内容区
+            this.historyContent.appendChild(historyItem);
+        });
+        // 滚动到底部
+        setTimeout(() => {
+            this.historyContent.scrollTop = this.historyContent.scrollHeight;
+        }, 100);
+    }
+    // 显示/隐藏历史面板
+    toggleHistoryPanel(show) {
+        if (show) {
+            this.updateHistoryPanel();
+            this.historyPanel.style.display = 'block';
+            // 添加淡入动画效果
+            this.historyPanel.style.opacity = '0';
+            this.historyPanel.style.transition = 'opacity 0.3s ease';
+            setTimeout(() => {
+                this.historyPanel.style.opacity = '1';
+            }, 10);
+        }
+        else {
+            // 淡出动画效果
+            this.historyPanel.style.opacity = '0';
+            setTimeout(() => {
+                this.historyPanel.style.display = 'none';
+            }, 300);
+        }
+    }
+}
+// 当页面加载完成后初始化游戏引擎
+$(() => {
+    const engine = new GalgameEngine();
+    // 处理UI显示/隐藏功能
+    function initToggleUIButton() {
+        const toggleBtn = document.getElementById('toggle-ui-btn');
+        if (toggleBtn) {
+            toggleBtn.addEventListener('click', function (e) {
+                e.stopPropagation(); // 防止点击事件触发对话推进
+                document.body.classList.toggle('ui-hidden');
+                // 更新按钮文本
+                if (document.body.classList.contains('ui-hidden')) {
+                    toggleBtn.textContent = '💬';
+                    toggleBtn.title = '显示界面';
+                    // 在UI隐藏模式下取消角色立绘的高亮/淡化效果
+                    const characterElements = document.querySelectorAll('.character-sprite');
+                    characterElements.forEach(element => {
+                        element.classList.remove('character-speaking', 'character-dimmed');
+                    });
+                }
+                else {
+                    toggleBtn.textContent = '💭';
+                    toggleBtn.title = '隐藏界面';
+                    // 恢复当前对话的角色状态
+                    engine.updateCharacters(engine.dialogData[engine.currentIndex]);
+                }
+            });
+            // 设置初始状态
+            toggleBtn.textContent = '💭';
+            toggleBtn.title = '隐藏界面';
+        }
+    }
+    // 初始化UI切换按钮
+    initToggleUIButton();
+    // 初始化历史对话按钮
+    const historyBtn = document.getElementById('history-btn');
+    const closeHistoryBtn = document.getElementById('close-history');
+    if (historyBtn && closeHistoryBtn) {
+        // 打开历史面板
+        historyBtn.addEventListener('click', function (e) {
+            e.stopPropagation(); // 防止点击事件触发对话推进
+            engine.toggleHistoryPanel(true);
+        });
+        // 关闭历史面板
+        closeHistoryBtn.addEventListener('click', function (e) {
+            e.stopPropagation(); // 防止点击事件触发对话推进
+            engine.toggleHistoryPanel(false);
+        });
+        // 点击历史面板内部不触发对话推进
+        document.getElementById('history-panel').addEventListener('click', function (e) {
+            e.stopPropagation();
+        });
+        // ESC键关闭历史面板
+        document.addEventListener('keydown', function (e) {
+            if (e.key === 'Escape' && engine.historyPanel.style.display === 'block') {
+                engine.toggleHistoryPanel(false);
+            }
+        });
+    }
+    // 初始化重新播放按钮
+    const restartBtn = document.getElementById('restart-btn');
+    if (restartBtn) {
+        restartBtn.addEventListener('click', function (e) {
+            e.stopPropagation(); // 防止点击事件触发对话推进
+            engine.restartDialog();
+        });
+        // 设置按钮标题
+        restartBtn.title = '重新开始';
+    }
+});</script><style>*{-webkit-tap-highlight-color:rgba(0,0,0,0);margin:0;padding:0;box-sizing:border-box;font-family:"Microsoft YaHei","Hiragino Sans GB",sans-serif;scrollbar-width:none !important;user-select:none !important;-webkit-user-select:none !important;-moz-user-select:none !important;-ms-user-select:none !important}::-webkit-scrollbar{width:0 !important;display:none !important}body,html{width:100%;aspect-ratio:16/9;overflow:hidden;background-color:rgba(1,1,1,0);margin:0 !important;padding:0 !important;-ms-overflow-style:none !important;scrollbar-width:none !important}.main-container{width:100%;max-width:1200px;aspect-ratio:16/9;position:relative;margin:0 auto;background:linear-gradient(135deg,#fff0f3,#ffe5ea);border:1px solid #fff;border-radius:12px;box-shadow:0 0 20px rgba(145,125,138,.15);overflow:hidden;position:absolute;top:50%;left:50%;transform:translate(-50%,-50%);max-height:95%;display:flex;flex-direction:column;box-sizing:border-box}.main-container::after{content:"";position:absolute;top:0;left:0;right:0;bottom:0;border:1px solid #fff;border-radius:12px;pointer-events:none;z-index:100;box-sizing:border-box}.inner-container{position:relative;width:97%;height:97%;margin:1.5% auto;background:#fff;border-radius:8px;box-shadow:0 5px 15px rgba(145,125,138,.15);overflow:hidden;display:flex;flex-direction:column;flex:1;box-sizing:border-box}.title-bar{position:relative;height:5.5%;background:linear-gradient(to right,#ffd0d8,#ffbbc8);display:flex;align-items:center;justify-content:center;color:#7d6b6e;font-weight:bold;font-size:clamp(10px,1.5vw,16px);text-shadow:0px 1px 1px hsla(0,0%,100%,.5);border-radius:8px 8px 0 0}.icon-left{position:absolute;left:15px;font-size:18px;color:#c18e98}.icon-right{position:absolute;right:15px;font-size:14px;color:#c18e98}.scene-area{position:relative;flex:1;overflow:hidden;background-color:#000;min-height:0}#cg-container{position:absolute;top:0;left:0;width:100%;height:100%;z-index:1;display:flex;align-items:center;justify-content:center}.background-image{position:absolute;top:0;left:0;width:100%;height:100%;object-fit:cover;transition:opacity 1.2s cubic-bezier(0.4,0,0.2,1);z-index:2;background-color:#000}#background-image-current{opacity:1;z-index:3}#background-image-next{opacity:0;z-index:4}#character-container{position:absolute;width:100%;height:100%;z-index:2;pointer-events:none;overflow:hidden}.character-sprite{position:absolute;bottom:0;height:95%;max-height:95%;width:auto;object-fit:contain;transition:opacity .8s ease,transform .5s ease,filter .5s ease,left .8s ease,right .8s ease;filter:drop-shadow(0 0 5px rgba(0,0,0,0.2));transform-origin:bottom center}.character-left{left:30%;transform:translateX(-50%)}.character-right{right:30%;transform:translateX(50%)}.character-center{position:absolute;left:50%;transform:translateX(-50%);bottom:0;height:98%;max-height:98%;width:auto;object-fit:contain}.character-enter{transform:scale(0.95);filter:blur(2px)}.character-exit{transform:scale(0.9);filter:blur(3px);transition:transform .5s ease,filter .5s ease}.character-active{opacity:1;transform:scale(1)}.character-speaking{filter:drop-shadow(0 0 8px rgba(0,0,0,0.3));transform:scale(1.05);z-index:3}.character-dimmed{filter:brightness(0.85) contrast(0.95)}#dialog-box{position:absolute;bottom:4%;left:50%;transform:translateX(-50%);width:50%;max-width:600px;background:linear-gradient(135deg,rgba(255,235,240,0.8),rgba(255,202,215,0.8));backdrop-filter:blur(8px);border-radius:10px;padding:clamp(6px,1.5%,12px) clamp(10px,2%,20px);color:#7d5b65;z-index:10;box-shadow:0 4px 12px rgba(145,125,138,.15),0 0 0 1px hsla(0,0%,100%,.4) inset;border:1px solid hsla(0,0%,100%,.7);transition:transform .3s ease,opacity .3s ease}#dialog-box:hover{transform:translateX(-50%) translateY(-2px);box-shadow:0 6px 15px rgba(145,125,138,.2),0 0 0 1px hsla(0,0%,100%,.5) inset}#character-name{font-size:16px;font-weight:bold;color:#c18e98;margin-bottom:4px;text-shadow:0 0 5px hsla(0,0%,100%,.7);position:relative;display:inline-block;padding-right:16px}#character-name:after{content:"❀";position:absolute;right:0;top:50%;transform:translateY(-50%);font-size:14px;color:#ffb0c0}#dialog-text{font-size:14px;line-height:1.4;min-height:50px;margin-bottom:8px;color:#4d2b35;text-shadow:0 1px 1px hsla(0,0%,100%,.9);letter-spacing:.2px;position:relative;padding:0 2px}#dialog-text:before,#dialog-text:after{content:"";position:absolute;height:80%;width:1px;background:linear-gradient(to bottom,rgba(255,180,190,0),rgba(255,180,190,0.5),rgba(255,180,190,0));top:10%}#dialog-text:before{left:0}#dialog-text:after{right:0}#next-hint{text-align:right;font-size:12px;color:rgba(193,142,152,.8);animation:pulse 1.5s infinite;position:relative;padding-right:16px}#next-hint:after{content:"✿";position:absolute;right:0;top:50%;transform:translateY(-50%) rotate(5deg);font-size:14px;animation:float 2s ease-in-out infinite}@keyframes pulse{0%{opacity:.4}50%{opacity:1}100%{opacity:.4}}@keyframes float{0%,100%{transform:translateY(-50%) rotate(5deg)}50%{transform:translateY(-65%) rotate(10deg)}}.bottom-area{position:absolute;bottom:15px;right:15px;display:flex;align-items:center;z-index:900}.sweet-memories{display:flex;align-items:center}.history-button{display:flex;align-items:center;justify-content:center;background:linear-gradient(135deg,#ffb5c5,#ffd6e0);border:none;padding:10px;border-radius:50%;color:#7d5b65;font-size:16px;cursor:pointer;margin-right:10px;width:40px;height:40px;transition:transform .3s ease,opacity .3s ease,background .3s ease;box-shadow:0 2px 5px rgba(0,0,0,.1)}.history-button:hover{transform:scale(1.1);opacity:.9;background:linear-gradient(135deg,#ffd6e0,#ffb5c5)}.restart-button{display:flex;align-items:center;justify-content:center;background:linear-gradient(135deg,#ffb5c5,#ffd6e0);border:none;padding:10px;border-radius:50%;color:#7d5b65;font-size:16px;cursor:pointer;margin-right:10px;width:40px;height:40px;transition:transform .3s ease,opacity .3s ease,background .3s ease;box-shadow:0 2px 5px rgba(0,0,0,.1);line-height:1;text-align:center;padding:0}.restart-button:hover{transform:scale(1.1);opacity:.9;background:linear-gradient(135deg,#ffd6e0,#ffb5c5)}#toggle-ui-btn{display:flex;align-items:center;justify-content:center;background:linear-gradient(135deg,#ffb5c5,#ffd6e0);border:none;padding:10px;border-radius:50%;color:#7d5b65;font-size:16px;cursor:pointer;width:40px;height:40px;transition:transform .3s ease,opacity .3s ease,background .3s ease;box-shadow:0 2px 5px rgba(0,0,0,.1)}#toggle-ui-btn:hover{transform:scale(1.1);opacity:.9;background:linear-gradient(135deg,#ffd6e0,#ffb5c5)}body.ui-hidden #dialog-box{display:none !important}body.ui-hidden #toggle-ui-btn{background:linear-gradient(135deg,#ffadc0,#ff8da0) !important}body.ui-hidden .restart-button{opacity:1;visibility:visible}body.ui-hidden #character-container{z-index:3}body.ui-hidden .character-dimmed{filter:none !important}.decoration-sticker{position:absolute;width:50px;height:50px;background-size:contain;background-repeat:no-repeat;z-index:15;opacity:.8;pointer-events:none}.sticker-1{top:15px;right:15px;transform:rotate(10deg);font-size:24px;color:#ffb0c0;display:flex;align-items:center;justify-content:center}.sticker-2{bottom:80px;left:15px;transform:rotate(-5deg);font-size:24px;color:#ffb0c0;display:flex;align-items:center;justify-content:center}body.transitioning .character-sprite{transition:opacity 1s ease,transform 1s ease,filter 1s ease,left 1s ease,right 1s ease}body.transitioning #next-hint{opacity:0;transition:opacity .6s ease}body.transitioning #dialog-box{opacity:.7;transition:opacity 1.2s ease,transform 1.2s ease}body.transitioning .decoration-sticker{opacity:.5;transition:opacity 1.2s ease}.narrator-mode #character-container,.protagonist-mode #character-container{opacity:0;pointer-events:none}.narrator-mode #dialog-box{background:linear-gradient(135deg,rgba(255,235,254,0.895),rgba(250,222,255,0.9))}.protagonist-mode #dialog-box{background:linear-gradient(135deg,rgba(245,225,235,0.9),rgba(235,215,230,0.9))}.narrator-mode #character-name{opacity:0;height:0;margin:0;overflow:hidden}@media (max-width:768px){body,html{aspect-ratio:3/4}#dialog-box{position:absolute;left:50%;bottom:-100%;width:100%;max-width:none;z-index:25;transition:none}#dialog-box:hover{box-shadow:0 4px 12px rgba(145,125,138,.15),0 0 0 1px hsla(0,0%,100%,.4) inset}body.transitioning #dialog-box{opacity:1;transition:none;transform:translateX(-50%)}.main-container{top:25%;overflow:visible}.inner-container{overflow:visible}.scene-area{overflow:visible}.title-bar{height:20px}.bottom-area{z-index:15;bottom:10px;right:10px}.decoration-sticker{display:none}#toggle-ui-btn{display:none !important}.history-button,#toggle-ui-btn{width:35px;height:35px;font-size:14px}#history-panel{width:96%;height:240% !important;max-height:300% !important;top:120% !important;border-radius:12px}#history-header{padding:12px 15px;font-size:16px;border-radius:12px 12px 0 0}#close-history{font-size:22px}#history-content::-webkit-scrollbar{width:6px !important}#history-content::-webkit-scrollbar-thumb{border:none}.history-item{padding:12px !important;margin-bottom:12px !important;border-radius:10px}.history-name{font-size:14px !important;margin-bottom:6px !important;padding-left:16px}.history-name::before{font-size:12px}.history-text{font-size:13px !important;line-height:1.5}}#history-panel{position:fixed;top:25%;left:5%;width:90%;height:90%;max-height:90%;background:linear-gradient(135deg,rgba(255,240,245,0.95),rgba(255,225,235,0.95));backdrop-filter:blur(10px);border-radius:15px;box-shadow:0 8px 30px rgba(145,125,138,.25),0 0 0 1px hsla(0,0%,100%,.6) inset;border:1px solid hsla(0,0%,100%,.8);z-index:1000;display:none;flex-direction:column;box-sizing:border-box;transform:none;margin:0;overflow:hidden}#history-header{flex-shrink:0;display:flex;justify-content:space-between;align-items:center;padding:15px 20px;background:linear-gradient(to right,rgba(255,208,216,0.8),rgba(255,187,200,0.8));border-bottom:1px solid hsla(0,0%,100%,.5);border-radius:15px 15px 0 0;color:#7d5b65;font-weight:bold;font-size:clamp(14px,1.8vw,18px);text-shadow:0 1px 1px hsla(0,0%,100%,.6)}#close-history{background:none;border:none;font-size:24px;color:#c18e98;cursor:pointer;padding:5px;line-height:1;transition:color .2s ease,transform .2s ease}#close-history:hover{color:#a16e78;transform:scale(1.1)}#history-content{flex-grow:1;overflow-y:auto;padding:20px;color:#4d2b35;scrollbar-width:thin;scrollbar-color:#ffb0c0 #fff0f3}#history-content::-webkit-scrollbar{width:8px !important;display:block !important}#history-content::-webkit-scrollbar-track{background:rgba(255,240,243,.5);border-radius:4px}#history-content::-webkit-scrollbar-thumb{background-color:rgba(255,176,192,.8);border-radius:4px;border:1px solid hsla(0,0%,100%,.3)}#history-content::-webkit-scrollbar-thumb:hover{background-color:#ffa0b4}.history-item{margin-bottom:15px;padding:15px;border-radius:12px;background:hsla(0,0%,100%,.6);box-shadow:0 2px 8px rgba(0,0,0,.05),0 0 0 1px hsla(0,0%,100%,.7) inset;transition:transform .2s ease,box-shadow .2s ease}.history-item:hover{transform:translateY(-2px);box-shadow:0 4px 12px rgba(0,0,0,.08),0 0 0 1px hsla(0,0%,100%,.8) inset}.history-name{font-weight:bold;color:#c18e98;margin-bottom:8px;position:relative;padding-left:18px;font-size:15px}.history-name::before{content:"❀";position:absolute;left:0;top:50%;transform:translateY(-50%);color:#ffb0c0;font-size:13px}.history-text{line-height:1.6;letter-spacing:.3px;font-size:14px;color:#4d2b35}.history-item.narrator{font-style:italic;background:rgba(245,235,235,.8);border-left:3px solid #ffcad5}
 </style></head><body><div class="main-container"><div class="inner-container"><div class="title-bar"><span class="icon-left">❀</span> 『⁺⊹𝒞𝒢𝒯𝒾𝓂ℯʚෆɞ₊』 <span class="icon-right">✧*:･ﾟ✧</span></div><div class="scene-area"><div id="cg-container"><img id="background-image-current" class="background-image" alt="当前背景CG"/> <img id="background-image-next" class="background-image" style="opacity:0" alt="下一个背景CG"/></div><div class="decoration-sticker sticker-1">♡</div><div class="decoration-sticker sticker-2">✿</div><div id="character-container"></div><div id="dialog-box"><div id="character-name">角色名称</div><div id="dialog-text">这里是对话内容...</div><div id="next-hint">点击或按空格继续</div></div><div id="history-panel" style="display:none;position:absolute;top:50%;left:50%;transform:translate(-50%,-50%);width:80%;height:80%;background:rgba(255,240,243,.95);z-index:1001;border-radius:15px;overflow:hidden;box-shadow:0 10px 30px rgba(0,0,0,.25),0 0 10px rgba(0,0,0,.1);backdrop-filter:blur(5px)"><div style="position:sticky;top:0;background:linear-gradient(to right,#ffd0d8,#ffbbc8);padding:5px 10px;border-bottom:1px solid rgba(255,255,255,.5);display:flex;justify-content:space-between;align-items:center;z-index:10;box-shadow:0 1px 3px rgba(0,0,0,.05);height:30px;box-sizing:border-box"><h3 style="margin:0;color:#7d5b65;font-size:12px;text-shadow:0 1px 1px rgba(255,255,255,.7)">𝕃𝕆𝔾</h3><button id="close-history" style="font-size:12px">⊗</button></div><div id="history-content" style="padding:20px;height:calc(100% - 60px);overflow-y:auto;scrollbar-width:thin;box-sizing:border-box"></div></div></div><div class="bottom-area"><button id="history-btn" class="history-button">📜</button> <button id="restart-btn" class="restart-button" style="display:none">📖</button> <button id="toggle-ui-btn">🎮</button></div></div></div></body></html>
