@@ -1,0 +1,395 @@
+/*
+ * 思维链美化-简约暗色
+ * 作者：络络 | Discord: @lolodesu_
+ * 感谢青空莉、柏柏和落花残的帮助
+ * 二改分享需 @lolodesu_
+ * 禁止商用
+ */
+
+/* 思考框主容器 */
+details.mes_reasoning_details {
+  width: 80%;
+  margin: 20px auto;
+  background: #2d2d2d;
+  border-radius: 12px;
+  box-shadow: 0 2px 8px rgba(0,0,0,0.3);
+  transition: all 0.25s cubic-bezier(0.215, 0.61, 0.355, 1);
+  overflow: hidden;
+  will-change: transform, box-shadow;
+  padding: 0 !important; /* 修复右侧空白问题 */
+}
+
+/* 展开状态加强阴影和上移 */
+details.mes_reasoning_details[open] {
+  box-shadow: 0 6px 20px rgba(0,0,0,0.28);
+  transform: translateY(-1px);
+}
+
+/* 标题栏样式 */
+details.mes_reasoning_details > summary.mes_reasoning_summary {
+  padding: 0 !important; /* 修复右侧空白问题 */
+  background: #363636;
+  color: #e0e0e0;
+  cursor: pointer;
+  list-style: none;
+  position: relative;
+  outline: none;
+  width: 100%;
+  box-sizing: border-box;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  border-left: none !important;
+  transition: background-color 0.2s cubic-bezier(0.25, 0.46, 0.45, 0.94);
+  user-select: none;
+  overflow: hidden; /* 防止缩放时露出背景 */
+}
+
+/* 标题栏交互反馈 */
+details.mes_reasoning_details > summary.mes_reasoning_summary:hover {
+  background: #3a3a3a !important;
+}
+
+details.mes_reasoning_details > summary.mes_reasoning_summary:active {
+  background: #323232 !important;
+  /* 移除缩放效果以避免露出背景 */
+  transform: none;
+}
+
+/* 隐藏默认的details的默认样式 */
+details.mes_reasoning_details {
+  border-left: none !important;
+}
+
+/* 去除默认箭头 */
+details.mes_reasoning_details > summary.mes_reasoning_summary::-webkit-details-marker,
+details.mes_reasoning_details > summary.mes_reasoning_summary::marker {
+  display: none;
+}
+
+/* 展开时标题栏圆角调整 */
+details.mes_reasoning_details[open] > summary.mes_reasoning_summary {
+  border-radius: 12px 12px 0 0;
+}
+
+/* Flex容器通用样式 - 限制在思维链内 */
+details.mes_reasoning_details .flex-container {
+  display: flex;
+  align-items: center;
+  background: transparent !important;
+}
+
+/* 标题文本区块 */
+details.mes_reasoning_details .mes_reasoning_header_block {
+  flex: 1;
+  background: transparent !important;
+  border: none !important;
+  box-shadow: none !important;
+  overflow: hidden;
+  min-width: 0;
+}
+
+/* 标题容器 */
+details.mes_reasoning_details .mes_reasoning_header {
+  background: transparent !important;
+  border: none !important;
+  box-shadow: none !important;
+  padding: 0 !important;
+  margin: 0 !important;
+  position: relative;
+  display: flex;
+  align-items: center;
+  width: 100%;
+}
+
+/* 图标动画 */
+details.mes_reasoning_details[open] .thinking-icon {
+  transform: scale(1.05);
+}
+
+details.mes_reasoning_details .mes_reasoning_header_title {
+  font-weight: 500;
+  background: transparent !important;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  padding-right: 10px;
+  line-height: 1.5;
+  display: inline-flex;
+  align-items: center;
+  color: #e0e0e0;
+  padding: 13px !important; /* 确保点击区域足够 */
+  width: 100%; /* 确保覆盖整个区域 */
+}
+
+/* 添加"💡思维链 - "前缀到标题文本 */
+details.mes_reasoning_details .mes_reasoning_header_title::before {
+  content: "💡思维链 - ";
+  white-space: nowrap;
+}
+
+/* 下拉箭头样式 - 对齐调整 */
+details.mes_reasoning_details .mes_reasoning_arrow {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  background: transparent !important;
+  margin-left: 5px;
+  line-height: 1;
+  padding-top: 2px; /* 微调垂直对齐 */
+  color: #999999; /* 暗色次要文本 */
+}
+
+/* 操作按钮区 - 移动到右侧并对齐 */
+details.mes_reasoning_details .mes_reasoning_actions {
+  display: inline-flex;
+  align-items: center;
+  opacity: 0.7;
+  transition: opacity 0.2s ease;
+  background: transparent !important;
+  margin-left: auto;
+  flex-shrink: 0;
+  margin-top: 0 !important;
+  padding-right: 13px; /* 确保右侧按钮区域有足够间距 */
+}
+
+details.mes_reasoning_details .mes_reasoning_actions:hover {
+  opacity: 1;
+}
+
+/* 按钮样式 - 限制在思维链内并确保垂直对齐 */
+details.mes_reasoning_details .mes_button,
+details.mes_reasoning_details .menu_button {
+  color: #e0e0e0;
+  margin-left: 10px;
+  cursor: pointer;
+  transition: all 0.2s ease;
+  background: transparent !important;
+  flex-shrink: 0;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  line-height: 1;
+}
+
+details.mes_reasoning_details .mes_button:hover,
+details.mes_reasoning_details .menu_button:hover {
+  color: #ffffff;
+  transform: scale(1.1);
+}
+
+/* 内容区域样式 - 增强展开动画 */
+details.mes_reasoning_details .mes_reasoning {
+  max-height: 300px;
+  overflow-y: auto;
+  padding: 16px;
+  color: #b0b0b0;
+  line-height: 1.6;
+  border-left: none !important;
+  background: #2d2d2d;
+  width: 100%;
+  box-sizing: border-box;
+  
+  /* 关键动画属性 */
+  transform-origin: top;
+  will-change: opacity, transform, max-height;
+}
+
+/* 展开动画 */
+details.mes_reasoning_details[open] .mes_reasoning {
+  animation: mes_reasoning_smooth_expand 0.38s cubic-bezier(0.33, 1, 0.68, 1) forwards;
+}
+
+@keyframes mes_reasoning_smooth_expand {
+  0% {
+    opacity: 0;
+    transform: translateY(-8px) scale(0.98);
+  }
+  40% {
+    opacity: 0.8;
+  }
+  100% {
+    opacity: 1;
+    transform: translateY(0) scale(1);
+  }
+}
+
+/* 列表样式优化 */
+details.mes_reasoning_details .mes_reasoning ol {
+  padding-left: 20px;
+  margin: 0;
+}
+
+details.mes_reasoning_details .mes_reasoning li {
+  margin-bottom: 10px;
+}
+
+details.mes_reasoning_details .mes_reasoning li:last-child {
+  margin-bottom: 0;
+}
+
+details.mes_reasoning_details .mes_reasoning ul {
+  padding-left: 20px;
+  margin: 5px 0;
+}
+
+details.mes_reasoning_details .mes_reasoning p {
+  margin: 5px 0;
+}
+
+/* 滚动条美化 */
+details.mes_reasoning_details .mes_reasoning::-webkit-scrollbar {
+  width: 8px;
+  background-color: transparent;
+}
+
+details.mes_reasoning_details .mes_reasoning::-webkit-scrollbar-thumb {
+  background-color: rgba(80, 80, 80, 0.6);
+  border-radius: 4px;
+  border: 2px solid #2d2d2d;
+  transition: background-color 0.2s ease;
+}
+
+details.mes_reasoning_details .mes_reasoning::-webkit-scrollbar-thumb:hover {
+  background-color: rgba(100, 100, 100, 0.8);
+}
+
+details.mes_reasoning_details .mes_reasoning::-webkit-scrollbar-track {
+  background-color: transparent;
+  margin: 4px 0;
+}
+
+/* 滚动条样式 */
+details.mes_reasoning_details .mes_reasoning {
+  scrollbar-width: thin;
+  scrollbar-color: rgba(80, 80, 80, 0.6) transparent;
+}
+
+/* 思考中状态的流光效果 */
+details.mes_reasoning_details[data-state="thinking"] .mes_reasoning_summary::after {
+  content: "";
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 200%;
+  height: 100%;
+  background: linear-gradient(
+    90deg,
+    transparent 0%,
+    rgba(255, 255, 255, 0.05) 15%,
+    rgba(255, 255, 255, 0.1) 25%,
+    rgba(255, 255, 255, 0.2) 35%,
+    rgba(255, 255, 255, 0.25) 45%,
+    rgba(255, 255, 255, 0.2) 55%,
+    rgba(255, 255, 255, 0.1) 65%,
+    rgba(255, 255, 255, 0.05) 75%,
+    transparent 85%
+  );
+  animation: mes_reasoning_shimmer 3s cubic-bezier(0.4, 0.0, 0.2, 1) infinite;
+  transform: translateX(-100%);
+  pointer-events: none;
+}
+
+/* 当思考框展开时，停止动画 */
+details.mes_reasoning_details[open][data-state="thinking"] .mes_reasoning_summary::after {
+  animation: none;
+  opacity: 0;
+}
+
+/* 思考完成时的动画效果 */
+details.mes_reasoning_details[data-state="done"] .mes_reasoning_summary {
+  position: relative;
+  overflow: hidden;
+}
+
+/* 主波动效果 - 改进后的完成动画 */
+details.mes_reasoning_details[data-state="done"] .mes_reasoning_summary::after {
+  content: "";
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 150%;
+  height: 100%;
+  background: linear-gradient(
+    90deg,
+    transparent 0%,
+    rgba(255, 255, 255, 0.02) 20%,
+    rgba(255, 255, 255, 0.08) 30%,
+    rgba(255, 255, 255, 0.15) 40%,
+    rgba(255, 255, 255, 0.2) 50%,
+    rgba(255, 255, 255, 0.15) 60%,
+    rgba(255, 255, 255, 0.08) 70%,
+    rgba(255, 255, 255, 0.02) 80%,
+    transparent 100%
+  );
+  animation: mes_reasoning_material_completion 1.4s cubic-bezier(0.3, 0.0, 0.3, 1) forwards;
+  pointer-events: none;
+  z-index: 5;
+}
+
+/* 改进的Material Design完成动画 - 避免命名冲突 */
+@keyframes mes_reasoning_material_completion {
+  0% {
+    transform: translateX(-100%);
+    opacity: 0;
+  }
+  10% {
+    opacity: 0.4;
+  }
+  30% {
+    opacity: 0.8;
+  }
+  70% {
+    opacity: 0.8;
+  }
+  95% {
+    opacity: 0.4;
+  }
+  100% {
+    transform: translateX(100%);
+    opacity: 0;
+  }
+}
+
+/* 流光动画定义 - 避免命名冲突 */
+@keyframes mes_reasoning_shimmer {
+  0% {
+    transform: translateX(-100%);
+    opacity: 0.8;
+  }
+  50% {
+    opacity: 1;
+  }
+  100% {
+    transform: translateX(50%);
+    opacity: 0.8;
+  }
+}
+
+/* 引用文本样式 */
+details.mes_reasoning_details .mes_reasoning q {
+  font-style: italic;
+  color: #cccccc;
+}
+
+/* 强制移除所有可能的背景面板和边框 - 限制在思维链内 */
+details.mes_reasoning_details .mes_reasoning_summary *,
+details.mes_reasoning_details .mes_reasoning_header_block *,
+details.mes_reasoning_details .mes_reasoning_header * {
+  background: transparent !important;
+  border: none !important;
+  box-shadow: none !important;
+}
+
+/* 解决图标对齐问题 */
+details.mes_reasoning_details .fa-solid {
+  line-height: 1;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+}
+
+/* 修复点击区域和空白问题 */
+details.mes_reasoning_details .mes_reasoning_summary {
+  padding: 0 !important;
+}

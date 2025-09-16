@@ -1,0 +1,17 @@
+{
+    "id": "241f66f4-9917-415b-9f5d-9490ff683911",
+    "scriptName": "[不发送]思维链",
+    "findRegex": "/<(?:think(?:ing)?|metacognition)>\\s*(.*?)\\s*(?:<\\/(?:think(?:ing)?|metacognition)>|<(?:content|context)>)/s",
+    "replaceString": "",
+    "trimStrings": [],
+    "placement": [
+        2
+    ],
+    "disabled": false,
+    "markdownOnly": false,
+    "promptOnly": true,
+    "runOnEdit": false,
+    "substituteRegex": 0,
+    "minDepth": null,
+    "maxDepth": null
+}
