@@ -3,7 +3,7 @@
     "scriptName": "[不发送]思维链",
     "disabled": false,
     "runOnEdit": false,
-    "findRegex": "/\\s*(.*?)\\s*(?:<\\/(?:think(?:ing)?|metacognition)>|<(?:content|context|spacetime_table)>)/s",
+    "findRegex": "/<(think(?:ing)?|metacognition)>\\s*(.*)\\s*<\\/\\1>/s",
     "replaceString": "",
     "trimStrings": [],
     "placement": [
