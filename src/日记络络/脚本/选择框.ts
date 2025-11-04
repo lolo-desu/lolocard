@@ -4,7 +4,7 @@ import default_css from './选择框默认样式.css?raw';
 
 const lorebook_name = '上锁的日记本' as const;
 const roleplay_options_tag = '<roleplay_options>' as const;
-const roleplay_options_regex = /<roleplay_options>\s*(?:```.*\n)?([\s\S]*?)(?:\n```)?\s*<\/roleplay_options>/im;
+const roleplay_options_regex = /<(roleplay_options)>\s*(?:```.*\n)?((?:(?!<\1>)[\s\S])*?)(?:\n```)?\s*<\/\1>/mi;
 
 //----------------------------------------------------------------------------------------------------------------------
 namespace option_section {
@@ -114,7 +114,7 @@ async function renderOneMessage(message_id: number) {
   if (!match) {
     return;
   }
-  const $roleplay_options_element = render_section.extract_options_element(match[1]);
+  const $roleplay_options_element = render_section.extract_options_element(match[2]);
 
   const $mes_text = retrieveDisplayedMessage(message_id);
   const to_render = $mes_text.find(`.roleplay_options, pre:contains("${roleplay_options_tag}")`);
