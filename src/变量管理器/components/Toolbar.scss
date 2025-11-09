@@ -1,0 +1,122 @@
+$border-color: var(--SmartThemeBorderColor);
+$bg-tint: var(--SmartThemeBlurTintColor);
+$text-color: var(--SmartThemeBodyColor);
+$em-color: var(--SmartThemeEmColor);
+$text-muted: var(--SmartThemeQuoteColor);
+$bg-hover: var(--SmartThemeBlurTintColor);
+$border-radius: 5px;
+
+.th-variable-manager {
+  .th-toolbar-root {
+    display: flex;
+    flex-direction: column;
+    gap: 12px;
+    align-items: stretch;
+    background: transparent;
+    border: 1.5px solid $border-color;
+    border-radius: $border-radius;
+    padding: 16px;
+    margin-bottom: 10px;
+  }
+
+  .button-grid {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 10px;
+  }
+
+  .button-grid button {
+    all: unset;
+    box-sizing: border-box;
+    flex: 1 1 calc(50% - 5px);
+    min-width: 120px;
+  }
+
+  .th-toolbar-btn {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    gap: 8px;
+    border-radius: $border-radius;
+    border: 1.5px solid $border-color;
+    padding: 12px 16px;
+    min-height: 48px;
+    background: transparent;
+    color: $text-color;
+    font-size: 14px;
+    font-weight: 500;
+    cursor: pointer;
+    transition: all 0.2s ease;
+    white-space: nowrap;
+
+    &:hover:not(:disabled) {
+      background: $bg-hover;
+      border-color: $em-color;
+    }
+
+    &:active:not(:disabled) {
+      transform: scale(0.98);
+    }
+
+    &:disabled {
+      opacity: 0.4;
+      cursor: not-allowed;
+    }
+
+    i {
+      font-size: 14px;
+    }
+
+    span {
+      font-size: 14px;
+    }
+  }
+
+  .search-field {
+    flex: 1 1 100%;
+    min-width: 100%;
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    padding: 0 16px;
+    min-height: 48px;
+    border-radius: $border-radius;
+    border: 1.5px solid $border-color;
+    background: var(--ui-color-sec) !important;;
+    color: $text-color;
+    transition: all 0.2s ease;
+
+    &:focus-within {
+      border-color: $em-color;
+      background: transparent;
+    }
+
+    i {
+      font-size: 14px;
+      color: $text-muted;
+    }
+
+    input {
+      flex: 1;
+      border: none;
+      background: transparent;
+      color: $text-color;
+      font-size: 15px;
+      padding: 12px 0;
+      overflow: hidden;
+      text-overflow: ellipsis;
+      white-space: nowrap;
+      min-width: 0;
+
+      &:focus {
+        outline: none;
+      }
+
+      &::placeholder {
+        color: $text-muted;
+        opacity: 0.7;
+        font-style: italic;
+      }
+    }
+  }
+}
