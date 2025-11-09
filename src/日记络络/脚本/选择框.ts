@@ -128,7 +128,14 @@ async function renderAllMessage() {
   $('#chat')
     .children(".mes[is_user='false'][is_system='false']")
     .each((_index, node) => {
-      renderOneMessage(Number(node.getAttribute('mesid')));
+      const message_id = $(node).attr('mesid');
+      try {
+        if (message_id) {
+          renderOneMessage(parseInt(message_id));
+        }
+      } catch (error) {
+        /** empty */
+      }
     });
 }
 
