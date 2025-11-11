@@ -978,7 +978,6 @@ async function handleAutoTaskSubmit() {
 
 .status-system {
   width: 100%;
-  max-width: 800px;
   aspect-ratio: 16/9;
   background: var(--bg-panel);
   border: 4px solid var(--border-color);
