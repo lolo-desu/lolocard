@@ -69,7 +69,7 @@ export type TaskDictionary = Record<string, TaskEntry>;
 export interface ShopEntry {
   物品名称: string;
   描述: string;
-  主角评价: string;
+  主角评价?: string;
   '价格(积分)': number;
   [key: string]: any;
 }
@@ -98,7 +98,7 @@ export interface RewardPayload {
 export interface ShopItemPayload {
   物品名称: string;
   描述: string;
-  主角评价: string;
+  主角评价?: string;
   价格: number;
 }
 
