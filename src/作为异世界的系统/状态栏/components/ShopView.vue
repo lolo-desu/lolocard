@@ -328,9 +328,10 @@ function canAfford(item: ShopEntry): boolean {
 
 @media (max-width: 768px) {
   .shop-container {
-    width: 100vw;
-    max-height: 100vh;
-    border-width: 0;
+    width: calc(100vw - 2px);
+    max-height: calc(100vh - 2px);
+    margin: 1px;
+    border-width: 4px;
     box-shadow: none;
   }
 

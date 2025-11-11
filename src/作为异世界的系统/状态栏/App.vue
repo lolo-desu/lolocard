@@ -252,6 +252,7 @@
         </div>
         <div class="bottom-right">
           <button class="action-button" type="button" @click="openAction('task')">发布任务</button>
+          <button class="action-button" type="button" @click="showTaskListView = true">查看任务</button>
           <button class="action-button" type="button" @click="openAction('reward')">发布奖励</button>
           <button class="action-button" type="button" @click="openAction('shop')">创建商城</button>
           <button class="action-button" type="button" @click="showShopView = true">查看商城</button>
@@ -264,10 +265,12 @@
     <ActionModal
       :visible="activeAction === 'task'"
       title="发布任务"
-      description="向主角发布新的任务目标，支持多种任务类型。"
       @close="closeAction"
     >
       <form class="form-grid" @submit.prevent="handleTaskSubmit">
+        <div class="form-actions" style="margin-bottom: 12px; padding-bottom: 0; border: none;">
+          <button type="button" class="primary" style="width: 100%;" @click="openAutoTaskModal">自动发布任务</button>
+        </div>
         <label>
           <span>任务名</span>
           <input v-model="taskForm.任务名" required placeholder="例如：夺回王城" />
@@ -372,6 +375,54 @@
       :available-points="systemState.可用积分"
       @close="showShopView = false"
     />
+
+    <TaskListView
+      v-if="showTaskListView"
+      :tasks="statData.任务列表 ?? {}"
+      @close="showTaskListView = false"
+    />
+
+    <ActionModal
+      :visible="showAutoTaskModal"
+      title="自动发布任务"
+      @close="closeAutoTaskModal"
+    >
+      <form class="form-grid" @submit.prevent="handleAutoTaskSubmit">
+        <label>
+          <span>任务类型</span>
+          <select v-model="autoTaskForm.任务类型">
+            <option v-for="type in taskTypes" :key="type" :value="type">
+              {{ type }}
+            </option>
+          </select>
+        </label>
+        <label>
+          <span>难度</span>
+          <select v-model="autoTaskForm.难度">
+            <option value="简单">简单</option>
+            <option value="普通">普通</option>
+            <option value="困难">困难</option>
+          </select>
+        </label>
+        <label>
+          <span>奖励丰厚程度</span>
+          <select v-model="autoTaskForm.奖励丰厚程度">
+            <option value="微薄">微薄</option>
+            <option value="一般">一般</option>
+            <option value="丰厚">丰厚</option>
+          </select>
+        </label>
+        <label class="form-grid__checkbox">
+          <input v-model="autoTaskForm.是否色情" type="checkbox" />
+          <span>包含色情内容</span>
+        </label>
+
+        <div class="form-actions">
+          <button type="button" class="ghost" @click="closeAutoTaskModal">取消</button>
+          <button type="submit" class="primary">生成</button>
+        </div>
+      </form>
+    </ActionModal>
   </div>
 </template>
 
@@ -379,6 +430,7 @@
 import { computed, onBeforeUnmount, onMounted, reactive, ref, watch } from 'vue';
 import ActionModal from './components/ActionModal.vue';
 import ShopView from './components/ShopView.vue';
+import TaskListView from './components/TaskListView.vue';
 import { useIsekaiData } from './composables/useIsekaiData';
 import { TASK_TYPES, type TaskType } from './types';
 
@@ -416,7 +468,15 @@ const shopForm = reactive({
   价格: 0,
 });
 const showShopView = ref(false);
+const showTaskListView = ref(false);
+const showAutoTaskModal = ref(false);
 const showStatusPopover = ref(false);
+const autoTaskForm = reactive({
+  任务类型: '主线' as TaskType,
+  难度: '普通',
+  奖励丰厚程度: '一般',
+  是否色情: false,
+});
 const statusPopoverTab = ref<StatusTab>('buff');
 const activeEquipmentBubble = ref<string | null>(null);
 const activeInventoryBubble = ref<string | null>(null);
@@ -857,6 +917,27 @@ async function handleShopSubmit() {
   await createShopItem({ ...shopForm, 价格: Number(shopForm.价格 ?? 0) });
   toastr?.success?.('商品已上架', '状态栏');
   Object.assign(shopForm, { 物品名称: '', 描述: '', 价格: 0 });
+  closeAction();
+}
+
+function openAutoTaskModal() {
+  showAutoTaskModal.value = true;
+}
+
+function closeAutoTaskModal() {
+  showAutoTaskModal.value = false;
+}
+
+async function handleAutoTaskSubmit() {
+  const 难度映射: Record<string, string> = { '简单': '简单', '普通': '普通', '困难': '困难' };
+  const 奖励映射: Record<string, string> = { '微薄': '微薄', '一般': '一般', '丰厚': '丰厚' };
+  const 色情限制 = autoTaskForm.是否色情 ? '必须' : '禁止';
+
+  const message = `【{{user}}发布了一个${难度映射[autoTaskForm.难度]}的${autoTaskForm.任务类型}任务，奖励${奖励映射[autoTaskForm.奖励丰厚程度]}，本次任务${色情限制}包含色情内容】<!--必须立即根据剧情生成合适的任务-->`;
+
+  await createChatMessages([{ role: 'user', message }]);
+  toastr?.success?.('自动任务指令已发送', '状态栏');
+  closeAutoTaskModal();
   closeAction();
 }
 </script>
@@ -1886,7 +1967,7 @@ async function handleShopSubmit() {
 
   .bottom-right {
     display: grid;
-    grid-template-columns: 1fr 1fr;
+    grid-template-columns: 1fr 1fr 1fr 1fr;
     gap: 8px;
     width: 100%;
   }
@@ -1896,6 +1977,20 @@ async function handleShopSubmit() {
     font-size: 9px;
     width: 100%;
     text-align: center;
+
+    &:nth-child(1),
+    &:nth-child(2) {
+      grid-column: span 1;
+    }
+
+    &:nth-child(3) {
+      grid-column: span 2;
+    }
+
+    &:nth-child(4),
+    &:nth-child(5) {
+      grid-column: span 2;
+    }
   }
 
   .system-tip {

@@ -351,7 +351,7 @@
       const submitBtn = form.querySelector('.submit-btn');
 
       const FIELD_META = {
-        systemImage: { required: false, fallback: '神秘引导者' },
+        systemImage: { required: false, fallback: '暂无' },
         heroName: { required: true },
         heroGender: { required: true },
         heroAge: { required: true },
@@ -362,19 +362,19 @@
         const talkative = data.systemTalkative ? '会' : '不会';
         const personality = data.systemPersonality ? '具有' : '不具有';
         const controlRule = data.allowAiControl
-          ? '为了剧情推进发展你可以适当代替{{user}}行动'
-          : '{{user}}的全部行为必须由输入方进行，禁止在故事中擅自代替{{user}}行动';
+          ? '为了剧情推进发展你可以适当代替{{user}}（系统）行动'
+          : '{{user}}（系统）的全部行为必须由输入方进行，绝对禁止在故事中擅自代替{{user}}（系统）行动';
 
         return `<!--
 从现在起请开始变量初始化，必须强制更新全部必要变量（但允许不更新诸如商城、buff等变量或剧情上不需要的变量）
-=== 角色档案 ===
-{{user}}形象: ${data.systemImage}
+{{user}}（系统）形象: ${data.systemImage}
+=== 主角档案 ===
 姓名: ${data.heroName}
 性别: ${data.heroGender}
 年龄: ${data.heroAge}
 人物设定/背景: ${data.heroPersona}
 
-{{user}}作为系统的设置：{{user}}${talkative}经常沟通，${personality}人格化与情绪表现。
+{{user}}作为系统的设置：{{user}}${talkative}与主角沟通，另外，${personality}（系统）人格化与情绪表现。
 ${controlRule}
 -->
 根据背景生成开场故事。`;

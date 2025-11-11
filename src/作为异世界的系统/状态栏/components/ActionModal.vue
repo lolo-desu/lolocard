@@ -174,19 +174,106 @@ const emit = defineEmits<{
     }
 
     :deep(.form-grid__checkbox) {
-      flex-direction: row;
-      align-items: center;
+      display: inline-flex !important;
+      flex-direction: row !important;
+      align-items: stretch !important;
+      gap: 0 !important;
+      padding: 0 !important;
+      margin: 0 auto !important;
+      border: 1px solid #000 !important;
+      background: #fff !important;
+      transition: all 0.1s;
+      cursor: pointer;
+      position: relative;
+      overflow: hidden;
+      height: 26px !important;
+      width: auto !important;
+      max-width: fit-content !important;
 
-      input[type='checkbox'] {
-        width: auto;
-        flex: none;
-        margin-right: 3px;
+      &:hover {
+        background: #f9f9f9 !important;
       }
 
-      span {
-        min-width: auto;
-        padding-top: 0;
-        font-weight: normal;
+      &:active {
+        background: #f0f0f0 !important;
+      }
+
+      > span:first-child {
+        display: none !important;
+      }
+
+      input[type='checkbox'] {
+        appearance: none !important;
+        -webkit-appearance: none !important;
+        -moz-appearance: none !important;
+        width: 26px !important;
+        height: 26px !important;
+        min-height: unset !important;
+        border: none !important;
+        border-right: 1px solid #000 !important;
+        background: #e8e8e8 !important;
+        cursor: pointer !important;
+        position: relative;
+        flex: none !important;
+        margin: 0 !important;
+        padding: 0 !important;
+        transition: all 0.1s;
+
+        &::before {
+          content: '';
+          position: absolute;
+          left: 50%;
+          top: 50%;
+          transform: translate(-50%, -50%);
+          width: 12px;
+          height: 12px;
+          border: 1px solid #666;
+          background: #fff;
+        }
+
+        &:checked {
+          background: #000 !important;
+
+          &::before {
+            background: #000;
+            border-color: #fff;
+          }
+
+          &::after {
+            content: '';
+            position: absolute;
+            left: 50%;
+            top: 50%;
+            transform: translate(-50%, -50%) translate(-1px, -1px) rotate(45deg);
+            width: 5px;
+            height: 8px;
+            border: solid #fff;
+            border-width: 0 2px 2px 0;
+            z-index: 1;
+          }
+        }
+
+        &:focus {
+          outline: none;
+        }
+      }
+
+      > span:last-child {
+        flex: 1 !important;
+        padding: 5px 8px !important;
+        min-width: auto !important;
+        font-weight: normal !important;
+        cursor: pointer !important;
+        user-select: none !important;
+        display: flex !important;
+        align-items: center !important;
+        font-size: 10px !important;
+        color: #000 !important;
+        line-height: 1.4 !important;
+      }
+
+      &:focus-within {
+        box-shadow: 0 0 0 2px rgba(0, 0, 0, 0.15);
       }
     }
 
@@ -279,6 +366,14 @@ const emit = defineEmits<{
   to {
     opacity: 1;
     transform: translateY(0);
+  }
+}
+
+@media (max-width: 768px) {
+  .pixel-modal__panel {
+    width: calc(100vw - 2px);
+    max-height: calc(100vh - 2px);
+    margin: 1px;
   }
 }
 </style>

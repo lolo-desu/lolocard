@@ -1,0 +1,398 @@
+<template>
+  <div class="task-overlay">
+    <div class="task-container">
+      <header class="task-header">
+        <h2 class="task-title">任务列表</h2>
+        <button class="task-close" @click="emit('close')">×</button>
+      </header>
+
+      <div class="task-info">
+        <div class="task-hint">主角当前接受的所有任务</div>
+      </div>
+
+      <div class="task-content">
+        <div v-if="taskItems.length === 0" class="task-empty">
+          <div class="empty-icon">📝</div>
+          <p>暂无任务</p>
+          <p class="empty-hint">系统管理员可通过"发布任务"按钮发布新任务</p>
+        </div>
+
+        <div v-else class="task-list">
+          <div
+            v-for="task in taskItems"
+            :key="task.key"
+            class="task-item"
+            :class="`task-type-${task.任务类型}`"
+          >
+            <div class="task-item-header">
+              <div class="task-name">{{ task.任务名 }}</div>
+              <div class="task-type-badge">{{ task.任务类型 }}</div>
+            </div>
+
+            <div v-if="task.任务说明" class="task-section">
+              <div class="task-section-title">任务说明</div>
+              <div class="task-section-content">{{ task.任务说明 }}</div>
+            </div>
+
+            <div v-if="task.任务目标" class="task-section">
+              <div class="task-section-title">任务目标</div>
+              <div class="task-section-content">{{ task.任务目标 }}</div>
+            </div>
+
+            <div class="task-footer">
+              <div v-if="task.奖励" class="task-reward">
+                <span class="reward-label">奖励:</span>
+                <span class="reward-text">{{ task.奖励 }}</span>
+              </div>
+              <div v-if="task.惩罚" class="task-penalty">
+                <span class="penalty-label">惩罚:</span>
+                <span class="penalty-text">{{ task.惩罚 }}</span>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</template>
+
+<script setup lang="ts">
+import { computed } from 'vue';
+import type { TaskEntry } from '../types';
+
+interface Props {
+  tasks: Record<string, TaskEntry>;
+}
+
+const props = defineProps<Props>();
+const emit = defineEmits<{
+  (e: 'close'): void;
+}>();
+
+const taskItems = computed(() => {
+  return Object.entries(props.tasks)
+    .filter(([key]) => key !== '$meta')
+    .map(([key, entry]) => ({
+      key,
+      ...entry,
+    }));
+});
+</script>
+
+<style scoped lang="scss">
+.task-overlay {
+  position: fixed;
+  inset: 0;
+  z-index: 10000;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  background: rgba(0, 0, 0, 0.85);
+  animation: fadeIn 0.3s ease-out;
+}
+
+.task-container {
+  width: min(640px, 92vw);
+  max-height: 85vh;
+  background: #f5f5f5;
+  border: 4px solid #000;
+  display: flex;
+  flex-direction: column;
+  font-family: 'Fusion Pixel 12px M latin', 'Courier New', monospace;
+  box-shadow: 12px 12px 0 rgba(0, 0, 0, 0.5);
+  animation: slideUp 0.3s ease-out;
+}
+
+.task-header {
+  background: #333;
+  color: #fff;
+  padding: 5px 12px;
+  border-bottom: 3px solid #000;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
+
+.task-title {
+  margin: 0;
+  font-size: 14px;
+  text-transform: uppercase;
+  letter-spacing: 1px;
+  text-shadow: 2px 2px 0px #000;
+}
+
+.task-close {
+  background: #fff;
+  border: 2px solid #000;
+  color: #000;
+  width: 22px;
+  height: 22px;
+  cursor: pointer;
+  font-size: 18px;
+  line-height: 1;
+  font-family: 'Courier New', monospace;
+  transition: all 0.1s;
+
+  &:hover {
+    background: #ddd;
+  }
+
+  &:active {
+    box-shadow: inset 2px 2px 0 rgba(0, 0, 0, 0.3);
+  }
+}
+
+.task-info {
+  background: #ffffcc;
+  border-bottom: 2px solid #000;
+  padding: 6px 12px;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  gap: 12px;
+}
+
+.task-hint {
+  font-size: 9px;
+  color: #666;
+}
+
+.task-content {
+  flex: 1;
+  overflow-y: auto;
+  padding: 10px;
+  min-height: 220px;
+
+  &::-webkit-scrollbar {
+    width: 6px;
+  }
+
+  &::-webkit-scrollbar-track {
+    background: rgba(0, 0, 0, 0.08);
+  }
+
+  &::-webkit-scrollbar-thumb {
+    background: #7a7a7a;
+    border: 1px solid #f5f5f5;
+  }
+}
+
+.task-empty {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  height: 100%;
+  color: #666;
+  text-align: center;
+
+  .empty-icon {
+    font-size: 44px;
+    margin-bottom: 10px;
+    opacity: 0.3;
+  }
+
+  p {
+    margin: 6px 0;
+    font-size: 14px;
+  }
+
+  .empty-hint {
+    font-size: 10px;
+    color: #999;
+  }
+}
+
+.task-list {
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+}
+
+.task-item {
+  background: #fff;
+  border: 2px solid #000;
+  padding: 10px;
+  position: relative;
+
+  &.task-type-主线 {
+    border-left: 4px solid #d32f2f;
+  }
+
+  &.task-type-支线 {
+    border-left: 4px solid #1976d2;
+  }
+
+  &.task-type-每日 {
+    border-left: 4px solid #388e3c;
+  }
+
+  &.task-type-临危受命 {
+    border-left: 4px solid #f57c00;
+  }
+}
+
+.task-item-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: flex-start;
+  margin-bottom: 10px;
+  gap: 8px;
+}
+
+.task-name {
+  font-size: 14px;
+  font-weight: bold;
+  color: #000;
+  flex: 1;
+  text-transform: uppercase;
+  letter-spacing: 0.5px;
+}
+
+.task-type-badge {
+  background: #000;
+  color: #fff;
+  padding: 2px 6px;
+  font-size: 9px;
+  border: 1px solid #000;
+  text-transform: uppercase;
+}
+
+.task-section {
+  margin-bottom: 8px;
+}
+
+.task-section-title {
+  font-size: 10px;
+  font-weight: bold;
+  color: #666;
+  margin-bottom: 4px;
+  text-transform: uppercase;
+}
+
+.task-section-content {
+  font-size: 11px;
+  color: #333;
+  line-height: 1.4;
+  padding: 6px 8px;
+  background: #f9f9f9;
+  border: 1px solid #ddd;
+  white-space: pre-wrap;
+}
+
+.task-footer {
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+  margin-top: 8px;
+  padding-top: 8px;
+  border-top: 1px dashed #ccc;
+}
+
+.task-reward,
+.task-penalty {
+  font-size: 10px;
+  display: flex;
+  gap: 6px;
+}
+
+.task-reward {
+  .reward-label {
+    color: #2e7d32;
+    font-weight: bold;
+  }
+
+  .reward-text {
+    color: #333;
+  }
+}
+
+.task-penalty {
+  .penalty-label {
+    color: #d32f2f;
+    font-weight: bold;
+  }
+
+  .penalty-text {
+    color: #333;
+  }
+}
+
+@keyframes fadeIn {
+  from {
+    opacity: 0;
+  }
+  to {
+    opacity: 1;
+  }
+}
+
+@keyframes slideUp {
+  from {
+    opacity: 0;
+    transform: translateY(30px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+@media (max-width: 768px) {
+  .task-container {
+    width: calc(100vw - 2px);
+    max-height: calc(100vh - 2px);
+    margin: 1px;
+    border-width: 4px;
+    box-shadow: none;
+  }
+
+  .task-header {
+    padding: 8px 12px;
+  }
+
+  .task-title {
+    font-size: 14px;
+    letter-spacing: 1px;
+  }
+
+  .task-close {
+    width: 28px;
+    height: 28px;
+    font-size: 22px;
+  }
+
+  .task-info {
+    padding: 10px 12px;
+  }
+
+  .task-hint {
+    font-size: 10px;
+  }
+
+  .task-content {
+    padding: 12px;
+    min-height: 300px;
+  }
+
+  .task-list {
+    gap: 16px;
+  }
+
+  .task-item {
+    padding: 12px;
+  }
+
+  .task-name {
+    font-size: 15px;
+  }
+
+  .task-type-badge {
+    font-size: 10px;
+  }
+
+  .task-section-content {
+    font-size: 12px;
+  }
+}
+</style>
