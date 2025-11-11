@@ -5,7 +5,7 @@
   <meta name="viewport" content="width=device-width, initial-scale=1" />
   <title>角色创生 - 像素世界</title>
   <style>
-    @import url('https://fonts.googleapis.com/css2?family=VT323&display=swap');
+    @import url("https://fontsapi.zeoseven.com/570/main/result.css");
     
     :root {
       --bg-dark: #0a0a0a;
@@ -15,7 +15,7 @@
       --border-color: #000000;
       --bg-panel: #f5f5f5;
       --bg-input: #ffffff;
-      --pixel-font: 'VT323', 'Courier New', monospace;
+      --pixel-font: "Fusion Pixel 12px M latin", 'Courier New', monospace;
     }
 
     * {
@@ -30,15 +30,15 @@
     }
 
     body {
-      background: var(--bg-dark);
       color: var(--text-primary);
-      min-height: 100vh;
       display: flex;
       align-items: center;
       justify-content: center;
-      padding: 20px;
+      padding: 10px;
       position: relative;
       overflow: hidden;
+      font-family: "Fusion Pixel 12px M latin";
+      font-weight: normal;
     }
 
     /* 像素化背景 */
@@ -73,7 +73,7 @@
     }
 
     .title {
-      font-size: 28px;
+      font-size: 18px;
       text-transform: uppercase;
       letter-spacing: 2px;
       text-shadow: 2px 2px 0px #000;
@@ -99,7 +99,7 @@
       text-align: right;
       width: 80px;
       margin-right: 15px;
-      font-size: 18px;
+      font-size: 12px;
       color: #000;
     }
 
@@ -109,7 +109,7 @@
       border: 2px solid #000;
       background: var(--bg-input);
       color: #000;
-      font-size: 18px;
+      font-size: 12px;
       font-family: var(--pixel-font);
       resize: none;
     }
@@ -148,7 +148,7 @@
       border: 3px 3px 5px 3px solid #000;
       color: #000;
       padding: 8px 20px;
-      font-size: 18px;
+      font-size: 12px;
       cursor: pointer;
       font-family: var(--pixel-font);
       transition: all 0.1s;
@@ -169,7 +169,7 @@
     }
 
     .status {
-      font-size: 16px;
+      font-size: 11px;
       text-align: right;
     }
 
@@ -189,7 +189,7 @@
     }
 
     .preview h3 {
-      font-size: 18px;
+      font-size: 12px;
       color: #000;
       margin-bottom: 10px;
       text-transform: uppercase;
@@ -197,7 +197,7 @@
 
     .preview pre {
       font-family: var(--pixel-font);
-      font-size: 16px;
+      font-size: 11px;
       color: #000;
       line-height: 1.4;
       margin: 0;
@@ -210,7 +210,7 @@
       border: 2px solid #ff9900;
       padding: 10px;
       margin: 10px 0;
-      font-size: 16px;
+      font-size: 11px;
       color: #000;
     }
 
@@ -243,7 +243,7 @@
       }
       
       .title {
-        font-size: 24px;
+        font-size: 18px;
       }
     }
   </style>
@@ -262,7 +262,7 @@
       <form id="init-form" class="form-container">
         <div class="form-field">
           <label for="systemImage">
-            <small>{{user}}|系统</small><span class="optional"><br>(可选)</span>
+            <small>爱丽丝|系统</small><span class="optional"><br>(可选)</span>
           </label>
           <input
             id="systemImage"
@@ -318,6 +318,24 @@
           ></textarea>
         </div>
 
+        <div class="form-field">
+          <label>系统设置</label>
+          <div style="flex: 1; display: flex; flex-direction: column; gap: 8px;">
+            <label style="display: flex; align-items: center; cursor: pointer; width: auto; text-align: left;">
+              <input type="checkbox" id="systemTalkative" style="flex: none; width: auto; margin-right: 8px;" checked />
+              <span>系统会主动与角色交流互动</span>
+            </label>
+            <label style="display: flex; align-items: center; cursor: pointer; width: auto; text-align: left;">
+              <input type="checkbox" id="systemPersonality" style="flex: none; width: auto; margin-right: 8px;" checked />
+              <span>系统具有独立人格与情感</span>
+            </label>
+            <label style="display: flex; align-items: center; cursor: pointer; width: auto; text-align: left;">
+              <input type="checkbox" id="allowAiControl" style="flex: none; width: auto; margin-right: 8px;" />
+              <span>允许AI代替{{user}}行动</span>
+            </label>
+          </div>
+        </div>
+
         <div class="actions">
           <button class="submit-btn" type="submit">开始游戏</button>
           <div class="status" id="status"></div>
@@ -329,7 +347,6 @@
   <script>
     (function() {
       const form = document.getElementById('init-form');
-      const preview = document.getElementById('message-preview');
       const status = document.getElementById('status');
       const submitBtn = form.querySelector('.submit-btn');
 
@@ -342,14 +359,25 @@
       };
 
       const template = (data) => {
-        return `=== 角色档案 ===
-引导者: ${data.systemImage}
+        const talkative = data.systemTalkative ? '会' : '不会';
+        const personality = data.systemPersonality ? '具有' : '不具有';
+        const controlRule = data.allowAiControl
+          ? '为了剧情推进发展你可以适当代替{{user}}行动'
+          : '{{user}}的全部行为必须由输入方进行，禁止在故事中擅自代替{{user}}行动';
+
+        return `<!--
+从现在起请开始变量初始化，必须强制更新全部必要变量（但允许不更新诸如商城、buff等变量或剧情上不需要的变量）
+=== 角色档案 ===
+{{user}}形象: ${data.systemImage}
 姓名: ${data.heroName}
 性别: ${data.heroGender}
 年龄: ${data.heroAge}
-背景: ${data.heroPersona}
+人物设定/背景: ${data.heroPersona}
 
-准备开始新的冒险...`;
+{{user}}作为系统的设置：{{user}}${talkative}经常沟通，${personality}人格化与情绪表现。
+${controlRule}
+-->
+根据背景生成开场故事。`;
       };
 
       function readValues() {
@@ -358,6 +386,10 @@
           const element = document.getElementById(key);
           values[key] = element ? element.value.trim() : '';
         }
+        // 读取复选框状态
+        values.systemTalkative = document.getElementById('systemTalkative')?.checked || false;
+        values.systemPersonality = document.getElementById('systemPersonality')?.checked || false;
+        values.allowAiControl = document.getElementById('allowAiControl')?.checked || false;
         return values;
       }
 
@@ -368,12 +400,10 @@
           heroGender: values.heroGender,
           heroAge: values.heroAge,
           heroPersona: values.heroPersona,
+          systemTalkative: values.systemTalkative,
+          systemPersonality: values.systemPersonality,
+          allowAiControl: values.allowAiControl,
         });
-      }
-
-      function updatePreview() {
-        const values = readValues();
-        preview.textContent = formatMessage(values);
       }
 
       function setStatus(message, type) {
@@ -398,9 +428,6 @@
       }
 
       // 事件监听
-      form.addEventListener('input', updatePreview);
-      updatePreview();
-
       form.addEventListener('submit', async (e) => {
         e.preventDefault();
         const values = readValues();
