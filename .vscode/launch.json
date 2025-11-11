@@ -7,16 +7,19 @@
       "request": "launch",
       "preLaunchTask": "开始任务",
       "postDebugTask": "结束任务",
-      "url": "http://localhost:8000",
+      "url": "http://localhost:6622",
       "disableNetworkCache": true,
       "internalConsoleOptions": "neverOpen",
       "cwd": "${workspaceFolder}",
       "timeout": 100000,
       "sourceMapPathOverrides": {
         "src://tavern_helper_template/*": "${workspaceFolder}/*",
-        "webpack://tavern_helper_template/*": "${workspaceFolder}/*"
+        "webpack://tavern_helper_template/*": "${workspaceFolder}/*",
       },
-      "skipFiles": ["**/jquery*.min.js", "**/node_modules/**"]
+      "skipFiles": [
+        "**/jquery*.min.js",
+        "**/node_modules/**"
+      ],
     },
     {
       "name": "编译代码并调试酒馆网页 (Edge)",
@@ -31,9 +34,12 @@
       "timeout": 100000,
       "sourceMapPathOverrides": {
         "src://tavern_helper_template/*": "${workspaceFolder}/*",
-        "webpack://tavern_helper_template/*": "${workspaceFolder}/*"
+        "webpack://tavern_helper_template/*": "${workspaceFolder}/*",
       },
-      "skipFiles": ["**/jquery*.min.js", "**/node_modules/**"]
+      "skipFiles": [
+        "**/jquery*.min.js",
+        "**/node_modules/**"
+      ],
     },
     {
       "name": "仅调试酒馆网页 (Chrome)",
@@ -46,9 +52,12 @@
       "timeout": 100000,
       "sourceMapPathOverrides": {
         "src://tavern_helper_template/*": "${workspaceFolder}/*",
-        "webpack://tavern_helper_template/*": "${workspaceFolder}/*"
+        "webpack://tavern_helper_template/*": "${workspaceFolder}/*",
       },
-      "skipFiles": ["**/jquery*.min.js", "**/node_modules/**"]
+      "skipFiles": [
+        "**/jquery*.min.js",
+        "**/node_modules/**"
+      ],
     },
     {
       "name": "仅调试酒馆网页 (Edge)",
@@ -61,9 +70,12 @@
       "timeout": 100000,
       "sourceMapPathOverrides": {
         "src://tavern_helper_template/*": "${workspaceFolder}/*",
-        "webpack://tavern_helper_template/*": "${workspaceFolder}/*"
+        "webpack://tavern_helper_template/*": "${workspaceFolder}/*",
       },
-      "skipFiles": ["**/jquery*.min.js", "**/node_modules/**"]
+      "skipFiles": [
+        "**/jquery*.min.js",
+        "**/node_modules/**"
+      ],
     }
   ]
 }

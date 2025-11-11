@@ -144,11 +144,9 @@ export function useIsekaiData() {
       const entry: ShopEntry = {
         物品名称: payload.物品名称,
         描述: payload.描述,
+        主角评价: payload.主角评价,
         '价格(积分)': payload.价格,
       };
-      if (payload.主角评价) {
-        entry.主角评价 = payload.主角评价;
-      }
       draft.商城[payload.物品名称] = entry;
     });
   };

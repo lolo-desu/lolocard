@@ -26,7 +26,8 @@
             v-for="item in shopItems"
             :key="item.key"
             class="shop-item"
-            :class="{ affordable: canAfford(item) }"
+            :class="{ selected: selectedItem === item.key, affordable: canAfford(item) }"
+            @click="toggleItem(item.key)"
           >
             <div class="item-header">
               <div class="item-name">{{ item.物品名称 }}</div>
@@ -42,16 +43,28 @@
               <span class="eval-label">主角评价:</span>
               <span class="eval-text">{{ item.主角评价 }}</span>
             </div>
+
+            <div v-if="selectedItem === item.key" class="item-detail-notice">
+              <div v-if="!canAfford(item)" class="status-notice insufficient">
+                ⚠️ 主角当前积分不足
+              </div>
+              <div v-else class="status-notice available">
+                ✓ 主角积分充足，可购买此商品
+              </div>
+            </div>
           </div>
         </div>
       </div>
 
+      <footer class="shop-footer">
+        <button class="footer-button" @click="emit('close')">返回</button>
+      </footer>
     </div>
   </div>
 </template>
 
 <script setup lang="ts">
-import { computed } from 'vue';
+import { computed, ref } from 'vue';
 import type { ShopEntry } from '../types';
 
 interface Props {
@@ -63,6 +76,8 @@ const props = defineProps<Props>();
 const emit = defineEmits<{
   (e: 'close'): void;
 }>();
+
+const selectedItem = ref<string | null>(null);
 
 const shopItems = computed(() => {
   return Object.entries(props.shop).map(([key, entry]) => ({
@@ -82,6 +97,13 @@ function canAfford(item: ShopEntry): boolean {
   return normalizedPoints.value >= item['价格(积分)'];
 }
 
+function toggleItem(key: string) {
+  if (selectedItem.value === key) {
+    selectedItem.value = null;
+  } else {
+    selectedItem.value = key;
+  }
+}
 </script>
 
 <style scoped lang="scss">
@@ -97,8 +119,8 @@ function canAfford(item: ShopEntry): boolean {
 }
 
 .shop-container {
-  width: min(640px, 92vw);
-  max-height: 85vh;
+  width: min(900px, 95vw);
+  max-height: 90vh;
   background: #f5f5f5;
   border: 4px solid #000;
   display: flex;
@@ -111,7 +133,7 @@ function canAfford(item: ShopEntry): boolean {
 .shop-header {
   background: #333;
   color: #fff;
-  padding: 5px 12px;
+  padding: 6px 15px;
   border-bottom: 3px solid #000;
   display: flex;
   justify-content: space-between;
@@ -120,9 +142,9 @@ function canAfford(item: ShopEntry): boolean {
 
 .shop-title {
   margin: 0;
-  font-size: 14px;
+  font-size: 16px;
   text-transform: uppercase;
-  letter-spacing: 1px;
+  letter-spacing: 1.5px;
   text-shadow: 2px 2px 0px #000;
 }
 
@@ -130,10 +152,10 @@ function canAfford(item: ShopEntry): boolean {
   background: #fff;
   border: 2px solid #000;
   color: #000;
-  width: 22px;
-  height: 22px;
+  width: 24px;
+  height: 24px;
   cursor: pointer;
-  font-size: 18px;
+  font-size: 20px;
   line-height: 1;
   font-family: 'Courier New', monospace;
   transition: all 0.1s;
@@ -150,18 +172,18 @@ function canAfford(item: ShopEntry): boolean {
 .shop-info {
   background: #ffffcc;
   border-bottom: 2px solid #000;
-  padding: 6px 12px;
+  padding: 8px 15px;
   display: flex;
   justify-content: space-between;
   align-items: center;
-  gap: 12px;
+  gap: 15px;
 }
 
 .shop-balance {
   display: flex;
   align-items: center;
-  gap: 4px;
-  font-size: 11px;
+  gap: 8px;
+  font-size: 14px;
   font-weight: bold;
 }
 
@@ -171,33 +193,20 @@ function canAfford(item: ShopEntry): boolean {
 
 .balance-value {
   color: #d32f2f;
-  font-size: 13px;
+  font-size: 16px;
   text-shadow: 1px 1px 0 #fff;
 }
 
 .shop-hint {
-  font-size: 9px;
+  font-size: 11px;
   color: #666;
 }
 
 .shop-content {
   flex: 1;
   overflow-y: auto;
-  padding: 10px;
-  min-height: 220px;
-
-  &::-webkit-scrollbar {
-    width: 6px;
-  }
-
-  &::-webkit-scrollbar-track {
-    background: rgba(0, 0, 0, 0.08);
-  }
-
-  &::-webkit-scrollbar-thumb {
-    background: #7a7a7a;
-    border: 1px solid #f5f5f5;
-  }
+  padding: 20px;
+  min-height: 400px;
 }
 
 .shop-empty {
@@ -209,35 +218,48 @@ function canAfford(item: ShopEntry): boolean {
   color: #666;
   text-align: center;
 
-.empty-icon {
-    font-size: 44px;
-    margin-bottom: 10px;
+  .empty-icon {
+    font-size: 64px;
+    margin-bottom: 20px;
     opacity: 0.3;
   }
 
   p {
-    margin: 6px 0;
-    font-size: 14px;
+    margin: 8px 0;
+    font-size: 16px;
   }
 
   .empty-hint {
-    font-size: 10px;
+    font-size: 12px;
     color: #999;
   }
 }
 
 .shop-grid {
   display: grid;
-  grid-template-columns: repeat(auto-fill, minmax(200px, 1fr));
-  gap: 8px;
+  grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
+  gap: 16px;
 }
 
 .shop-item {
   background: #fff;
-  border: 2px solid #000;
-  padding: 8px;
-  cursor: default;
+  border: 3px solid #000;
+  padding: 15px;
+  cursor: pointer;
+  transition: all 0.2s;
   position: relative;
+
+  &:hover {
+    background: #f0f0f0;
+    transform: translateY(-2px);
+    box-shadow: 4px 4px 0 rgba(0, 0, 0, 0.2);
+  }
+
+  &.selected {
+    border-color: #2196f3;
+    background: #e3f2fd;
+    box-shadow: 0 0 0 2px #2196f3;
+  }
 
   &:not(.affordable) {
     .item-price .price-value {
@@ -250,12 +272,12 @@ function canAfford(item: ShopEntry): boolean {
   display: flex;
   justify-content: space-between;
   align-items: flex-start;
-  margin-bottom: 8px;
-  gap: 8px;
+  margin-bottom: 12px;
+  gap: 10px;
 }
 
 .item-name {
-  font-size: 13px;
+  font-size: 16px;
   font-weight: bold;
   color: #000;
   flex: 1;
@@ -269,42 +291,96 @@ function canAfford(item: ShopEntry): boolean {
 }
 
 .price-value {
-  font-size: 14px;
+  font-size: 18px;
   font-weight: bold;
   color: #2e7d32;
 }
 
 .price-unit {
-  font-size: 9px;
+  font-size: 10px;
   color: #666;
 }
 
 .item-description {
-  font-size: 10px;
+  font-size: 12px;
   color: #333;
-  line-height: 1.3;
-  margin-bottom: 6px;
-  min-height: 32px;
+  line-height: 1.5;
+  margin-bottom: 10px;
+  min-height: 40px;
 }
 
 .item-evaluation {
   background: #fff9c4;
   border: 1px solid #f9a825;
-  padding: 5px;
-  font-size: 9px;
-  margin-bottom: 5px;
-  line-height: 1.3;
+  padding: 8px;
+  font-size: 11px;
+  margin-bottom: 10px;
+  line-height: 1.4;
 }
 
 .eval-label {
   color: #666;
-  margin-right: 4px;
+  margin-right: 5px;
 }
 
 .eval-text {
   color: #000;
 }
 
+.item-detail-notice {
+  margin-top: 12px;
+  padding-top: 12px;
+  border-top: 2px dashed #ccc;
+}
+
+.status-notice {
+  text-align: center;
+  font-size: 11px;
+  padding: 8px;
+  border: 2px solid;
+  line-height: 1.4;
+
+  &.insufficient {
+    color: #d32f2f;
+    background: #ffebee;
+    border-color: #ef5350;
+  }
+
+  &.available {
+    color: #2e7d32;
+    background: #e8f5e9;
+    border-color: #66bb6a;
+  }
+}
+
+.shop-footer {
+  background: #333;
+  border-top: 4px solid #000;
+  padding: 15px 20px;
+  display: flex;
+  justify-content: center;
+}
+
+.footer-button {
+  background: #fff;
+  border: 3px solid #000;
+  color: #000;
+  padding: 10px 30px;
+  font-size: 16px;
+  font-family: 'Fusion Pixel 12px M latin', 'Courier New', monospace;
+  cursor: pointer;
+  text-transform: uppercase;
+  letter-spacing: 2px;
+  transition: all 0.1s;
+
+  &:hover {
+    background: #ddd;
+  }
+
+  &:active {
+    border-width: 3px 5px 5px 3px;
+  }
+}
 
 @keyframes fadeIn {
   from {

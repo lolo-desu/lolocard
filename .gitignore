@@ -11,7 +11,3 @@ pnpm-debug.log*
 
 auto-imports.d.ts
 components.d.ts
-
-src/nova-creator-cli
-src/作为异世界的系统/TODO.txt
-.vscode
