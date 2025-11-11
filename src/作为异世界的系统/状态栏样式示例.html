@@ -1,0 +1,911 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>角色状态栏系统</title>
+  <style>
+    @import url("https://fontsapi.zeoseven.com/570/main/result.css");
+    
+    :root {
+      --bg-dark: #0a0a0a;
+      --bg-darker: #050505;
+      --text-primary: #ffffff;
+      --text-secondary: #cccccc;
+      --border-color: #000000;
+      --bg-panel: #f5f5f5;
+      --bg-input: #ffffff;
+      --bg-card: #f0f0f0;
+      --bg-card-hover: #e0e0e0;
+      --bg-success: #90ee90;
+      --bg-error: #ffb3b3;
+      --bg-highlight: #ffffcc;
+      --bg-warning: #ffe4b3;
+      --pixel-font: "Fusion Pixel 12px M latin", 'Courier New', monospace;
+    }
+
+    * {
+      margin: 0;
+      padding: 0;
+      box-sizing: border-box;
+    }
+
+
+
+    /* 主容器 - 16:9比例，嵌入优化 */
+    .status-system {
+      width: 100%;
+      max-width: 800px;
+      aspect-ratio: 16/9;
+      background: var(--bg-panel);
+      border: 4px solid var(--border-color);
+      position: relative;
+      overflow: hidden;
+      display: flex;
+      flex-direction: column;
+      font-family: var(--pixel-font);
+      font-weight: normal;
+    }
+
+    /* 像素化背景纹理 */
+    .status-system::before {
+      content: '';
+      position: absolute;
+      top: 0;
+      left: 0;
+      right: 0;
+      bottom: 0;
+      background-image: 
+        linear-gradient(90deg, rgba(0,0,0,0.03) 1px, transparent 1px),
+        linear-gradient(rgba(0,0,0,0.03) 1px, transparent 1px);
+      background-size: 15px 15px;
+      z-index: 1;
+      pointer-events: none;
+    }
+
+    /* 顶部信息栏 */
+    .top-info-bar {
+      background: #333;
+      color: var(--text-primary);
+      padding: 8px 20px;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      font-size: 12px;
+      position: relative;
+      z-index: 2;
+      border-bottom: 3px solid var(--border-color);
+    }
+
+    .info-left {
+      display: flex;
+      gap: 20px;
+      align-items: center;
+    }
+
+    .info-right {
+      display: flex;
+      gap: 15px;
+      align-items: center;
+    }
+
+    .status-badge {
+      background: var(--bg-input);
+      color: #000;
+      padding: 2px 8px;
+      border: 1px solid var(--border-color);
+      font-size: 10px;
+    }
+
+    .hp-display {
+      background: var(--bg-highlight);
+      color: #000;
+      padding: 2px 8px;
+      border: 1px solid #ff9900;
+      font-weight: bold;
+      font-size: 10px;
+    }
+
+    /* 主要内容区域 */
+    .main-content {
+      flex: 1;
+      display: flex;
+      position: relative;
+      z-index: 2;
+    }
+
+    /* 左侧角色信息面板 */
+    .character-panel {
+      flex: 2;
+      padding: 15px;
+      display: flex;
+      flex-direction: column;
+      gap: 15px;
+      background: var(--bg-card);
+    }
+
+    .character-header {
+      display: flex;
+      gap: 15px;
+      align-items: flex-start;
+    }
+
+    .character-avatar {
+      width: 80px;
+      height: 80px;
+      background: var(--bg-input);
+      border: 2px solid var(--border-color);
+      background-image: url('data:image/svg+xml;base64,PHN2ZyB3aWR0aD0iODAiIGhlaWdodD0iODAiIHZpZXdCb3g9IjAgMCA4MCA4MCIgZmlsbD0ibm9uZSIgeG1sbnM9Imh0dHA6Ly93d3cudzMub3JnLzIwMDAvc3ZnIj4KPHJlY3Qgd2lkdGg9IjgwIiBoZWlnaHQ9IjgwIiBmaWxsPSIjRkZGRkZGIiBzdHJva2U9IiMwMDAiIHN0cm9rZS13aWR0aD0iMiIvPgo8cGF0aCBkPSJNMzUsMTQ1MTAsZW1yZW5lbG1pZ28sZW1yZW5lbG1pZ28sdGV4dCxDSEFSQUNURVIsQ0VBUCxDSEVBVCxDTE9CQU4KR01NRC9HQkxQLC0sLEVESVRfc3RyaW5nLHR5cGU9KFNUUklORyksQ0xBU0VOZXNToKRUcm91cGUoMzUsNTJew0pPLDM1LDE5LDI1LDQ2LDE5LDQ2K0pPOAotY2lyY2xlKDM1LDI1LDEwK0pPO0NpcmNsZSgzNSw0Niw4K0pPOwpBdGV4dCgzNSw2MSxDSEFSQUNURVIsZm9udC1zaXplPSIxNCIpPgo8L3N2Zz4K');
+      background-size: contain;
+      background-repeat: no-repeat;
+      background-position: center;
+    }
+
+    .character-basic-info {
+      flex: 1;
+    }
+
+    .character-name {
+      font-size: 18px;
+      color: #000;
+      margin-bottom: 8px;
+      text-transform: uppercase;
+      letter-spacing: 1px;
+      text-shadow: 1px 1px 0px #fff;
+    }
+
+    .character-stats {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 8px;
+      font-size: 11px;
+    }
+
+    .stat-item {
+      display: flex;
+      justify-content: space-between;
+      background: var(--bg-input);
+      padding: 4px 6px;
+      border: 1px solid var(--border-color);
+    }
+
+    .stat-label {
+      color: #000;
+      font-weight: bold;
+    }
+
+    .stat-value {
+      color: #000;
+    }
+
+    .character-description {
+      background: var(--bg-input);
+      border: 1px solid var(--border-color);
+      padding: 8px;
+      font-size: 10px;
+      color: #000;
+      line-height: 1.3;
+      min-height: 40px;
+    }
+
+    /* 能力面板 */
+    .abilities-panel {
+      background: var(--bg-input);
+      border: 2px solid var(--border-color);
+      padding: 10px;
+      display: grid;
+      grid-template-columns: repeat(3, 1fr);
+      gap: 8px;
+    }
+
+    .ability-card {
+      background: var(--bg-card);
+      border: 1px solid var(--border-color);
+      padding: 6px;
+      text-align: center;
+      font-size: 9px;
+    }
+
+    .ability-name {
+      color: #000;
+      font-weight: bold;
+      margin-bottom: 3px;
+      font-size: 10px;
+    }
+
+    .ability-value {
+      color: #000;
+      font-size: 11px;
+      margin-bottom: 2px;
+      font-weight: bold;
+    }
+
+    .ability-desc {
+      color: #666;
+      font-size: 8px;
+      line-height: 1.2;
+    }
+
+    /* 右侧面板 */
+    .right-panel {
+      flex: 1;
+      display: flex;
+      flex-direction: column;
+      border-left: 3px solid var(--border-color);
+    }
+
+    .equipment-section {
+      flex: 1;
+      padding: 10px;
+      background: var(--bg-card);
+      border-bottom: 2px solid var(--border-color);
+    }
+
+    .section-title {
+      font-size: 12px;
+      color: #000;
+      margin-bottom: 8px;
+      text-transform: uppercase;
+      font-weight: bold;
+      text-align: center;
+    }
+
+    .equipment-grid {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 6px;
+    }
+
+    .equipment-slot {
+      background: var(--bg-input);
+      border: 1px solid var(--border-color);
+      padding: 6px 8px;
+      font-size: 9px;
+      text-align: center;
+    }
+
+    .slot-name {
+      color: #000;
+      font-weight: bold;
+      margin-bottom: 2px;
+      font-size: 8px;
+    }
+
+    .slot-item {
+      color: #000;
+      font-size: 9px;
+      word-break: break-word;
+    }
+
+    /* 物品栏 */
+    .inventory-section {
+      flex: 1;
+      padding: 10px;
+      background: var(--bg-card);
+      display: flex;
+      flex-direction: column;
+    }
+
+    .inventory-title {
+      font-size: 12px;
+      color: #000;
+      margin-bottom: 8px;
+      text-transform: uppercase;
+      font-weight: bold;
+      text-align: center;
+    }
+
+    .inventory-container {
+      flex: 1;
+      display: flex;
+      flex-direction: column;
+    }
+
+    .inventory-grid {
+      display: grid;
+      grid-template-columns: repeat(2, 1fr);
+      gap: 4px;
+      flex: 1;
+      overflow-y: auto;
+    }
+
+    .inventory-item {
+      background: var(--bg-input);
+      border: 1px solid var(--border-color);
+      padding: 6px;
+      cursor: pointer;
+      transition: background-color 0.2s;
+      display: flex;
+      flex-direction: column;
+      min-height: 40px;
+    }
+
+    .inventory-item:hover {
+      background: var(--bg-card-hover);
+    }
+
+    .item-name {
+      font-size: 9px;
+      color: #000;
+      font-weight: bold;
+      margin-bottom: 2px;
+      text-align: center;
+    }
+
+    .item-description {
+      font-size: 7px;
+      color: #666;
+      line-height: 1.2;
+      text-align: center;
+      word-wrap: break-word;
+    }
+
+    .inventory-empty {
+      grid-column: 1 / -1;
+      text-align: center;
+      color: #666;
+      font-style: italic;
+      padding: 20px;
+      font-size: 10px;
+    }
+
+    .inventory-pagination {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      margin-top: 8px;
+      padding: 4px 0;
+    }
+
+    .page-info {
+      font-size: 8px;
+      color: #000;
+    }
+
+    .page-button {
+      background: var(--bg-input);
+      border: 1px solid var(--border-color);
+      padding: 2px 6px;
+      font-family: var(--pixel-font);
+      font-size: 8px;
+      color: #000;
+      cursor: pointer;
+      transition: background-color 0.2s;
+    }
+
+    .page-button:hover {
+      background: var(--bg-card-hover);
+    }
+
+    .page-button:disabled {
+      opacity: 0.5;
+      cursor: not-allowed;
+    }
+
+    /* 底部操作栏 */
+    .bottom-bar {
+      background: #333;
+      color: var(--text-primary);
+      padding: 8px 20px;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      font-size: 10px;
+      position: relative;
+      z-index: 2;
+      border-top: 3px solid var(--border-color);
+    }
+
+    .bottom-left {
+      display: flex;
+      gap: 15px;
+      align-items: center;
+    }
+
+    .bottom-right {
+      display: flex;
+      gap: 15px;
+      align-items: center;
+    }
+
+    .action-button {
+      background: var(--bg-input);
+      color: #000;
+      border: 2px solid var(--border-color);
+      padding: 4px 12px;
+      font-family: var(--pixel-font);
+      font-size: 9px;
+      cursor: pointer;
+      transition: all 0.1s;
+    }
+
+    .action-button:hover {
+      background: #dddddd;
+    }
+
+    .action-button:active {
+      border-width: 2px 4px 2px 2px;
+    }
+
+
+
+    /* 响应式设计 - 9:16移动端适配 */
+    @media (max-width: 768px) {
+      .status-system {
+        max-width: 100%;
+        min-height: 600px;
+        width: 100%;
+      }
+      
+      .top-info-bar,
+      .bottom-bar {
+        padding: 6px 12px;
+        font-size: 10px;
+      }
+      
+      .main-content {
+        flex-direction: column;
+      }
+      
+      .right-panel {
+        flex-direction: row;
+        border-left: none;
+        border-top: 2px solid var(--border-color);
+        max-height: 40%;
+      }
+      
+      .equipment-section,
+      .inventory-section {
+        flex: 1;
+        min-height: 0;
+      }
+      
+      .character-avatar {
+        width: 60px;
+        height: 60px;
+      }
+      
+      .character-name {
+        font-size: 14px;
+      }
+      
+      .character-stats {
+        grid-template-columns: 1fr;
+        font-size: 10px;
+      }
+      
+      .abilities-panel {
+        grid-template-columns: repeat(2, 1fr);
+      }
+      
+      .equipment-grid {
+        grid-template-columns: 1fr;
+      }
+      
+      .inventory-grid {
+        grid-template-columns: 1fr;
+      }
+      
+      .inventory-pagination {
+        padding: 6px 0;
+      }
+      
+      .page-button {
+        padding: 4px 8px;
+        font-size: 9px;
+      }
+      
+      .page-info {
+        font-size: 9px;
+      }
+    }
+
+    /* 滚动条样式 */
+    .inventory-grid::-webkit-scrollbar {
+      width: 6px;
+    }
+
+    .inventory-grid::-webkit-scrollbar-track {
+      background: #f0f0f0;
+      border: 1px solid var(--border-color);
+    }
+
+    .inventory-grid::-webkit-scrollbar-thumb {
+      background: var(--border-color);
+      border: 1px solid #f0f0f0;
+    }
+
+    /* 像素化边框效果 */
+    .pixel-border {
+      border: 3px solid #000;
+      box-shadow: 
+        0 0 0 1px #fff,
+        0 0 0 4px #000;
+    }
+
+    /* 动画效果 */
+    @keyframes fadeIn {
+      from { opacity: 0; transform: translateY(10px); }
+      to { opacity: 1; transform: translateY(0); }
+    }
+
+    .status-system {
+      animation: fadeIn 0.5s ease-out;
+    }
+
+    /* 状态指示器 */
+    .status-indicator {
+      width: 8px;
+      height: 8px;
+      background: var(--bg-success);
+      border: 1px solid var(--border-color);
+      border-radius: 50%;
+      display: inline-block;
+      margin-right: 5px;
+    }
+
+    .status-indicator.offline {
+      background: var(--bg-error);
+    }
+
+    .status-indicator.warning {
+      background: var(--bg-warning);
+    }
+  </style>
+</head>
+<body>
+  <div class="status-system">
+    <!-- 顶部信息栏 -->
+    <div class="top-info-bar">
+      <div class="info-left">
+        <div class="status-indicator" id="connectionStatus"></div>
+        <span id="currentTime">2025-11-10 16:34:26</span>
+      </div>
+      <div class="info-right">
+        <div class="hp-display" id="hpDisplay">HP: 100/100</div>
+        <div class="status-badge" id="locationBadge">未知地点</div>
+      </div>
+    </div>
+
+    <!-- 主要内容区域 -->
+    <div class="main-content">
+      <!-- 左侧角色信息面板 -->
+      <div class="character-panel">
+        <!-- 角色头部信息 -->
+        <div class="character-header">
+          <div class="character-avatar" id="characterAvatar"></div>
+          <div class="character-basic-info">
+            <div class="character-name" id="characterName">角色名称</div>
+            <div class="character-stats">
+              <div class="stat-item">
+                <span class="stat-label">性别:</span>
+                <span class="stat-value" id="characterGender">待设定</span>
+              </div>
+              <div class="stat-item">
+                <span class="stat-label">年龄:</span>
+                <span class="stat-value" id="characterAge">待设定</span>
+              </div>
+              <div class="stat-item">
+                <span class="stat-label">经验值:</span>
+                <span class="stat-value" id="expValue">0</span>
+              </div>
+              <div class="stat-item">
+                <span class="stat-label">等级:</span>
+                <span class="stat-value" id="levelValue">1</span>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <!-- 角色描述 -->
+        <div class="character-description" id="characterDescription">
+          暂无角色描述信息...
+        </div>
+
+        <!-- 能力面板 -->
+        <div class="abilities-panel">
+          <div class="ability-card">
+            <div class="ability-name">力量</div>
+            <div class="ability-value" id="strValue">10</div>
+            <div class="ability-desc" id="strDesc">普通人的水平</div>
+          </div>
+          <div class="ability-card">
+            <div class="ability-name">敏捷</div>
+            <div class="ability-value" id="dexValue">10</div>
+            <div class="ability-desc" id="dexDesc">普通人的水平</div>
+          </div>
+          <div class="ability-card">
+            <div class="ability-name">体质</div>
+            <div class="ability-value" id="conValue">10</div>
+            <div class="ability-desc" id="conDesc">普通人的水平</div>
+          </div>
+          <div class="ability-card">
+            <div class="ability-name">感知</div>
+            <div class="ability-value" id="perValue">10</div>
+            <div class="ability-desc" id="perDesc">普通人的水平</div>
+          </div>
+          <div class="ability-card">
+            <div class="ability-name">意志</div>
+            <div class="ability-value" id="wisValue">10</div>
+            <div class="ability-desc" id="wisDesc">普通人的水平</div>
+          </div>
+          <div class="ability-card">
+            <div class="ability-name">魅力</div>
+            <div class="ability-value" id="chaValue">10</div>
+            <div class="ability-desc" id="chaDesc">普通人的水平</div>
+          </div>
+        </div>
+      </div>
+
+      <!-- 右侧面板 -->
+      <div class="right-panel">
+        <!-- 装备栏 -->
+        <div class="equipment-section">
+          <div class="section-title">装备栏</div>
+          <div class="equipment-grid">
+            <div class="equipment-slot">
+              <div class="slot-name">主手</div>
+              <div class="slot-item" id="mainHand">无</div>
+            </div>
+            <div class="equipment-slot">
+              <div class="slot-name">副手</div>
+              <div class="slot-item" id="offHand">无</div>
+            </div>
+            <div class="equipment-slot">
+              <div class="slot-name">防具</div>
+              <div class="slot-item" id="armor">无</div>
+            </div>
+            <div class="equipment-slot">
+              <div class="slot-name">饰品</div>
+              <div class="slot-item" id="accessory">无</div>
+            </div>
+          </div>
+        </div>
+
+        <!-- 物品栏 -->
+        <div class="inventory-section">
+          <div class="inventory-title">物品栏</div>
+          <div class="inventory-container">
+            <div class="inventory-grid" id="inventoryGrid">
+              <div class="inventory-empty">暂无物品</div>
+            </div>
+            <div class="inventory-pagination">
+              <button class="page-button" id="prevPageBtn">上一页</button>
+              <span class="page-info" id="pageInfo">1/1</span>
+              <button class="page-button" id="nextPageBtn">下一页</button>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- 底部操作栏 -->
+    <div class="bottom-bar">
+      <div class="bottom-left">
+        <span>FND: <span id="fndValue">0</span></span>
+        <span>SAN: <span id="sanValue">100</span></span>
+        <span>负重: <span id="weightValue">0/50</span></span>
+      </div>
+      <div class="bottom-right">
+        <button class="action-button" id="publishTaskBtn">发布任务</button>
+        <button class="action-button" id="grantRewardBtn">发放奖励</button>
+      </div>
+    </div>
+  </div>
+
+  <script>
+    // 角色数据更新函数
+    function updateCharacterData(characterData) {
+      // 更新基本信息
+      if (characterData.name) {
+        document.getElementById('characterName').textContent = characterData.name;
+      }
+      if (characterData.gender) {
+        document.getElementById('characterGender').textContent = characterData.gender;
+      }
+      if (characterData.age) {
+        document.getElementById('characterAge').textContent = characterData.age;
+      }
+      if (characterData.description) {
+        document.getElementById('characterDescription').textContent = characterData.description;
+      }
+
+      // 更新能力值
+      const abilities = characterData.abilities || {};
+      if (abilities.strength) {
+        document.getElementById('strValue').textContent = abilities.strength.value || '10';
+        document.getElementById('strDesc').textContent = abilities.strength.description || '普通人的水平';
+      }
+      if (abilities.agility) {
+        document.getElementById('dexValue').textContent = abilities.agility.value || '10';
+        document.getElementById('dexDesc').textContent = abilities.agility.description || '普通人的水平';
+      }
+      if (abilities.constitution) {
+        document.getElementById('conValue').textContent = abilities.constitution.value || '10';
+        document.getElementById('conDesc').textContent = abilities.constitution.description || '普通人的水平';
+      }
+      if (abilities.perception) {
+        document.getElementById('perValue').textContent = abilities.perception.value || '10';
+        document.getElementById('perDesc').textContent = abilities.perception.description || '普通人的水平';
+      }
+      if (abilities.wisdom) {
+        document.getElementById('wisValue').textContent = abilities.wisdom.value || '10';
+        document.getElementById('wisDesc').textContent = abilities.wisdom.description || '普通人的水平';
+      }
+      if (abilities.charisma) {
+        document.getElementById('chaValue').textContent = abilities.charisma.value || '10';
+        document.getElementById('chaDesc').textContent = abilities.charisma.description || '普通人的水平';
+      }
+
+      // 更新装备
+      const equipment = characterData.equipment || {};
+      document.getElementById('mainHand').textContent = equipment.mainHand || '无';
+      document.getElementById('offHand').textContent = equipment.offHand || '无';
+      document.getElementById('armor').textContent = equipment.armor || '无';
+      document.getElementById('accessory').textContent = equipment.accessory || '无';
+
+      // 更新物品栏
+      const inventory = characterData.inventory || [];
+      window.inventoryData = inventory; // 存储到全局变量
+      window.currentPage = 1;
+      window.itemsPerPage = 6; // 每页显示6个物品
+      updateInventoryDisplay();
+
+      // 更新其他状态
+      if (characterData.hp) {
+        document.getElementById('hpDisplay').textContent = `HP: ${characterData.hp.current || 0}/${characterData.hp.max || 0}`;
+      }
+      if (characterData.fnd !== undefined) {
+        document.getElementById('fndValue').textContent = characterData.fnd;
+      }
+      if (characterData.san !== undefined) {
+        document.getElementById('sanValue').textContent = characterData.san;
+      }
+      if (characterData.location) {
+        document.getElementById('locationBadge').textContent = characterData.location;
+      }
+      if (characterData.exp) {
+        document.getElementById('expValue').textContent = characterData.exp;
+      }
+      if (characterData.level) {
+        document.getElementById('levelValue').textContent = characterData.level;
+      }
+    }
+
+    // 模拟实时更新
+    function updateTime() {
+      const now = new Date();
+      const timeString = now.toLocaleString('zh-CN', {
+        year: 'numeric',
+        month: '2-digit',
+        day: '2-digit',
+        hour: '2-digit',
+        minute: '2-digit',
+        second: '2-digit'
+      });
+      document.getElementById('currentTime').textContent = timeString;
+    }
+
+    // 初始化
+    document.addEventListener('DOMContentLoaded', function() {
+      // 启动时间更新
+      updateTime();
+      setInterval(updateTime, 1000);
+
+      // 示例数据
+      const sampleCharacter = {
+        name: '艾莉娅·温特',
+        gender: '女',
+        age: '23岁',
+        description: '一位年轻的冒险者，拥有敏锐的洞察力和坚定的意志。眼神中闪烁着智慧的光芒，似乎总在思考着什么。',
+        abilities: {
+          strength: { value: '12', description: '略高于普通人' },
+          agility: { value: '15', description: '动作敏捷' },
+          constitution: { value: '11', description: '体质良好' },
+          perception: { value: '16', description: '观察力极佳' },
+          wisdom: { value: '13', description: '判断力敏锐' },
+          charisma: { value: '14', description: '善于交流' }
+        },
+        equipment: {
+          mainHand: '银质匕首',
+          offHand: '木制圆盾',
+          armor: '皮制护甲',
+          accessory: '月光石戒指'
+        },
+        inventory: [
+          { name: '治疗药水', description: '恢复少量生命值' },
+          { name: '面包', description: '可以充饥' },
+          { name: '地图', description: '标示附近地区' },
+          { name: '绳索', description: '10米长的麻绳' },
+          { name: '火石', description: '生火工具' },
+          { name: '金币', description: '15枚金币' },
+          { name: '银质戒指', description: '提升魅力值' },
+          { name: '钢铁剑', description: '锋利的钢制武器' },
+          { name: '皮甲', description: '轻便的防护装备' },
+          { name: '野营工具', description: '野外生存必需品' },
+          { name: '神秘卷轴', description: '记录古老咒文的羊皮纸' },
+          { name: '魔法宝石', description: '蕴含微弱魔力的水晶' }
+        ],
+        hp: { current: 85, max: 100 },
+        fnd: 45,
+        san: 95,
+        location: '废弃城堡',
+        exp: 1250,
+        level: 3
+      };
+
+      // 延迟加载示例数据
+      setTimeout(() => {
+        updateCharacterData(sampleCharacter);
+      }, 1000);
+    });
+
+    // 保存和读取功能
+    // 物品栏分页和显示函数
+    function updateInventoryDisplay() {
+      const inventoryGrid = document.getElementById('inventoryGrid');
+      const pageInfo = document.getElementById('pageInfo');
+      const prevBtn = document.getElementById('prevPageBtn');
+      const nextBtn = document.getElementById('nextPageBtn');
+      
+      if (!window.inventoryData) window.inventoryData = [];
+      
+      const totalPages = Math.ceil(window.inventoryData.length / window.itemsPerPage);
+      
+      if (totalPages === 0) {
+        inventoryGrid.innerHTML = '<div class="inventory-empty">暂无物品</div>';
+        pageInfo.textContent = '0/0';
+        prevBtn.disabled = true;
+        nextBtn.disabled = true;
+        return;
+      }
+      
+      // 确保当前页码在有效范围内
+      if (window.currentPage > totalPages) window.currentPage = totalPages;
+      if (window.currentPage < 1) window.currentPage = 1;
+      
+      const startIndex = (window.currentPage - 1) * window.itemsPerPage;
+      const endIndex = Math.min(startIndex + window.itemsPerPage, window.inventoryData.length);
+      const currentItems = window.inventoryData.slice(startIndex, endIndex);
+      
+      inventoryGrid.innerHTML = currentItems.map(item => 
+        `<div class="inventory-item" title="${item.description || ''}">
+          <div class="item-name">${item.name || '未知物品'}</div>
+          <div class="item-description">${item.description || ''}</div>
+        </div>`
+      ).join('');
+      
+      pageInfo.textContent = `${window.currentPage}/${totalPages}`;
+      prevBtn.disabled = window.currentPage <= 1;
+      nextBtn.disabled = window.currentPage >= totalPages;
+    }
+
+    // 分页按钮事件
+    document.getElementById('prevPageBtn').addEventListener('click', function() {
+      if (window.currentPage > 1) {
+        window.currentPage--;
+        updateInventoryDisplay();
+      }
+    });
+
+    document.getElementById('nextPageBtn').addEventListener('click', function() {
+      const totalPages = Math.ceil((window.inventoryData || []).length / window.itemsPerPage);
+      if (window.currentPage < totalPages) {
+        window.currentPage++;
+        updateInventoryDisplay();
+      }
+    });
+
+    document.getElementById('publishTaskBtn').addEventListener('click', function() {
+      console.log('发布任务...');
+      // 这里可以添加实际的发布任务逻辑
+    });
+
+    document.getElementById('grantRewardBtn').addEventListener('click', function() {
+      console.log('发放奖励...');
+      // 这里可以添加实际的发放奖励逻辑
+    });
+  </script>
+</body>
+</html>
+

@@ -1,0 +1,433 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>角色创生 - 像素世界</title>
+  <style>
+    @import url('https://fonts.googleapis.com/css2?family=VT323&display=swap');
+    
+    :root {
+      --bg-dark: #0a0a0a;
+      --bg-darker: #050505;
+      --text-primary: #ffffff;
+      --text-secondary: #cccccc;
+      --border-color: #000000;
+      --bg-panel: #f5f5f5;
+      --bg-input: #ffffff;
+      --pixel-font: 'VT323', 'Courier New', monospace;
+    }
+
+    * {
+      margin: 0;
+      padding: 0;
+      box-sizing: border-box;
+    }
+
+    html, button, input, textarea {
+      font-family: var(--pixel-font);
+      font-weight: normal;
+    }
+
+    body {
+      background: var(--bg-dark);
+      color: var(--text-primary);
+      min-height: 100vh;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      padding: 20px;
+      position: relative;
+      overflow: hidden;
+    }
+
+    /* 像素化背景 */
+    body::before {
+      content: '';
+      position: absolute;
+      top: 0;
+      left: 0;
+      right: 0;
+      bottom: 0;
+      background-image: 
+        linear-gradient(90deg, rgba(255,255,255,0.03) 1px, transparent 1px),
+        linear-gradient(rgba(255,255,255,0.03) 1px, transparent 1px);
+      background-size: 20px 20px;
+      z-index: -1;
+    }
+
+    .container {
+      width: 100%;
+      max-width: 600px;
+      background: var(--bg-panel);
+      border: 4px solid var(--border-color);
+      position: relative;
+    }
+
+    .header {
+      background: #333;
+      color: var(--text-primary);
+      padding: 12px 20px;
+      border-bottom: 4px solid var(--border-color);
+      text-align: center;
+    }
+
+    .title {
+      font-size: 28px;
+      text-transform: uppercase;
+      letter-spacing: 2px;
+      text-shadow: 2px 2px 0px #000;
+    }
+
+    .content {
+      padding: 20px;
+      color: #333;
+    }
+
+    .form-container {
+      width: 100%;
+    }
+
+    .form-field {
+      display: flex;
+      justify-content: flex-start;
+      align-items: center;
+      margin: 15px 0;
+    }
+
+    .form-field label {
+      text-align: right;
+      width: 80px;
+      margin-right: 15px;
+      font-size: 18px;
+      color: #000;
+    }
+
+    input, textarea {
+      flex: 1;
+      padding: 8px 12px;
+      border: 2px solid #000;
+      background: var(--bg-input);
+      color: #000;
+      font-size: 18px;
+      font-family: var(--pixel-font);
+      resize: none;
+    }
+
+    input:focus, textarea:focus {
+      outline: none;
+      background: #ffffcc;
+      border-color: #ff0000;
+    }
+
+    textarea {
+      min-height: 80px;
+    }
+
+    .required {
+      color: #ff0000;
+      font-weight: bold;
+    }
+
+    .optional {
+      color: #666;
+      font-weight: normal;
+    }
+
+    .actions {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      margin-top: 25px;
+      padding-top: 15px;
+      border-top: 2px solid #000;
+    }
+
+    .submit-btn {
+      background: var(--bg-input);
+      border: 3px 3px 5px 3px solid #000;
+      color: #000;
+      padding: 8px 20px;
+      font-size: 18px;
+      cursor: pointer;
+      font-family: var(--pixel-font);
+      transition: all 0.1s;
+      left:50%;
+    }
+
+    .submit-btn:hover {
+      background: #dddddd;
+    }
+
+    .submit-btn:active {
+      border-width: 3px 5px 3px 3px;
+    }
+
+    .submit-btn:disabled {
+      opacity: 0.5;
+      cursor: not-allowed;
+    }
+
+    .status {
+      font-size: 16px;
+      text-align: right;
+    }
+
+    .status--success {
+      color: #00aa00;
+    }
+
+    .status--error {
+      color: #ff0000;
+    }
+
+    .preview {
+      margin-top: 20px;
+      padding: 15px;
+      border: 2px solid #000;
+      background: #f0f0f0;
+    }
+
+    .preview h3 {
+      font-size: 18px;
+      color: #000;
+      margin-bottom: 10px;
+      text-transform: uppercase;
+    }
+
+    .preview pre {
+      font-family: var(--pixel-font);
+      font-size: 16px;
+      color: #000;
+      line-height: 1.4;
+      margin: 0;
+      white-space: pre-wrap;
+      word-break: break-word;
+    }
+
+    .note {
+      background: #ffffcc;
+      border: 2px solid #ff9900;
+      padding: 10px;
+      margin: 10px 0;
+      font-size: 16px;
+      color: #000;
+    }
+
+    .pixel-border {
+      border: 4px solid #000;
+      box-shadow: 
+        0 0 0 1px #fff,
+        0 0 0 5px #000;
+    }
+
+    @media (max-width: 768px) {
+      .form-field {
+        flex-direction: column;
+        align-items: flex-start;
+      }
+      
+      .form-field label {
+        width: 100%;
+        text-align: left;
+        margin-bottom: 5px;
+      }
+      
+      input, textarea {
+        width: 100%;
+      }
+      
+      .actions {
+        flex-direction: column;
+        gap: 15px;
+      }
+      
+      .title {
+        font-size: 24px;
+      }
+    }
+  </style>
+</head>
+<body>
+  <div class="container pixel-border">
+    <div class="header">
+      <h1 class="title">CHARACTER CREATE</h1>
+    </div>
+    
+    <div class="content">
+      <div class="note">
+        <strong>系统提示：</strong>请填写你心仪的角色设定……
+      </div>
+      
+      <form id="init-form" class="form-container">
+        <div class="form-field">
+          <label for="systemImage">
+            <small>{{user}}|系统</small><span class="optional"><br>(可选)</span>
+          </label>
+          <input
+            id="systemImage"
+            type="text"
+            placeholder="神秘的声音、凭空出现的光板、白发蓝瞳猫耳耳机少女..."
+          />
+        </div>
+
+        <div class="form-field">
+          <label for="heroName">
+            姓名 <span class="required">*</span>
+          </label>
+          <input
+            id="heroName"
+            type="text"
+            placeholder="输入角色姓名"
+            required
+          />
+        </div>
+
+        <div class="form-field">
+          <label for="heroGender">
+            性别 <span class="required">*</span>
+          </label>
+          <input
+            id="heroGender"
+            type="text"
+            placeholder="男/女/其他"
+            required
+          />
+        </div>
+
+        <div class="form-field">
+          <label for="heroAge">
+            年龄 <span class="required">*</span>
+          </label>
+          <input
+            id="heroAge"
+            type="text"
+            placeholder="18岁..."
+            required
+          />
+        </div>
+
+        <div class="form-field">
+          <label for="heroPersona">
+            背景 <span class="required">*</span>
+          </label>
+          <textarea
+            id="heroPersona"
+            placeholder="可以简略写外表，也从其他角色卡复制粘贴自己心仪的角色"
+            required
+          ></textarea>
+        </div>
+
+        <div class="actions">
+          <button class="submit-btn" type="submit">开始游戏</button>
+          <div class="status" id="status"></div>
+        </div>
+      </form>
+    </div>
+  </div>
+
+  <script>
+    (function() {
+      const form = document.getElementById('init-form');
+      const preview = document.getElementById('message-preview');
+      const status = document.getElementById('status');
+      const submitBtn = form.querySelector('.submit-btn');
+
+      const FIELD_META = {
+        systemImage: { required: false, fallback: '神秘引导者' },
+        heroName: { required: true },
+        heroGender: { required: true },
+        heroAge: { required: true },
+        heroPersona: { required: true },
+      };
+
+      const template = (data) => {
+        return `=== 角色档案 ===
+引导者: ${data.systemImage}
+姓名: ${data.heroName}
+性别: ${data.heroGender}
+年龄: ${data.heroAge}
+背景: ${data.heroPersona}
+
+准备开始新的冒险...`;
+      };
+
+      function readValues() {
+        const values = {};
+        for (const key in FIELD_META) {
+          const element = document.getElementById(key);
+          values[key] = element ? element.value.trim() : '';
+        }
+        return values;
+      }
+
+      function formatMessage(values) {
+        return template({
+          systemImage: values.systemImage || FIELD_META.systemImage.fallback,
+          heroName: values.heroName,
+          heroGender: values.heroGender,
+          heroAge: values.heroAge,
+          heroPersona: values.heroPersona,
+        });
+      }
+
+      function updatePreview() {
+        const values = readValues();
+        preview.textContent = formatMessage(values);
+      }
+
+      function setStatus(message, type) {
+        status.textContent = message || '';
+        status.className = type ? `status ${type}` : 'status';
+      }
+
+      function escapeForSlash(text) {
+        return text.replace(/\|/g, '\\|');
+      }
+
+      async function dispatchSlashCommand(payload) {
+        const slashCommand = `/send ${escapeForSlash(payload)} || /trigger`;
+        if (typeof window.triggerSlash === 'function') {
+          return window.triggerSlash(slashCommand);
+        }
+        if (navigator.clipboard?.writeText) {
+          await navigator.clipboard.writeText(slashCommand);
+          throw new Error('命令已复制，请手动执行');
+        }
+        throw new Error('请手动复制命令: ' + slashCommand);
+      }
+
+      // 事件监听
+      form.addEventListener('input', updatePreview);
+      updatePreview();
+
+      form.addEventListener('submit', async (e) => {
+        e.preventDefault();
+        const values = readValues();
+        const missingKeys = Object.keys(FIELD_META).filter(key => {
+          const meta = FIELD_META[key];
+          return meta.required && !values[key];
+        });
+
+        if (missingKeys.length) {
+          setStatus('请填写所有必填项', 'status--error');
+          return;
+        }
+
+        const payload = formatMessage(values);
+        submitBtn.disabled = true;
+        setStatus('正在初始化角色...', '');
+
+        try {
+          await dispatchSlashCommand(payload);
+          setStatus('角色创建完成！', 'status--success');
+        } catch (error) {
+          setStatus(error.message || '创建失败', 'status--error');
+        } finally {
+          submitBtn.disabled = false;
+        }
+      });
+    })();
+  </script>
+</body>
+</html>
