@@ -1,6 +1,8 @@
 import { createApp } from 'vue';
 import App from './App.vue';
 
+declare const $: (callback: () => void) => void;
+
 const ROOT_ID = 'isekai-status-app';
 
 function ensureRoot(): HTMLElement {
@@ -20,8 +22,6 @@ function bootstrap() {
   app.mount(root);
 }
 
-if (document.readyState === 'loading') {
-  document.addEventListener('DOMContentLoaded', bootstrap, { once: true });
-} else {
+$(() => {
   bootstrap();
-}
+});

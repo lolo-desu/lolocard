@@ -98,7 +98,8 @@ function canAfford(item: ShopEntry): boolean {
 
 .shop-container {
   width: min(640px, 92vw);
-  max-height: 85vh;
+  max-height: min(720px, calc(100% - 32px));
+  margin: 16px;
   background: #f5f5f5;
   border: 4px solid #000;
   display: flex;
@@ -328,9 +329,9 @@ function canAfford(item: ShopEntry): boolean {
 
 @media (max-width: 768px) {
   .shop-container {
-    width: calc(100vw - 2px);
-    max-height: calc(100vh - 2px);
-    margin: 1px;
+    width: 100%;
+    max-height: calc(100% - 12px);
+    margin: 6px;
     border-width: 4px;
     box-shadow: none;
   }

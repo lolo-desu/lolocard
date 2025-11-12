@@ -51,7 +51,8 @@ const emit = defineEmits<{
   &__panel {
     position: relative;
     width: min(320px, 92vw);
-    max-height: 65vh;
+    max-height: min(560px, calc(100% - 32px));
+    margin: 16px;
     overflow: hidden;
     display: flex;
     flex-direction: column;
@@ -371,9 +372,9 @@ const emit = defineEmits<{
 
 @media (max-width: 768px) {
   .pixel-modal__panel {
-    width: calc(100vw - 2px);
-    max-height: calc(100vh - 2px);
-    margin: 1px;
+    width: 100%;
+    max-height: calc(100% - 12px);
+    margin: 6px;
   }
 }
 </style>

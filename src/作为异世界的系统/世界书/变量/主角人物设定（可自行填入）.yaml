@@ -1,0 +1,35 @@
+---
+#主角人物档案
+主角姓名：{{get_message_variable::stat_data.主角.姓名}}
+
+基本信息：
+- 性别：{{get_message_variable::stat_data.主角.性别}}
+- 年龄：{{get_message_variable::stat_data.主角.年龄}}
+- 当前时间地点：{{get_message_variable::stat_data.世界.当前时间}} · {{get_message_variable::stat_data.世界.当前地点}}
+
+外貌印象：
+- 主观描述：{{get_message_variable::stat_data.主角.外貌.描述}}
+- 自我评价：{{get_message_variable::stat_data.主角.外貌.自我评价}}
+
+能力六维：
+- 力量：{{get_message_variable::stat_data.主角.能力面板.力量.数值}}（自评：{{get_message_variable::stat_data.主角.能力面板.力量.自我评价}}）
+- 敏捷：{{get_message_variable::stat_data.主角.能力面板.敏捷.数值}}（自评：{{get_message_variable::stat_data.主角.能力面板.敏捷.自我评价}}）
+- 体质：{{get_message_variable::stat_data.主角.能力面板.体质.数值}}（自评：{{get_message_variable::stat_data.主角.能力面板.体质.自我评价}}）
+- 感知：{{get_message_variable::stat_data.主角.能力面板.感知.数值}}（自评：{{get_message_variable::stat_data.主角.能力面板.感知.自我评价}}）
+- 意志：{{get_message_variable::stat_data.主角.能力面板.意志.数值}}（自评：{{get_message_variable::stat_data.主角.能力面板.意志.自我评价}}）
+- 魅力：{{get_message_variable::stat_data.主角.能力面板.魅力.数值}}（自评：{{get_message_variable::stat_data.主角.能力面板.魅力.自我评价}}）
+
+装备现状：
+- 主手：{{get_message_variable::stat_data.主角.装备栏.主手.装备}}（自评：{{get_message_variable::stat_data.主角.装备栏.主手.自我评价}}）
+- 副手：{{get_message_variable::stat_data.主角.装备栏.副手.装备}}（自评：{{get_message_variable::stat_data.主角.装备栏.副手.自我评价}}）
+- 防具：{{get_message_variable::stat_data.主角.装备栏.防具.装备}}（自评：{{get_message_variable::stat_data.主角.装备栏.防具.自我评价}}）
+- 饰品：{{get_message_variable::stat_data.主角.装备栏.饰品.装备}}（自评：{{get_message_variable::stat_data.主角.装备栏.饰品.自我评价}}）
+
+状态效果：
+- 伤势：{{format_message_variable::stat_data.主角.伤势}}
+- Buff：{{format_message_variable::stat_data.主角.Buff}}
+- Debuff：{{format_message_variable::stat_data.主角.Debuff}}
+
+与系统（{{get_message_variable::stat_data.系统状态.玩家ID}}）的关系：
+- 感知到的系统形象：{{get_message_variable::stat_data.系统状态.对主角可见形象}}
+- 可用积分：{{get_message_variable::stat_data.系统状态.可用积分}}
