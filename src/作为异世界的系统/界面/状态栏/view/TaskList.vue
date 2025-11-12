@@ -11,42 +11,37 @@
       </div>
 
       <div class="task-content">
-        <div v-if="taskItems.length === 0" class="task-empty">
+        <div v-if="Object.keys(tasks).length === 0" class="task-empty">
           <div class="empty-icon">📝</div>
           <p>暂无任务</p>
           <p class="empty-hint">系统管理员可通过"发布任务"按钮发布新任务</p>
         </div>
 
         <div v-else class="task-list">
-          <div
-            v-for="task in taskItems"
-            :key="task.key"
-            class="task-item"
-            :class="`task-type-${task.任务类型}`"
-          >
+          <div v-for="(item, name) in tasks" :key="name" class="task-item" :class="`task-type-${item.类型}`">
             <div class="task-item-header">
-              <div class="task-name">{{ task.任务名 }}</div>
-              <div class="task-type-badge">{{ task.任务类型 }}</div>
+              <div class="task-name">{{ name }}</div>
+              <div class="task-type-badge">{{ item.类型 }}</div>
             </div>
 
-            <div v-if="task.任务说明" class="task-section">
+            <div class="task-section">
               <div class="task-section-title">任务说明</div>
-              <div class="task-section-content">{{ task.任务说明 }}</div>
+              <div class="task-section-content">{{ item.说明 }}</div>
             </div>
 
-            <div v-if="task.任务目标" class="task-section">
+            <div class="task-section">
               <div class="task-section-title">任务目标</div>
-              <div class="task-section-content">{{ task.任务目标 }}</div>
+              <div class="task-section-content">{{ item.目标 }}</div>
             </div>
 
             <div class="task-footer">
-              <div v-if="task.奖励" class="task-reward">
+              <div class="task-reward">
                 <span class="reward-label">奖励:</span>
-                <span class="reward-text">{{ task.奖励 }}</span>
+                <span class="reward-text">{{ item.奖励 }}</span>
               </div>
-              <div v-if="task.惩罚" class="task-penalty">
+              <div class="task-penalty">
                 <span class="penalty-label">惩罚:</span>
-                <span class="penalty-text">{{ task.惩罚 }}</span>
+                <span class="penalty-text">{{ item.惩罚 }}</span>
               </div>
             </div>
           </div>
@@ -57,26 +52,12 @@
 </template>
 
 <script setup lang="ts">
-import { computed } from 'vue';
-import type { TaskEntry } from '../types';
+import { useDataStore } from '../store';
+const tasks = toRef(useDataStore().data, '任务列表');
 
-interface Props {
-  tasks: Record<string, TaskEntry>;
-}
-
-const props = defineProps<Props>();
 const emit = defineEmits<{
-  (e: 'close'): void;
+  close: [void];
 }>();
-
-const taskItems = computed(() => {
-  return Object.entries(props.tasks)
-    .filter(([key]) => key !== '$meta')
-    .map(([key, entry]) => ({
-      key,
-      ...entry,
-    }));
-});
 </script>
 
 <style scoped lang="scss">

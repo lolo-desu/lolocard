@@ -1,6 +1,6 @@
 <template>
-  <teleport to="body">
-    <div v-if="visible" class="pixel-modal">
+  <Teleport to="body">
+    <div class="pixel-modal">
       <div class="pixel-modal__backdrop" @click="emit('close')"></div>
       <div class="pixel-modal__panel">
         <header class="pixel-modal__header">
@@ -16,19 +16,14 @@
         </div>
       </div>
     </div>
-  </teleport>
+  </Teleport>
 </template>
 
 <script setup lang="ts">
-interface Props {
-  visible: boolean;
-  title: string;
-  description?: string;
-}
+defineProps<{ title: string; description?: string }>();
 
-defineProps<Props>();
 const emit = defineEmits<{
-  (e: 'close'): void;
+  close: [void];
 }>();
 </script>
 

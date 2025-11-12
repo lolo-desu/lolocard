@@ -9,13 +9,13 @@
       <div class="shop-info">
         <div class="shop-balance">
           <span class="balance-label">主角可用积分:</span>
-          <span class="balance-value">{{ availablePoints }}</span>
+          <span class="balance-value">{{ available_points }}</span>
         </div>
         <div class="shop-hint">仅供查看当前上架商品，购买需主角自行决定</div>
       </div>
 
       <div class="shop-content">
-        <div v-if="shopItems.length === 0" class="shop-empty">
+        <div v-if="Object.keys(shop).length === 0" class="shop-empty">
           <div class="empty-icon">🏪</div>
           <p>商城暂无商品</p>
           <p class="empty-hint">系统管理员可通过"创建商城"按钮上架商品</p>
@@ -23,65 +23,42 @@
 
         <div v-else class="shop-grid">
           <div
-            v-for="item in shopItems"
-            :key="item.key"
+            v-for="(item, name) in shop"
+            :key="name"
             class="shop-item"
-            :class="{ affordable: canAfford(item) }"
+            :class="{ affordable: available_points >= item.积分价格 }"
           >
             <div class="item-header">
-              <div class="item-name">{{ item.物品名称 }}</div>
+              <div class="item-name">{{ name }}</div>
               <div class="item-price">
-                <span class="price-value">{{ item['价格(积分)'] }}</span>
+                <span class="price-value">{{ item.积分价格 }}</span>
                 <span class="price-unit">积分</span>
               </div>
             </div>
 
             <div class="item-description">{{ item.描述 }}</div>
 
-            <div v-if="item.主角评价" class="item-evaluation">
+            <div class="item-evaluation">
               <span class="eval-label">主角评价:</span>
               <span class="eval-text">{{ item.主角评价 }}</span>
             </div>
           </div>
         </div>
       </div>
-
     </div>
   </div>
 </template>
 
 <script setup lang="ts">
-import { computed } from 'vue';
-import type { ShopEntry } from '../types';
+import { useDataStore } from '../store';
 
-interface Props {
-  shop: Record<string, ShopEntry>;
-  availablePoints: number | string;
-}
+const store = useDataStore();
+const shop = toRef(store.data, '商品列表');
+const available_points = toRef(store.data.系统状态, '可用积分');
 
-const props = defineProps<Props>();
 const emit = defineEmits<{
-  (e: 'close'): void;
+  close: [void];
 }>();
-
-const shopItems = computed(() => {
-  return Object.entries(props.shop).map(([key, entry]) => ({
-    key,
-    ...entry,
-  }));
-});
-
-const normalizedPoints = computed(() => {
-  const points = props.availablePoints;
-  if (typeof points === 'number') return points;
-  const parsed = Number(points);
-  return Number.isFinite(parsed) ? parsed : 0;
-});
-
-function canAfford(item: ShopEntry): boolean {
-  return normalizedPoints.value >= item['价格(积分)'];
-}
-
 </script>
 
 <style scoped lang="scss">
@@ -210,7 +187,7 @@ function canAfford(item: ShopEntry): boolean {
   color: #666;
   text-align: center;
 
-.empty-icon {
+  .empty-icon {
     font-size: 44px;
     margin-bottom: 10px;
     opacity: 0.3;
@@ -305,7 +282,6 @@ function canAfford(item: ShopEntry): boolean {
 .eval-text {
   color: #000;
 }
-
 
 @keyframes fadeIn {
   from {

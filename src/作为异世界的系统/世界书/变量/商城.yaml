@@ -1,7 +1,6 @@
 ---
-商城中的商品是由{{user}}提供的，{{get_message_variable::stat_data.主角.姓名}}可以自行决策使用积分购买物品
-- 当前积分：{{get_message_variable::stat_data.系统状态.可用积分}} —— {{get_message_variable::stat_data.主角.姓名}}会根据积分和商品重要程度决定先攒积分还是立刻消费。
-除此之外，你需要检查是否有商品没有对应的自我评价变量内容并及时进行更新。
-```yaml
-{{format_message_variable::stat_data.商城}}
-```
+商城:
+  description: 商城中的商品是由<user>提供的，{{get_message_variable::stat_data.主角.姓名}}可以自行决策使用积分购买物品
+  当前积分: '{{get_message_variable::stat_data.系统状态.可用积分}} —— {{get_message_variable::stat_data.主角.姓名}}会根据积分和商品重要程度决定先攒积分还是立刻消费'
+  商品列表: |-
+    {{format_message_variable::stat_data.商城}}

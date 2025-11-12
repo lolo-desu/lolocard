@@ -3,11 +3,11 @@
     <section class="status-system">
       <div class="top-info-bar">
         <div class="info-left">
-          <span class="status-indicator" :class="statusIndicatorClass" aria-hidden="true"></span>
+          <span class="status-indicator online" aria-hidden="true"></span>
           <span>{{ currentTimeLabel }}</span>
         </div>
         <div class="info-right">
-          <div class="status-badge">{{ world.当前地点 || '未知地点' }}</div>
+          <div class="status-badge">{{ statData.世界.当前地点 }}</div>
         </div>
       </div>
 
@@ -23,7 +23,7 @@
                 <div class="character-header">
                   <div
                     class="character-avatar"
-                    :class="{ 'has-avatar': avatarUrl, 'uploading': avatarUploading }"
+                    :class="{ 'has-avatar': avatarUrl, uploading: avatarUploading }"
                     :style="avatarUrl ? { backgroundImage: `url(${avatarUrl})` } : {}"
                     :title="avatarUploading ? '上传中...' : '点击上传头像'"
                     @click="uploadAvatar(hero.姓名)"
@@ -36,37 +36,22 @@
                     </div>
                   </div>
                   <div class="character-basic-info">
-                    <div class="character-name">{{ hero.姓名 || '角色名称' }}</div>
+                    <div class="character-name">{{ statData.主角.姓名 }}</div>
                     <div class="character-stats">
                       <div class="stat-item">
                         <span class="stat-label">性别:</span>
-                        <span class="stat-value">{{ hero.性别 || '待设定' }}</span>
+                        <span class="stat-value">{{ statData.主角.性别 }}</span>
                       </div>
                       <div class="stat-item">
                         <span class="stat-label">年龄:</span>
-                        <span class="stat-value">{{ hero.年龄 || '待设定' }}</span>
-                      </div>
-                      <div class="stat-item">
-                        <span class="stat-label">经验值:</span>
-                        <span class="stat-value">{{ experienceValue }}</span>
-                      </div>
-                      <div class="stat-item">
-                        <span class="stat-label">等级:</span>
-                        <span class="stat-value">{{ levelValue }}</span>
+                        <span class="stat-value">{{ statData.主角.年龄 }}</span>
                       </div>
                     </div>
                   </div>
                 </div>
                 <div class="character-description-section">
-                  <div v-if="hero.外貌?.描述" class="appearance-description">
-                    {{ hero.外貌.描述 }}
-                  </div>
-                  <div v-if="hero.外貌?.自我评价" class="self-evaluation">
-                    {{ hero.外貌.自我评价 }}
-                  </div>
-                  <div v-if="!hero.外貌?.描述 && !hero.外貌?.自我评价" class="appearance-description">
-                    暂无角色描述信息...
-                  </div>
+                  <div class="appearance-description">{{ hero.外貌.描述 }}</div>
+                  <div class="self-evaluation">{{ hero.外貌.主角评价 }}</div>
                 </div>
               </div>
             </div>
@@ -94,45 +79,45 @@
                   <div class="ability-item__value">{{ ability.数值 }}</div>
                   <div class="ability-item__desc">{{ abilityBaseDescriptions[ability.key] }}</div>
                   <div v-if="showBubble === ability.key" class="ability-bubble">
-                    {{ ability.自我评价 }}
+                    {{ ability.主角评价 }}
                   </div>
                 </div>
               </div>
             </div>
           </div>
-        <div class="mobile-section status-effects-mobile-only">
-          <button class="collapse-toggle" :aria-expanded="sectionOpen('effects')" @click="toggleSection('effects')">
-            <span>状态效果</span>
-            <span class="chevron">{{ sectionOpen('effects') ? '−' : '+' }}</span>
-          </button>
-          <div v-show="sectionOpen('effects')" class="mobile-section__body">
-            <div class="status-effects-panel">
-              <div v-if="buffList.length" class="status-effects-group">
-                <div class="status-effects-title">增益状态 ({{ buffList.length }})</div>
-                <ul class="status-effects-list">
-                  <li v-for="buff in buffList" :key="buff.id" class="status-effect-item">
-                    <div class="status-effect-name">{{ buff.name }}</div>
-                    <p class="status-effect-desc">{{ buff.description }}</p>
-                    <p v-if="buff.evaluation" class="status-effect-eval">「{{ buff.evaluation }}」</p>
-                    <p v-if="buff.extra" class="status-effect-meta">{{ buff.extra }}</p>
-                  </li>
-                </ul>
+          <div class="mobile-section status-effects-mobile-only">
+            <button class="collapse-toggle" :aria-expanded="sectionOpen('effects')" @click="toggleSection('effects')">
+              <span>状态效果</span>
+              <span class="chevron">{{ sectionOpen('effects') ? '−' : '+' }}</span>
+            </button>
+            <div v-show="sectionOpen('effects')" class="mobile-section__body">
+              <div class="status-effects-panel">
+                <div v-if="buffList.length" class="status-effects-group">
+                  <div class="status-effects-title">增益状态 ({{ buffList.length }})</div>
+                  <ul class="status-effects-list">
+                    <li v-for="buff in buffList" :key="buff.id" class="status-effect-item">
+                      <div class="status-effect-name">{{ buff.name }}</div>
+                      <p class="status-effect-desc">{{ buff.description }}</p>
+                      <p v-if="buff.evaluation" class="status-effect-eval">「{{ buff.evaluation }}」</p>
+                      <p v-if="buff.extra" class="status-effect-meta">{{ buff.extra }}</p>
+                    </li>
+                  </ul>
+                </div>
+                <div v-if="debuffList.length" class="status-effects-group">
+                  <div class="status-effects-title">减益状态 ({{ debuffList.length }})</div>
+                  <ul class="status-effects-list">
+                    <li v-for="debuff in debuffList" :key="debuff.id" class="status-effect-item">
+                      <div class="status-effect-name">{{ debuff.name }}</div>
+                      <p class="status-effect-desc">{{ debuff.description }}</p>
+                      <p v-if="debuff.evaluation" class="status-effect-eval">「{{ debuff.evaluation }}」</p>
+                      <p v-if="debuff.extra" class="status-effect-meta">{{ debuff.extra }}</p>
+                    </li>
+                  </ul>
+                </div>
+                <p v-if="!buffList.length && !debuffList.length" class="status-effects-empty">暂无状态效果</p>
               </div>
-              <div v-if="debuffList.length" class="status-effects-group">
-                <div class="status-effects-title">减益状态 ({{ debuffList.length }})</div>
-                <ul class="status-effects-list">
-                  <li v-for="debuff in debuffList" :key="debuff.id" class="status-effect-item">
-                    <div class="status-effect-name">{{ debuff.name }}</div>
-                    <p class="status-effect-desc">{{ debuff.description }}</p>
-                    <p v-if="debuff.evaluation" class="status-effect-eval">「{{ debuff.evaluation }}」</p>
-                    <p v-if="debuff.extra" class="status-effect-meta">{{ debuff.extra }}</p>
-                  </li>
-                </ul>
-              </div>
-              <p v-if="!buffList.length && !debuffList.length" class="status-effects-empty">暂无状态效果</p>
             </div>
           </div>
-        </div>
         </div>
 
         <div class="right-panel">
@@ -264,191 +249,37 @@
           </div>
         </div>
         <div class="bottom-right">
-          <button class="action-button" type="button" @click="openAction('task')">发布任务</button>
-          <button class="action-button" type="button" @click="showTaskListView = true">查看任务</button>
-          <button class="action-button" type="button" @click="openAction('reward')">发布奖励</button>
-          <button class="action-button" type="button" @click="openAction('shop')">创建商城</button>
-          <button class="action-button" type="button" @click="showShopView = true">查看商城</button>
+          <button class="action-button" type="button" @click="show_publish_task = true">发布任务</button>
+          <button class="action-button" type="button" @click="show_task_list = true">查看任务</button>
+          <button class="action-button" type="button" @click="show_grant_reward = true">发布奖励</button>
+          <button class="action-button" type="button" @click="show_create_shop_item = true">创建商品</button>
+          <button class="action-button" type="button" @click="show_shop = true">查看商城</button>
         </div>
       </div>
-
-      <p v-if="error" class="error-banner">{{ error }}</p>
     </section>
 
-    <ActionModal
-      :visible="activeAction === 'task'"
-      title="发布任务"
-      @close="closeAction"
-    >
-      <form class="form-grid" @submit.prevent="handleTaskSubmit">
-        <div class="form-actions" style="margin-bottom: 12px; padding-bottom: 0; border: none;">
-          <button type="button" class="primary" style="width: 100%;" @click="openAutoTaskModal">自动发布任务</button>
-        </div>
-        <label>
-          <span>任务名</span>
-          <input v-model="taskForm.任务名" required placeholder="例如：夺回王城" />
-        </label>
-        <label>
-          <span>类型</span>
-          <select v-model="taskForm.任务类型">
-            <option v-for="type in taskTypes" :key="type" :value="type">
-              {{ type }}
-            </option>
-          </select>
-        </label>
-        <label>
-          <span>任务说明</span>
-          <textarea v-model="taskForm.任务说明" placeholder="交代背景、系统指示等" />
-        </label>
-        <label>
-          <span>任务目标</span>
-          <textarea v-model="taskForm.任务目标" placeholder="列出具体步骤或达成条件" />
-        </label>
-        <label>
-          <span>奖励</span>
-          <input v-model="taskForm.奖励" placeholder="积分、道具、权限..." />
-        </label>
-        <label>
-          <span>惩罚</span>
-          <input v-model="taskForm.惩罚" placeholder="失败后承担的代价（可选）" />
-        </label>
+    <AutoTask v-if="show_publish_task" @close="show_publish_task = false" />
 
-        <div class="form-actions">
-          <button type="button" class="ghost" @click="closeAction">取消</button>
-          <button type="submit" class="primary" :disabled="syncing">发布</button>
-        </div>
-      </form>
-    </ActionModal>
+    <GrantReward v-if="show_grant_reward" @close="show_grant_reward = false" />
 
-    <ActionModal
-      :visible="activeAction === 'reward'"
-      title="发布奖励"
-      description="将奖励发放到主角物品栏，或直接调整系统积分。"
-      @close="closeAction"
-    >
-      <form class="form-grid" @submit.prevent="handleRewardSubmit">
-        <label>
-          <span>奖励名称</span>
-          <input v-model="rewardForm.名称" required placeholder="例如：龙鳞护符" />
-        </label>
-        <label>
-          <span>描述</span>
-          <textarea v-model="rewardForm.描述" placeholder="效果、来历等" />
-        </label>
-        <label>
-          <span>主角评价</span>
-          <textarea v-model="rewardForm.主角评价" placeholder="展示给主角的文案" />
-        </label>
-        <label>
-          <span>增加积分</span>
-          <input v-model.number="rewardForm.增加积分" type="number" min="0" placeholder="可选，输入数字则增加积分" />
-        </label>
-        <label class="form-grid__checkbox">
-          <input v-model="rewardForm.写入背包" type="checkbox" />
-          <span>写入主角物品栏</span>
-        </label>
+    <CreateShopItem v-if="show_create_shop_item" @close="show_create_shop_item = false" />
 
-        <div class="form-actions">
-          <button type="button" class="ghost" @click="closeAction">取消</button>
-          <button type="submit" class="primary" :disabled="syncing">发放</button>
-        </div>
-      </form>
-    </ActionModal>
+    <Shop v-if="show_shop" @close="show_shop = false" />
 
-    <ActionModal
-      :visible="activeAction === 'shop'"
-      title="创建商城条目"
-      description="为商城上架新商品，供主角在系统界面中兑换。"
-      @close="closeAction"
-    >
-      <form class="form-grid" @submit.prevent="handleShopSubmit">
-        <label>
-          <span>物品名称</span>
-          <input v-model="shopForm.物品名称" required placeholder="例如：星辉精粹" />
-        </label>
-        <label>
-          <span>描述</span>
-          <textarea v-model="shopForm.描述" placeholder="简述功效与限制" />
-        </label>
-        <label>
-          <span>价格(积分)</span>
-          <input v-model.number="shopForm.价格" type="number" min="0" required placeholder="所需积分数" />
-        </label>
-
-        <div class="form-actions">
-          <button type="button" class="ghost" @click="closeAction">取消</button>
-          <button type="submit" class="primary" :disabled="syncing">上架</button>
-        </div>
-      </form>
-    </ActionModal>
-
-    <ShopView
-      v-if="showShopView"
-      :shop="statData.商城 ?? {}"
-      :available-points="systemState.可用积分"
-      @close="showShopView = false"
-    />
-
-    <TaskListView
-      v-if="showTaskListView"
-      :tasks="statData.任务列表 ?? {}"
-      @close="showTaskListView = false"
-    />
-
-    <ActionModal
-      :visible="showAutoTaskModal"
-      title="自动发布任务"
-      @close="closeAutoTaskModal"
-    >
-      <form class="form-grid" @submit.prevent="handleAutoTaskSubmit">
-        <label>
-          <span>任务类型</span>
-          <select v-model="autoTaskForm.任务类型">
-            <option v-for="type in taskTypes" :key="type" :value="type">
-              {{ type }}
-            </option>
-          </select>
-        </label>
-        <label>
-          <span>难度</span>
-          <select v-model="autoTaskForm.难度">
-            <option value="简单">简单</option>
-            <option value="普通">普通</option>
-            <option value="困难">困难</option>
-          </select>
-        </label>
-        <label>
-          <span>奖励丰厚程度</span>
-          <select v-model="autoTaskForm.奖励丰厚程度">
-            <option value="微薄">微薄</option>
-            <option value="一般">一般</option>
-            <option value="丰厚">丰厚</option>
-          </select>
-        </label>
-        <label class="form-grid__checkbox">
-          <input v-model="autoTaskForm.是否色情" type="checkbox" />
-          <span>包含色情内容</span>
-        </label>
-
-        <div class="form-actions">
-          <button type="button" class="ghost" @click="closeAutoTaskModal">取消</button>
-          <button type="submit" class="primary">生成</button>
-        </div>
-      </form>
-    </ActionModal>
+    <TaskList v-if="show_task_list" @close="show_task_list = false" />
   </div>
 </template>
 
 <script setup lang="ts">
 import { computed, onBeforeUnmount, onMounted, reactive, ref, watch } from 'vue';
-import ActionModal from './components/ActionModal.vue';
-import ShopView from './components/ShopView.vue';
-import TaskListView from './components/TaskListView.vue';
-import { useIsekaiData } from './composables/useIsekaiData';
 import { useAvatarManager } from './composables/useAvatarManager';
-import { TASK_TYPES, type TaskType } from './types';
+import { useDataStore } from './store';
+import AutoTask from './view/AutoTask.vue';
+import CreateShopItem from './view/CreateShopItem.vue';
+import GrantReward from './view/GrantReward.vue';
+import Shop from './view/Shop.vue';
+import TaskList from './view/TaskList.vue';
 
-type FloatingAction = 'task' | 'reward' | 'shop';
 type SectionKey = 'info' | 'abilities' | 'equipment' | 'inventory' | 'effects';
 type StatusTab = 'buff' | 'debuff';
 
@@ -460,42 +291,19 @@ type StatusEffectEntry = {
   extra?: string;
 };
 
-const activeAction = ref<FloatingAction | null>(null);
-const taskForm = reactive({
-  任务名: '',
-  任务类型: TASK_TYPES[0] as TaskType,
-  任务说明: '',
-  任务目标: '',
-  奖励: '',
-  惩罚: '',
-});
-const rewardForm = reactive({
-  名称: '',
-  描述: '',
-  主角评价: '',
-  增加积分: null as number | null,
-  写入背包: true,
-});
-const shopForm = reactive({
-  物品名称: '',
-  描述: '',
-  价格: 0,
-});
-const showShopView = ref(false);
-const showTaskListView = ref(false);
-const showAutoTaskModal = ref(false);
+const show_publish_task = ref(false);
+const show_task_list = ref(false);
+const show_grant_reward = ref(false);
+const show_create_shop_item = ref(false);
+const show_shop = ref(false);
+
 const showStatusPopover = ref(false);
-const autoTaskForm = reactive({
-  任务类型: '主线' as TaskType,
-  难度: '普通',
-  奖励丰厚程度: '一般',
-  是否色情: false,
-});
 const statusPopoverTab = ref<StatusTab>('buff');
 const activeEquipmentBubble = ref<string | null>(null);
 const activeInventoryBubble = ref<string | null>(null);
 
-const { statData, loading, syncing, error, publishTask, grantReward, createShopItem } = useIsekaiData();
+const statData = toRef(useDataStore(), 'data');
+
 const { uploading: avatarUploading, avatarUrl, uploadAvatar, loadAvatarForCharacter } = useAvatarManager();
 
 const world = computed(() => statData.value.世界 ?? { 当前地点: '未知地点', 当前时间: '未知时间' });
@@ -503,11 +311,15 @@ const systemState = computed(() => statData.value.系统状态 ?? {});
 const hero = computed(() => statData.value.主角 ?? {});
 
 // 监听角色名称变化，自动加载头像
-watch(() => hero.value.姓名, async (newName) => {
-  if (newName && newName !== '角色名称') {
-    await loadAvatarForCharacter(newName);
-  }
-}, { immediate: true });
+watch(
+  () => hero.value.姓名,
+  async newName => {
+    if (newName && newName !== '角色名称') {
+      await loadAvatarForCharacter(newName);
+    }
+  },
+  { immediate: true },
+);
 
 const abilityOrder = ['力量', '敏捷', '体质', '感知', '意志', '魅力'] as const;
 const abilityBaseDescriptions: Record<(typeof abilityOrder)[number], string> = {
@@ -523,7 +335,7 @@ const orderedAbilities = computed(() => {
   return abilityOrder.map(key => ({
     key,
     数值: abilities[key]?.数值 ?? '--',
-    自我评价: abilities[key]?.自我评价 ?? '暂无评价',
+    主角评价: abilities[key]?.主角评价 ?? '暂无评价',
   }));
 });
 
@@ -548,7 +360,7 @@ function mapStatusEntry(entry: unknown, index: number, prefix: string): StatusEf
       id: `${prefix}-${index}-${name}`,
       name,
       description: record.描述 || record.影响 || '暂无描述',
-      evaluation: record.自我评价,
+      evaluation: record.主角评价,
       extra: record.持续时间 || record.触发条件 || record.影响,
     };
   }
@@ -583,86 +395,6 @@ function normalizeStatusEntries(value: unknown, prefix: string): StatusEffectEnt
   return entries;
 }
 
-const RADAR_SIZE = 200;
-const RADAR_CENTER = RADAR_SIZE / 2;
-const RADAR_RADIUS = 75;
-const RADAR_LABEL_OFFSET = 26;
-const RADAR_VALUE_OFFSET = 6;
-const RADAR_LEVELS = [0.35, 0.7, 1];
-
-function normalizeAbilityValue(value: unknown) {
-  if (typeof value === 'number') {
-    return Math.min(100, Math.max(0, value));
-  }
-  const parsed = Number(value);
-  if (!Number.isFinite(parsed)) {
-    return 0;
-  }
-  return Math.min(100, Math.max(0, parsed));
-}
-
-function radarAngle(index: number) {
-  return ((Math.PI * 2) / abilityOrder.length) * index - Math.PI / 2;
-}
-
-const abilityRadarPoints = computed(() => {
-  return orderedAbilities.value.map((ability, index) => {
-    const numericValue = normalizeAbilityValue(ability.数值);
-    const angle = radarAngle(index);
-    const ratio = Math.max(0.2, numericValue / 100);
-    const radius = RADAR_RADIUS * ratio;
-    const x = RADAR_CENTER + Math.cos(angle) * radius;
-    const y = RADAR_CENTER + Math.sin(angle) * radius;
-    const labelX = RADAR_CENTER + Math.cos(angle) * (RADAR_RADIUS + RADAR_LABEL_OFFSET);
-    const labelY = RADAR_CENTER + Math.sin(angle) * (RADAR_RADIUS + RADAR_LABEL_OFFSET);
-    const valueX = RADAR_CENTER + Math.cos(angle) * (RADAR_RADIUS + RADAR_VALUE_OFFSET);
-    const valueY = RADAR_CENTER + Math.sin(angle) * (RADAR_RADIUS + RADAR_VALUE_OFFSET);
-    return {
-      ...ability,
-      displayValue: ability.数值,
-      numericValue,
-      angle,
-      x,
-      y,
-      labelX,
-      labelY,
-      valueX,
-      valueY,
-    };
-  });
-});
-
-const abilityRadarPath = computed(() => abilityRadarPoints.value.map(point => `${point.x},${point.y}`).join(' '));
-
-const radarGridPolygons = computed(() =>
-  RADAR_LEVELS.map(level => ({
-    level,
-    points: abilityOrder
-      .map((_, index) => {
-        const angle = radarAngle(index);
-        const x = RADAR_CENTER + Math.cos(angle) * RADAR_RADIUS * level;
-        const y = RADAR_CENTER + Math.sin(angle) * RADAR_RADIUS * level;
-        return `${x},${y}`;
-      })
-      .join(' '),
-  })),
-);
-
-const radarAxes = computed(() =>
-  abilityOrder.map((key, index) => {
-    const angle = radarAngle(index);
-    const x2 = RADAR_CENTER + Math.cos(angle) * RADAR_RADIUS;
-    const y2 = RADAR_CENTER + Math.sin(angle) * RADAR_RADIUS;
-    return {
-      key,
-      x1: RADAR_CENTER,
-      y1: RADAR_CENTER,
-      x2,
-      y2,
-    };
-  }),
-);
-const activeAbilityKey = ref<(typeof abilityOrder)[number]>(abilityOrder[0]);
 const showBubble = ref<string | null>(null);
 const buffList = computed(() => normalizeStatusEntries(hero.value.Buff, 'buff'));
 const debuffList = computed(() => normalizeStatusEntries(hero.value.Debuff, 'debuff'));
@@ -697,7 +429,7 @@ const equipmentSlots = computed(() => {
       return {
         label,
         item: record.装备 ?? record.名称 ?? record.value ?? '空置',
-        evaluation: record.自我评价 ?? record.评价 ?? '',
+        evaluation: record.主角评价 ?? record.评价 ?? '',
       };
     }
     return {
@@ -708,20 +440,8 @@ const equipmentSlots = computed(() => {
   });
 });
 
-const heroDescription = computed(() => {
-  const desc = hero.value.外貌?.描述;
-  const evalText = hero.value.外貌?.自我评价;
-  if (desc || evalText) {
-    return [desc, evalText].filter(Boolean).join('｜');
-  }
-  return '暂无角色描述信息...';
-});
-
 const experienceValue = computed(() => hero.value.经验 ?? hero.value.exp ?? systemState.value?.经验 ?? 0);
 const levelValue = computed(() => hero.value.等级 ?? hero.value.level ?? systemState.value?.等级 ?? 1);
-
-const fndValue = computed(() => hero.value.FND ?? hero.value.fnd ?? systemState.value?.FND ?? '--');
-const sanValue = computed(() => hero.value.SAN ?? hero.value.san ?? systemState.value?.SAN ?? '--');
 
 const inventoryItems = computed(() => {
   const inventory = hero.value.物品栏 ?? {};
@@ -791,15 +511,6 @@ function nextPage() {
 }
 
 const currentTimeLabel = computed(() => world.value.当前时间 || new Date().toLocaleString('zh-CN'));
-const statusIndicatorClass = computed(() => {
-  if (error.value) {
-    return 'offline';
-  }
-  if (syncing.value || loading.value) {
-    return 'warning';
-  }
-  return 'online';
-});
 
 const isMobile = ref(false);
 const sectionState = reactive<Record<SectionKey, boolean>>({
@@ -911,15 +622,6 @@ watch(isMobile, value => {
   updateScale();
 });
 
-const taskTypes = TASK_TYPES;
-
-function openAction(type: FloatingAction) {
-  activeAction.value = type;
-}
-function closeAction() {
-  activeAction.value = null;
-}
-
 function toggleStatusPopover(tab: StatusTab) {
   if (showStatusPopover.value && statusPopoverTab.value === tab) {
     showStatusPopover.value = false;
@@ -931,67 +633,6 @@ function toggleStatusPopover(tab: StatusTab) {
 
 function closeStatusPopover() {
   showStatusPopover.value = false;
-}
-
-async function handleTaskSubmit() {
-  if (!taskForm.任务名.trim()) {
-    toastr?.warning?.('请填写任务名', '状态栏');
-    return;
-  }
-  await publishTask({ ...taskForm });
-  toastr?.success?.('任务已发布', '状态栏');
-  Object.assign(taskForm, { 任务名: '', 任务说明: '', 任务目标: '', 奖励: '', 惩罚: '' });
-  closeAction();
-}
-
-async function handleRewardSubmit() {
-  if (!rewardForm.名称.trim()) {
-    toastr?.warning?.('请填写奖励名称', '状态栏');
-    return;
-  }
-  const payload = {
-    名称: rewardForm.名称,
-    描述: rewardForm.描述,
-    主角评价: rewardForm.主角评价,
-    写入背包: rewardForm.写入背包,
-    增加积分: typeof rewardForm.增加积分 === 'number' ? rewardForm.增加积分 : undefined,
-  };
-  await grantReward(payload);
-  toastr?.success?.('奖励已发放', '状态栏');
-  Object.assign(rewardForm, { 名称: '', 描述: '', 主角评价: '', 增加积分: null, 写入背包: true });
-  closeAction();
-}
-
-async function handleShopSubmit() {
-  if (!shopForm.物品名称.trim()) {
-    toastr?.warning?.('请填写物品名称', '状态栏');
-    return;
-  }
-  await createShopItem({ ...shopForm, 价格: Number(shopForm.价格 ?? 0) });
-  toastr?.success?.('商品已上架', '状态栏');
-  Object.assign(shopForm, { 物品名称: '', 描述: '', 价格: 0 });
-  closeAction();
-}
-
-function openAutoTaskModal() {
-  showAutoTaskModal.value = true;
-}
-
-function closeAutoTaskModal() {
-  showAutoTaskModal.value = false;
-}
-
-async function handleAutoTaskSubmit() {
-  const 难度映射: Record<string, string> = { '简单': '简单', '普通': '普通', '困难': '困难' };
-  const 奖励映射: Record<string, string> = { '微薄': '微薄', '一般': '一般', '丰厚': '丰厚' };
-  const 色情限制 = autoTaskForm.是否色情 ? '必须' : '禁止';
-
-  const message = `【{{user}}发布了一个${难度映射[autoTaskForm.难度]}的${autoTaskForm.任务类型}任务，奖励${奖励映射[autoTaskForm.奖励丰厚程度]}，本次任务${色情限制}包含色情内容】<!--必须立即根据剧情生成合适的任务-->`;
-
-  await createChatMessages([{ role: 'user', message }]);
-  toastr?.success?.('自动任务指令已发送', '状态栏');
-  closeAutoTaskModal();
-  closeAction();
 }
 </script>
 
@@ -1145,21 +786,21 @@ async function handleAutoTaskSubmit() {
   background-size: cover;
   background-position: center;
   transition: all 0.2s ease;
-  
+
   &:hover {
     border-color: #666;
     opacity: 0.9;
   }
-  
+
   &.has-avatar {
     background-color: transparent;
   }
-  
+
   &.uploading {
     cursor: wait;
     opacity: 0.6;
   }
-  
+
   .avatar-placeholder {
     width: 100%;
     height: 100%;
@@ -1171,7 +812,7 @@ async function handleAutoTaskSubmit() {
     font-weight: bold;
     user-select: none;
   }
-  
+
   .avatar-loading {
     position: absolute;
     inset: 0;
@@ -1186,7 +827,8 @@ async function handleAutoTaskSubmit() {
 }
 
 @keyframes pulse {
-  0%, 100% {
+  0%,
+  100% {
     opacity: 0.6;
   }
   50% {
@@ -1249,6 +891,7 @@ async function handleAutoTaskSubmit() {
   min-height: 35px;
   /* 限制为两行 */
   display: -webkit-box;
+  line-clamp: 2;
   -webkit-line-clamp: 2;
   -webkit-box-orient: vertical;
   overflow: hidden;
@@ -1266,6 +909,7 @@ async function handleAutoTaskSubmit() {
   min-height: 35px;
   /* 限制为两行 */
   display: -webkit-box;
+  line-clamp: 2;
   -webkit-line-clamp: 2;
   -webkit-box-orient: vertical;
   overflow: hidden;
@@ -1437,19 +1081,19 @@ async function handleAutoTaskSubmit() {
 }
 
 @media (min-width: 769px) {
-  .abilities-panel .ability-item:nth-last-child(-n+3) .ability-bubble {
+  .abilities-panel .ability-item:nth-last-child(-n + 3) .ability-bubble {
     top: auto;
     bottom: calc(100% + 8px);
   }
 
-  .abilities-panel .ability-item:nth-last-child(-n+3) .ability-bubble::before {
+  .abilities-panel .ability-item:nth-last-child(-n + 3) .ability-bubble::before {
     bottom: auto;
     top: 100%;
     border-width: 6px 6px 0 6px;
     border-color: var(--border-color) transparent transparent transparent;
   }
 
-  .abilities-panel .ability-item:nth-last-child(-n+3) .ability-bubble::after {
+  .abilities-panel .ability-item:nth-last-child(-n + 3) .ability-bubble::after {
     bottom: auto;
     top: 100%;
     border-width: 5px 5px 0 5px;
@@ -1460,19 +1104,19 @@ async function handleAutoTaskSubmit() {
 }
 
 @media (max-width: 768px) {
-  .abilities-panel .ability-item:nth-last-child(-n+2) .ability-bubble {
+  .abilities-panel .ability-item:nth-last-child(-n + 2) .ability-bubble {
     top: auto;
     bottom: calc(100% + 8px);
   }
 
-  .abilities-panel .ability-item:nth-last-child(-n+2) .ability-bubble::before {
+  .abilities-panel .ability-item:nth-last-child(-n + 2) .ability-bubble::before {
     bottom: auto;
     top: 100%;
     border-width: 6px 6px 0 6px;
     border-color: var(--border-color) transparent transparent transparent;
   }
 
-  .abilities-panel .ability-item:nth-last-child(-n+2) .ability-bubble::after {
+  .abilities-panel .ability-item:nth-last-child(-n + 2) .ability-bubble::after {
     bottom: auto;
     top: 100%;
     border-width: 5px 5px 0 5px;
