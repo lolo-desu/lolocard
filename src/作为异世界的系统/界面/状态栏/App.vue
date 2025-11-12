@@ -21,7 +21,20 @@
             <div v-show="sectionOpen('info')" class="mobile-section__body">
               <div class="character-info-card">
                 <div class="character-header">
-                  <div class="character-avatar"></div>
+                  <div
+                    class="character-avatar"
+                    :class="{ 'has-avatar': avatarUrl, 'uploading': avatarUploading }"
+                    :style="avatarUrl ? { backgroundImage: `url(${avatarUrl})` } : {}"
+                    :title="avatarUploading ? '上传中...' : '点击上传头像'"
+                    @click="uploadAvatar(hero.姓名)"
+                  >
+                    <div v-if="!avatarUrl && !avatarUploading" class="avatar-placeholder">
+                      <span>+</span>
+                    </div>
+                    <div v-if="avatarUploading" class="avatar-loading">
+                      <span>...</span>
+                    </div>
+                  </div>
                   <div class="character-basic-info">
                     <div class="character-name">{{ hero.姓名 || '角色名称' }}</div>
                     <div class="character-stats">
@@ -432,6 +445,7 @@ import ActionModal from './components/ActionModal.vue';
 import ShopView from './components/ShopView.vue';
 import TaskListView from './components/TaskListView.vue';
 import { useIsekaiData } from './composables/useIsekaiData';
+import { useAvatarManager } from './composables/useAvatarManager';
 import { TASK_TYPES, type TaskType } from './types';
 
 type FloatingAction = 'task' | 'reward' | 'shop';
@@ -482,10 +496,18 @@ const activeEquipmentBubble = ref<string | null>(null);
 const activeInventoryBubble = ref<string | null>(null);
 
 const { statData, loading, syncing, error, publishTask, grantReward, createShopItem } = useIsekaiData();
+const { uploading: avatarUploading, avatarUrl, uploadAvatar, loadAvatarForCharacter } = useAvatarManager();
 
 const world = computed(() => statData.value.世界 ?? { 当前地点: '未知地点', 当前时间: '未知时间' });
 const systemState = computed(() => statData.value.系统状态 ?? {});
 const hero = computed(() => statData.value.主角 ?? {});
+
+// 监听角色名称变化，自动加载头像
+watch(() => hero.value.姓名, async (newName) => {
+  if (newName && newName !== '角色名称') {
+    await loadAvatarForCharacter(newName);
+  }
+}, { immediate: true });
 
 const abilityOrder = ['力量', '敏捷', '体质', '感知', '意志', '魅力'] as const;
 const abilityBaseDescriptions: Record<(typeof abilityOrder)[number], string> = {
@@ -1117,6 +1139,59 @@ async function handleAutoTaskSubmit() {
   background: var(--bg-input);
   border: 2px solid var(--border-color);
   flex-shrink: 0;
+  cursor: pointer;
+  position: relative;
+  overflow: hidden;
+  background-size: cover;
+  background-position: center;
+  transition: all 0.2s ease;
+  
+  &:hover {
+    border-color: #666;
+    opacity: 0.9;
+  }
+  
+  &.has-avatar {
+    background-color: transparent;
+  }
+  
+  &.uploading {
+    cursor: wait;
+    opacity: 0.6;
+  }
+  
+  .avatar-placeholder {
+    width: 100%;
+    height: 100%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 24px;
+    color: #666;
+    font-weight: bold;
+    user-select: none;
+  }
+  
+  .avatar-loading {
+    position: absolute;
+    inset: 0;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    background: rgba(0, 0, 0, 0.5);
+    color: white;
+    font-size: 12px;
+    animation: pulse 1.5s ease-in-out infinite;
+  }
+}
+
+@keyframes pulse {
+  0%, 100% {
+    opacity: 0.6;
+  }
+  50% {
+    opacity: 1;
+  }
 }
 
 .character-name {
