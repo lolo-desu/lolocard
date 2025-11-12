@@ -702,26 +702,17 @@ const fndValue = computed(() => hero.value.FND ?? hero.value.fnd ?? systemState.
 const sanValue = computed(() => hero.value.SAN ?? hero.value.san ?? systemState.value?.SAN ?? '--');
 
 const inventoryItems = computed(() => {
-  const inventory = Array.isArray(hero.value.物品栏) ? hero.value.物品栏 : [];
-  return inventory.map((entry, index) => {
-    if (Array.isArray(entry)) {
-      const [name, description, feeling] = entry as [string, string, string?];
-      return {
-        id: `${index}-${name}`,
-        名称: name || '未知物品',
-        描述: description,
-        主角评价: feeling,
-        placeholder: false,
-      };
-    }
-    return {
-      id: `${index}-${(entry as any)?.名称 ?? 'item'}`,
-      名称: (entry as any)?.名称 ?? '未知物品',
-      描述: (entry as any)?.描述,
-      主角评价: (entry as any)?.主角评价,
-      placeholder: false,
-    };
-  });
+  const inventory = hero.value.物品栏 ?? {};
+  if (typeof inventory !== 'object' || Array.isArray(inventory)) {
+    return [];
+  }
+  return Object.entries(inventory).map(([name, item], index) => ({
+    id: `${index}-${name}`,
+    名称: name || '未知物品',
+    描述: item?.描述 || '',
+    主角评价: item?.主角评价,
+    placeholder: false,
+  }));
 });
 
 const itemsPerPage = 6;

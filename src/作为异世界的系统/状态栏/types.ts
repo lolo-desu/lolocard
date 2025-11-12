@@ -26,13 +26,12 @@ export interface EquipmentSlots {
   [key: string]: string;
 }
 
-export type InventoryTuple = [string, string, string?];
-
 export interface InventoryItem {
-  名称: string;
   描述: string;
   主角评价?: string;
 }
+
+export type InventoryDictionary = Record<string, InventoryItem>;
 
 export interface HeroState {
   姓名: string;
@@ -40,7 +39,7 @@ export interface HeroState {
   年龄: string;
   外貌: Appearance;
   能力面板: AbilityPanel;
-  物品栏: Array<InventoryTuple | InventoryItem>;
+  物品栏: InventoryDictionary;
   装备栏: EquipmentSlots;
   [key: string]: any;
 }

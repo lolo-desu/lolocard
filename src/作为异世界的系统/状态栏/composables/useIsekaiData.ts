@@ -31,7 +31,7 @@ const DEFAULT_STATE: IsekaiStatData = {
       意志: { 数值: '??', 自我评价: '未知' },
       魅力: { 数值: '??', 自我评价: '未知' },
     },
-    物品栏: [],
+    物品栏: {},
     装备栏: {
       主手: '空置',
       副手: '空置',
@@ -122,11 +122,15 @@ export function useIsekaiData() {
 
   const grantReward = async (payload: RewardPayload) => {
     await mutateStatData(draft => {
-      const inventory = Array.isArray(draft.主角?.物品栏) ? draft.主角.物品栏 : [];
-      if (payload.写入背包 !== false) {
-        inventory.push([payload.名称, payload.描述, payload.主角评价 ?? '']);
+      if (!draft.主角?.物品栏 || typeof draft.主角.物品栏 !== 'object') {
+        draft.主角.物品栏 = {};
       }
-      _.set(draft, '主角.物品栏', inventory);
+      if (payload.写入背包 !== false) {
+        draft.主角.物品栏[payload.名称] = {
+          描述: payload.描述,
+          主角评价: payload.主角评价,
+        };
+      }
 
       if (typeof payload.增加积分 === 'number' && !Number.isNaN(payload.增加积分)) {
         const current = Number(draft.系统状态?.可用积分 ?? 0);
