@@ -1,8 +1,8 @@
-import { Data } from '../../data';
+import { Schema } from '../../schema';
 
 export const useDataStore = defineStore('data', () => {
   const data = ref(
-    Data.parse(_.get(getVariables({ type: 'message', message_id: getCurrentMessageId() }), 'stat_data', {})),
+    Schema.parse(_.get(getVariables({ type: 'message', message_id: getCurrentMessageId() }), 'stat_data', {})),
   );
 
   watchEffect(() => {

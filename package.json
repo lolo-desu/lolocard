@@ -5,7 +5,8 @@
     "watch": "webpack --mode development --watch --progress",
     "format": "prettier --write \"src/**/*.{ts,tsx,js,jsx,css,scss,html,vue}\"",
     "lint": "eslint",
-    "lint:fix": "eslint"
+    "lint:fix": "eslint",
+    "dump": "node dump_schema.ts"
   },
   "browserslist": [
     "defaults and partially supports es6-module"

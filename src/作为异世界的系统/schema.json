@@ -1,0 +1,503 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "type": "object",
+  "properties": {
+    "世界": {
+      "type": "object",
+      "properties": {
+        "当前时间": {
+          "type": "string"
+        },
+        "当前地点": {
+          "type": "string"
+        }
+      },
+      "required": [
+        "当前时间",
+        "当前地点"
+      ]
+    },
+    "主角": {
+      "type": "object",
+      "properties": {
+        "姓名": {
+          "type": "string"
+        },
+        "性别": {
+          "type": "string"
+        },
+        "年龄": {
+          "anyOf": [
+            {
+              "type": "number"
+            },
+            {
+              "type": "string",
+              "const": "待初始化"
+            }
+          ]
+        },
+        "外貌": {
+          "type": "object",
+          "properties": {
+            "描述": {
+              "type": "string"
+            },
+            "主角评价": {
+              "type": "string"
+            }
+          },
+          "required": [
+            "描述",
+            "主角评价"
+          ]
+        },
+        "能力面板": {
+          "type": "object",
+          "properties": {
+            "力量": {
+              "description": "体能与攻击能力，决定近战输出与负重",
+              "type": "object",
+              "properties": {
+                "数值": {
+                  "anyOf": [
+                    {
+                      "anyOf": [
+                        {
+                          "type": "number"
+                        },
+                        {
+                          "type": "string",
+                          "const": "待初始化"
+                        }
+                      ]
+                    },
+                    {
+                      "type": "string",
+                      "const": "待初始化"
+                    }
+                  ]
+                },
+                "主角评价": {
+                  "type": "string"
+                }
+              },
+              "required": [
+                "数值",
+                "主角评价"
+              ]
+            },
+            "敏捷": {
+              "description": "移动、闪避与反应速度，影响先手与命中",
+              "type": "object",
+              "properties": {
+                "数值": {
+                  "anyOf": [
+                    {
+                      "type": "number"
+                    },
+                    {
+                      "type": "string",
+                      "const": "待初始化"
+                    }
+                  ]
+                },
+                "主角评价": {
+                  "type": "string"
+                }
+              },
+              "required": [
+                "数值",
+                "主角评价"
+              ]
+            },
+            "体质": {
+              "description": "生命力与耐久度，决定抗性与恢复速度",
+              "type": "object",
+              "properties": {
+                "数值": {
+                  "anyOf": [
+                    {
+                      "type": "number"
+                    },
+                    {
+                      "type": "string",
+                      "const": "待初始化"
+                    }
+                  ]
+                },
+                "主角评价": {
+                  "type": "string"
+                }
+              },
+              "required": [
+                "数值",
+                "主角评价"
+              ]
+            },
+            "感知": {
+              "description": "观察与洞察能力，影响侦查与魔力控制",
+              "type": "object",
+              "properties": {
+                "数值": {
+                  "anyOf": [
+                    {
+                      "type": "number"
+                    },
+                    {
+                      "type": "string",
+                      "const": "待初始化"
+                    }
+                  ]
+                },
+                "主角评价": {
+                  "type": "string"
+                }
+              },
+              "required": [
+                "数值",
+                "主角评价"
+              ]
+            },
+            "意志": {
+              "description": "精神力与抗干扰能力，决定技能稳定性",
+              "type": "object",
+              "properties": {
+                "数值": {
+                  "anyOf": [
+                    {
+                      "type": "number"
+                    },
+                    {
+                      "type": "string",
+                      "const": "待初始化"
+                    }
+                  ]
+                },
+                "主角评价": {
+                  "type": "string"
+                }
+              },
+              "required": [
+                "数值",
+                "主角评价"
+              ]
+            },
+            "魅力": {
+              "description": "影响交涉、统御与社交反馈的综合指标",
+              "type": "object",
+              "properties": {
+                "数值": {
+                  "anyOf": [
+                    {
+                      "type": "number"
+                    },
+                    {
+                      "type": "string",
+                      "const": "待初始化"
+                    }
+                  ]
+                },
+                "主角评价": {
+                  "type": "string"
+                }
+              },
+              "required": [
+                "数值",
+                "主角评价"
+              ]
+            }
+          },
+          "required": [
+            "力量",
+            "敏捷",
+            "体质",
+            "感知",
+            "意志",
+            "魅力"
+          ]
+        },
+        "装备栏": {
+          "type": "object",
+          "properties": {
+            "主手": {
+              "type": "object",
+              "properties": {
+                "装备": {
+                  "type": "string"
+                },
+                "主角评价": {
+                  "type": "string"
+                }
+              },
+              "required": [
+                "装备",
+                "主角评价"
+              ]
+            },
+            "副手": {
+              "type": "object",
+              "properties": {
+                "装备": {
+                  "type": "string"
+                },
+                "主角评价": {
+                  "type": "string"
+                }
+              },
+              "required": [
+                "装备",
+                "主角评价"
+              ]
+            },
+            "防具": {
+              "type": "object",
+              "properties": {
+                "装备": {
+                  "type": "string"
+                },
+                "主角评价": {
+                  "type": "string"
+                }
+              },
+              "required": [
+                "装备",
+                "主角评价"
+              ]
+            },
+            "饰品": {
+              "type": "object",
+              "properties": {
+                "装备": {
+                  "type": "string"
+                },
+                "主角评价": {
+                  "type": "string"
+                }
+              },
+              "required": [
+                "装备",
+                "主角评价"
+              ]
+            }
+          },
+          "required": [
+            "主手",
+            "副手",
+            "防具",
+            "饰品"
+          ]
+        },
+        "物品栏": {
+          "type": "object",
+          "propertyNames": {
+            "description": "物品名",
+            "type": "string"
+          },
+          "additionalProperties": {
+            "type": "object",
+            "properties": {
+              "描述": {
+                "type": "string"
+              },
+              "主角评价": {
+                "type": "string"
+              }
+            },
+            "required": [
+              "描述",
+              "主角评价"
+            ]
+          }
+        },
+        "持有能力": {
+          "type": "object",
+          "propertyNames": {
+            "description": "物品名",
+            "type": "string"
+          },
+          "additionalProperties": {
+            "type": "object",
+            "properties": {
+              "描述": {
+                "type": "string"
+              },
+              "主角评价": {
+                "type": "string"
+              }
+            },
+            "required": [
+              "描述",
+              "主角评价"
+            ]
+          }
+        },
+        "当前状态": {
+          "type": "object",
+          "propertyNames": {
+            "description": "状态名",
+            "type": "string"
+          },
+          "additionalProperties": {
+            "type": "object",
+            "properties": {
+              "类型": {
+                "type": "string",
+                "enum": [
+                  "增益",
+                  "减益"
+                ]
+              },
+              "持续时间": {
+                "anyOf": [
+                  {
+                    "type": "string",
+                    "const": "永久"
+                  },
+                  {
+                    "type": "string"
+                  }
+                ]
+              },
+              "触发条件": {
+                "type": "string"
+              },
+              "描述": {
+                "type": "string"
+              },
+              "主角评价": {
+                "type": "string"
+              }
+            },
+            "required": [
+              "类型",
+              "持续时间",
+              "触发条件",
+              "描述",
+              "主角评价"
+            ]
+          }
+        }
+      },
+      "required": [
+        "姓名",
+        "性别",
+        "年龄",
+        "外貌",
+        "能力面板",
+        "装备栏",
+        "物品栏",
+        "持有能力",
+        "当前状态"
+      ]
+    },
+    "系统状态": {
+      "type": "object",
+      "properties": {
+        "可用积分": {
+          "anyOf": [
+            {
+              "type": "number"
+            },
+            {
+              "type": "string",
+              "const": "待初始化"
+            }
+          ]
+        },
+        "对主角可见形象": {
+          "type": "string"
+        },
+        "玩家ID": {
+          "type": "string"
+        }
+      },
+      "required": [
+        "可用积分",
+        "对主角可见形象",
+        "玩家ID"
+      ]
+    },
+    "商品列表": {
+      "type": "object",
+      "propertyNames": {
+        "description": "商品名",
+        "type": "string"
+      },
+      "additionalProperties": {
+        "type": "object",
+        "properties": {
+          "描述": {
+            "type": "string"
+          },
+          "主角评价": {
+            "type": "string"
+          },
+          "积分价格": {
+            "anyOf": [
+              {
+                "type": "number"
+              },
+              {
+                "type": "string",
+                "const": "待初始化"
+              }
+            ]
+          }
+        },
+        "required": [
+          "描述",
+          "主角评价",
+          "积分价格"
+        ]
+      }
+    },
+    "任务列表": {
+      "type": "object",
+      "propertyNames": {
+        "description": "任务名",
+        "type": "string"
+      },
+      "additionalProperties": {
+        "type": "object",
+        "properties": {
+          "类型": {
+            "type": "string",
+            "enum": [
+              "主线",
+              "支线",
+              "每日",
+              "临危受命"
+            ]
+          },
+          "说明": {
+            "type": "string"
+          },
+          "目标": {
+            "type": "string"
+          },
+          "奖励": {
+            "type": "string"
+          },
+          "惩罚": {
+            "type": "string"
+          }
+        },
+        "required": [
+          "类型",
+          "说明",
+          "目标",
+          "奖励",
+          "惩罚"
+        ]
+      }
+    }
+  },
+  "required": [
+    "世界",
+    "主角",
+    "系统状态",
+    "商品列表",
+    "任务列表"
+  ]
+}

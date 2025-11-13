@@ -23,7 +23,7 @@
 </template>
 
 <script lang="ts" setup>
-import { Data } from '../../../data';
+import { Schema } from '../../../schema';
 import ActionModal from '../components/ActionModal.vue';
 import { useDataStore } from '../store';
 
@@ -35,7 +35,7 @@ const ShopItemForm = z
   .object({
     名称: z.coerce.string(),
   })
-  .extend(Data.shape.商品列表.valueType.shape);
+  .extend(Schema.shape.商品列表.valueType.shape);
 type ShopItemForm = z.infer<typeof ShopItemForm>;
 
 const shop_item_form = ref<ShopItemForm>({
@@ -56,7 +56,7 @@ function handleSubmit() {
   const data = result.data;
   const store = useDataStore();
   if (data.名称) {
-    _.set(store.data.商品列表, data.名称, Data.shape.商品列表.valueType.parse(data));
+    _.set(store.data.商品列表, data.名称, Schema.shape.商品列表.valueType.parse(data));
   }
   toastr.success('已增加商品');
   emit('close');

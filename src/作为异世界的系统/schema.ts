@@ -1,4 +1,6 @@
-export const Data = z.object({
+import { z } from 'zod';
+
+export const Schema = z.object({
   世界: z.object({
     当前时间: z.coerce.string(),
     当前地点: z.coerce.string(),
@@ -120,16 +122,5 @@ export const Data = z.object({
     }),
   ),
 });
-
-export type Data = z.output<typeof Data>;
-
-export type WorldData = z.output<typeof Data.shape.世界>;
-
-export type HeroData = z.output<typeof Data.shape.主角>;
-
-export type SystemData = z.output<typeof Data.shape.系统状态>;
-
-export type ShopData = z.output<typeof Data.shape.商品列表>;
-
-export type TaskData = z.output<typeof Data.shape.任务列表>;
+export type Schema = z.output<typeof Schema>;
 export const TASK_TYPES = ['主线', '支线', '每日', '临危受命'] as const;

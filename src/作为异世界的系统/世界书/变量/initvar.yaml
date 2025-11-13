@@ -1,4 +1,4 @@
-# yaml-language-server: $schema=https://testingcf.jsdelivr.net/gh/MagicalAstrogy/MagVarUpdate/artifact/stat-data-schema.json
+# yaml-language-server: $schema=../../schema.json
 世界:
   当前时间: 待初始化
   当前地点: 待初始化

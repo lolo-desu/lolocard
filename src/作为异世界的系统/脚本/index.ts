@@ -1,4 +1,4 @@
-import { Data } from '../data';
+import { Schema } from '../schema';
 
 function trimQuotesAndBackslashes(string: string): string {
   return string.replace(/^[\\"'` ]*(.*?)[\\"'` ]*$/, '$1');
@@ -87,7 +87,7 @@ $(async () => {
           break;
         }
       }
-      const result = Data.safeParse(new_data);
+      const result = Schema.safeParse(new_data);
       if (result.success) {
         variables.stat_data = result.data;
       }

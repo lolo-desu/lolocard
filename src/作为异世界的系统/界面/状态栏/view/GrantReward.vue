@@ -31,7 +31,7 @@
 </template>
 
 <script lang="ts" setup>
-import { Data } from '../../../data';
+import { Schema } from '../../../schema';
 import ActionModal from '../components/ActionModal.vue';
 import { useDataStore } from '../store';
 
@@ -45,7 +45,7 @@ const RewardForm = z
     增加积分: z.coerce.number(),
     写入背包: z.coerce.boolean(),
   })
-  .extend(Data.shape.主角.shape.物品栏.valueType.shape);
+  .extend(Schema.shape.主角.shape.物品栏.valueType.shape);
 type RewardForm = z.infer<typeof RewardForm>;
 
 const reward_form = ref<RewardForm>({
@@ -67,9 +67,12 @@ function handleSubmit() {
   const data = result.data;
   const store = useDataStore();
   if (data.写入背包 === true && data.名称) {
-    _.set(store.data.主角.物品栏, data.名称, Data.shape.主角.shape.物品栏.valueType.parse(data));
+    _.set(store.data.主角.物品栏, data.名称, Schema.shape.主角.shape.物品栏.valueType.parse(data));
   }
   if (data.增加积分 > 0) {
+    if (typeof store.data.系统状态.可用积分 === 'string') {
+      store.data.系统状态.可用积分 = 0;
+    }
     store.data.系统状态.可用积分 += data.增加积分;
   }
   toastr.success('已发放奖励');

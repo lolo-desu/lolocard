@@ -44,7 +44,7 @@
 </template>
 
 <script lang="ts" setup>
-import { Data, TASK_TYPES } from '../../../data';
+import { Schema, TASK_TYPES } from '../../../schema';
 import ActionModal from '../components/ActionModal.vue';
 import { useDataStore } from '../store';
 import AutoTask from './AutoTask.vue';
@@ -53,7 +53,7 @@ const emit = defineEmits<{
   close: [void];
 }>();
 
-const TaskForm = z.object({ 名称: z.coerce.string() }).extend(Data.shape.任务列表.valueType.shape);
+const TaskForm = z.object({ 名称: z.coerce.string() }).extend(Schema.shape.任务列表.valueType.shape);
 type TaskForm = z.infer<typeof TaskForm>;
 
 const task_form = ref<TaskForm>({
@@ -76,7 +76,7 @@ function handleSubmit() {
   const data = result.data;
   const store = useDataStore();
   if (data.名称) {
-    _.set(store.data.任务列表, data.名称, Data.shape.任务列表.valueType.parse(data));
+    _.set(store.data.任务列表, data.名称, Schema.shape.任务列表.valueType.parse(data));
   }
   toastr.success('已发布任务');
   emit('close');

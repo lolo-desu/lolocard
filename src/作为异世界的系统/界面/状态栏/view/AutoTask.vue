@@ -33,7 +33,7 @@
 </template>
 
 <script lang="ts" setup>
-import { Data, TASK_TYPES } from '../../../data';
+import { Schema, TASK_TYPES } from '../../../schema';
 import ActionModal from '../components/ActionModal.vue';
 
 const emit = defineEmits<{
@@ -44,7 +44,7 @@ const DIFFICULTIES = ['简单', '普通', '困难'] as const;
 const REWARDS = ['微薄', '一般', '丰厚'] as const;
 
 const TaskForm = z.object({
-  类型: Data.shape.任务列表.valueType.shape.类型,
+  类型: Schema.shape.任务列表.valueType.shape.类型,
   难度: z.enum(DIFFICULTIES),
   奖励: z.enum(REWARDS),
   是否色情: z.coerce.boolean(),
