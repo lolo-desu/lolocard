@@ -2,7 +2,7 @@
   <ActionModal title="发布任务" @close="emit('close')">
     <form class="form-grid">
       <div class="form-actions" style="margin-bottom: 12px; padding-bottom: 0; border: none">
-        <button type="button" class="primary" style="width: 100%" @click="emit('close')">自动发布任务</button>
+        <button type="button" class="primary" style="width: 100%" @click="show_auto_task = true">自动发布任务</button>
       </div>
       <label>
         <span>名称</span>
@@ -40,7 +40,7 @@
     </form>
   </ActionModal>
 
-  <AutoTask @close="emit('close')" />
+  <AutoTask v-if="show_auto_task" @close="show_auto_task = false" />
 </template>
 
 <script lang="ts" setup>
@@ -48,6 +48,8 @@ import { Schema, TASK_TYPES } from '../../../schema';
 import ActionModal from '../components/ActionModal.vue';
 import { useDataStore } from '../store';
 import AutoTask from './AutoTask.vue';
+
+const show_auto_task = ref(false);
 
 const emit = defineEmits<{
   close: [void];

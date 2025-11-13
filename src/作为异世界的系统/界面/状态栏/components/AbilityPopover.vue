@@ -1,0 +1,333 @@
+<template>
+  <div class="ability-popover-trigger">
+    <button
+      class="ability-button"
+      type="button"
+      :class="{ active: show }"
+      @click="toggle"
+    >
+      <span class="button-icon">★</span>
+      能力 ({{ abilities.length }})
+    </button>
+    <div v-if="show" class="ability-popover">
+      <div class="popover-header">
+        <span>持有能力</span>
+        <button class="popover-close" type="button" aria-label="关闭能力列表" @click="close">×</button>
+      </div>
+      <div class="ability-content">
+        <p v-if="!abilities.length" class="ability-empty">暂无持有能力</p>
+        <ul v-else class="ability-list">
+          <li
+            v-for="(ability, index) in abilities"
+            :key="ability.id"
+            class="ability-item"
+            :class="{ active: activeBubble === ability.id, 'bubble-top': shouldShowBubbleOnTop(index, abilities.length) }"
+            @click="toggleBubble(ability.id)"
+          >
+            <div class="ability-name">{{ ability.name }}</div>
+            <p class="ability-desc">{{ ability.描述 }}</p>
+            <div v-if="activeBubble === ability.id && ability.主角评价" class="ability-bubble">
+              {{ ability.主角评价 }}
+            </div>
+          </li>
+        </ul>
+      </div>
+    </div>
+  </div>
+</template>
+
+<script setup lang="ts">
+import { useBubble } from '../composables/useBubble';
+
+type AbilityEntry = {
+  id: string;
+  name: string;
+  描述: string;
+  主角评价: string;
+};
+
+defineProps<{
+  abilities: AbilityEntry[];
+}>();
+
+const show = defineModel<boolean>('show', { default: false });
+
+const { activeBubble, toggleBubble } = useBubble<string>();
+
+function toggle() {
+  show.value = !show.value;
+}
+
+function close() {
+  show.value = false;
+}
+
+// 判断气泡应该显示在上方还是下方
+// 列表后半部分的元素,气泡显示在上方
+function shouldShowBubbleOnTop(index: number, total: number): boolean {
+  return index >= Math.floor(total / 2);
+}
+</script>
+
+<style lang="scss" scoped>
+.ability-popover-trigger {
+  display: flex;
+  gap: 8px;
+  align-items: flex-start;
+  position: relative;
+}
+
+.ability-button {
+  background: transparent;
+  border: none;
+  font-family: var(--pixel-font);
+  font-size: 10px;
+  font-weight: bold;
+  cursor: pointer;
+  padding: 4px 8px;
+  transition: color 0.2s;
+  color: var(--text-primary);
+  display: flex;
+  align-items: center;
+  gap: 4px;
+}
+
+.ability-button.active {
+  color: #1976d2;
+  text-decoration: underline;
+}
+
+.button-icon {
+  font-size: 12px;
+}
+
+.ability-popover {
+  position: absolute;
+  bottom: calc(100% + 10px);
+  left: 0;
+  width: 320px;
+  background: var(--bg-input);
+  border: 3px solid var(--border-color);
+  border-radius: 4px;
+  padding: 0;
+  box-shadow: 4px 4px 0 rgba(0, 0, 0, 0.3);
+  z-index: 30;
+  animation: popoverFadeIn 0.2s ease-out;
+}
+
+@keyframes popoverFadeIn {
+  from {
+    opacity: 0;
+    transform: translateY(10px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+.popover-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  font-weight: bold;
+  font-size: 11px;
+  padding: 10px 12px;
+  background: var(--bg-card);
+  border-bottom: 2px solid var(--border-color);
+  color: #000;
+}
+
+.popover-close {
+  background: transparent;
+  border: none;
+  font-size: 16px;
+  line-height: 1;
+  cursor: pointer;
+  color: #666;
+  transition: color 0.2s;
+  padding: 0 4px;
+
+  &:hover {
+    color: #000;
+  }
+}
+
+.ability-content {
+  max-height: 320px;
+  overflow-y: auto;
+  padding: 8px;
+  padding-right: 4px;
+
+  /* 自定义滚动条样式 */
+  &::-webkit-scrollbar {
+    width: 8px;
+  }
+
+  &::-webkit-scrollbar-track {
+    background: var(--bg-card);
+    border-radius: 4px;
+    border: 1px solid var(--border-color);
+  }
+
+  &::-webkit-scrollbar-thumb {
+    background: #999;
+    border-radius: 4px;
+    border: 1px solid var(--border-color);
+
+    &:hover {
+      background: #777;
+    }
+
+    &:active {
+      background: #555;
+    }
+  }
+
+  /* Firefox 滚动条样式 */
+  scrollbar-width: thin;
+  scrollbar-color: #999 var(--bg-card);
+}
+
+.ability-empty {
+  font-size: 10px;
+  color: #999;
+  text-align: center;
+  padding: 20px;
+  margin: 0;
+}
+
+.ability-list {
+  list-style: none;
+  margin: 0;
+  padding: 0;
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+}
+
+.ability-item {
+  background: var(--bg-card);
+  border: 1px solid var(--border-color);
+  padding: 8px;
+  font-size: 9px;
+  text-align: left;
+  line-height: 1.5;
+  transition: all 0.2s;
+  cursor: pointer;
+  position: relative;
+
+  &:hover {
+    background: var(--bg-card-hover);
+    border-color: #666;
+  }
+
+  &.active {
+    background: #e3f2fd;
+    border-color: #1976d2;
+    box-shadow: 0 0 0 2px rgba(25, 118, 210, 0.15);
+  }
+}
+
+.ability-name {
+  font-weight: bold;
+  font-size: 11px;
+  margin-bottom: 6px;
+  color: #000;
+  padding-bottom: 5px;
+  border-bottom: 1px solid var(--border-color);
+}
+
+.ability-desc {
+  font-size: 10px;
+  color: #333;
+  line-height: 1.5;
+}
+
+.ability-bubble {
+  position: absolute;
+  top: calc(100% + 8px);
+  left: 50%;
+  transform: translateX(-50%);
+  background: #f5f5f5;
+  border: 2px solid var(--border-color);
+  padding: 8px 10px;
+  font-size: 9px;
+  color: #000;
+  white-space: normal;
+  z-index: 100;
+  animation: bubblePop 0.2s ease-out;
+  max-width: 200px;
+  min-width: 120px;
+  text-align: left;
+  line-height: 1.4;
+  box-shadow: 2px 2px 0 rgba(0, 0, 0, 0.2);
+  pointer-events: none;
+
+  &::before {
+    content: '';
+    position: absolute;
+    bottom: 100%;
+    left: 50%;
+    transform: translateX(-50%);
+    width: 0;
+    height: 0;
+    border-style: solid;
+    border-width: 0 6px 6px 6px;
+    border-color: transparent transparent var(--border-color) transparent;
+  }
+
+  &::after {
+    content: '';
+    position: absolute;
+    bottom: 100%;
+    left: 50%;
+    transform: translateX(-50%);
+    width: 0;
+    height: 0;
+    border-style: solid;
+    border-width: 0 5px 5px 5px;
+    border-color: transparent transparent #f5f5f5 transparent;
+    margin-bottom: -1px;
+  }
+}
+
+// 后半部分的元素,气泡显示在上方
+.ability-item.bubble-top .ability-bubble {
+  top: auto;
+  bottom: calc(100% + 8px);
+
+  &::before {
+    bottom: auto;
+    top: 100%;
+    border-width: 6px 6px 0 6px;
+    border-color: var(--border-color) transparent transparent transparent;
+  }
+
+  &::after {
+    bottom: auto;
+    top: 100%;
+    border-width: 5px 5px 0 5px;
+    border-color: #f5f5f5 transparent transparent transparent;
+    margin-bottom: 0;
+    margin-top: -1px;
+  }
+}
+
+@keyframes bubblePop {
+  from {
+    opacity: 0;
+    transform: translateX(-50%) scale(0.9);
+  }
+  to {
+    opacity: 1;
+    transform: translateX(-50%) scale(1);
+  }
+}
+
+@media (max-width: 768px) {
+  .ability-popover-trigger {
+    display: none;
+  }
+}
+</style>

@@ -44,6 +44,11 @@
                 <span class="penalty-text">{{ item.惩罚 }}</span>
               </div>
             </div>
+
+            <div class="task-actions">
+              <button class="action-button delete" @click="deleteTask(name as string)">删除</button>
+              <button class="action-button fail" @click="failTask(name as string, item as any)">失败</button>
+            </div>
           </div>
         </div>
       </div>
@@ -53,11 +58,38 @@
 
 <script setup lang="ts">
 import { useDataStore } from '../store';
-const tasks = toRef(useDataStore().data, '任务列表');
+const store = useDataStore();
+const tasks = toRef(store.data, '任务列表');
 
 const emit = defineEmits<{
   close: [void];
 }>();
+
+function deleteTask(taskName: string) {
+  if (confirm(`确定要删除任务 "${taskName}" 吗？该任务将会消失。`)) {
+    createChatMessages([
+      {
+        role: 'user',
+        message: `[系统提示：任务"${taskName}"消失了。]`,
+      },
+    ]);
+    const { [taskName]: removed, ...rest } = tasks.value;
+    tasks.value = rest;
+  }
+}
+
+function failTask(taskName: string, task: { 惩罚: string }) {
+  if (confirm(`确定要将任务 "${taskName}" 标记为失败吗？`)) {
+    createChatMessages([
+      {
+        role: 'user',
+        message: `[系统提示：任务"${taskName}"失败了！惩罚：${task.惩罚}]`,
+      },
+    ]);
+    const { [taskName]: removed, ...rest } = tasks.value;
+    tasks.value = rest;
+  }
+}
 </script>
 
 <style scoped lang="scss">
@@ -195,6 +227,7 @@ const emit = defineEmits<{
   background: #fff;
   border: 2px solid #000;
   padding: 10px;
+  padding-bottom: 40px;
   position: relative;
 
   &.task-type-主线 {
@@ -269,6 +302,48 @@ const emit = defineEmits<{
   margin-top: 8px;
   padding-top: 8px;
   border-top: 1px dashed #ccc;
+}
+
+.task-actions {
+  position: absolute;
+  bottom: 8px;
+  right: 10px;
+  display: flex;
+  gap: 8px;
+}
+
+.action-button {
+  background: #fff;
+  border: 1px solid #000;
+  padding: 3px 8px;
+  font-size: 10px;
+  cursor: pointer;
+  font-family: inherit;
+  transition: all 0.2s;
+
+  &:hover {
+    transform: translateY(-1px);
+    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.2);
+  }
+
+  &.delete {
+    border-color: #757575;
+    color: #757575;
+    &:hover {
+      background: #f5f5f5;
+      border-color: #000;
+      color: #000;
+    }
+  }
+
+  &.fail {
+    border-color: #d32f2f;
+    color: #d32f2f;
+    &:hover {
+      background: #d32f2f;
+      color: #fff;
+    }
+  }
 }
 
 .task-reward,

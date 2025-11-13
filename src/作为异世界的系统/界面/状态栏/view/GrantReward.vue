@@ -10,16 +10,12 @@
         <textarea v-model="reward_form.描述" placeholder="效果、来历等" />
       </label>
       <label>
-        <span>主角评价</span>
-        <textarea v-model="reward_form.主角评价" placeholder="展示给主角的文案" />
-      </label>
-      <label>
         <span>增加积分</span>
         <input v-model.number="reward_form.增加积分" type="number" min="0" placeholder="可选，输入数字则增加积分" />
       </label>
       <label class="form-grid__checkbox">
-        <input v-model="reward_form.写入背包" type="checkbox" />
-        <span>写入主角物品栏</span>
+        <input v-model="reward_form.发送消息" type="checkbox" />
+        <span>同时作为消息发送</span>
       </label>
 
       <div class="form-actions">
@@ -43,38 +39,50 @@ const RewardForm = z
   .object({
     名称: z.coerce.string(),
     增加积分: z.coerce.number(),
-    写入背包: z.coerce.boolean(),
+    发送消息: z.coerce.boolean(),
   })
-  .extend(Schema.shape.主角.shape.物品栏.valueType.shape);
+  .extend(Schema.shape.主角.shape.物品栏.valueType.omit({ 主角评价: true }).shape);
 type RewardForm = z.infer<typeof RewardForm>;
 
 const reward_form = ref<RewardForm>({
   名称: '',
   描述: '',
-  主角评价: '',
   增加积分: 0,
-  写入背包: true,
+  发送消息: true,
 });
 
-function handleSubmit() {
+async function handleSubmit() {
   const result = RewardForm.safeParse(reward_form.value);
   if (result.error) {
-    toastr.success('填写奖励时出错');
+    toastr.error('填写奖励时出错');
+    console.error(result.error);
     emit('close');
     return;
   }
 
   const data = result.data;
   const store = useDataStore();
-  if (data.写入背包 === true && data.名称) {
+
+  if (data.名称) {
     _.set(store.data.主角.物品栏, data.名称, Schema.shape.主角.shape.物品栏.valueType.parse(data));
   }
+
   if (data.增加积分 > 0) {
     if (typeof store.data.系统状态.可用积分 === 'string') {
       store.data.系统状态.可用积分 = 0;
     }
     store.data.系统状态.可用积分 += data.增加积分;
   }
+
+  if (data.发送消息) {
+    let message = `{{user}}发放了一份奖励：【${data.名称}，${data.描述}`;
+    if (data.增加积分 > 0) {
+      message += `，增加积分：${data.增加积分}`;
+    }
+    message += '】';
+    await createChatMessages([{ role: 'user', message }]);
+  }
+
   toastr.success('已发放奖励');
   emit('close');
 }

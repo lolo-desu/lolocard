@@ -23,13 +23,18 @@
 
         <div v-else class="shop-grid">
           <div
-            v-for="(item, name) in shop"
-            :key="name"
+            v-for="(item, index) in shop_items"
+            :key="item.name"
             class="shop-item"
-            :class="{ affordable: available_points >= item.积分价格 }"
+            :class="{
+              affordable: available_points >= item.积分价格,
+              active: activeBubble === item.name,
+              'bubble-top': shouldShowBubbleOnTop(index, shop_items.length),
+            }"
+            @click="toggleBubble(item.name)"
           >
             <div class="item-header">
-              <div class="item-name">{{ name }}</div>
+              <div class="item-name">{{ item.name }}</div>
               <div class="item-price">
                 <span class="price-value">{{ item.积分价格 }}</span>
                 <span class="price-unit">积分</span>
@@ -38,9 +43,9 @@
 
             <div class="item-description">{{ item.描述 }}</div>
 
-            <div class="item-evaluation">
-              <span class="eval-label">主角评价:</span>
-              <span class="eval-text">{{ item.主角评价 }}</span>
+            <button class="delist-button" title="下架商品" @click.stop="delistItem(item.name)">×</button>
+            <div v-if="activeBubble === item.name" class="info-bubble">
+              {{ item.主角评价 }}
             </div>
           </div>
         </div>
@@ -50,6 +55,7 @@
 </template>
 
 <script setup lang="ts">
+import { useBubble } from '../composables/useBubble';
 import { useDataStore } from '../store';
 
 const store = useDataStore();
@@ -59,6 +65,31 @@ const available_points = toRef(store.data.系统状态, '可用积分');
 const emit = defineEmits<{
   close: [void];
 }>();
+
+const { activeBubble, toggleBubble } = useBubble<string>();
+
+function delistItem(itemName: string) {
+  if (confirm(`确定要下架商品 "${itemName}" 吗？`)) {
+    const { [itemName]: removed, ...rest } = shop.value;
+    shop.value = rest;
+  }
+}
+
+function formatEvaluation(evaluation: string | undefined): string {
+  return evaluation === '待初始化' || evaluation === undefined ? '暂无' : evaluation;
+}
+
+const shop_items = computed(() =>
+  Object.entries(shop.value).map(([name, item]) => ({
+    name,
+    ...item,
+    主角评价: formatEvaluation(item.主角评价),
+  })),
+);
+
+function shouldShowBubbleOnTop(index: number, total: number): boolean {
+  return index < Math.floor(total / 2);
+}
 </script>
 
 <style scoped lang="scss">
@@ -214,13 +245,44 @@ const emit = defineEmits<{
   background: #fff;
   border: 2px solid #000;
   padding: 8px;
-  cursor: default;
+  cursor: pointer;
   position: relative;
+
+  &.active {
+    border-color: #1976d2;
+  }
 
   &:not(.affordable) {
     .item-price .price-value {
       color: #d32f2f;
     }
+  }
+
+  .delist-button {
+    position: absolute;
+    bottom: 2px;
+    right: 2px;
+    width: 18px;
+    height: 18px;
+    background: #e57373;
+    color: white;
+    border: 1px solid #000;
+    cursor: pointer;
+    font-size: 16px;
+    line-height: 15px;
+    font-family: 'Courier New', monospace;
+    z-index: 10;
+    display: none;
+    transition: all 0.2s;
+
+    &:hover {
+      background: #d32f2f;
+      transform: scale(1.1);
+    }
+  }
+
+  &:hover .delist-button {
+    display: block;
   }
 }
 
@@ -281,6 +343,74 @@ const emit = defineEmits<{
 
 .eval-text {
   color: #000;
+}
+
+.info-bubble {
+  position: absolute;
+  bottom: calc(100% + 6px);
+  left: 50%;
+  transform: translateX(-50%);
+  background: #f5f5f5;
+  border: 2px solid var(--border-color);
+  padding: 6px 8px;
+  font-size: 8px;
+  color: #000;
+  white-space: normal;
+  z-index: 25;
+  max-width: 180px;
+  min-width: 120px;
+  text-align: left;
+  line-height: 1.3;
+  box-shadow: 2px 2px 0 rgba(0, 0, 0, 0.2);
+  pointer-events: none;
+}
+
+.info-bubble::before {
+  content: '';
+  position: absolute;
+  top: 100%;
+  left: 50%;
+  transform: translateX(-50%);
+  width: 0;
+  height: 0;
+  border-style: solid;
+  border-width: 6px 6px 0 6px;
+  border-color: var(--border-color) transparent transparent transparent;
+}
+
+.info-bubble::after {
+  content: '';
+  position: absolute;
+  top: 100%;
+  left: 50%;
+  transform: translateX(-50%);
+  width: 0;
+  height: 0;
+  border-style: solid;
+  border-width: 5px 5px 0 5px;
+  border-color: #f5f5f5 transparent transparent transparent;
+  margin-top: -1px;
+}
+
+.shop-item.bubble-top .info-bubble {
+  bottom: auto;
+  top: calc(100% + 6px);
+
+  &::before {
+    top: auto;
+    bottom: 100%;
+    border-width: 0 6px 6px 6px;
+    border-color: transparent transparent #000 transparent;
+  }
+
+  &::after {
+    top: auto;
+    bottom: 100%;
+    border-width: 0 5px 5px 5px;
+    border-color: transparent transparent #f5f5f5 transparent;
+    margin-top: 0;
+    margin-bottom: -1px;
+  }
 }
 
 @keyframes fadeIn {
