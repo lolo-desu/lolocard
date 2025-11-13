@@ -365,6 +365,27 @@
           ? '为了剧情推进发展你可以适当代替{{user}}（系统）行动'
           : '{{user}}（系统）的全部行为必须由输入方进行，绝对禁止在故事中擅自代替{{user}}（系统）行动';
 
+        // 世界书背景条目内容 = 用户填写的背景
+        const personaEntryContent = data.heroPersona;
+
+        // 生成写变量与写世界书的 STScript 命令
+        const commands = [
+          // 角色基础信息写入变量
+          `/variables set 主角.姓名=${data.heroName}`,
+          `/variables set 主角.性别=${data.heroGender}`,
+          `/variables set 主角.年龄=${data.heroAge}`,
+          // 世界书中创建 / 更新「人设：${角色名}」条目
+          `/worldbook set "人设：${data.heroName}" `
+            + `启用=true `
+            + `激活策略.类型=蓝灯 `
+            + `插入位置.类型=角色定义之后 `
+            + `插入位置.顺序=8390 `
+            + `激活概率=100 `
+            + `递归.不可被其他条目激活=true `
+            + `递归.不可激活其他条目=true `
+            + `内容=${personaEntryContent.replace(/\n/g, '\\n')}`
+        ].join(' || ');
+
         return `<!--
 从现在起请开始变量初始化，必须强制更新全部必要变量（但允许不更新诸如商城、buff等变量或剧情上不需要的变量）
 {{user}}（系统）形象: ${data.systemImage}
@@ -372,10 +393,13 @@
 姓名: ${data.heroName}
 性别: ${data.heroGender}
 年龄: ${data.heroAge}
-人物设定/背景: ${data.heroPersona}
+人物设定/背景已写入世界书条目「人设：${data.heroName}」
 
 {{user}}作为系统的设置：{{user}}${talkative}与主角沟通，另外，${personality}（系统）人格化与情绪表现。
 ${controlRule}
+
+以下命令将由 /trigger 执行，用于初始化变量与人设条目:
+${commands}
 -->
 根据背景生成开场故事。`;
       };
