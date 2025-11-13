@@ -2,12 +2,15 @@ import type { SectionKey } from '../types';
 
 export function useResponsive() {
   const isMobile = ref(false);
+
+  // 移动端：默认全部折叠
+  // 电脑端：sectionOpen 一律返回 true，也就是永远展开
   const sectionState = reactive<Record<SectionKey, boolean>>({
     info: false,
     abilities: false,
     equipment: false,
     inventory: false,
-    effects: false,
+    status: false,
   });
 
   function sectionOpen(key: SectionKey) {
