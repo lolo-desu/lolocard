@@ -410,6 +410,13 @@
         },
         "玩家ID": {
           "type": "string"
+        },
+        "玩家本轮操作日志": {
+          "default": [],
+          "type": "array",
+          "items": {
+            "type": "string"
+          }
         }
       },
       "required": [
