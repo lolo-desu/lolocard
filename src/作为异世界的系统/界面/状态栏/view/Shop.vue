@@ -43,7 +43,7 @@
 
             <div class="item-description">{{ item.描述 }}</div>
 
-            <button class="delist-button" title="下架商品" @click.stop="delistItem(name)">×</button>
+            <button class="delist-button" title="下架商品" @click.stop="dropItem(name)">×</button>
             <div v-if="activeBubble === name" class="info-bubble">
               {{ item.主角评价 }}
             </div>
@@ -52,9 +52,18 @@
       </div>
     </div>
   </div>
+
+  <Confirm
+    v-if="drop_visible"
+    title="下架商品"
+    :question="drop_question"
+    @cancel="drop_visible = false"
+    @confirm="onDropConfirm"
+  />
 </template>
 
 <script setup lang="ts">
+import Confirm from '../components/Confirm.vue';
 import { useBubble } from '../composables/useBubble';
 import { useDataStore } from '../store';
 
@@ -68,12 +77,18 @@ const emit = defineEmits<{
 
 const { activeBubble, toggleBubble } = useBubble<string>();
 
-function delistItem(item_name: string) {
-  if (confirm(`确定要下架商品 "${item_name}" 吗？`)) {
-    store.log(`商品'${item_name}'已下架'`);
-    _.unset(shop.value, item_name);
-    toastr.success('已下架商品')
-  }
+const drop_visible = ref<boolean>(false);
+const drop_item = ref<string>('');
+const drop_question = computed(() => `确定要下架商品 "${drop_item.value}" 吗？`);
+function dropItem(item: string) {
+  drop_visible.value = true;
+  drop_item.value = item;
+}
+function onDropConfirm() {
+  store.log(`商品'${drop_item.value}'已下架'`);
+  _.unset(shop.value, drop_item.value);
+  toastr.success('已下架商品');
+  drop_visible.value = false;
 }
 
 function shouldShowBubbleOnTop(index: number): boolean {
@@ -85,7 +100,7 @@ function shouldShowBubbleOnTop(index: number): boolean {
 .shop-overlay {
   position: fixed;
   inset: 0;
-  z-index: 10000;
+  z-index: 9998;
   display: flex;
   align-items: center;
   justify-content: center;

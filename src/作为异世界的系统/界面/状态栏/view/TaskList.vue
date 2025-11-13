@@ -46,18 +46,29 @@
             </div>
 
             <div class="task-actions">
-              <button class="action-button delete" @click="deleteTask(name as string)">删除</button>
-              <button class="action-button fail" @click="failTask(name as string, item as any)">失败</button>
+              <button class="action-button delete" @click="deleteItem(name)">删除</button>
+              <button class="action-button fail" @click="failItem(name)">失败</button>
             </div>
           </div>
         </div>
       </div>
     </div>
   </div>
+
+  <Confirm
+    v-if="delete_visible"
+    title="删除任务"
+    :question="delete_question"
+    @cancel="delete_visible = false"
+    @confirm="onDeleteConfirm"
+  />
+  <Confirm v-if="fail_visible" title="标记任务为失败" :question="fail_question" @cancel="fail_visible = false" @confirm="onFailConfirm" />
 </template>
 
 <script setup lang="ts">
+import Confirm from '../components/Confirm.vue';
 import { useDataStore } from '../store';
+
 const store = useDataStore();
 const tasks = toRef(store.data, '任务列表');
 
@@ -65,20 +76,32 @@ const emit = defineEmits<{
   close: [void];
 }>();
 
-function deleteTask(task_name: string) {
-  if (confirm(`确定要删除任务 "${task_name}" 吗？该任务将会消失。`)) {
-    store.log(`任务'${task_name}'已消失`);
-    _.unset(tasks.value, task_name);
-    toastr.success('已删除任务');
-  }
+const delete_visible = ref<boolean>(false);
+const delete_item = ref<string>('');
+const delete_question = computed(() => `确定要删除任务 "${delete_item.value}" 吗？该任务将会消失。`);
+function deleteItem(item: string) {
+  delete_visible.value = true;
+  delete_item.value = item;
+}
+function onDeleteConfirm() {
+  store.log(`任务'${delete_item.value}'已消失`);
+  _.unset(tasks.value, delete_item.value);
+  toastr.success('已删除任务');
+  delete_visible.value = false;
 }
 
-function failTask(task_name: string, task: { 惩罚: string }) {
-  if (confirm(`确定要将任务 "${task_name}" 标记为失败吗？`)) {
-    store.log(`任务'${task_name}'被标记为失败！惩罚：${task.惩罚}`);
-    _.unset(tasks.value, task_name);
-    toastr.success('已标记任务为失败');
-  }
+const fail_visible = ref<boolean>(false);
+const fail_item = ref<string>('');
+const fail_question = computed(() => `确定要将任务 "${fail_item.value}" 标记为失败吗？`);
+function failItem(item: string) {
+  fail_visible.value = true;
+  fail_item.value = item;
+}
+function onFailConfirm() {
+  store.log(`任务'${fail_item.value}'被标记为失败！惩罚：${_.get(tasks.value, fail_item.value).惩罚}`);
+  _.unset(tasks.value, fail_item.value);
+  toastr.success('已标记任务为失败');
+  fail_visible.value = false;
 }
 </script>
 
@@ -86,7 +109,7 @@ function failTask(task_name: string, task: { 惩罚: string }) {
 .task-overlay {
   position: fixed;
   inset: 0;
-  z-index: 10000;
+  z-index: 9998;
   display: flex;
   align-items: center;
   justify-content: center;
