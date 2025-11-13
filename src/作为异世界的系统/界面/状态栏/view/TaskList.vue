@@ -65,29 +65,19 @@ const emit = defineEmits<{
   close: [void];
 }>();
 
-function deleteTask(taskName: string) {
-  if (confirm(`确定要删除任务 "${taskName}" 吗？该任务将会消失。`)) {
-    createChatMessages([
-      {
-        role: 'user',
-        message: `[系统提示：任务"${taskName}"消失了。]`,
-      },
-    ]);
-    const { [taskName]: removed, ...rest } = tasks.value;
-    tasks.value = rest;
+function deleteTask(task_name: string) {
+  if (confirm(`确定要删除任务 "${task_name}" 吗？该任务将会消失。`)) {
+    store.log(`任务'${task_name}'已消失`);
+    _.unset(tasks.value, task_name);
+    toastr.success('已删除任务');
   }
 }
 
-function failTask(taskName: string, task: { 惩罚: string }) {
-  if (confirm(`确定要将任务 "${taskName}" 标记为失败吗？`)) {
-    createChatMessages([
-      {
-        role: 'user',
-        message: `[系统提示：任务"${taskName}"失败了！惩罚：${task.惩罚}]`,
-      },
-    ]);
-    const { [taskName]: removed, ...rest } = tasks.value;
-    tasks.value = rest;
+function failTask(task_name: string, task: { 惩罚: string }) {
+  if (confirm(`确定要将任务 "${task_name}" 标记为失败吗？`)) {
+    store.log(`任务'${task_name}'被标记为失败！惩罚：${task.惩罚}`);
+    _.unset(tasks.value, task_name);
+    toastr.success('已标记任务为失败');
   }
 }
 </script>

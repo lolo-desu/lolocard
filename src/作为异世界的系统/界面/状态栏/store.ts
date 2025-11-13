@@ -15,5 +15,11 @@ export const useDataStore = defineStore('data', () => {
     );
   });
 
-  return { data };
+  // 强制日志置空
+  data.value.系统状态.玩家本轮操作日志 = [];
+  const log = (string: string) => {
+    data.value.系统状态.玩家本轮操作日志.push(string);
+  };
+
+  return { data, log };
 });

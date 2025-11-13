@@ -54,11 +54,17 @@ function handleSubmit() {
   }
 
   const data = result.data;
+  if (!data.名称) {
+    toastr.error('必须填写名称');
+    return;
+  }
+
   const store = useDataStore();
   if (data.名称) {
+    store.log(`已创建商品'${data.名称}'`);
     _.set(store.data.商品列表, data.名称, Schema.shape.商品列表.valueType.parse(data));
+    toastr.success('已创建商品');
   }
-  toastr.success('已增加商品');
   emit('close');
 }
 </script>

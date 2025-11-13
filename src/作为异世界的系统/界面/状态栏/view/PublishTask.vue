@@ -70,16 +70,20 @@ const task_form = ref<TaskForm>({
 function handleSubmit() {
   const result = TaskForm.safeParse(task_form.value);
   if (result.error) {
-    toastr.success('填写奖励时出错');
+    toastr.error('填写奖励时出错');
     emit('close');
     return;
   }
 
   const data = result.data;
-  const store = useDataStore();
-  if (data.名称) {
-    _.set(store.data.任务列表, data.名称, Schema.shape.任务列表.valueType.parse(data));
+  if (!data.名称) {
+    toastr.error('必须填写名称');
+    return;
   }
+
+  const store = useDataStore();
+  store.log(`已发布新任务'${data.名称}'`);
+  _.set(store.data.任务列表, data.名称, Schema.shape.任务列表.valueType.parse(data));
   toastr.success('已发布任务');
   emit('close');
 }

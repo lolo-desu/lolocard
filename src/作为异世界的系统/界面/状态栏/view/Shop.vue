@@ -23,18 +23,18 @@
 
         <div v-else class="shop-grid">
           <div
-            v-for="(item, index) in shop_items"
-            :key="item.name"
+            v-for="(item, name, index) in shop"
+            :key="name"
             class="shop-item"
             :class="{
               affordable: available_points >= item.积分价格,
-              active: activeBubble === item.name,
-              'bubble-top': shouldShowBubbleOnTop(index, shop_items.length),
+              active: activeBubble === name,
+              'bubble-top': shouldShowBubbleOnTop(index),
             }"
-            @click="toggleBubble(item.name)"
+            @click="toggleBubble(name)"
           >
             <div class="item-header">
-              <div class="item-name">{{ item.name }}</div>
+              <div class="item-name">{{ name }}</div>
               <div class="item-price">
                 <span class="price-value">{{ item.积分价格 }}</span>
                 <span class="price-unit">积分</span>
@@ -43,8 +43,8 @@
 
             <div class="item-description">{{ item.描述 }}</div>
 
-            <button class="delist-button" title="下架商品" @click.stop="delistItem(item.name)">×</button>
-            <div v-if="activeBubble === item.name" class="info-bubble">
+            <button class="delist-button" title="下架商品" @click.stop="delistItem(name)">×</button>
+            <div v-if="activeBubble === name" class="info-bubble">
               {{ item.主角评价 }}
             </div>
           </div>
@@ -68,27 +68,16 @@ const emit = defineEmits<{
 
 const { activeBubble, toggleBubble } = useBubble<string>();
 
-function delistItem(itemName: string) {
-  if (confirm(`确定要下架商品 "${itemName}" 吗？`)) {
-    const { [itemName]: removed, ...rest } = shop.value;
-    shop.value = rest;
+function delistItem(item_name: string) {
+  if (confirm(`确定要下架商品 "${item_name}" 吗？`)) {
+    store.log(`商品'${item_name}'已下架'`);
+    _.unset(shop.value, item_name);
+    toastr.success('已下架商品')
   }
 }
 
-function formatEvaluation(evaluation: string | undefined): string {
-  return evaluation === '待初始化' || evaluation === undefined ? '暂无' : evaluation;
-}
-
-const shop_items = computed(() =>
-  Object.entries(shop.value).map(([name, item]) => ({
-    name,
-    ...item,
-    主角评价: formatEvaluation(item.主角评价),
-  })),
-);
-
-function shouldShowBubbleOnTop(index: number, total: number): boolean {
-  return index < Math.floor(total / 2);
+function shouldShowBubbleOnTop(index: number): boolean {
+  return index < Math.floor(Object.keys(shop.value).length / 2);
 }
 </script>
 

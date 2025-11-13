@@ -13,10 +13,6 @@
         <span>增加积分</span>
         <input v-model.number="reward_form.增加积分" type="number" min="0" placeholder="可选，输入数字则增加积分" />
       </label>
-      <label class="form-grid__checkbox">
-        <input v-model="reward_form.发送消息" type="checkbox" />
-        <span>同时作为消息发送</span>
-      </label>
 
       <div class="form-actions">
         <button type="button" class="ghost" @click="emit('close')">取消</button>
@@ -39,7 +35,6 @@ const RewardForm = z
   .object({
     名称: z.coerce.string(),
     增加积分: z.coerce.number(),
-    发送消息: z.coerce.boolean(),
   })
   .extend(Schema.shape.主角.shape.物品栏.valueType.omit({ 主角评价: true }).shape);
 type RewardForm = z.infer<typeof RewardForm>;
@@ -48,7 +43,6 @@ const reward_form = ref<RewardForm>({
   名称: '',
   描述: '',
   增加积分: 0,
-  发送消息: true,
 });
 
 async function handleSubmit() {
@@ -61,6 +55,11 @@ async function handleSubmit() {
   }
 
   const data = result.data;
+  if (!data.名称 && !data.增加积分) {
+    toastr.error('未给予任何奖励');
+    return;
+  }
+
   const store = useDataStore();
 
   if (data.名称) {
@@ -74,15 +73,9 @@ async function handleSubmit() {
     store.data.系统状态.可用积分 += data.增加积分;
   }
 
-  if (data.发送消息) {
-    let message = `{{user}}发放了一份奖励：【${data.名称}，${data.描述}`;
-    if (data.增加积分 > 0) {
-      message += `，增加积分：${data.增加积分}`;
-    }
-    message += '】';
-    await createChatMessages([{ role: 'user', message }]);
-  }
-
+  store.log(
+    `发放了一份奖励（${_.concat(data.名称 ? `名称：${data.名称}，描述：${data.描述}` : [], data.增加积分 ? `增加积分：${data.增加积分}` : []).join('，')}）`,
+  );
   toastr.success('已发放奖励');
   emit('close');
 }
