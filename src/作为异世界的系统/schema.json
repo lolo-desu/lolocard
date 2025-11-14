@@ -62,15 +62,7 @@
                 "数值": {
                   "anyOf": [
                     {
-                      "anyOf": [
-                        {
-                          "type": "number"
-                        },
-                        {
-                          "type": "string",
-                          "const": "待初始化"
-                        }
-                      ]
+                      "type": "number"
                     },
                     {
                       "type": "string",
