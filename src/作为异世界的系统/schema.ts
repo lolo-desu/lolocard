@@ -17,7 +17,7 @@ export const Schema = z.object({
     能力面板: z.object({
       力量: z
         .object({
-          数值: z.union([z.union([z.coerce.number(), z.literal('待初始化')]), z.literal('待初始化')]),
+          数值: z.union([z.coerce.number(), z.literal('待初始化')]),
           主角评价: z.coerce.string(),
         })
         .describe('体能与攻击能力，决定近战输出与负重'),
