@@ -92,7 +92,9 @@ function onDropConfirm() {
 }
 
 function shouldShowBubbleOnTop(index: number): boolean {
-  return index < Math.floor(Object.keys(shop.value).length / 2);
+  const columns = 2;
+  const rowIndex = Math.floor(index / columns);
+  return rowIndex === 0;
 }
 </script>
 
