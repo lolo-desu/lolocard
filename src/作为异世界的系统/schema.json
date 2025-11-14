@@ -56,7 +56,6 @@
           "type": "object",
           "properties": {
             "力量": {
-              "description": "体能与攻击能力，决定近战输出与负重",
               "type": "object",
               "properties": {
                 "数值": {
@@ -80,7 +79,6 @@
               ]
             },
             "敏捷": {
-              "description": "移动、闪避与反应速度，影响先手与命中",
               "type": "object",
               "properties": {
                 "数值": {
@@ -104,7 +102,6 @@
               ]
             },
             "体质": {
-              "description": "生命力与耐久度，决定抗性与恢复速度",
               "type": "object",
               "properties": {
                 "数值": {
@@ -128,7 +125,6 @@
               ]
             },
             "感知": {
-              "description": "观察与洞察能力，影响侦查与魔力控制",
               "type": "object",
               "properties": {
                 "数值": {
@@ -152,7 +148,6 @@
               ]
             },
             "意志": {
-              "description": "精神力与抗干扰能力，决定技能稳定性",
               "type": "object",
               "properties": {
                 "数值": {
@@ -176,7 +171,6 @@
               ]
             },
             "魅力": {
-              "description": "影响交涉、统御与社交反馈的综合指标",
               "type": "object",
               "properties": {
                 "数值": {
@@ -283,7 +277,6 @@
         "物品栏": {
           "type": "object",
           "propertyNames": {
-            "description": "物品名",
             "type": "string"
           },
           "additionalProperties": {
@@ -305,7 +298,6 @@
         "持有能力": {
           "type": "object",
           "propertyNames": {
-            "description": "物品名",
             "type": "string"
           },
           "additionalProperties": {
@@ -327,7 +319,6 @@
         "当前状态": {
           "type": "object",
           "propertyNames": {
-            "description": "状态名",
             "type": "string"
           },
           "additionalProperties": {
@@ -341,15 +332,7 @@
                 ]
               },
               "持续时间": {
-                "anyOf": [
-                  {
-                    "type": "string",
-                    "const": "永久"
-                  },
-                  {
-                    "type": "string"
-                  }
-                ]
+                "type": "string"
               },
               "触发条件": {
                 "type": "string"
@@ -420,7 +403,6 @@
     "商品列表": {
       "type": "object",
       "propertyNames": {
-        "description": "商品名",
         "type": "string"
       },
       "additionalProperties": {
@@ -454,7 +436,6 @@
     "任务列表": {
       "type": "object",
       "propertyNames": {
-        "description": "任务名",
         "type": "string"
       },
       "additionalProperties": {
