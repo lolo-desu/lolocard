@@ -46,7 +46,7 @@ const shop_item_form = ref<ShopItemForm>({
 });
 
 function handleSubmit() {
-  const result = ShopItemForm.safeParse(shop_item_form.value);
+  const result = ShopItemForm.safeDecode(shop_item_form.value);
   if (result.error) {
     toastr.success('填写商品时出错');
     emit('close');
@@ -62,7 +62,7 @@ function handleSubmit() {
   const store = useDataStore();
   if (data.名称) {
     store.log(`已创建商品'${data.名称}'`);
-    _.set(store.data.商品列表, data.名称, Schema.shape.商品列表.valueType.parse(data));
+    _.set(store.data.商品列表, data.名称, Schema.shape.商品列表.valueType.decode(data));
     toastr.success('已创建商品');
   }
   emit('close');

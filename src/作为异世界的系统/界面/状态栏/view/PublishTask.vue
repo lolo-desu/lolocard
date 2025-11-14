@@ -68,7 +68,7 @@ const task_form = ref<TaskForm>({
 });
 
 function handleSubmit() {
-  const result = TaskForm.safeParse(task_form.value);
+  const result = TaskForm.safeDecode(task_form.value);
   if (result.error) {
     toastr.error('填写奖励时出错');
     emit('close');
@@ -83,7 +83,7 @@ function handleSubmit() {
 
   const store = useDataStore();
   store.log(`已发布新任务'${data.名称}'`);
-  _.set(store.data.任务列表, data.名称, Schema.shape.任务列表.valueType.parse(data));
+  _.set(store.data.任务列表, data.名称, Schema.shape.任务列表.valueType.decode(data));
   toastr.success('已发布任务');
   emit('close');
 }

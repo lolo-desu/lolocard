@@ -47,7 +47,7 @@ const reward_form = ref<RewardForm>({
 });
 
 async function handleSubmit() {
-  const result = RewardForm.safeParse(reward_form.value);
+  const result = RewardForm.safeDecode(reward_form.value);
   if (result.error) {
     toastr.error('填写奖励时出错');
     console.error(result.error);
@@ -64,7 +64,7 @@ async function handleSubmit() {
   const store = useDataStore();
 
   if (data.名称) {
-    _.set(store.data.主角.物品栏, data.名称, Schema.shape.主角.shape.物品栏.valueType.parse(data));
+    _.set(store.data.主角.物品栏, data.名称, Schema.shape.主角.shape.物品栏.valueType.decode(data));
   }
 
   if (data.增加积分 > 0) {
