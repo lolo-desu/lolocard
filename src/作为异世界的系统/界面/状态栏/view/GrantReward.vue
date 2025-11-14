@@ -36,12 +36,13 @@ const RewardForm = z
     名称: z.coerce.string(),
     增加积分: z.coerce.number(),
   })
-  .extend(Schema.shape.主角.shape.物品栏.valueType.omit({ 主角评价: true }).shape);
+  .extend(Schema.shape.主角.shape.物品栏.valueType.shape);
 type RewardForm = z.infer<typeof RewardForm>;
 
 const reward_form = ref<RewardForm>({
   名称: '',
   描述: '',
+  主角评价: '待初始化',
   增加积分: 0,
 });
 
