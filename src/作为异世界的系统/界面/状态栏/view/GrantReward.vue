@@ -42,7 +42,7 @@ type RewardForm = z.infer<typeof RewardForm>;
 const reward_form = ref<RewardForm>({
   名称: '',
   描述: '',
-  主角评价: '待初始化',
+  主角评价: '待评价，需要立即更新',
   增加积分: 0,
 });
 

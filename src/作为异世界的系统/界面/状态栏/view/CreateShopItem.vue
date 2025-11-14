@@ -41,7 +41,7 @@ type ShopItemForm = z.infer<typeof ShopItemForm>;
 const shop_item_form = ref<ShopItemForm>({
   名称: '',
   描述: '',
-  主角评价: '待初始化',
+  主角评价: '待评价，需要立即更新',
   积分价格: 0,
 });
 
