@@ -6,7 +6,7 @@
       :class="{ active: show }"
       @click="toggle"
     >
-      <span class="button-icon">★</span>
+      <span class="button-icon">✦</span>
       能力 ({{ abilities.length }})
     </button>
     <div v-if="show" class="ability-popover">
@@ -22,7 +22,11 @@
             :key="ability.id"
             class="ability-item"
             :class="{ active: activeBubble === ability.id, 'bubble-top': shouldShowBubbleOnTop(index, abilities.length) }"
-            @click="toggleBubble(ability.id)"
+            @pointerdown="onAbilityPointerDown(ability, $event)"
+            @pointerup="onAbilityPointerUp(ability, $event)"
+            @pointerleave="onAbilityPointerCancel($event)"
+            @pointercancel="onAbilityPointerCancel($event)"
+            @contextmenu.prevent
           >
             <div class="ability-name">{{ ability.name }}</div>
             <p class="ability-desc">{{ ability.描述 }}</p>
@@ -34,13 +38,33 @@
       </div>
     </div>
   </div>
+
+  <Confirm
+    v-if="showAbilityActionModal"
+    :title="`处理能力：${selectedAbilityName}`"
+    :question="`请选择要对「${selectedAbilityName}」执行的操作。`"
+    @cancel="closeAbilityActionModal"
+  >
+    <template #hint>
+      <span>删除是指出现bug强行将条目删除、销毁是指玩家主动删除。删除不写日志，销毁会记录“系统销毁了能力”。</span>
+    </template>
+    <template #actions>
+      <button type="button" class="confirm-button ghost" @click="handleAbilityBugDelete">删除</button>
+      <button type="button" class="confirm-button ghost" @click="handleAbilityDestroy">销毁</button>
+      <button type="button" class="confirm-button ghost" @click="closeAbilityActionModal">取消</button>
+    </template>
+  </Confirm>
 </template>
 
 <script setup lang="ts">
+import { computed, onBeforeUnmount, ref } from 'vue';
+import Confirm from './Confirm.vue';
 import { useBubble } from '../composables/useBubble';
+import { useDataStore } from '../store';
 
 type AbilityEntry = {
   id: string;
+  key: string;
   name: string;
   描述: string;
   主角评价: string;
@@ -53,6 +77,16 @@ defineProps<{
 const show = defineModel<boolean>('show', { default: false });
 
 const { activeBubble, toggleBubble } = useBubble<string>();
+const store = useDataStore();
+
+const LONG_PRESS_DELAY = 600;
+let pressTimer: ReturnType<typeof setTimeout> | null = null;
+const longPressTriggered = ref(false);
+
+const showAbilityActionModal = ref(false);
+const pendingAbility = ref<AbilityEntry | null>(null);
+const selectedAbilityName = computed(() => pendingAbility.value?.name ?? '未知能力');
+onBeforeUnmount(() => clearPressTimer());
 
 function toggle() {
   show.value = !show.value;
@@ -66,6 +100,103 @@ function close() {
 // 列表后半部分的元素,气泡显示在上方
 function shouldShowBubbleOnTop(index: number, total: number): boolean {
   return index >= Math.floor(total / 2);
+}
+
+function clearPressTimer() {
+  if (pressTimer) {
+    clearTimeout(pressTimer);
+    pressTimer = null;
+  }
+}
+
+function onAbilityPointerDown(ability: AbilityEntry, event: PointerEvent) {
+  if (event.button !== 0) return;
+  activePointerId.value = event.pointerId;
+  (event.currentTarget as HTMLElement | null)?.setPointerCapture(event.pointerId);
+  longPressTriggered.value = false;
+  if (event.pointerType !== 'mouse') {
+    event.preventDefault();
+  }
+  clearPressTimer();
+  pressTimer = setTimeout(() => {
+    longPressTriggered.value = true;
+    openAbilityActionModal(ability);
+  }, LONG_PRESS_DELAY);
+}
+
+function onAbilityPointerUp(ability: AbilityEntry, event: PointerEvent) {
+  if (event.button !== 0 || activePointerId.value !== event.pointerId) return;
+  (event.currentTarget as HTMLElement | null)?.releasePointerCapture(event.pointerId);
+  activePointerId.value = null;
+  const wasLongPress = longPressTriggered.value;
+  clearPressTimer();
+  if (!wasLongPress) {
+    toggleBubble(ability.id);
+  }
+}
+
+function onAbilityPointerCancel(event?: PointerEvent) {
+  if (event && activePointerId.value === event.pointerId) {
+    (event.currentTarget as HTMLElement | null)?.releasePointerCapture(event.pointerId);
+    activePointerId.value = null;
+  }
+  clearPressTimer();
+  longPressTriggered.value = false;
+}
+
+function openAbilityActionModal(ability: AbilityEntry) {
+  pendingAbility.value = ability;
+  showAbilityActionModal.value = true;
+}
+
+function closeAbilityActionModal() {
+  showAbilityActionModal.value = false;
+  pendingAbility.value = null;
+}
+
+function ensureHeldAbilities(): Record<string, any> | null {
+  const hero = store.data.主角;
+  if (!hero || typeof hero !== 'object') {
+    return null;
+  }
+  if (!hero.持有能力 || typeof hero.持有能力 !== 'object') {
+    hero.持有能力 = {};
+  }
+  return hero.持有能力 as Record<string, any>;
+}
+
+function removeHeldAbility(key: string | undefined) {
+  if (!key) return false;
+  const record = ensureHeldAbilities();
+  if (!record) return false;
+  if (Object.prototype.hasOwnProperty.call(record, key)) {
+    delete record[key];
+    return true;
+  }
+  return false;
+}
+
+function handleAbilityBugDelete() {
+  if (!pendingAbility.value) return;
+  const success = removeHeldAbility(pendingAbility.value.key ?? pendingAbility.value.name);
+  if (success) {
+    toastr.success(`已删除能力「${selectedAbilityName.value}」`);
+  } else {
+    toastr.warning('未找到要删除的能力');
+  }
+  closeAbilityActionModal();
+}
+
+function handleAbilityDestroy() {
+  if (!pendingAbility.value) return;
+  const success = removeHeldAbility(pendingAbility.value.key ?? pendingAbility.value.name);
+  if (success) {
+    store.log(`系统销毁了能力'${selectedAbilityName.value}'`);
+    toastr.success(`已销毁能力「${selectedAbilityName.value}」`);
+  } else {
+    toastr.warning('未找到要销毁的能力');
+  }
+  closeAbilityActionModal();
 }
 </script>
 
@@ -216,6 +347,7 @@ function shouldShowBubbleOnTop(index: number, total: number): boolean {
   transition: all 0.2s;
   cursor: pointer;
   position: relative;
+  user-select: none;
 
   &:hover {
     background: var(--bg-card-hover);

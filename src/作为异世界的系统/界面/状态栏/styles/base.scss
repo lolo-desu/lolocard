@@ -66,9 +66,9 @@
 }
 
 .inventory-container .mobile-section__body {
-  flex: 1;
-  min-height: 0;
-  display: flex;
+  flex: none;
+  min-height: auto;
+  display: block;
 }
 
 .right-panel {
@@ -80,8 +80,8 @@
 }
 
 .inventory-container {
-  flex: 1;
-  min-height: 0;
+  flex: none;
+  min-height: auto;
 }
 
 .collapse-toggle {

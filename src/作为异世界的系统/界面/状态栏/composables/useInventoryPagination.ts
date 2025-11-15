@@ -19,6 +19,7 @@ export function useInventoryPagination(inventoryItems: ComputedRef<InventoryItem
     while (filled.length < ITEMS_PER_PAGE) {
       filled.push({
         id: `placeholder-${currentPage.value}-${filled.length}`,
+        key: `placeholder-${filled.length}`,
         名称: '—',
         描述: '空槽位',
         主角评价: '',

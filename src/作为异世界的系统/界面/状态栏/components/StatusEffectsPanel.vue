@@ -23,7 +23,16 @@
       <template v-if="activeTab === '增益'">
         <p v-if="!buffList.length" class="status-effects-empty">暂无增益状态</p>
         <ul v-else class="status-effects-list">
-          <li v-for="buff in buffList" :key="buff.id" class="status-effect-item">
+          <li
+            v-for="buff in buffList"
+            :key="buff.id"
+            class="status-effect-item"
+            @pointerdown="onStatusPointerDown(buff, $event)"
+            @pointerup="onStatusPointerUp($event)"
+            @pointerleave="onStatusPointerCancel($event)"
+            @pointercancel="onStatusPointerCancel($event)"
+            @contextmenu.prevent
+          >
             <div class="status-effect-name">{{ buff.name }}</div>
             <p class="status-effect-desc">{{ buff.描述 }}</p>
             <p v-if="buff.主角评价" class="status-effect-eval">「{{ buff.主角评价 }}」</p>
@@ -38,7 +47,16 @@
       <template v-else>
         <p v-if="!debuffList.length" class="status-effects-empty">暂无减益状态</p>
         <ul v-else class="status-effects-list">
-          <li v-for="debuff in debuffList" :key="debuff.id" class="status-effect-item">
+          <li
+            v-for="debuff in debuffList"
+            :key="debuff.id"
+            class="status-effect-item"
+            @pointerdown="onStatusPointerDown(debuff, $event)"
+            @pointerup="onStatusPointerUp($event)"
+            @pointerleave="onStatusPointerCancel($event)"
+            @pointercancel="onStatusPointerCancel($event)"
+            @contextmenu.prevent
+          >
             <div class="status-effect-name">{{ debuff.name }}</div>
             <p class="status-effect-desc">{{ debuff.描述 }}</p>
             <p v-if="debuff.主角评价" class="status-effect-eval">「{{ debuff.主角评价 }}」</p>
@@ -51,10 +69,27 @@
       </template>
     </div>
   </div>
+  <Confirm
+    v-if="showStatusActionModal"
+    :title="`处理状态：${selectedStatusName}`"
+    :question="`请选择要对「${selectedStatusName}」执行的操作。`"
+    @cancel="closeStatusActionModal"
+  >
+    <template #hint>
+      <span>删除是指出现bug强行将条目删除、销毁是指玩家主动删除。注意：删除不会记录日志，销毁会以系统行为记录日志。</span>
+    </template>
+    <template #actions>
+      <button type="button" class="confirm-button ghost" @click="handleStatusBugDelete">删除</button>
+      <button type="button" class="confirm-button ghost" @click="handleStatusDestroy">销毁</button>
+      <button type="button" class="confirm-button ghost" @click="closeStatusActionModal">取消</button>
+    </template>
+  </Confirm>
 </template>
 
 <script setup lang="ts">
+import Confirm from './Confirm.vue';
 import type { StatusEffectEntry, StatusTab } from '../types';
+import { useDataStore } from '../store';
 
 defineProps<{
   buffList: StatusEffectEntry[];
@@ -62,6 +97,114 @@ defineProps<{
 }>();
 
 const activeTab = ref<StatusTab>('增益');
+const store = useDataStore();
+
+const showStatusActionModal = ref(false);
+const pendingStatus = ref<StatusEffectEntry | null>(null);
+const selectedStatusName = computed(() => pendingStatus.value?.name ?? '未知状态');
+
+const LONG_PRESS_DELAY = 600;
+let pressTimer: ReturnType<typeof setTimeout> | null = null;
+const longPressTriggered = ref(false);
+const activePointerId = ref<number | null>(null);
+
+function clearPressTimer() {
+  if (pressTimer) {
+    clearTimeout(pressTimer);
+    pressTimer = null;
+  }
+}
+
+onBeforeUnmount(() => {
+  clearPressTimer();
+});
+
+function onStatusPointerDown(status: StatusEffectEntry, event: PointerEvent) {
+  if (event.button !== 0) return;
+  activePointerId.value = event.pointerId;
+  (event.currentTarget as HTMLElement | null)?.setPointerCapture(event.pointerId);
+  longPressTriggered.value = false;
+  if (event.pointerType !== 'mouse') {
+    event.preventDefault();
+  }
+  clearPressTimer();
+  pressTimer = setTimeout(() => {
+    longPressTriggered.value = true;
+    openStatusActionModal(status);
+  }, LONG_PRESS_DELAY);
+}
+
+function onStatusPointerUp(event: PointerEvent) {
+  if (event.button !== 0 || activePointerId.value !== event.pointerId) return;
+  (event.currentTarget as HTMLElement | null)?.releasePointerCapture(event.pointerId);
+  activePointerId.value = null;
+  clearPressTimer();
+  longPressTriggered.value = false;
+}
+
+function onStatusPointerCancel(event?: PointerEvent) {
+  if (event && activePointerId.value === event.pointerId) {
+    (event.currentTarget as HTMLElement | null)?.releasePointerCapture(event.pointerId);
+    activePointerId.value = null;
+  }
+  clearPressTimer();
+  longPressTriggered.value = false;
+}
+
+function openStatusActionModal(status: StatusEffectEntry) {
+  pendingStatus.value = status;
+  showStatusActionModal.value = true;
+}
+
+function closeStatusActionModal() {
+  showStatusActionModal.value = false;
+  pendingStatus.value = null;
+}
+
+function ensureStatusRecord(): Record<string, any> | null {
+  const hero = store.data.主角;
+  if (!hero || typeof hero !== 'object') {
+    return null;
+  }
+  if (!hero.当前状态 || typeof hero.当前状态 !== 'object') {
+    hero.当前状态 = {};
+  }
+  return hero.当前状态 as Record<string, any>;
+}
+
+function removeStatusEntry(key: string | undefined) {
+  if (!key) return false;
+  const statusRecord = ensureStatusRecord();
+  if (!statusRecord) return false;
+  if (Object.prototype.hasOwnProperty.call(statusRecord, key)) {
+    delete statusRecord[key];
+    return true;
+  }
+  return false;
+}
+
+function handleStatusBugDelete() {
+  if (!pendingStatus.value) return;
+  const success = removeStatusEntry(pendingStatus.value.key);
+  if (success) {
+    toastr.success(`已删除状态「${selectedStatusName.value}」`);
+  } else {
+    toastr.warning('未找到要删除的状态');
+  }
+  closeStatusActionModal();
+}
+
+function handleStatusDestroy() {
+  if (!pendingStatus.value) return;
+  const success = removeStatusEntry(pendingStatus.value.key);
+  if (success) {
+    store.log(`系统销毁了状态'${selectedStatusName.value}'`);
+    toastr.success(`已销毁状态「${selectedStatusName.value}」`);
+  } else {
+    toastr.warning('未找到要销毁的状态');
+  }
+  closeStatusActionModal();
+}
 </script>
 
 <style lang="scss" scoped>
@@ -74,20 +217,23 @@ const activeTab = ref<StatusTab>('增益');
 
 .status-tabs {
   display: flex;
+  background: #fff;
+  border-top: 2px solid var(--border-color);
   border-bottom: 2px solid var(--border-color);
 }
 
 .status-tab {
   flex: 1;
-  padding: 8px;
-  background: var(--bg-card);
+  padding: 8px 0;
+  text-align: center;
+  background: #fff;
   border: none;
-  border-right: 1px solid var(--border-color);
+  border-right: 2px solid var(--border-color);
   font-family: var(--pixel-font);
   font-size: 10px;
   font-weight: bold;
   cursor: pointer;
-  transition: background-color 0.2s;
+  transition: color 0.2s, background 0.2s;
   color: #000;
 }
 
@@ -96,11 +242,10 @@ const activeTab = ref<StatusTab>('增益');
 }
 
 .status-tab:hover {
-  background: var(--bg-card-hover);
+  background: #f5f5f5;
 }
 
 .status-tab.active {
-  background: var(--bg-input);
   color: #1976d2;
 }
 
@@ -127,6 +272,10 @@ const activeTab = ref<StatusTab>('增益');
   font-size: 8px;
   text-align: left;
   line-height: 1.3;
+  cursor: pointer;
+  user-select: none;
+  touch-action: none;
+  position: relative;
 }
 
 .status-effect-name {

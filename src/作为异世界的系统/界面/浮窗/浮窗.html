@@ -1,0 +1,145 @@
+<style>
+  .system-popup {
+    max-width: 520px;
+    margin: 20px auto;
+    border: 2px solid #121212;
+    background: #f8f8f8;
+    box-shadow:
+      0 6px 18px rgba(0, 0, 0, 0.25),
+      inset 0 0 0 2px #fff;
+    font-family: 'Fusion Pixel 12px', 'Microsoft YaHei', sans-serif;
+    color: #111;
+  }
+
+  .popup-header {
+    padding: 16px 20px 12px;
+    border-bottom: 2px solid #121212;
+    display: flex;
+    flex-direction: column;
+    gap: 6px;
+    background: linear-gradient(180deg, #fefefe 0%, #f1f1f1 100%);
+  }
+
+  .popup-title {
+    font-size: 20px;
+    letter-spacing: 0.04em;
+  }
+
+  .popup-meta {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 8px;
+    font-size: 12px;
+    color: #666;
+  }
+
+  .popup-tag {
+    padding: 2px 8px;
+    border: 1px solid #121212;
+    font-size: 11px;
+    text-transform: uppercase;
+    letter-spacing: 0.08em;
+    background: #fff;
+  }
+
+  .popup-body {
+    padding: 20px;
+    min-height: 160px;
+    background: #fff;
+    border-bottom: 2px solid #121212;
+  }
+
+  .popup-footer {
+    padding: 14px 20px;
+    display: flex;
+    justify-content: flex-end;
+    gap: 10px;
+    background: #f3f3f3;
+  }
+
+  .markdown-content h1,
+  .markdown-content h2,
+  .markdown-content h3 {
+    margin: 0 0 12px;
+    padding-bottom: 6px;
+    border-bottom: 1px solid #ddd;
+    font-weight: bold;
+  }
+
+  .markdown-content p {
+    margin: 0 0 12px;
+    line-height: 1.6;
+    font-size: 14px;
+  }
+
+  .markdown-content ul,
+  .markdown-content ol {
+    padding-left: 20px;
+    margin: 0 0 12px;
+    line-height: 1.5;
+  }
+
+  .markdown-content blockquote {
+    margin: 0 0 12px;
+    padding: 10px 14px;
+    border-left: 4px solid #1976d2;
+    background: rgba(25, 118, 210, 0.08);
+    font-style: italic;
+  }
+
+  .markdown-content code {
+    padding: 2px 4px;
+    background: #f1f1f1;
+    border: 1px solid #e0e0e0;
+    font-size: 12px;
+    border-radius: 2px;
+  }
+
+  .markdown-content pre {
+    padding: 12px;
+    background: #111;
+    color: #f7f7f7;
+    border: 1px solid #000;
+    overflow-x: auto;
+  }
+
+  .markdown-content table {
+    width: 100%;
+    border-collapse: collapse;
+    margin-bottom: 12px;
+    font-size: 12px;
+  }
+
+  .markdown-content th,
+  .markdown-content td {
+    border: 1px solid #ccc;
+    padding: 6px 10px;
+  }
+
+  @media (max-width: 560px) {
+    .system-popup {
+      margin: 12px;
+    }
+  }
+</style>
+
+<div class="system-popup">
+  <div class="popup-header">
+    <div class="popup-title">$1</div> //标题主内容，比如任务名称、商品名称、状态名称
+    <div class="popup-meta">
+      <span class="popup-tag">$2</span> //标签，比如主线任务、商品、能力、增益
+      <span class="popup-time">{{get_message_variable::stat_data.世界.当前时间}}</span> //固定显示时间？
+    </div>
+  </div>
+  <div class="popup-body markdown-content"> //让AI自己写带html标签的文本，不固定
+    <h2>${标题}</h2>//一些示例
+    <p>正文</p>
+    <ul>
+      <li>待办事项1</li>
+      <li>待办事项2</li>
+      <li>待办事项3</li>
+    </ul>
+  </div>
+  <div class="popup-footer">
+  </div>
+</div>

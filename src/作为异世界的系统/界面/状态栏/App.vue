@@ -90,7 +90,7 @@
               <span class="chevron">{{ sectionOpen('inventory') ? '−' : '+' }}</span>
             </button>
             <div v-show="sectionOpen('inventory')" class="mobile-section__body">
-              <InventoryPanel :inventory="inventoryItems" />
+              <InventoryPanel :inventory="inventoryItems" :is-mobile="isMobile" />
             </div>
           </div>
         </div>
@@ -186,6 +186,7 @@ const abilityList = computed(() => {
   }
   return Object.entries(abilities).map(([name, ability], index) => ({
     id: `${index}-${name}`,
+    key: name,
     name,
     描述: ability?.描述 || '',
     主角评价: formatEvaluation(ability?.主角评价),
@@ -220,6 +221,7 @@ const inventoryItems = computed(() => {
   }
   return Object.entries(inventory).map(([name, item], index) => ({
     id: `${index}-${name}`,
+    key: name,
     名称: name || '未知物品',
     描述: item?.描述 || '',
     主角评价: formatEvaluation(item?.主角评价),

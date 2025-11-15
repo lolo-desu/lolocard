@@ -16,6 +16,7 @@ export function normalizeStatusEntries(value: unknown): StatusEffectEntry[] {
     const statusData = data as Record<string, any>;
     entries.push({
       id: `status-${name}`,
+      key: name,
       name,
       类型: statusData.类型 || '增益',
       持续时间: statusData.持续时间 || '',

@@ -1,484 +1,523 @@
-<!DOCTYPE html>
+﻿<!doctype html>
 <html lang="zh-CN">
-<head>
-  <meta charset="UTF-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1" />
-  <title>角色创生 - 像素世界</title>
-  <style>
-    @import url("https://fontsapi.zeoseven.com/570/main/result.css");
-    
-    :root {
-      --bg-dark: #0a0a0a;
-      --bg-darker: #050505;
-      --text-primary: #ffffff;
-      --text-secondary: #cccccc;
-      --border-color: #000000;
-      --bg-panel: #f5f5f5;
-      --bg-input: #ffffff;
-      --pixel-font: "Fusion Pixel 12px M latin", 'Courier New', monospace;
-    }
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <title>角色创生 - 像素世界</title>
+    <style>
+      @import url('https://fontsapi.zeoseven.com/570/main/result.css');
 
-    * {
-      margin: 0;
-      padding: 0;
-      box-sizing: border-box;
-    }
-
-    html, button, input, textarea {
-      font-family: var(--pixel-font);
-      font-weight: normal;
-    }
-
-    body {
-      color: var(--text-primary);
-      display: flex;
-      align-items: center;
-      justify-content: center;
-      padding: 10px;
-      position: relative;
-      overflow: hidden;
-      font-family: "Fusion Pixel 12px M latin";
-      font-weight: normal;
-    }
-
-    /* 像素化背景 */
-    body::before {
-      content: '';
-      position: absolute;
-      top: 0;
-      left: 0;
-      right: 0;
-      bottom: 0;
-      background-image: 
-        linear-gradient(90deg, rgba(255,255,255,0.03) 1px, transparent 1px),
-        linear-gradient(rgba(255,255,255,0.03) 1px, transparent 1px);
-      background-size: 20px 20px;
-      z-index: -1;
-    }
-
-    .container {
-      width: 100%;
-      max-width: 600px;
-      background: var(--bg-panel);
-      border: 4px solid var(--border-color);
-      position: relative;
-    }
-
-    .header {
-      background: #333;
-      color: var(--text-primary);
-      padding: 12px 20px;
-      border-bottom: 4px solid var(--border-color);
-      text-align: center;
-    }
-
-    .title {
-      font-size: 18px;
-      text-transform: uppercase;
-      letter-spacing: 2px;
-      text-shadow: 2px 2px 0px #000;
-    }
-
-    .content {
-      padding: 20px;
-      color: #333;
-    }
-
-    .form-container {
-      width: 100%;
-    }
-
-    .form-field {
-      display: flex;
-      justify-content: flex-start;
-      align-items: center;
-      margin: 15px 0;
-    }
-
-    .form-field label {
-      text-align: right;
-      width: 80px;
-      margin-right: 15px;
-      font-size: 12px;
-      color: #000;
-    }
-
-    input, textarea {
-      flex: 1;
-      padding: 8px 12px;
-      border: 2px solid #000;
-      background: var(--bg-input);
-      color: #000;
-      font-size: 12px;
-      font-family: var(--pixel-font);
-      resize: none;
-    }
-
-    input:focus, textarea:focus {
-      outline: none;
-      background: #ffffcc;
-      border-color: #ff0000;
-    }
-
-    textarea {
-      min-height: 80px;
-    }
-
-    .required {
-      color: #ff0000;
-      font-weight: bold;
-    }
-
-    .optional {
-      color: #666;
-      font-weight: normal;
-    }
-
-    .actions {
-      display: flex;
-      justify-content: space-between;
-      align-items: center;
-      margin-top: 25px;
-      padding-top: 15px;
-      border-top: 2px solid #000;
-    }
-
-    .submit-btn {
-      background: var(--bg-input);
-      border: 3px 3px 5px 3px solid #000;
-      color: #000;
-      padding: 8px 20px;
-      font-size: 12px;
-      cursor: pointer;
-      font-family: var(--pixel-font);
-      transition: all 0.1s;
-      left:50%;
-    }
-
-    .submit-btn:hover {
-      background: #dddddd;
-    }
-
-    .submit-btn:active {
-      border-width: 3px 5px 3px 3px;
-    }
-
-    .submit-btn:disabled {
-      opacity: 0.5;
-      cursor: not-allowed;
-    }
-
-    .status {
-      font-size: 11px;
-      text-align: right;
-    }
-
-    .status--success {
-      color: #00aa00;
-    }
-
-    .status--error {
-      color: #ff0000;
-    }
-
-    .preview {
-      margin-top: 20px;
-      padding: 15px;
-      border: 2px solid #000;
-      background: #f0f0f0;
-    }
-
-    .preview h3 {
-      font-size: 12px;
-      color: #000;
-      margin-bottom: 10px;
-      text-transform: uppercase;
-    }
-
-    .preview pre {
-      font-family: var(--pixel-font);
-      font-size: 11px;
-      color: #000;
-      line-height: 1.4;
-      margin: 0;
-      white-space: pre-wrap;
-      word-break: break-word;
-    }
-
-    .note {
-      background: #ffffcc;
-      border: 2px solid #ff9900;
-      padding: 10px;
-      margin: 10px 0;
-      font-size: 11px;
-      color: #000;
-    }
-
-    .pixel-border {
-      border: 4px solid #000;
-      box-shadow: 
-        0 0 0 1px #fff,
-        0 0 0 5px #000;
-    }
-
-    @media (max-width: 768px) {
-      .form-field {
-        flex-direction: column;
-        align-items: flex-start;
+      :root {
+        --bg-dark: #0a0a0a;
+        --bg-darker: #050505;
+        --text-primary: #ffffff;
+        --text-secondary: #cccccc;
+        --border-color: #000000;
+        --bg-panel: #f5f5f5;
+        --bg-input: #ffffff;
+        --pixel-font: 'Fusion Pixel 12px M latin', 'Courier New', monospace;
       }
-      
-      .form-field label {
+
+      * {
+        margin: 0;
+        padding: 0;
+        box-sizing: border-box;
+      }
+
+      html,
+      button,
+      input,
+      textarea {
+        font-family: var(--pixel-font);
+        font-weight: normal;
+      }
+
+      body {
+        color: var(--text-primary);
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        padding: 10px;
+        position: relative;
+        overflow: hidden;
+        font-family: 'Fusion Pixel 12px M latin';
+        font-weight: normal;
+      }
+
+      /* 像素化背景 */
+      body::before {
+        content: '';
+        position: absolute;
+        top: 0;
+        left: 0;
+        right: 0;
+        bottom: 0;
+        background-image:
+          linear-gradient(90deg, rgba(255, 255, 255, 0.03) 1px, transparent 1px),
+          linear-gradient(rgba(255, 255, 255, 0.03) 1px, transparent 1px);
+        background-size: 20px 20px;
+        z-index: -1;
+      }
+
+      .container {
         width: 100%;
-        text-align: left;
-        margin-bottom: 5px;
+        max-width: 600px;
+        background: var(--bg-panel);
+        border: 4px solid var(--border-color);
+        position: relative;
       }
-      
-      input, textarea {
-        width: 100%;
+
+      .header {
+        background: #333;
+        color: var(--text-primary);
+        padding: 12px 20px;
+        border-bottom: 4px solid var(--border-color);
+        text-align: center;
       }
-      
-      .actions {
-        flex-direction: column;
-        gap: 15px;
-      }
-      
+
       .title {
         font-size: 18px;
+        text-transform: uppercase;
+        letter-spacing: 2px;
+        text-shadow: 2px 2px 0px #000;
       }
-    }
-  </style>
-</head>
-<body>
-  <div class="container pixel-border">
-    <div class="header">
-      <h1 class="title">CHARACTER CREATE</h1>
-    </div>
-    
-    <div class="content">
-      <div class="note">
-        <strong>系统提示：</strong>请填写你心仪的角色设定……
+
+      .content {
+        padding: 20px;
+        color: #333;
+      }
+
+      .form-container {
+        width: 100%;
+      }
+
+      .form-field {
+        display: flex;
+        justify-content: flex-start;
+        align-items: center;
+        margin: 15px 0;
+      }
+
+      .form-field label {
+        text-align: right;
+        width: 80px;
+        margin-right: 15px;
+        font-size: 12px;
+        color: #000;
+      }
+
+      input,
+      textarea {
+        flex: 1;
+        padding: 8px 12px;
+        border: 2px solid #000;
+        background: var(--bg-input);
+        color: #000;
+        font-size: 12px;
+        font-family: var(--pixel-font);
+        resize: none;
+      }
+
+      input:focus,
+      textarea:focus {
+        outline: none;
+        background: #ffffcc;
+        border-color: #ff0000;
+      }
+
+      textarea {
+        min-height: 80px;
+      }
+
+      .required {
+        color: #ff0000;
+        font-weight: bold;
+      }
+
+      .optional {
+        color: #666;
+        font-weight: normal;
+      }
+
+      .actions {
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        margin-top: 25px;
+        padding-top: 15px;
+        border-top: 2px solid #000;
+      }
+
+      .submit-btn {
+        background: var(--bg-input);
+        border: 3px 3px 5px 3px solid #000;
+        color: #000;
+        padding: 8px 20px;
+        font-size: 12px;
+        cursor: pointer;
+        font-family: var(--pixel-font);
+        transition: all 0.1s;
+        left: 50%;
+      }
+
+      .submit-btn:hover {
+        background: #dddddd;
+      }
+
+      .submit-btn:active {
+        border-width: 3px 5px 3px 3px;
+      }
+
+      .submit-btn:disabled {
+        opacity: 0.5;
+        cursor: not-allowed;
+      }
+
+      .status {
+        font-size: 11px;
+        text-align: right;
+      }
+
+      .status--success {
+        color: #00aa00;
+      }
+
+      .status--error {
+        color: #ff0000;
+      }
+
+      .preview {
+        margin-top: 20px;
+        padding: 15px;
+        border: 2px solid #000;
+        background: #f0f0f0;
+      }
+
+      .preview h3 {
+        font-size: 12px;
+        color: #000;
+        margin-bottom: 10px;
+        text-transform: uppercase;
+      }
+
+      .preview pre {
+        font-family: var(--pixel-font);
+        font-size: 11px;
+        color: #000;
+        line-height: 1.4;
+        margin: 0;
+        white-space: pre-wrap;
+        word-break: break-word;
+      }
+
+      .note {
+        background: #ffffcc;
+        border: 2px solid #ff9900;
+        padding: 10px;
+        margin: 10px 0;
+        font-size: 11px;
+        color: #000;
+      }
+
+      .pixel-border {
+        border: 4px solid #000;
+        box-shadow:
+          0 0 0 1px #fff,
+          0 0 0 5px #000;
+      }
+
+      @media (max-width: 768px) {
+        .form-field {
+          flex-direction: column;
+          align-items: flex-start;
+        }
+
+        .form-field label {
+          width: 100%;
+          text-align: left;
+          margin-bottom: 5px;
+        }
+
+        input,
+        textarea {
+          width: 100%;
+        }
+
+        .actions {
+          flex-direction: column;
+          gap: 15px;
+        }
+
+        .title {
+          font-size: 18px;
+        }
+      }
+    </style>
+  </head>
+  <body>
+    <div class="container pixel-border">
+      <div class="header">
+        <h1 class="title">CHARACTER CREATE</h1>
       </div>
-      
-      <form id="init-form" class="form-container">
-        <div class="form-field">
-          <label for="systemImage">
-            <small>爱丽丝|系统</small><span class="optional"><br>(可选)</span>
-          </label>
-          <input
-            id="systemImage"
-            type="text"
-            placeholder="神秘的声音、凭空出现的光板、白发蓝瞳猫耳耳机少女..."
-          />
-        </div>
 
-        <div class="form-field">
-          <label for="heroName">
-            姓名 <span class="required">*</span>
-          </label>
-          <input
-            id="heroName"
-            type="text"
-            placeholder="输入角色姓名"
-            required
-          />
-        </div>
+      <div class="content">
+        <div class="note"><strong>系统提示：</strong>请填写你心仪的角色设定……</div>
 
-        <div class="form-field">
-          <label for="heroGender">
-            性别 <span class="required">*</span>
-          </label>
-          <input
-            id="heroGender"
-            type="text"
-            placeholder="男/女/其他"
-            required
-          />
-        </div>
-
-        <div class="form-field">
-          <label for="heroAge">
-            年龄 <span class="required">*</span>
-          </label>
-          <input
-            id="heroAge"
-            type="text"
-            placeholder="18岁..."
-            required
-          />
-        </div>
-
-        <div class="form-field">
-          <label for="heroPersona">
-            背景 <span class="required">*</span>
-          </label>
-          <textarea
-            id="heroPersona"
-            placeholder="可以简略写外表，也从其他角色卡复制粘贴自己心仪的角色"
-            required
-          ></textarea>
-        </div>
-
-        <div class="form-field">
-          <label>系统设置</label>
-          <div style="flex: 1; display: flex; flex-direction: column; gap: 8px;">
-            <label style="display: flex; align-items: center; cursor: pointer; width: auto; text-align: left;">
-              <input type="checkbox" id="systemTalkative" style="flex: none; width: auto; margin-right: 8px;" checked />
-              <span>系统会主动与角色交流互动</span>
+        <form id="init-form" class="form-container">
+          <div class="form-field">
+            <label for="systemImage">
+              <small>爱丽丝|系统</small><span class="optional"><br />(可选)</span>
             </label>
-            <label style="display: flex; align-items: center; cursor: pointer; width: auto; text-align: left;">
-              <input type="checkbox" id="systemPersonality" style="flex: none; width: auto; margin-right: 8px;" checked />
-              <span>系统具有独立人格与情感</span>
-            </label>
-            <label style="display: flex; align-items: center; cursor: pointer; width: auto; text-align: left;">
-              <input type="checkbox" id="allowAiControl" style="flex: none; width: auto; margin-right: 8px;" />
-              <span>允许AI代替{{user}}行动</span>
-            </label>
+            <input id="systemImage" type="text" placeholder="神秘的声音、凭空出现的光板、白发蓝瞳猫耳耳机少女..." />
           </div>
-        </div>
 
-        <div class="actions">
-          <button class="submit-btn" type="submit">开始游戏</button>
-          <div class="status" id="status"></div>
-        </div>
-      </form>
+          <div class="form-field">
+            <label for="heroName"> 姓名 <span class="required">*</span> </label>
+            <input id="heroName" type="text" placeholder="输入角色姓名" required />
+          </div>
+
+          <div class="form-field">
+            <label for="heroGender"> 性别 <span class="required">*</span> </label>
+            <input id="heroGender" type="text" placeholder="男/女/其他" required />
+          </div>
+
+          <div class="form-field">
+            <label for="heroAge"> 年龄 <span class="required">*</span> </label>
+            <input id="heroAge" type="text" placeholder="18岁..." required />
+          </div>
+
+          <div class="form-field">
+            <label for="heroPersona"> 背景 <span class="required">*</span> </label>
+            <textarea
+              id="heroPersona"
+              placeholder="可以简略写外表，也从其他角色卡复制粘贴自己心仪的角色"
+              required
+            ></textarea>
+          </div>
+
+          <div class="form-field">
+            <label>系统设置</label>
+            <div style="flex: 1; display: flex; flex-direction: column; gap: 8px">
+              <label style="display: flex; align-items: center; cursor: pointer; width: auto; text-align: left">
+                <input
+                  type="checkbox"
+                  id="systemTalkative"
+                  style="flex: none; width: auto; margin-right: 8px"
+                  checked
+                />
+                <span>系统会主动与角色交流互动</span>
+              </label>
+              <label style="display: flex; align-items: center; cursor: pointer; width: auto; text-align: left">
+                <input
+                  type="checkbox"
+                  id="systemPersonality"
+                  style="flex: none; width: auto; margin-right: 8px"
+                  checked
+                />
+                <span>系统具有独立人格与情感</span>
+              </label>
+              <label style="display: flex; align-items: center; cursor: pointer; width: auto; text-align: left">
+                <input type="checkbox" id="allowAiControl" style="flex: none; width: auto; margin-right: 8px" />
+                <span>允许AI代替{{user}}行动</span>
+              </label>
+            </div>
+          </div>
+
+          <div class="actions">
+            <button class="submit-btn" type="submit">开始游戏</button>
+            <div class="status" id="status"></div>
+          </div>
+        </form>
+      </div>
     </div>
-  </div>
 
-  <script>
-    (function() {
-      const form = document.getElementById('init-form');
-      const status = document.getElementById('status');
-      const submitBtn = form.querySelector('.submit-btn');
+    <script>
+      (function () {
+        const form = document.getElementById('init-form');
+        const status = document.getElementById('status');
+        const submitBtn = form.querySelector('.submit-btn');
 
-      const FIELD_META = {
-        systemImage: { required: false, fallback: '暂无' },
-        heroName: { required: true },
-        heroGender: { required: true },
-        heroAge: { required: true },
-        heroPersona: { required: true },
-      };
+        const FIELD_META = {
+          systemImage: { required: false, fallback: '暂无' },
+          heroName: { required: true },
+          heroGender: { required: true },
+          heroAge: { required: true },
+          heroPersona: { required: true },
+        };
+        const GUIDE_WORLDBOOK_NAME = '异世界系统指南！';
 
-      const template = (data) => {
-        const talkative = data.systemTalkative ? '会' : '不会';
-        const personality = data.systemPersonality ? '具有' : '不具有';
-        const controlRule = data.allowAiControl
-          ? '为了剧情推进发展你可以适当代替{{user}}（系统）行动'
-          : '{{user}}（系统）的全部行为必须由输入方进行，绝对禁止在故事中擅自代替{{user}}（系统）行动';
+        function setStatus(message, type) {
+          status.textContent = message || '';
+          status.className = type ? `status ${type}` : 'status';
+        }
 
-        // 世界书背景条目内容 = 用户填写的背景
-        const personaEntryContent = data.heroPersona;
+        function readValues() {
+          const values = {};
+          Object.keys(FIELD_META).forEach(key => {
+            const element = document.getElementById(key);
+            values[key] = element ? element.value.trim() : '';
+          });
+          values.systemTalkative = document.getElementById('systemTalkative')?.checked ?? false;
+          values.systemPersonality = document.getElementById('systemPersonality')?.checked ?? false;
+          values.allowAiControl = document.getElementById('allowAiControl')?.checked ?? false;
+          return values;
+        }
 
-        // 生成写变量与写世界书的 STScript 命令
-        const commands = [
-          // 角色基础信息写入变量
-          `/variables set 主角.姓名=${data.heroName}`,
-          `/variables set 主角.性别=${data.heroGender}`,
-          `/variables set 主角.年龄=${data.heroAge}`,
-          // 世界书中创建 / 更新「人设：${角色名}」条目
-          `/worldbook set "人设：${data.heroName}" `
-            + `启用=true `
-            + `激活策略.类型=蓝灯 `
-            + `插入位置.类型=角色定义之后 `
-            + `插入位置.顺序=8390 `
-            + `激活概率=100 `
-            + `递归.不可被其他条目激活=true `
-            + `递归.不可激活其他条目=true `
-            + `内容=${personaEntryContent.replace(/\n/g, '\\n')}`
-        ].join(' || ');
+        function buildInitPrompt(values) {
+          const talkative = values.systemTalkative ? '会' : '不会';
+          const personality = values.systemPersonality ? '具有' : '不具有';
+          const reminder = values.allowAiControl
+            ? '为了剧情推进发展你可以适当代替{{user}}（系统）行动，但请记住{{user}}才是玩家。'
+            : '{{user}}（系统）的所有行动必须由玩家输入，严禁擅自代替{{user}}。';
 
-        return `<!--
-从现在起请开始变量初始化，必须强制更新全部必要变量（但允许不更新诸如商城、buff等变量或剧情上不需要的变量）
-{{user}}（系统）形象: ${data.systemImage}
-=== 主角档案 ===
-姓名: ${data.heroName}
-性别: ${data.heroGender}
-年龄: ${data.heroAge}
-人物设定/背景已写入世界书条目「人设：${data.heroName}」
-
-{{user}}作为系统的设置：{{user}}${talkative}与主角沟通，另外，${personality}（系统）人格化与情绪表现。
-${controlRule}
-
-以下命令将由 /trigger 执行，用于初始化变量与人设条目:
-${commands}
+          return `<!--
+从现在起请初始化变量。{{user}}（系统）形象：${values.systemImage || FIELD_META.systemImage.fallback}
+系统会${talkative}主动与角色交流，${personality}独立人格。
+${reminder}
+=== 主角信息 ===
+姓名：${values.heroName}
+性别：${values.heroGender}
+年龄：${values.heroAge}
 -->
-根据背景生成开场故事。`;
-      };
-
-      function readValues() {
-        const values = {};
-        for (const key in FIELD_META) {
-          const element = document.getElementById(key);
-          values[key] = element ? element.value.trim() : '';
+结合设定，为剧情撰写开场故事。`;
         }
-        // 读取复选框状态
-        values.systemTalkative = document.getElementById('systemTalkative')?.checked || false;
-        values.systemPersonality = document.getElementById('systemPersonality')?.checked || false;
-        values.allowAiControl = document.getElementById('allowAiControl')?.checked || false;
-        return values;
-      }
 
-      function formatMessage(values) {
-        return template({
-          systemImage: values.systemImage || FIELD_META.systemImage.fallback,
-          heroName: values.heroName,
-          heroGender: values.heroGender,
-          heroAge: values.heroAge,
-          heroPersona: values.heroPersona,
-          systemTalkative: values.systemTalkative,
-          systemPersonality: values.systemPersonality,
-          allowAiControl: values.allowAiControl,
+        function buildSystemSettingsContent(values) {
+          const allowAction = values.allowAiControl ? '允许' : '不允许';
+          const personality = values.systemPersonality ? '具有' : '不具有';
+          const talkative = values.systemTalkative ? '会' : '不会';
+          const reminder = values.allowAiControl
+            ? '你允许适当扮演系统，但请记住{{user}}才是玩家，玩家不是故事的主人公'
+            : '再次强调，你不允许扮演系统进行任何行动，请在正文中出现玩家本人进行的操作';
+
+          return `你${allowAction}扮演{{user}}系统进行行动（如发布任务、展示主角状态等全部系统相关行为）。{{user}}是一个${personality}独立人格和情感，${talkative}主动与角色交流互动的系统。${reminder}`;
+        }
+
+        function ensureEntryBase(overrides = {}) {
+          return {
+            enabled: true,
+            strategy: {
+              type: 'constant',
+              keys: [],
+              keys_secondary: { logic: 'and_any', keys: [] },
+              scan_depth: 1,
+            },
+            position: {
+              type: 'after_character_definition',
+              role: 'system',
+              depth: 0,
+              order: 8390,
+            },
+            probability: 100,
+            recursion: {
+              prevent_incoming: true,
+              prevent_outgoing: true,
+              delay_until: null,
+            },
+            effect: { sticky: null, cooldown: null, delay: null },
+            ...overrides,
+          };
+        }
+
+        async function writeHeroVariables(values) {
+          await updateVariablesWith(
+            current => {
+              const next = { ...current };
+              const hero = { ...(next.主角 ?? {}) };
+              hero.姓名 = values.heroName;
+              hero.性别 = values.heroGender;
+              hero.年龄 = values.heroAge;
+              next.主角 = hero;
+              return next;
+            },
+            { type: 'character' },
+          );
+        }
+
+        async function ensureGuideWorldbook() {
+          const names = getWorldbookNames();
+          if (!names.includes(GUIDE_WORLDBOOK_NAME)) {
+            await createWorldbook(GUIDE_WORLDBOOK_NAME, []);
+          }
+        }
+
+        async function upsertWorldbookEntry(worldbookName, entryName, builder) {
+          await updateWorldbookWith(worldbookName, worldbook => {
+            const entry = builder();
+            const next = [...worldbook];
+            const index = next.findIndex(item => item.name === entryName);
+            if (index >= 0) {
+              next[index] = { ...next[index], ...entry, name: entryName };
+            } else {
+              next.push({ ...entry, name: entryName });
+            }
+            return next;
+          });
+        }
+
+        async function writePersonaEntry(worldbookName, values) {
+          await upsertWorldbookEntry(worldbookName, `人设：${values.heroName}`, () =>
+            ensureEntryBase({ content: values.heroPersona }),
+          );
+        }
+
+        async function writeSystemSettingsEntry(worldbookName, values) {
+          await upsertWorldbookEntry(worldbookName, '系统设置', () =>
+            ensureEntryBase({
+              position: {
+                type: 'at_depth',
+                role: 'system',
+                depth: 1,
+                order: 0,
+              },
+              content: buildSystemSettingsContent(values),
+              extra: { location: '系统深度D1' },
+            }),
+          );
+        }
+
+        async function sendIntroMessage(values) {
+          const message = buildInitPrompt(values);
+          await createChatMessages([{ role: 'system', message }]);
+          await triggerSlash('/trigger');
+        }
+
+        function validate(values) {
+          const missing = Object.keys(FIELD_META).filter(key => FIELD_META[key].required && !values[key]);
+          if (missing.length) {
+            throw new Error('请填写所有必填项');
+          }
+        }
+
+        form.addEventListener('submit', async event => {
+          event.preventDefault();
+          const values = readValues();
+
+          try {
+            validate(values);
+          } catch (error) {
+            setStatus(error.message, 'status--error');
+            return;
+          }
+
+          submitBtn.disabled = true;
+          setStatus('正在写入角色数据...', '');
+
+          try {
+            await writeHeroVariables(values);
+            await ensureGuideWorldbook();
+            await writePersonaEntry(GUIDE_WORLDBOOK_NAME, values);
+            await writeSystemSettingsEntry(GUIDE_WORLDBOOK_NAME, values);
+            await sendIntroMessage(values);
+            setStatus('角色创建完成！', 'status--success');
+          } catch (error) {
+            console.error(error);
+            setStatus(error?.message ?? '创建失败', 'status--error');
+          } finally {
+            submitBtn.disabled = false;
+          }
         });
-      }
-
-      function setStatus(message, type) {
-        status.textContent = message || '';
-        status.className = type ? `status ${type}` : 'status';
-      }
-
-      function escapeForSlash(text) {
-        return text.replace(/\|/g, '\\|');
-      }
-
-      async function dispatchSlashCommand(payload) {
-        const slashCommand = `/send ${escapeForSlash(payload)} || /trigger`;
-        if (typeof window.triggerSlash === 'function') {
-          return window.triggerSlash(slashCommand);
-        }
-        if (navigator.clipboard?.writeText) {
-          await navigator.clipboard.writeText(slashCommand);
-          throw new Error('命令已复制，请手动执行');
-        }
-        throw new Error('请手动复制命令: ' + slashCommand);
-      }
-
-      // 事件监听
-      form.addEventListener('submit', async (e) => {
-        e.preventDefault();
-        const values = readValues();
-        const missingKeys = Object.keys(FIELD_META).filter(key => {
-          const meta = FIELD_META[key];
-          return meta.required && !values[key];
-        });
-
-        if (missingKeys.length) {
-          setStatus('请填写所有必填项', 'status--error');
-          return;
-        }
-
-        const payload = formatMessage(values);
-        submitBtn.disabled = true;
-        setStatus('正在初始化角色...', '');
-
-        try {
-          await dispatchSlashCommand(payload);
-          setStatus('角色创建完成！', 'status--success');
-        } catch (error) {
-          setStatus(error.message || '创建失败', 'status--error');
-        } finally {
-          submitBtn.disabled = false;
-        }
-      });
-    })();
-  </script>
-</body>
+      })();
+    </script>
+  </body>
 </html>

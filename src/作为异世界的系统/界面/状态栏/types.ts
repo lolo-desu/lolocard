@@ -5,6 +5,7 @@ export type StatusTab = '增益' | '减益';
 export type StatusEffectEntry = {
   id: string;
   name: string;
+  key: string;
   类型: '增益' | '减益';
   持续时间: string;
   触发条件: string;
@@ -20,6 +21,14 @@ export type AbilityData = {
   主角评价: string;
 };
 
+export type HeldAbility = {
+  id: string;
+  key: string;
+  name: string;
+  描述: string;
+  主角评价: string;
+};
+
 export type EquipmentSlot = {
   label: string;
   item: string;
@@ -28,6 +37,7 @@ export type EquipmentSlot = {
 
 export type InventoryItem = {
   id: string;
+  key: string;
   名称: string;
   描述: string;
   主角评价?: string;

@@ -13,4 +13,4 @@ export const abilityBaseDescriptions: Record<AbilityKey, string> = {
 
 export const BASE_WIDTH = 800;
 
-export const ITEMS_PER_PAGE = 6;
+export const ITEMS_PER_PAGE = 4;

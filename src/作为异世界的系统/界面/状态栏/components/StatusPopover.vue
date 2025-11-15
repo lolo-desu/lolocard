@@ -1,4 +1,4 @@
-<template>
+﻿<template>
   <div class="status-effects-trigger">
     <button
       class="status-button"
@@ -6,7 +6,7 @@
       :class="{ active: show }"
       @click="toggle"
     >
-      <span class="button-icon">⚡</span>
+      <span class="button-icon">✤</span>
       状态 ({{ buffCount + debuffCount }})
     </button>
     <div v-if="show" class="status-effects-popover">
@@ -43,7 +43,11 @@
                 :key="buff.id"
                 class="status-effect-item status-effect-buff"
                 :class="{ active: activeBubble === buff.id, 'bubble-top': shouldShowBubbleOnTop(index, buffList.length) }"
-                @click="toggleBubble(buff.id)"
+                @pointerdown="onStatusPointerDown(buff, $event)"
+                @pointerup="onStatusPointerUp(buff, $event)"
+                @pointerleave="onStatusPointerCancel($event)"
+                @pointercancel="onStatusPointerCancel($event)"
+                @contextmenu.prevent
               >
                 <div class="status-effect-name">{{ buff.name }}</div>
                 <p class="status-effect-desc">{{ buff.描述 }}</p>
@@ -65,7 +69,11 @@
                 :key="debuff.id"
                 class="status-effect-item status-effect-debuff"
                 :class="{ active: activeBubble === debuff.id, 'bubble-top': shouldShowBubbleOnTop(index, debuffList.length) }"
-                @click="toggleBubble(debuff.id)"
+                @pointerdown="onStatusPointerDown(debuff, $event)"
+                @pointerup="onStatusPointerUp(debuff, $event)"
+                @pointerleave="onStatusPointerCancel($event)"
+                @pointercancel="onStatusPointerCancel($event)"
+                @contextmenu.prevent
               >
                 <div class="status-effect-name">{{ debuff.name }}</div>
                 <p class="status-effect-desc">{{ debuff.描述 }}</p>
@@ -83,11 +91,30 @@
       </div>
     </div>
   </div>
+
+  <Confirm
+    v-if="showStatusActionModal"
+    :title="`处理状态：${selectedStatusName}`"
+    :question="`请选择要对「${selectedStatusName}」执行的操作。`"
+    @cancel="closeStatusActionModal"
+  >
+    <template #hint>
+      <span>删除是指出现bug强行将条目删除、销毁是指玩家主动删除。删除不写日志，销毁会记录“系统销毁了状态”。</span>
+    </template>
+    <template #actions>
+      <button type="button" class="confirm-button ghost" @click="handleStatusBugDelete">删除</button>
+      <button type="button" class="confirm-button ghost" @click="handleStatusDestroy">销毁</button>
+      <button type="button" class="confirm-button ghost" @click="closeStatusActionModal">取消</button>
+    </template>
+  </Confirm>
 </template>
 
 <script setup lang="ts">
+import { computed, onBeforeUnmount, ref } from 'vue';
+import Confirm from './Confirm.vue';
 import type { StatusEffectEntry, StatusTab } from '../types';
 import { useBubble } from '../composables/useBubble';
+import { useDataStore } from '../store';
 
 defineProps<{
   buffList: StatusEffectEntry[];
@@ -100,6 +127,16 @@ const show = defineModel<boolean>('show', { default: false });
 const tab = defineModel<StatusTab>('tab', { default: '增益' });
 
 const { activeBubble, toggleBubble } = useBubble<string>();
+const store = useDataStore();
+
+const LONG_PRESS_DELAY = 600;
+let pressTimer: ReturnType<typeof setTimeout> | null = null;
+const longPressTriggered = ref(false);
+const showStatusActionModal = ref(false);
+const pendingStatus = ref<StatusEffectEntry | null>(null);
+const selectedStatusName = computed(() => pendingStatus.value?.name ?? '未知状态');
+const activePointerId = ref<number | null>(null);
+onBeforeUnmount(() => clearPressTimer());
 
 function toggle() {
   show.value = !show.value;
@@ -113,6 +150,103 @@ function close() {
 // 列表后半部分的元素,气泡显示在上方
 function shouldShowBubbleOnTop(index: number, total: number): boolean {
   return index >= Math.floor(total / 2);
+}
+
+function clearPressTimer() {
+  if (pressTimer) {
+    clearTimeout(pressTimer);
+    pressTimer = null;
+  }
+}
+
+function onStatusPointerDown(status: StatusEffectEntry, event: PointerEvent) {
+  if (event.button !== 0) return;
+  activePointerId.value = event.pointerId;
+  (event.currentTarget as HTMLElement | null)?.setPointerCapture(event.pointerId);
+  longPressTriggered.value = false;
+  if (event.pointerType !== 'mouse') {
+    event.preventDefault();
+  }
+  clearPressTimer();
+  pressTimer = setTimeout(() => {
+    longPressTriggered.value = true;
+    openStatusActionModal(status);
+  }, LONG_PRESS_DELAY);
+}
+
+function onStatusPointerUp(status: StatusEffectEntry, event: PointerEvent) {
+  if (event.button !== 0 || activePointerId.value !== event.pointerId) return;
+  (event.currentTarget as HTMLElement | null)?.releasePointerCapture(event.pointerId);
+  activePointerId.value = null;
+  const wasLongPress = longPressTriggered.value;
+  clearPressTimer();
+  if (!wasLongPress) {
+    toggleBubble(status.id);
+  }
+}
+
+function onStatusPointerCancel(event?: PointerEvent) {
+  if (event && activePointerId.value === event.pointerId) {
+    (event.currentTarget as HTMLElement | null)?.releasePointerCapture(event.pointerId);
+    activePointerId.value = null;
+  }
+  clearPressTimer();
+  longPressTriggered.value = false;
+}
+
+function openStatusActionModal(status: StatusEffectEntry) {
+  pendingStatus.value = status;
+  showStatusActionModal.value = true;
+}
+
+function closeStatusActionModal() {
+  showStatusActionModal.value = false;
+  pendingStatus.value = null;
+}
+
+function ensureStatusRecord(): Record<string, any> | null {
+  const hero = store.data.主角;
+  if (!hero || typeof hero !== 'object') {
+    return null;
+  }
+  if (!hero.当前状态 || typeof hero.当前状态 !== 'object') {
+    hero.当前状态 = {};
+  }
+  return hero.当前状态 as Record<string, any>;
+}
+
+function removeStatusEntry(key: string | undefined) {
+  if (!key) return false;
+  const record = ensureStatusRecord();
+  if (!record) return false;
+  if (Object.prototype.hasOwnProperty.call(record, key)) {
+    delete record[key];
+    return true;
+  }
+  return false;
+}
+
+function handleStatusBugDelete() {
+  if (!pendingStatus.value) return;
+  const success = removeStatusEntry(pendingStatus.value.key ?? pendingStatus.value.name);
+  if (success) {
+    toastr.success(`已删除状态「${selectedStatusName.value}」`);
+  } else {
+    toastr.warning('未找到要删除的状态');
+  }
+  closeStatusActionModal();
+}
+
+function handleStatusDestroy() {
+  if (!pendingStatus.value) return;
+  const success = removeStatusEntry(pendingStatus.value.key ?? pendingStatus.value.name);
+  if (success) {
+    store.log(`系统销毁了状态'${selectedStatusName.value}'`);
+    toastr.success(`已销毁状态「${selectedStatusName.value}」`);
+  } else {
+    toastr.warning('未找到要销毁的状态');
+  }
+  closeStatusActionModal();
 }
 </script>
 
@@ -208,61 +342,60 @@ function shouldShowBubbleOnTop(index: number, total: number): boolean {
 
 .status-tabs {
   display: flex;
-  gap: 4px;
-  margin-bottom: 8px;
-  background: var(--bg-card);
-  padding: 4px;
-  border-radius: 2px;
+  border: 2px solid var(--border-color);
+  border-bottom: none;
+  background: #fff;
+  margin-bottom: 0;
+  overflow: hidden;
 }
 
 .status-tab {
   flex: 1;
-  padding: 8px 12px;
-  background: transparent;
-  border: 2px solid transparent;
-  border-radius: 2px;
+  padding: 8px 0;
+  background: #fff;
+  border: none;
   font-family: var(--pixel-font);
-  font-size: 10px;
+ 	font-size: 10px;
   font-weight: bold;
   cursor: pointer;
-  transition: all 0.2s;
-  color: #666;
+  transition: background-color 0.2s, color 0.2s;
+  color: #000;
   position: relative;
+}
 
-  &::before {
-    content: '';
-    position: absolute;
-    left: 8px;
-    top: 50%;
-    transform: translateY(-50%);
-    width: 6px;
-    height: 6px;
-    border-radius: 50%;
-    background: currentColor;
-    opacity: 0.5;
-  }
+.status-tab + .status-tab::before {
+  content: '';
+  position: absolute;
+  left: -1px;
+  top: 0;
+  bottom: 0;
+  border-left: 2px solid var(--border-color);
+}
 
-  &:hover {
-    background: rgba(0, 0, 0, 0.05);
-    color: #000;
-  }
+.status-tab::after {
+  content: '';
+  position: absolute;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  border-bottom: 2px solid black;
+}
 
-  &.active {
-    background: var(--bg-input);
-    border-color: var(--border-color);
-    color: #1976d2;
-    box-shadow: inset 0 1px 3px rgba(0, 0, 0, 0.1);
+.status-tab:hover {
+  background: #f5f5f5;
+}
 
-    &::before {
-      opacity: 1;
-    }
-  }
+.status-tab.active {
+  color: #1976d2;
 }
 
 .status-list-content {
   max-height: 280px;
   overflow-y: auto;
   padding-right: 4px;
+  border: 2px solid var(--border-color);
+  border-top: none;
+  padding: 12px;
 
   /* 自定义滚动条样式 */
   &::-webkit-scrollbar {
@@ -321,6 +454,8 @@ function shouldShowBubbleOnTop(index: number, total: number): boolean {
   transition: all 0.2s;
   cursor: pointer;
   position: relative;
+  user-select: none;
+  touch-action: none;
 
   &:hover {
     background: var(--bg-card-hover);

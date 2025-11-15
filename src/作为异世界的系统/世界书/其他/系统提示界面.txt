@@ -1,0 +1,8 @@
+---
+description: 当需要在正文中展示系统相关内容时, 你必须按照 format 进行输出。
+format: |-
+  <system_notification>
+  <title>${主标题，如任务名、获得物品名}</title>
+  <tag>${标签，如主线任务、增益、能力}</tag>
+  ${系统提示内容，按html输出}
+  </system_notification>

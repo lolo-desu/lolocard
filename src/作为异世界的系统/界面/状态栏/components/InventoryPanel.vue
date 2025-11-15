@@ -1,17 +1,21 @@
 <template>
   <div class="inventory-section">
     <div class="inventory-title">物品栏</div>
-    <div class="inventory-grid">
+    <div class="inventory-grid" @wheel.stop>
       <div
-        v-for="(item, index) in inventory"
+        v-for="(item, index) in displayedInventoryWithPad"
         :key="item.id"
         class="inventory-item"
         :class="{
           placeholder: item.placeholder,
           active: activeBubble === item.id,
-          'bubble-top': shouldShowBubbleOnTop(index, inventory.length),
+          'bubble-top': shouldShowBubbleOnTop(index, displayedInventoryWithPad.length),
         }"
-        @click="!item.placeholder && toggleBubble(item.id)"
+        @pointerdown="onPointerDown(item, $event)"
+        @pointerup="onPointerUp(item, $event)"
+        @pointerleave="onPointerCancel()"
+        @pointercancel="onPointerCancel()"
+        @contextmenu.prevent
       >
         <div class="item-name">{{ item.名称 }}</div>
         <div class="item-description">{{ item.描述 || item.主角评价 || '空槽位' }}</div>
@@ -21,17 +25,171 @@
       </div>
     </div>
   </div>
+
+  <Confirm
+    v-if="showInventoryActionModal"
+    :title="actionModalTitle"
+    :question="`请选择要对「${selectedItemName}」执行的操作。`"
+    @cancel="closeActionModal"
+  >
+    <template #hint>
+      <span>删除：强行将物品删除，通常用于出现bug时。<br></br>销毁：将物品删除并通知AI，作为剧情的一部分。</span>
+    </template>
+    <template #actions>
+      <button type="button" class="confirm-button ghost" @click="handleBugDelete">删除</button>
+      <button type="button" class="confirm-button ghost" @click="handleDestroy">销毁</button>
+      <button type="button" class="confirm-button ghost" @click="closeActionModal">取消</button>
+    </template>
+  </Confirm>
 </template>
 
 <script setup lang="ts">
+import Confirm from './Confirm.vue';
 import { useBubble } from '../composables/useBubble';
+import { useDataStore } from '../store';
+import { ITEMS_PER_PAGE } from '../constants';
 import type { InventoryItem } from '../types';
 
-defineProps<{
+const props = defineProps<{
   inventory: InventoryItem[];
+  isMobile?: boolean;
 }>();
 
-const { activeBubble, toggleBubble } = useBubble<string>();
+const store = useDataStore();
+const { activeBubble, toggleBubble, closeBubble } = useBubble<string>();
+const displayedInventory = computed(() => props.inventory ?? []);
+const displayedInventoryWithPad = computed(() => {
+  const list = [...displayedInventory.value];
+  if (props.isMobile) {
+    return list;
+  }
+  if (list.length < ITEMS_PER_PAGE) {
+    const placeholdersNeeded = ITEMS_PER_PAGE - list.length;
+    for (let i = 0; i < placeholdersNeeded; i += 1) {
+      list.push({
+        id: `placeholder-${i}`,
+        key: `placeholder-${i}`,
+        名称: '—',
+        描述: '空槽位',
+        主角评价: '',
+        placeholder: true,
+      });
+    }
+  }
+  return list;
+});
+
+const showInventoryActionModal = ref(false);
+const pendingItem = ref<InventoryItem | null>(null);
+const selectedItemName = computed(() => pendingItem.value?.名称 || '未知物品');
+const actionModalTitle = computed(() => `处理物品：${selectedItemName.value}`);
+
+const LONG_PRESS_DELAY = 600;
+let pressTimer: ReturnType<typeof setTimeout> | null = null;
+const longPressTriggered = ref(false);
+
+function clearPressTimer() {
+  if (pressTimer) {
+    clearTimeout(pressTimer);
+    pressTimer = null;
+  }
+}
+
+onBeforeUnmount(() => {
+  clearPressTimer();
+});
+
+function onPointerDown(item: InventoryItem, event: PointerEvent) {
+  if (item.placeholder || event.button !== 0) {
+    return;
+  }
+  longPressTriggered.value = false;
+  clearPressTimer();
+  pressTimer = setTimeout(() => {
+    longPressTriggered.value = true;
+    openActionModal(item);
+  }, LONG_PRESS_DELAY);
+}
+
+function onPointerUp(item: InventoryItem, event: PointerEvent) {
+  if (item.placeholder || event.button !== 0) {
+    return;
+  }
+  const wasLongPress = longPressTriggered.value;
+  clearPressTimer();
+  if (!wasLongPress) {
+    toggleBubble(item.id);
+  }
+}
+
+function onPointerCancel() {
+  clearPressTimer();
+  longPressTriggered.value = false;
+}
+
+function openActionModal(item: InventoryItem) {
+  pendingItem.value = item;
+  showInventoryActionModal.value = true;
+  closeBubble();
+}
+
+function closeActionModal() {
+  showInventoryActionModal.value = false;
+  pendingItem.value = null;
+}
+
+function ensureInventoryRecord(): Record<string, any> | null {
+  const hero = store.data.主角;
+  if (!hero || typeof hero !== 'object') {
+    return null;
+  }
+  if (!hero.物品栏 || typeof hero.物品栏 !== 'object') {
+    hero.物品栏 = {};
+  }
+  return hero.物品栏 as Record<string, any>;
+}
+
+function removeInventoryItem(key: string | undefined) {
+  if (key === undefined) {
+    return false;
+  }
+  const inventory = ensureInventoryRecord();
+  if (!inventory) {
+    return false;
+  }
+  if (Object.prototype.hasOwnProperty.call(inventory, key)) {
+    delete inventory[key];
+    return true;
+  }
+  return false;
+}
+
+function handleBugDelete() {
+  if (!pendingItem.value) {
+    return;
+  }
+  const removed = removeInventoryItem(pendingItem.value.key);
+  if (removed) {
+    toastr.success(`已删除物品「${selectedItemName.value}」`);
+  } else {
+    toastr.warning('未找到要删除的物品');
+  }
+  closeActionModal();
+}
+
+function handleDestroy() {
+  if (!pendingItem.value) {
+    return;
+  }
+  const removed = removeInventoryItem(pendingItem.value.key);
+  if (removed) {
+    store.log(`系统销毁了物品'${selectedItemName.value}'`);
+    toastr.success(`已销毁物品「${selectedItemName.value}」`);
+  } else {
+    toastr.warning('未找到要销毁的物品');
+  }
+  closeActionModal();
+}
 
 // 判断气泡应该显示在上方还是下方
 // 列表后半部分的元素,气泡显示在上方
@@ -42,12 +200,13 @@ function shouldShowBubbleOnTop(index: number, total: number): boolean {
 
 <style lang="scss" scoped>
 .inventory-section {
-  padding: 10px;
+  padding: 10px 10px 60px;
   background: var(--bg-card);
   display: flex;
   flex-direction: column;
-  flex: 1;
-  min-height: 0;
+  flex: none;
+  min-height: auto;
+  width: 100%;
 }
 
 .inventory-title {
@@ -59,14 +218,17 @@ function shouldShowBubbleOnTop(index: number, total: number): boolean {
 }
 
 .inventory-grid {
-  flex: 1;
-  min-height: 0;
+  flex: none;
+  min-height: 200px;
+  max-height: 200px;
   display: grid;
   grid-template-columns: repeat(2, 1fr);
-  gap: 4px;
+  gap: 6px;
+  grid-auto-rows: 94px;
   overflow-y: auto;
   overflow-x: hidden;
   padding-right: 4px;
+  margin-bottom: 6px;
 
   &::-webkit-scrollbar {
     width: 4px;
@@ -94,7 +256,8 @@ function shouldShowBubbleOnTop(index: number, total: number): boolean {
   display: flex;
   flex-direction: column;
   justify-content: center;
-  min-height: 40px;
+  min-height: 0;
+  height: 100%;
   position: relative;
   overflow: visible;
   z-index: 1;
@@ -220,10 +383,16 @@ function shouldShowBubbleOnTop(index: number, total: number): boolean {
 @media (max-width: 768px) {
   .inventory-section {
     border-bottom: none;
+    padding-bottom: 20px;
   }
 
   .inventory-grid {
+    min-height: auto;
+    max-height: none;
     grid-template-columns: 1fr;
+    grid-auto-rows: 72px;
+    overflow: visible;
+    padding-right: 0;
   }
 }
 </style>
