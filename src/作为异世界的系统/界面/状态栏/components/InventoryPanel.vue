@@ -46,7 +46,9 @@
 <script setup lang="ts">
 import Confirm from './Confirm.vue';
 import { useBubble } from '../composables/useBubble';
+import { useEntryRemoval } from '../composables/useEntryRemoval';
 import { useLongPress } from '../composables/useLongPress';
+import { removeHeroRecordEntry } from '../utils/heroRecords';
 import { useDataStore } from '../store';
 import { ITEMS_PER_PAGE } from '../constants';
 import type { InventoryItem } from '../types';
@@ -80,9 +82,23 @@ const displayedInventoryWithPad = computed(() => {
   return list;
 });
 
-const showInventoryActionModal = ref(false);
-const pendingItem = ref<InventoryItem | null>(null);
-const selectedItemName = computed(() => pendingItem.value?.名称 || '未知物品');
+const {
+  showRemovalModal: showInventoryActionModal,
+  selectedName: selectedItemName,
+  openRemovalModal,
+  closeRemovalModal: closeActionModal,
+  handleBugDelete,
+  handleDestroy,
+} = useEntryRemoval<InventoryItem>({
+  getName: item => item?.名称 || '未知物品',
+  getKey: item => item?.key,
+  removeByKey: key => removeHeroRecordEntry(store.data.主角, '物品栏', key),
+  deleteSuccessMessage: name => `已删除物品「${name}」`,
+  destroySuccessMessage: name => `已销毁物品「${name}」`,
+  deleteFailureMessage: '未找到要删除的物品',
+  destroyFailureMessage: '未找到要销毁的物品',
+  logDestroy: name => store.log(`系统销毁了物品'${name}'`),
+});
 const actionModalTitle = computed(() => `处理物品：${selectedItemName.value}`);
 
 const inventoryPress = useLongPress<InventoryItem>({
@@ -93,68 +109,10 @@ const inventoryPress = useLongPress<InventoryItem>({
 });
 
 function openActionModal(item: InventoryItem) {
-  pendingItem.value = item;
-  showInventoryActionModal.value = true;
   closeBubble();
+  openRemovalModal(item);
 }
 
-function closeActionModal() {
-  showInventoryActionModal.value = false;
-  pendingItem.value = null;
-}
-
-function ensureInventoryRecord(): Record<string, any> | null {
-  const hero = store.data.主角;
-  if (!hero || typeof hero !== 'object') {
-    return null;
-  }
-  if (!hero.物品栏 || typeof hero.物品栏 !== 'object') {
-    hero.物品栏 = {};
-  }
-  return hero.物品栏 as Record<string, any>;
-}
-
-function removeInventoryItem(key: string | undefined) {
-  if (key === undefined) {
-    return false;
-  }
-  const inventory = ensureInventoryRecord();
-  if (!inventory) {
-    return false;
-  }
-  if (Object.prototype.hasOwnProperty.call(inventory, key)) {
-    delete inventory[key];
-    return true;
-  }
-  return false;
-}
-
-function handleBugDelete() {
-  if (!pendingItem.value) {
-    return;
-  }
-  const removed = removeInventoryItem(pendingItem.value.key);
-  if (removed) {
-    toastr.success(`已删除物品「${selectedItemName.value}」`);
-  } else {
-    toastr.warning('未找到要删除的物品');
-  }
-  closeActionModal();
-}
-
-function handleDestroy() {
-  if (!pendingItem.value) {
-    return;
-  }
-  const removed = removeInventoryItem(pendingItem.value.key);
-  if (removed) {
-    store.log(`系统销毁了物品'${selectedItemName.value}'`);
-    toastr.success(`已销毁物品「${selectedItemName.value}」`);
-  } else {
-    toastr.warning('未找到要销毁的物品');
-  }
-  closeActionModal();
-}
 
 // 判断气泡应该显示在上方还是下方
 // 列表后半部分的元素,气泡显示在上方

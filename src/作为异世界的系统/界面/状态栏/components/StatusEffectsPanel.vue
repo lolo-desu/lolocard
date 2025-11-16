@@ -88,7 +88,9 @@
 
 <script setup lang="ts">
 import Confirm from './Confirm.vue';
+import { useEntryRemoval } from '../composables/useEntryRemoval';
 import { useLongPress } from '../composables/useLongPress';
+import { removeHeroRecordEntry } from '../utils/heroRecords';
 import type { StatusEffectEntry, StatusTab } from '../types';
 import { useDataStore } from '../store';
 
@@ -100,68 +102,27 @@ defineProps<{
 const activeTab = ref<StatusTab>('增益');
 const store = useDataStore();
 
-const showStatusActionModal = ref(false);
-const pendingStatus = ref<StatusEffectEntry | null>(null);
-const selectedStatusName = computed(() => pendingStatus.value?.name ?? '未知状态');
+const {
+  showRemovalModal: showStatusActionModal,
+  selectedName: selectedStatusName,
+  openRemovalModal: openStatusActionModal,
+  closeRemovalModal: closeStatusActionModal,
+  handleBugDelete: handleStatusBugDelete,
+  handleDestroy: handleStatusDestroy,
+} = useEntryRemoval<StatusEffectEntry>({
+  getName: status => status?.name ?? '未知状态',
+  getKey: status => status?.key ?? status?.name,
+  removeByKey: key => removeHeroRecordEntry(store.data.主角, '当前状态', key),
+  deleteSuccessMessage: name => `已删除状态「${name}」`,
+  destroySuccessMessage: name => `已销毁状态「${name}」`,
+  deleteFailureMessage: '未找到要删除的状态',
+  destroyFailureMessage: '未找到要销毁的状态',
+  logDestroy: name => store.log(`系统销毁了状态'${name}'`),
+});
 
 const statusPress = useLongPress<StatusEffectEntry>({
   onLongPress: status => openStatusActionModal(status),
 });
-
-function openStatusActionModal(status: StatusEffectEntry) {
-  pendingStatus.value = status;
-  showStatusActionModal.value = true;
-}
-
-function closeStatusActionModal() {
-  showStatusActionModal.value = false;
-  pendingStatus.value = null;
-}
-
-function ensureStatusRecord(): Record<string, any> | null {
-  const hero = store.data.主角;
-  if (!hero || typeof hero !== 'object') {
-    return null;
-  }
-  if (!hero.当前状态 || typeof hero.当前状态 !== 'object') {
-    hero.当前状态 = {};
-  }
-  return hero.当前状态 as Record<string, any>;
-}
-
-function removeStatusEntry(key: string | undefined) {
-  if (!key) return false;
-  const statusRecord = ensureStatusRecord();
-  if (!statusRecord) return false;
-  if (Object.prototype.hasOwnProperty.call(statusRecord, key)) {
-    delete statusRecord[key];
-    return true;
-  }
-  return false;
-}
-
-function handleStatusBugDelete() {
-  if (!pendingStatus.value) return;
-  const success = removeStatusEntry(pendingStatus.value.key);
-  if (success) {
-    toastr.success(`已删除状态「${selectedStatusName.value}」`);
-  } else {
-    toastr.warning('未找到要删除的状态');
-  }
-  closeStatusActionModal();
-}
-
-function handleStatusDestroy() {
-  if (!pendingStatus.value) return;
-  const success = removeStatusEntry(pendingStatus.value.key);
-  if (success) {
-    store.log(`系统销毁了状态'${selectedStatusName.value}'`);
-    toastr.success(`已销毁状态「${selectedStatusName.value}」`);
-  } else {
-    toastr.warning('未找到要销毁的状态');
-  }
-  closeStatusActionModal();
-}
 </script>
 
 <style lang="scss" scoped>

@@ -57,10 +57,11 @@
 </template>
 
 <script setup lang="ts">
-import { computed, ref } from 'vue';
 import Confirm from './Confirm.vue';
 import { useBubble } from '../composables/useBubble';
+import { useEntryRemoval } from '../composables/useEntryRemoval';
 import { useLongPress } from '../composables/useLongPress';
+import { removeHeroRecordEntry } from '../utils/heroRecords';
 import { useDataStore } from '../store';
 
 type AbilityEntry = {
@@ -80,9 +81,23 @@ const show = defineModel<boolean>('show', { default: false });
 const { activeBubble, toggleBubble } = useBubble<string>();
 const store = useDataStore();
 
-const showAbilityActionModal = ref(false);
-const pendingAbility = ref<AbilityEntry | null>(null);
-const selectedAbilityName = computed(() => pendingAbility.value?.name ?? '未知能力');
+const {
+  showRemovalModal: showAbilityActionModal,
+  selectedName: selectedAbilityName,
+  openRemovalModal: openAbilityActionModal,
+  closeRemovalModal: closeAbilityActionModal,
+  handleBugDelete: handleAbilityBugDelete,
+  handleDestroy: handleAbilityDestroy,
+} = useEntryRemoval<AbilityEntry>({
+  getName: ability => ability?.name ?? '未知能力',
+  getKey: ability => ability?.key ?? ability?.name,
+  removeByKey: key => removeHeroRecordEntry(store.data.主角, '持有能力', key),
+  deleteSuccessMessage: name => `已删除能力「${name}」`,
+  destroySuccessMessage: name => `已销毁能力「${name}」`,
+  deleteFailureMessage: '未找到要删除的能力',
+  destroyFailureMessage: '未找到要销毁的能力',
+  logDestroy: name => store.log(`系统销毁了能力'${name}'`),
+});
 
 const abilityPress = useLongPress<AbilityEntry>({
   onTap: ability => toggleBubble(ability.id),
@@ -103,60 +118,7 @@ function shouldShowBubbleOnTop(index: number, total: number): boolean {
   return index >= Math.floor(total / 2);
 }
 
-function openAbilityActionModal(ability: AbilityEntry) {
-  pendingAbility.value = ability;
-  showAbilityActionModal.value = true;
-}
-
-function closeAbilityActionModal() {
-  showAbilityActionModal.value = false;
-  pendingAbility.value = null;
-}
-
-function ensureHeldAbilities(): Record<string, any> | null {
-  const hero = store.data.主角;
-  if (!hero || typeof hero !== 'object') {
-    return null;
-  }
-  if (!hero.持有能力 || typeof hero.持有能力 !== 'object') {
-    hero.持有能力 = {};
-  }
-  return hero.持有能力 as Record<string, any>;
-}
-
-function removeHeldAbility(key: string | undefined) {
-  if (!key) return false;
-  const record = ensureHeldAbilities();
-  if (!record) return false;
-  if (Object.prototype.hasOwnProperty.call(record, key)) {
-    delete record[key];
-    return true;
-  }
-  return false;
-}
-
-function handleAbilityBugDelete() {
-  if (!pendingAbility.value) return;
-  const success = removeHeldAbility(pendingAbility.value.key ?? pendingAbility.value.name);
-  if (success) {
-    toastr.success(`已删除能力「${selectedAbilityName.value}」`);
-  } else {
-    toastr.warning('未找到要删除的能力');
-  }
-  closeAbilityActionModal();
-}
-
-function handleAbilityDestroy() {
-  if (!pendingAbility.value) return;
-  const success = removeHeldAbility(pendingAbility.value.key ?? pendingAbility.value.name);
-  if (success) {
-    store.log(`系统销毁了能力'${selectedAbilityName.value}'`);
-    toastr.success(`已销毁能力「${selectedAbilityName.value}」`);
-  } else {
-    toastr.warning('未找到要销毁的能力');
-  }
-  closeAbilityActionModal();
-}
+// existing toggle, close, shouldShow... remain
 </script>
 
 <style lang="scss" scoped>
