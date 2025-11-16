@@ -15,3 +15,7 @@ components.d.ts
 src/nova-creator-cli
 src/作为异世界的系统/TODO.txt
 .vscode/launch.json
+.idea/.gitignore
+.idea/prettier.xml
+.idea/vcs.xml
+.idea/inspectionProfiles/Project_Default.xml

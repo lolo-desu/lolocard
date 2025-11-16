@@ -3,7 +3,7 @@
   <head>
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1" />
-    <title>角色创生 - 像素世界</title>
+    <title>角色创建</title>
     <style>
       @import url('https://fontsapi.zeoseven.com/570/main/result.css');
 
@@ -266,7 +266,7 @@
         <form id="init-form" class="form-container">
           <div class="form-field">
             <label for="systemImage">
-              <small>爱丽丝|系统</small><span class="optional"><br />(可选)</span>
+              <small>{{user}}|系统</small><span class="optional"><br />(可选)</span>
             </label>
             <input id="systemImage" type="text" placeholder="神秘的声音、凭空出现的光板、白发蓝瞳猫耳耳机少女..." />
           </div>
@@ -378,6 +378,10 @@ ${reminder}
 姓名：${values.heroName}
 性别：${values.heroGender}
 年龄：${values.heroAge}
+背景和人设在其他区域。
+开场故事要求：请按照文风要求/写作要求介绍${values.heroName}的生平/日常生活/自我介绍等作为导入（必要的话也可以使用第一人称）。
+关于系统:应当一直到文章才出现关于系统的内容而不是开头，请勿擅自决定系统类型、名称等任何内容，交给玩家{{user}}来决定。
+如果下方内容中包括【不允许扮演{{user}}】，请不要擅自在正文中出现系统相关内容。
 -->
 结合设定，为剧情撰写开场故事。`;
         }
@@ -390,7 +394,7 @@ ${reminder}
             ? '你允许适当扮演系统，但请记住{{user}}才是玩家，玩家不是故事的主人公'
             : '再次强调，你不允许扮演系统进行任何行动，请在正文中出现玩家本人进行的操作';
 
-          return `你${allowAction}扮演{{user}}系统进行行动（如发布任务、展示主角状态等全部系统相关行为）。{{user}}是一个${personality}独立人格和情感，${talkative}主动与角色交流互动的系统。${reminder}`;
+          return `【你${allowAction}扮演{{user}}系统进行行动（如发布任务、展示主角状态等全部系统相关行为）。{{user}}是一个${personality}独立人格和情感，${talkative}主动与角色交流互动的系统。${reminder}】`;
         }
 
         function ensureEntryBase(overrides = {}) {
@@ -400,7 +404,6 @@ ${reminder}
               type: 'constant',
               keys: [],
               keys_secondary: { logic: 'and_any', keys: [] },
-              scan_depth: 1,
             },
             position: {
               type: 'after_character_definition',
@@ -456,7 +459,7 @@ ${reminder}
         }
 
         async function writePersonaEntry(worldbookName, values) {
-          await upsertWorldbookEntry(worldbookName, `人设：${values.heroName}`, () =>
+          await upsertWorldbookEntry(worldbookName, `(请自行关闭)人设：${values.heroName}`, () =>
             ensureEntryBase({ content: values.heroPersona }),
           );
         }
@@ -467,7 +470,7 @@ ${reminder}
               position: {
                 type: 'at_depth',
                 role: 'system',
-                depth: 1,
+                depth: 0,
                 order: 0,
               },
               content: buildSystemSettingsContent(values),

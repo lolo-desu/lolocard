@@ -82,6 +82,7 @@ const store = useDataStore();
 const LONG_PRESS_DELAY = 600;
 let pressTimer: ReturnType<typeof setTimeout> | null = null;
 const longPressTriggered = ref(false);
+const activePointerId = ref<number | null>(null);
 
 const showAbilityActionModal = ref(false);
 const pendingAbility = ref<AbilityEntry | null>(null);

@@ -53,7 +53,10 @@ import { nextTick } from 'vue';
 import Confirm from './Confirm.vue';
 import { useBubble } from '../composables/useBubble';
 import { useDataStore } from '../store';
+import type { Schema } from '../../../schema';
 import type { AbilityData, AbilityKey } from '../types';
+
+type AbilityPanel = Schema['主角']['能力面板'];
 
 defineProps<{
   abilities: AbilityData[];
@@ -135,15 +138,12 @@ function closeAbilityModal() {
   abilityInputValue.value = '';
 }
 
-function ensureAbilityPanel(): Record<string, any> | null {
+function ensureAbilityPanel(): AbilityPanel | null {
   const hero = store.data.主角;
   if (!hero || typeof hero !== 'object') {
     return null;
   }
-  if (!hero.能力面板 || typeof hero.能力面板 !== 'object') {
-    hero.能力面板 = {};
-  }
-  return hero.能力面板 as Record<string, any>;
+  return hero.能力面板;
 }
 
 function handleAbilityConfirm() {
@@ -165,9 +165,8 @@ function handleAbilityConfirm() {
     toastr.error('未找到主角能力数据');
     return;
   }
-  const target = abilityPanel[pendingAbilityKey.value] ?? {};
+  const target = abilityPanel[pendingAbilityKey.value];
   target.数值 = nextValue;
-  abilityPanel[pendingAbilityKey.value] = target;
   store.log(`能力'${pendingAbilityKey.value}'已更新为${nextValue}`);
   toastr.success('能力数值已更新');
   closeAbilityModal();
@@ -181,7 +180,7 @@ function handleAbilityConfirm() {
   padding: 8px;
   display: grid;
   grid-template-columns: repeat(3, 1fr);
-  grid-template-rows: repeat(2, minmax(60px, auto));
+  grid-template-rows: repeat(2, minmax(70px, auto));
   gap: 6px;
   flex: 1;
   min-height: 0;

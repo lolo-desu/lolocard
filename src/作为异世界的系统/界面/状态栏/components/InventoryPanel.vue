@@ -33,7 +33,7 @@
     @cancel="closeActionModal"
   >
     <template #hint>
-      <span>删除：强行将物品删除，通常用于出现bug时。<br></br>销毁：将物品删除并通知AI，作为剧情的一部分。</span>
+      <span>删除：强行将物品删除，通常用于出现bug时。</br>销毁：将物品删除并通知AI，作为剧情的一部分。</span>
     </template>
     <template #actions>
       <button type="button" class="confirm-button ghost" @click="handleBugDelete">删除</button>
