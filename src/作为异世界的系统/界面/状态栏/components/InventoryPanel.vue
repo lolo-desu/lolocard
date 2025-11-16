@@ -11,10 +11,10 @@
           active: activeBubble === item.id,
           'bubble-top': shouldShowBubbleOnTop(index, displayedInventoryWithPad.length),
         }"
-        @pointerdown="onPointerDown(item, $event)"
-        @pointerup="onPointerUp(item, $event)"
-        @pointerleave="onPointerCancel()"
-        @pointercancel="onPointerCancel()"
+        @pointerdown="inventoryPress.onPointerDown(item, $event)"
+        @pointerup="inventoryPress.onPointerUp(item, $event)"
+        @pointerleave="inventoryPress.onPointerCancel()"
+        @pointercancel="inventoryPress.onPointerCancel($event)"
         @contextmenu.prevent
       >
         <div class="item-name">{{ item.名称 }}</div>
@@ -46,6 +46,7 @@
 <script setup lang="ts">
 import Confirm from './Confirm.vue';
 import { useBubble } from '../composables/useBubble';
+import { useLongPress } from '../composables/useLongPress';
 import { useDataStore } from '../store';
 import { ITEMS_PER_PAGE } from '../constants';
 import type { InventoryItem } from '../types';
@@ -84,48 +85,12 @@ const pendingItem = ref<InventoryItem | null>(null);
 const selectedItemName = computed(() => pendingItem.value?.名称 || '未知物品');
 const actionModalTitle = computed(() => `处理物品：${selectedItemName.value}`);
 
-const LONG_PRESS_DELAY = 600;
-let pressTimer: ReturnType<typeof setTimeout> | null = null;
-const longPressTriggered = ref(false);
-
-function clearPressTimer() {
-  if (pressTimer) {
-    clearTimeout(pressTimer);
-    pressTimer = null;
-  }
-}
-
-onBeforeUnmount(() => {
-  clearPressTimer();
+const inventoryPress = useLongPress<InventoryItem>({
+  onTap: item => toggleBubble(item.id),
+  onLongPress: item => openActionModal(item),
+  usePointerCapture: false,
+  shouldHandle: item => !item.placeholder,
 });
-
-function onPointerDown(item: InventoryItem, event: PointerEvent) {
-  if (item.placeholder || event.button !== 0) {
-    return;
-  }
-  longPressTriggered.value = false;
-  clearPressTimer();
-  pressTimer = setTimeout(() => {
-    longPressTriggered.value = true;
-    openActionModal(item);
-  }, LONG_PRESS_DELAY);
-}
-
-function onPointerUp(item: InventoryItem, event: PointerEvent) {
-  if (item.placeholder || event.button !== 0) {
-    return;
-  }
-  const wasLongPress = longPressTriggered.value;
-  clearPressTimer();
-  if (!wasLongPress) {
-    toggleBubble(item.id);
-  }
-}
-
-function onPointerCancel() {
-  clearPressTimer();
-  longPressTriggered.value = false;
-}
 
 function openActionModal(item: InventoryItem) {
   pendingItem.value = item;

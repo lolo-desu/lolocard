@@ -27,10 +27,10 @@
             v-for="buff in buffList"
             :key="buff.id"
             class="status-effect-item"
-            @pointerdown="onStatusPointerDown(buff, $event)"
-            @pointerup="onStatusPointerUp($event)"
-            @pointerleave="onStatusPointerCancel($event)"
-            @pointercancel="onStatusPointerCancel($event)"
+            @pointerdown="statusPress.onPointerDown(buff, $event)"
+            @pointerup="statusPress.onPointerUp(buff, $event)"
+            @pointerleave="statusPress.onPointerCancel($event)"
+            @pointercancel="statusPress.onPointerCancel($event)"
             @contextmenu.prevent
           >
             <div class="status-effect-name">{{ buff.name }}</div>
@@ -51,10 +51,10 @@
             v-for="debuff in debuffList"
             :key="debuff.id"
             class="status-effect-item"
-            @pointerdown="onStatusPointerDown(debuff, $event)"
-            @pointerup="onStatusPointerUp($event)"
-            @pointerleave="onStatusPointerCancel($event)"
-            @pointercancel="onStatusPointerCancel($event)"
+            @pointerdown="statusPress.onPointerDown(debuff, $event)"
+            @pointerup="statusPress.onPointerUp(debuff, $event)"
+            @pointerleave="statusPress.onPointerCancel($event)"
+            @pointercancel="statusPress.onPointerCancel($event)"
             @contextmenu.prevent
           >
             <div class="status-effect-name">{{ debuff.name }}</div>
@@ -88,6 +88,7 @@
 
 <script setup lang="ts">
 import Confirm from './Confirm.vue';
+import { useLongPress } from '../composables/useLongPress';
 import type { StatusEffectEntry, StatusTab } from '../types';
 import { useDataStore } from '../store';
 
@@ -103,53 +104,9 @@ const showStatusActionModal = ref(false);
 const pendingStatus = ref<StatusEffectEntry | null>(null);
 const selectedStatusName = computed(() => pendingStatus.value?.name ?? '未知状态');
 
-const LONG_PRESS_DELAY = 600;
-let pressTimer: ReturnType<typeof setTimeout> | null = null;
-const longPressTriggered = ref(false);
-const activePointerId = ref<number | null>(null);
-
-function clearPressTimer() {
-  if (pressTimer) {
-    clearTimeout(pressTimer);
-    pressTimer = null;
-  }
-}
-
-onBeforeUnmount(() => {
-  clearPressTimer();
+const statusPress = useLongPress<StatusEffectEntry>({
+  onLongPress: status => openStatusActionModal(status),
 });
-
-function onStatusPointerDown(status: StatusEffectEntry, event: PointerEvent) {
-  if (event.button !== 0) return;
-  activePointerId.value = event.pointerId;
-  (event.currentTarget as HTMLElement | null)?.setPointerCapture(event.pointerId);
-  longPressTriggered.value = false;
-  if (event.pointerType !== 'mouse') {
-    event.preventDefault();
-  }
-  clearPressTimer();
-  pressTimer = setTimeout(() => {
-    longPressTriggered.value = true;
-    openStatusActionModal(status);
-  }, LONG_PRESS_DELAY);
-}
-
-function onStatusPointerUp(event: PointerEvent) {
-  if (event.button !== 0 || activePointerId.value !== event.pointerId) return;
-  (event.currentTarget as HTMLElement | null)?.releasePointerCapture(event.pointerId);
-  activePointerId.value = null;
-  clearPressTimer();
-  longPressTriggered.value = false;
-}
-
-function onStatusPointerCancel(event?: PointerEvent) {
-  if (event && activePointerId.value === event.pointerId) {
-    (event.currentTarget as HTMLElement | null)?.releasePointerCapture(event.pointerId);
-    activePointerId.value = null;
-  }
-  clearPressTimer();
-  longPressTriggered.value = false;
-}
 
 function openStatusActionModal(status: StatusEffectEntry) {
   pendingStatus.value = status;

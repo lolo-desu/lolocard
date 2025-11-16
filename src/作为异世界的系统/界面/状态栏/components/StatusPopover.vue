@@ -43,10 +43,10 @@
                 :key="buff.id"
                 class="status-effect-item status-effect-buff"
                 :class="{ active: activeBubble === buff.id, 'bubble-top': shouldShowBubbleOnTop(index, buffList.length) }"
-                @pointerdown="onStatusPointerDown(buff, $event)"
-                @pointerup="onStatusPointerUp(buff, $event)"
-                @pointerleave="onStatusPointerCancel($event)"
-                @pointercancel="onStatusPointerCancel($event)"
+                @pointerdown="statusPress.onPointerDown(buff, $event)"
+                @pointerup="statusPress.onPointerUp(buff, $event)"
+                @pointerleave="statusPress.onPointerCancel($event)"
+                @pointercancel="statusPress.onPointerCancel($event)"
                 @contextmenu.prevent
               >
                 <div class="status-effect-name">{{ buff.name }}</div>
@@ -69,10 +69,10 @@
                 :key="debuff.id"
                 class="status-effect-item status-effect-debuff"
                 :class="{ active: activeBubble === debuff.id, 'bubble-top': shouldShowBubbleOnTop(index, debuffList.length) }"
-                @pointerdown="onStatusPointerDown(debuff, $event)"
-                @pointerup="onStatusPointerUp(debuff, $event)"
-                @pointerleave="onStatusPointerCancel($event)"
-                @pointercancel="onStatusPointerCancel($event)"
+                @pointerdown="statusPress.onPointerDown(debuff, $event)"
+                @pointerup="statusPress.onPointerUp(debuff, $event)"
+                @pointerleave="statusPress.onPointerCancel($event)"
+                @pointercancel="statusPress.onPointerCancel($event)"
                 @contextmenu.prevent
               >
                 <div class="status-effect-name">{{ debuff.name }}</div>
@@ -110,10 +110,11 @@
 </template>
 
 <script setup lang="ts">
-import { computed, onBeforeUnmount, ref } from 'vue';
+import { computed, ref } from 'vue';
 import Confirm from './Confirm.vue';
 import type { StatusEffectEntry, StatusTab } from '../types';
 import { useBubble } from '../composables/useBubble';
+import { useLongPress } from '../composables/useLongPress';
 import { useDataStore } from '../store';
 
 defineProps<{
@@ -129,14 +130,14 @@ const tab = defineModel<StatusTab>('tab', { default: '增益' });
 const { activeBubble, toggleBubble } = useBubble<string>();
 const store = useDataStore();
 
-const LONG_PRESS_DELAY = 600;
-let pressTimer: ReturnType<typeof setTimeout> | null = null;
-const longPressTriggered = ref(false);
 const showStatusActionModal = ref(false);
 const pendingStatus = ref<StatusEffectEntry | null>(null);
 const selectedStatusName = computed(() => pendingStatus.value?.name ?? '未知状态');
-const activePointerId = ref<number | null>(null);
-onBeforeUnmount(() => clearPressTimer());
+
+const statusPress = useLongPress<StatusEffectEntry>({
+  onTap: status => toggleBubble(status.id),
+  onLongPress: status => openStatusActionModal(status),
+});
 
 function toggle() {
   show.value = !show.value;
@@ -150,48 +151,6 @@ function close() {
 // 列表后半部分的元素,气泡显示在上方
 function shouldShowBubbleOnTop(index: number, total: number): boolean {
   return index >= Math.floor(total / 2);
-}
-
-function clearPressTimer() {
-  if (pressTimer) {
-    clearTimeout(pressTimer);
-    pressTimer = null;
-  }
-}
-
-function onStatusPointerDown(status: StatusEffectEntry, event: PointerEvent) {
-  if (event.button !== 0) return;
-  activePointerId.value = event.pointerId;
-  (event.currentTarget as HTMLElement | null)?.setPointerCapture(event.pointerId);
-  longPressTriggered.value = false;
-  if (event.pointerType !== 'mouse') {
-    event.preventDefault();
-  }
-  clearPressTimer();
-  pressTimer = setTimeout(() => {
-    longPressTriggered.value = true;
-    openStatusActionModal(status);
-  }, LONG_PRESS_DELAY);
-}
-
-function onStatusPointerUp(status: StatusEffectEntry, event: PointerEvent) {
-  if (event.button !== 0 || activePointerId.value !== event.pointerId) return;
-  (event.currentTarget as HTMLElement | null)?.releasePointerCapture(event.pointerId);
-  activePointerId.value = null;
-  const wasLongPress = longPressTriggered.value;
-  clearPressTimer();
-  if (!wasLongPress) {
-    toggleBubble(status.id);
-  }
-}
-
-function onStatusPointerCancel(event?: PointerEvent) {
-  if (event && activePointerId.value === event.pointerId) {
-    (event.currentTarget as HTMLElement | null)?.releasePointerCapture(event.pointerId);
-    activePointerId.value = null;
-  }
-  clearPressTimer();
-  longPressTriggered.value = false;
 }
 
 function openStatusActionModal(status: StatusEffectEntry) {

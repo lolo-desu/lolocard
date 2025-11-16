@@ -7,10 +7,10 @@
           v-for="ability in abilities"
           :key="ability.id"
           class="ability-status-item"
-          @pointerdown="onAbilityPointerDown(ability, $event)"
-          @pointerup="onAbilityPointerUp($event)"
-          @pointerleave="onAbilityPointerCancel($event)"
-          @pointercancel="onAbilityPointerCancel($event)"
+          @pointerdown="abilityPress.onPointerDown(ability, $event)"
+          @pointerup="abilityPress.onPointerUp(ability, $event)"
+          @pointerleave="abilityPress.onPointerCancel($event)"
+          @pointercancel="abilityPress.onPointerCancel($event)"
           @contextmenu.prevent
         >
           <div class="ability-status-name">{{ ability.name }}</div>
@@ -40,6 +40,7 @@
 
 <script setup lang="ts">
 import Confirm from './Confirm.vue';
+import { useLongPress } from '../composables/useLongPress';
 import { useDataStore } from '../store';
 import type { HeldAbility } from '../types';
 
@@ -52,53 +53,9 @@ const showAbilityActionModal = ref(false);
 const pendingAbility = ref<HeldAbility | null>(null);
 const selectedAbilityName = computed(() => pendingAbility.value?.name ?? '未知能力');
 
-const LONG_PRESS_DELAY = 600;
-let pressTimer: ReturnType<typeof setTimeout> | null = null;
-const longPressTriggered = ref(false);
-const activePointerId = ref<number | null>(null);
-
-function clearPressTimer() {
-  if (pressTimer) {
-    clearTimeout(pressTimer);
-    pressTimer = null;
-  }
-}
-
-onBeforeUnmount(() => {
-  clearPressTimer();
+const abilityPress = useLongPress<HeldAbility>({
+  onLongPress: ability => openAbilityActionModal(ability),
 });
-
-function onAbilityPointerDown(ability: HeldAbility, event: PointerEvent) {
-  if (event.button !== 0) return;
-  activePointerId.value = event.pointerId;
-  (event.currentTarget as HTMLElement | null)?.setPointerCapture(event.pointerId);
-  longPressTriggered.value = false;
-  if (event.pointerType !== 'mouse') {
-    event.preventDefault();
-  }
-  clearPressTimer();
-  pressTimer = setTimeout(() => {
-    longPressTriggered.value = true;
-    openAbilityActionModal(ability);
-  }, LONG_PRESS_DELAY);
-}
-
-function onAbilityPointerUp(event: PointerEvent) {
-  if (event.button !== 0 || activePointerId.value !== event.pointerId) return;
-  (event.currentTarget as HTMLElement | null)?.releasePointerCapture(event.pointerId);
-  activePointerId.value = null;
-  clearPressTimer();
-  longPressTriggered.value = false;
-}
-
-function onAbilityPointerCancel(event?: PointerEvent) {
-  if (event && activePointerId.value === event.pointerId) {
-    (event.currentTarget as HTMLElement | null)?.releasePointerCapture(event.pointerId);
-    activePointerId.value = null;
-  }
-  clearPressTimer();
-  longPressTriggered.value = false;
-}
 
 function openAbilityActionModal(ability: HeldAbility) {
   pendingAbility.value = ability;

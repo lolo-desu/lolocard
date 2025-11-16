@@ -22,10 +22,10 @@
             :key="ability.id"
             class="ability-item"
             :class="{ active: activeBubble === ability.id, 'bubble-top': shouldShowBubbleOnTop(index, abilities.length) }"
-            @pointerdown="onAbilityPointerDown(ability, $event)"
-            @pointerup="onAbilityPointerUp(ability, $event)"
-            @pointerleave="onAbilityPointerCancel($event)"
-            @pointercancel="onAbilityPointerCancel($event)"
+            @pointerdown="abilityPress.onPointerDown(ability, $event)"
+            @pointerup="abilityPress.onPointerUp(ability, $event)"
+            @pointerleave="abilityPress.onPointerCancel($event)"
+            @pointercancel="abilityPress.onPointerCancel($event)"
             @contextmenu.prevent
           >
             <div class="ability-name">{{ ability.name }}</div>
@@ -57,9 +57,10 @@
 </template>
 
 <script setup lang="ts">
-import { computed, onBeforeUnmount, ref } from 'vue';
+import { computed, ref } from 'vue';
 import Confirm from './Confirm.vue';
 import { useBubble } from '../composables/useBubble';
+import { useLongPress } from '../composables/useLongPress';
 import { useDataStore } from '../store';
 
 type AbilityEntry = {
@@ -79,15 +80,14 @@ const show = defineModel<boolean>('show', { default: false });
 const { activeBubble, toggleBubble } = useBubble<string>();
 const store = useDataStore();
 
-const LONG_PRESS_DELAY = 600;
-let pressTimer: ReturnType<typeof setTimeout> | null = null;
-const longPressTriggered = ref(false);
-const activePointerId = ref<number | null>(null);
-
 const showAbilityActionModal = ref(false);
 const pendingAbility = ref<AbilityEntry | null>(null);
 const selectedAbilityName = computed(() => pendingAbility.value?.name ?? '未知能力');
-onBeforeUnmount(() => clearPressTimer());
+
+const abilityPress = useLongPress<AbilityEntry>({
+  onTap: ability => toggleBubble(ability.id),
+  onLongPress: ability => openAbilityActionModal(ability),
+});
 
 function toggle() {
   show.value = !show.value;
@@ -101,48 +101,6 @@ function close() {
 // 列表后半部分的元素,气泡显示在上方
 function shouldShowBubbleOnTop(index: number, total: number): boolean {
   return index >= Math.floor(total / 2);
-}
-
-function clearPressTimer() {
-  if (pressTimer) {
-    clearTimeout(pressTimer);
-    pressTimer = null;
-  }
-}
-
-function onAbilityPointerDown(ability: AbilityEntry, event: PointerEvent) {
-  if (event.button !== 0) return;
-  activePointerId.value = event.pointerId;
-  (event.currentTarget as HTMLElement | null)?.setPointerCapture(event.pointerId);
-  longPressTriggered.value = false;
-  if (event.pointerType !== 'mouse') {
-    event.preventDefault();
-  }
-  clearPressTimer();
-  pressTimer = setTimeout(() => {
-    longPressTriggered.value = true;
-    openAbilityActionModal(ability);
-  }, LONG_PRESS_DELAY);
-}
-
-function onAbilityPointerUp(ability: AbilityEntry, event: PointerEvent) {
-  if (event.button !== 0 || activePointerId.value !== event.pointerId) return;
-  (event.currentTarget as HTMLElement | null)?.releasePointerCapture(event.pointerId);
-  activePointerId.value = null;
-  const wasLongPress = longPressTriggered.value;
-  clearPressTimer();
-  if (!wasLongPress) {
-    toggleBubble(ability.id);
-  }
-}
-
-function onAbilityPointerCancel(event?: PointerEvent) {
-  if (event && activePointerId.value === event.pointerId) {
-    (event.currentTarget as HTMLElement | null)?.releasePointerCapture(event.pointerId);
-    activePointerId.value = null;
-  }
-  clearPressTimer();
-  longPressTriggered.value = false;
 }
 
 function openAbilityActionModal(ability: AbilityEntry) {

@@ -5,10 +5,10 @@
       :key="ability.key"
       class="ability-item"
       :class="{ active: activeBubble === ability.key }"
-      @pointerdown="onPointerDown(ability, $event)"
-      @pointerup="onPointerUp(ability, $event)"
-      @pointerleave="onPointerCancel($event)"
-      @pointercancel="onPointerCancel($event)"
+      @pointerdown="abilityPress.onPointerDown(ability, $event)"
+      @pointerup="abilityPress.onPointerUp(ability, $event)"
+      @pointerleave="abilityPress.onPointerCancel($event)"
+      @pointercancel="abilityPress.onPointerCancel($event)"
       @contextmenu.prevent
     >
       <div class="ability-item__name">{{ ability.key }}</div>
@@ -52,6 +52,7 @@
 import { nextTick } from 'vue';
 import Confirm from './Confirm.vue';
 import { useBubble } from '../composables/useBubble';
+import { useLongPress } from '../composables/useLongPress';
 import { useDataStore } from '../store';
 import type { Schema } from '../../../schema';
 import type { AbilityData, AbilityKey } from '../types';
@@ -70,59 +71,13 @@ const showAbilityModal = ref(false);
 const pendingAbilityKey = ref<AbilityKey | null>(null);
 const abilityInputValue = ref<string>('');
 const abilityInputRef = ref<HTMLInputElement | null>(null);
-const activePointerId = ref<number | null>(null);
 
 const selectedAbilityName = computed(() => pendingAbilityKey.value ?? '未知能力');
 
-const LONG_PRESS_DELAY = 600;
-let pressTimer: ReturnType<typeof setTimeout> | null = null;
-const longPressTriggered = ref(false);
-
-function clearPressTimer() {
-  if (pressTimer) {
-    clearTimeout(pressTimer);
-    pressTimer = null;
-  }
-}
-
-onBeforeUnmount(() => {
-  clearPressTimer();
+const abilityPress = useLongPress<AbilityData>({
+  onTap: ability => toggleBubble(ability.key),
+  onLongPress: ability => openAbilityModal(ability),
 });
-
-function onPointerDown(ability: AbilityData, event: PointerEvent) {
-  if (event.button !== 0) return;
-  activePointerId.value = event.pointerId;
-  (event.currentTarget as HTMLElement | null)?.setPointerCapture(event.pointerId);
-  longPressTriggered.value = false;
-  if (event.pointerType !== 'mouse') {
-    event.preventDefault();
-  }
-  clearPressTimer();
-  pressTimer = setTimeout(() => {
-    longPressTriggered.value = true;
-    openAbilityModal(ability);
-  }, LONG_PRESS_DELAY);
-}
-
-function onPointerUp(ability: AbilityData, event: PointerEvent) {
-  if (event.button !== 0 || activePointerId.value !== event.pointerId) return;
-  (event.currentTarget as HTMLElement | null)?.releasePointerCapture(event.pointerId);
-  activePointerId.value = null;
-  const wasLongPress = longPressTriggered.value;
-  clearPressTimer();
-  if (!wasLongPress) {
-    toggleBubble(ability.key);
-  }
-}
-
-function onPointerCancel(event?: PointerEvent) {
-  if (event && activePointerId.value === event.pointerId) {
-    (event.currentTarget as HTMLElement | null)?.releasePointerCapture(event.pointerId);
-    activePointerId.value = null;
-  }
-  clearPressTimer();
-  longPressTriggered.value = false;
-}
 
 function openAbilityModal(ability: AbilityData) {
   pendingAbilityKey.value = ability.key;
