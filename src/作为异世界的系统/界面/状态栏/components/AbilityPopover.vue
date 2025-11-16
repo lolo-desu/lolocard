@@ -15,26 +15,32 @@
         <button class="popover-close" type="button" aria-label="关闭能力列表" @click="close">×</button>
       </div>
       <div class="ability-content">
-        <p v-if="!abilities.length" class="ability-empty">暂无持有能力</p>
-        <ul v-else class="ability-list">
-          <li
-            v-for="(ability, index) in abilities"
-            :key="ability.id"
-            class="ability-item"
-            :class="{ active: activeBubble === ability.id, 'bubble-top': shouldShowBubbleOnTop(index, abilities.length) }"
-            @pointerdown="abilityPress.onPointerDown(ability, $event)"
-            @pointerup="abilityPress.onPointerUp(ability, $event)"
-            @pointerleave="abilityPress.onPointerCancel($event)"
-            @pointercancel="abilityPress.onPointerCancel($event)"
-            @contextmenu.prevent
-          >
-            <div class="ability-name">{{ ability.name }}</div>
-            <p class="ability-desc">{{ ability.描述 }}</p>
-            <div v-if="activeBubble === ability.id && ability.主角评价" class="ability-bubble">
-              {{ ability.主角评价 }}
-            </div>
-          </li>
-        </ul>
+        <div class="ability-scroll">
+          <p v-if="!abilities.length" class="ability-empty">暂无持有能力</p>
+          <ul class="ability-list">
+            <li
+              v-for="(ability, index) in displayAbilities"
+              :key="ability.id"
+              class="ability-item"
+              :class="{
+                active: !ability.__placeholder && activeBubble === ability.id,
+                'bubble-top': !ability.__placeholder && shouldShowBubbleOnTop(index, displayAbilities.length),
+                placeholder: ability.__placeholder,
+              }"
+              @pointerdown="abilityPress.onPointerDown(ability, $event)"
+              @pointerup="abilityPress.onPointerUp(ability, $event)"
+              @pointerleave="abilityPress.onPointerCancel($event)"
+              @pointercancel="abilityPress.onPointerCancel($event)"
+              @contextmenu.prevent
+            >
+              <div class="ability-name">{{ ability.name }}</div>
+              <p class="ability-desc">{{ ability.描述 }}</p>
+              <div v-if="activeBubble === ability.id && ability.主角评价 && !ability.__placeholder" class="ability-bubble">
+                {{ ability.主角评价 }}
+              </div>
+            </li>
+          </ul>
+        </div>
       </div>
     </div>
   </div>
@@ -57,6 +63,7 @@
 </template>
 
 <script setup lang="ts">
+import { computed, toRef } from 'vue';
 import Confirm from './Confirm.vue';
 import { useBubble } from '../composables/useBubble';
 import { useEntryRemoval } from '../composables/useEntryRemoval';
@@ -72,9 +79,29 @@ type AbilityEntry = {
   主角评价: string;
 };
 
-defineProps<{
+type AbilityDisplay = AbilityEntry & { __placeholder?: boolean };
+
+const props = defineProps<{
   abilities: AbilityEntry[];
 }>();
+
+const abilities = toRef(props, 'abilities');
+
+const displayAbilities = computed<AbilityDisplay[]>(() => {
+  const list = abilities.value.map(ability => ({ ...ability }));
+  while (list.length < 2) {
+    const index = list.length;
+    list.push({
+      id: `placeholder-${index}`,
+      key: `placeholder-${index}`,
+      name: '空槽位',
+      描述: '暂无能力',
+      主角评价: '',
+      __placeholder: true,
+    } as AbilityDisplay);
+  }
+  return list;
+});
 
 const show = defineModel<boolean>('show', { default: false });
 
@@ -88,7 +115,7 @@ const {
   closeRemovalModal: closeAbilityActionModal,
   handleBugDelete: handleAbilityBugDelete,
   handleDestroy: handleAbilityDestroy,
-} = useEntryRemoval<AbilityEntry>({
+} = useEntryRemoval<AbilityDisplay>({
   getName: ability => ability?.name ?? '未知能力',
   getKey: ability => ability?.key ?? ability?.name,
   removeByKey: key => removeHeroRecordEntry(store.data.主角, '持有能力', key),
@@ -99,9 +126,10 @@ const {
   logDestroy: name => store.log(`系统销毁了能力'${name}'`),
 });
 
-const abilityPress = useLongPress<AbilityEntry>({
+const abilityPress = useLongPress<AbilityDisplay>({
   onTap: ability => toggleBubble(ability.id),
   onLongPress: ability => openAbilityActionModal(ability),
+  shouldHandle: ability => !ability.__placeholder,
 });
 
 function toggle() {
@@ -112,13 +140,9 @@ function close() {
   show.value = false;
 }
 
-// 判断气泡应该显示在上方还是下方
-// 列表后半部分的元素,气泡显示在上方
 function shouldShowBubbleOnTop(index: number, total: number): boolean {
   return index >= Math.floor(total / 2);
 }
-
-// existing toggle, close, shouldShow... remain
 </script>
 
 <style lang="scss" scoped>
@@ -167,51 +191,16 @@ function shouldShowBubbleOnTop(index: number, total: number): boolean {
   animation: popoverFadeIn 0.2s ease-out;
 }
 
-@keyframes popoverFadeIn {
-  from {
-    opacity: 0;
-    transform: translateY(10px);
-  }
-  to {
-    opacity: 1;
-    transform: translateY(0);
-  }
-}
-
-.popover-header {
-  display: flex;
-  justify-content: space-between;
-  align-items: center;
-  font-weight: bold;
-  font-size: 11px;
-  padding: 10px 12px;
-  background: var(--bg-card);
-  border-bottom: 2px solid var(--border-color);
-  color: #000;
-}
-
-.popover-close {
-  background: transparent;
-  border: none;
-  font-size: 16px;
-  line-height: 1;
-  cursor: pointer;
-  color: #666;
-  transition: color 0.2s;
-  padding: 0 4px;
-
-  &:hover {
-    color: #000;
-  }
-}
-
 .ability-content {
-  max-height: 320px;
-  overflow-y: auto;
   padding: 8px;
   padding-right: 4px;
+  position: relative;
+}
 
-  /* 自定义滚动条样式 */
+.ability-scroll {
+  max-height: 320px;
+  overflow-y: auto;
+
   &::-webkit-scrollbar {
     width: 8px;
   }
@@ -236,7 +225,6 @@ function shouldShowBubbleOnTop(index: number, total: number): boolean {
     }
   }
 
-  /* Firefox 滚动条样式 */
   scrollbar-width: thin;
   scrollbar-color: #999 var(--bg-card);
 }
@@ -280,6 +268,13 @@ function shouldShowBubbleOnTop(index: number, total: number): boolean {
     border-color: #1976d2;
     box-shadow: 0 0 0 2px rgba(25, 118, 210, 0.15);
   }
+
+  &.placeholder {
+    border-style: dashed;
+    color: #888;
+    background: #fafafa;
+    pointer-events: none;
+  }
 }
 
 .ability-name {
@@ -308,7 +303,7 @@ function shouldShowBubbleOnTop(index: number, total: number): boolean {
   font-size: 9px;
   color: #000;
   white-space: normal;
-  z-index: 100;
+  z-index: 9999;
   animation: bubblePop 0.2s ease-out;
   max-width: 200px;
   min-width: 120px;
@@ -345,7 +340,6 @@ function shouldShowBubbleOnTop(index: number, total: number): boolean {
   }
 }
 
-// 后半部分的元素,气泡显示在上方
 .ability-item.bubble-top .ability-bubble {
   top: auto;
   bottom: calc(100% + 8px);

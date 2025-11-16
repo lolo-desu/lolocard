@@ -1,12 +1,13 @@
 <template>
   <div class="ability-status-panel">
-    <div v-if="abilities.length" class="ability-status-group">
+    <div class="ability-status-group">
       <div class="ability-status-title">持有能力 ({{ abilities.length }})</div>
       <ul class="ability-status-list">
         <li
-          v-for="ability in abilities"
+          v-for="ability in displayAbilities"
           :key="ability.id"
           class="ability-status-item"
+          :class="{ placeholder: ability.__placeholder }"
           @pointerdown="abilityPress.onPointerDown(ability, $event)"
           @pointerup="abilityPress.onPointerUp(ability, $event)"
           @pointerleave="abilityPress.onPointerCancel($event)"
@@ -15,11 +16,10 @@
         >
           <div class="ability-status-name">{{ ability.name }}</div>
           <p class="ability-status-desc">{{ ability.描述 }}</p>
-          <p v-if="ability.主角评价" class="ability-status-eval">「{{ ability.主角评价 }}」</p>
+          <p v-if="ability.主角评价" class="ability-status-eval">{{ ability.主角评价 }}</p>
         </li>
       </ul>
     </div>
-    <p v-if="!abilities.length" class="ability-status-empty">暂无持有能力</p>
   </div>
   <Confirm
     v-if="showAbilityActionModal"
@@ -39,6 +39,7 @@
 </template>
 
 <script setup lang="ts">
+import { computed, toRef } from 'vue';
 import Confirm from './Confirm.vue';
 import { useEntryRemoval } from '../composables/useEntryRemoval';
 import { useLongPress } from '../composables/useLongPress';
@@ -46,9 +47,29 @@ import { removeHeroRecordEntry } from '../utils/heroRecords';
 import { useDataStore } from '../store';
 import type { HeldAbility } from '../types';
 
-defineProps<{
+type AbilityDisplay = HeldAbility & { __placeholder?: boolean };
+
+const props = defineProps<{
   abilities: HeldAbility[];
 }>();
+
+const abilities = toRef(props, 'abilities');
+
+const displayAbilities = computed<AbilityDisplay[]>(() => {
+  const list = abilities.value.map(ability => ({ ...ability }));
+  while (list.length < 2) {
+    const index = list.length;
+    list.push({
+      id: `placeholder-${index}`,
+      key: `placeholder-${index}`,
+      name: '空槽位',
+      描述: '暂无能力',
+      主角评价: '',
+      __placeholder: true,
+    } as AbilityDisplay);
+  }
+  return list;
+});
 
 const store = useDataStore();
 
@@ -59,7 +80,7 @@ const {
   closeRemovalModal: closeAbilityActionModal,
   handleBugDelete: handleAbilityBugDelete,
   handleDestroy: handleAbilityDestroy,
-} = useEntryRemoval<HeldAbility>({
+} = useEntryRemoval<AbilityDisplay>({
   getName: ability => ability?.name ?? '未知能力',
   getKey: ability => ability?.key,
   removeByKey: key => removeHeroRecordEntry(store.data.主角, '持有能力', key),
@@ -70,8 +91,9 @@ const {
   destroyFailureMessage: '未找到要销毁的能力',
 });
 
-const abilityPress = useLongPress<HeldAbility>({
+const abilityPress = useLongPress<AbilityDisplay>({
   onLongPress: ability => openAbilityActionModal(ability),
+  shouldHandle: ability => !ability.__placeholder,
 });
 </script>
 
@@ -116,6 +138,13 @@ const abilityPress = useLongPress<HeldAbility>({
   cursor: pointer;
   user-select: none;
   touch-action: none;
+
+  &.placeholder {
+    border-style: dashed;
+    color: #888;
+    background: #fafafa;
+    pointer-events: none;
+  }
 }
 
 .ability-status-name {
@@ -141,5 +170,4 @@ const abilityPress = useLongPress<HeldAbility>({
   color: #666;
   text-align: center;
 }
-
 </style>

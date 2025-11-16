@@ -1,4 +1,4 @@
-export type SectionKey = 'info' | 'abilities' | 'equipment' | 'inventory' | 'status';
+export type SectionKey = 'info' | 'abilities' | 'equipment' | 'inventory' | 'status' | 'held-abilities';
 
 export type StatusTab = '增益' | '减益';
 

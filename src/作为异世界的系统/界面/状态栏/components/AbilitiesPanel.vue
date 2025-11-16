@@ -98,14 +98,17 @@ function ensureAbilityPanel(): AbilityPanel | null {
   if (!hero || typeof hero !== 'object') {
     return null;
   }
-  return hero.能力面板;
+  if (!hero.能力面板 || typeof hero.能力面板 !== 'object') {
+    hero.能力面板 = {} as AbilityPanel;
+  }
+  return hero.能力面板 as AbilityPanel;
 }
 
 function handleAbilityConfirm() {
   if (!pendingAbilityKey.value) {
     return;
   }
-  const trimmed = abilityInputValue.value.trim();
+  const trimmed = String(abilityInputValue.value ?? '').trim();
   if (trimmed === '') {
     toastr.error('请输入数值');
     return;
@@ -120,9 +123,12 @@ function handleAbilityConfirm() {
     toastr.error('未找到主角能力数据');
     return;
   }
-  const target = abilityPanel[pendingAbilityKey.value];
-  target.数值 = nextValue;
-  store.log(`能力'${pendingAbilityKey.value}'已更新为${nextValue}`);
+const target = abilityPanel[pendingAbilityKey.value] ?? (abilityPanel[pendingAbilityKey.value] = {
+  数值: nextValue,
+  主角评价: '待评价，需要立即更新',
+} as AbilityPanel[AbilityKey]);
+target.数值 = nextValue;
+  store.log(`能力'${pendingAbilityKey.value}'已更新为${nextValue}|立即更新全部自我评价变量`);
   toastr.success('能力数值已更新');
   closeAbilityModal();
 }

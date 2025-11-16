@@ -1,18 +1,19 @@
 <template>
-  <p v-if="!entries.length" :class="['status-effects-empty', { compact: isCompact }]">
+  <p v-if="!displayEntries.length" :class="['status-effects-empty', { compact: isCompact }]">
     {{ emptyText }}
   </p>
   <ul v-else :class="['status-effects-list', { compact: isCompact }]">
     <li
-      v-for="(entry, index) in entries"
+      v-for="(entry, index) in displayEntries"
       :key="entry.id"
       :class="[
         'status-effect-item',
         getAdditionalClass(entry, index),
         {
           compact: isCompact,
+          placeholder: entry.__placeholder,
           active: activeId === entry.id,
-          'bubble-top': useBubble && bubbleShouldShowOnTop?.(index, entries.length),
+          'bubble-top': useBubble && !entry.__placeholder && bubbleShouldShowOnTop?.(index, displayEntries.length),
         },
       ]"
       @pointerdown="$emit('pointerdown', entry, $event)"
@@ -23,12 +24,11 @@
     >
       <div :class="['status-effect-name', { compact: isCompact }]">{{ entry.name }}</div>
       <p :class="['status-effect-desc', { compact: isCompact }]">{{ entry.描述 }}</p>
-      <p v-if="entry.主角评价" :class="['status-effect-eval', { compact: isCompact }]">「{{ entry.主角评价 }}」</p>
       <div :class="['status-effect-meta', { compact: isCompact }]">
         <span v-if="entry.持续时间">持续时间: {{ entry.持续时间 }}</span>
         <span v-if="entry.触发条件">触发条件: {{ entry.触发条件 }}</span>
       </div>
-      <div v-if="useBubble && activeId === entry.id && entry.主角评价" class="status-bubble">
+      <div v-if="useBubble && !entry.__placeholder && activeId === entry.id && entry.主角评价" class="status-bubble">
         {{ entry.主角评价 }}
       </div>
     </li>
@@ -39,6 +39,8 @@
 import { computed } from 'vue';
 import type { StatusEffectEntry } from '../types';
 
+type StatusListEntry = StatusEffectEntry & { __placeholder?: boolean };
+
 const props = defineProps<{
   entries: StatusEffectEntry[];
   emptyText: string;
@@ -47,6 +49,7 @@ const props = defineProps<{
   bubbleShouldShowOnTop?: (index: number, total: number) => boolean;
   getItemClass?: (entry: StatusEffectEntry, index: number) => string | Record<string, boolean> | undefined;
   compact?: boolean;
+  minRows?: number;
 }>();
 
 defineEmits<{
@@ -58,7 +61,34 @@ defineEmits<{
 
 const useBubble = computed(() => props.useBubble ?? false);
 
-function getAdditionalClass(entry: StatusEffectEntry, index: number) {
+const displayEntries = computed<StatusListEntry[]>(() => {
+  const items: StatusListEntry[] = [...props.entries];
+  const minRows = props.minRows ?? 0;
+  if (minRows > 0 && items.length < minRows) {
+    const placeholders = minRows - items.length;
+    for (let i = 0; i < placeholders; i += 1) {
+      items.push({
+        id: `placeholder-${i}`,
+        key: `placeholder-${i}`,
+        name: '空槽位',
+        类型: '增益',
+        描述: '',
+        主角评价: '',
+        持续时间: '',
+        触发条件: '',
+        __placeholder: true,
+      });
+    }
+  }
+  return items;
+});
+
+const bubbleShouldShowOnTop = computed(() => props.bubbleShouldShowOnTop);
+const activeId = computed(() => props.activeId ?? null);
+
+const isCompact = computed(() => props.compact ?? false);
+
+function getAdditionalClass(entry: StatusListEntry, index: number) {
   if (typeof props.getItemClass === 'function') {
     return props.getItemClass(entry, index) ?? '';
   }
@@ -67,12 +97,6 @@ function getAdditionalClass(entry: StatusEffectEntry, index: number) {
   }
   return '';
 }
-
-const bubbleShouldShowOnTop = computed(() => props.bubbleShouldShowOnTop);
-
-const activeId = computed(() => props.activeId ?? null);
-
-const isCompact = computed(() => props.compact ?? false);
 </script>
 
 <style scoped lang="scss">
@@ -127,6 +151,13 @@ const isCompact = computed(() => props.compact ?? false);
     font-size: 8px;
     line-height: 1.3;
   }
+
+  &.placeholder {
+    border-style: dashed;
+    color: #888;
+    background: #fafafa;
+    pointer-events: none;
+  }
 }
 
 .status-effect-name {
@@ -156,18 +187,6 @@ const isCompact = computed(() => props.compact ?? false);
     color: #111;
     margin-bottom: 3px;
     line-height: 1.3;
-  }
-}
-
-.status-effect-eval {
-  font-size: 9px;
-  color: #555;
-  margin-bottom: 4px;
-
-  &.compact {
-    font-size: 8px;
-    color: #222;
-    margin-bottom: 3px;
   }
 }
 
@@ -219,7 +238,7 @@ const isCompact = computed(() => props.compact ?? false);
   font-size: 9px;
   color: #000;
   white-space: normal;
-  z-index: 100;
+  z-index: 9999;
   animation: bubblePop 0.2s ease-out;
   max-width: 200px;
   min-width: 120px;

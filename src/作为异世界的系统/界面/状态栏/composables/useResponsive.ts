@@ -11,6 +11,7 @@ export function useResponsive() {
     equipment: false,
     inventory: false,
     status: false,
+    'held-abilities': false,
   });
 
   function sectionOpen(key: SectionKey) {

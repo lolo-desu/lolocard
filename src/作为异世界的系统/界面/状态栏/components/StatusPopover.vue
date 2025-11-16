@@ -43,10 +43,11 @@
             :active-id="activeBubble"
             :bubble-should-show-on-top="shouldShowBubbleOnTop"
             :get-item-class="getBuffItemClass"
-            @pointerdown="statusPress.onPointerDown"
-            @pointerup="statusPress.onPointerUp"
-            @pointerleave="statusPress.onPointerCancel"
-            @pointercancel="statusPress.onPointerCancel"
+            :min-rows="2"
+            @pointerdown="(entry, event) => statusPress.onPointerDown(entry, event)"
+            @pointerup="(entry, event) => statusPress.onPointerUp(entry, event)"
+            @pointerleave="(_, event) => statusPress.onPointerCancel(event)"
+            @pointercancel="(_, event) => statusPress.onPointerCancel(event)"
           />
           <StatusList
             v-else
@@ -56,10 +57,11 @@
             :active-id="activeBubble"
             :bubble-should-show-on-top="shouldShowBubbleOnTop"
             :get-item-class="getDebuffItemClass"
-            @pointerdown="statusPress.onPointerDown"
-            @pointerup="statusPress.onPointerUp"
-            @pointerleave="statusPress.onPointerCancel"
-            @pointercancel="statusPress.onPointerCancel"
+            :min-rows="2"
+            @pointerdown="(entry, event) => statusPress.onPointerDown(entry, event)"
+            @pointerup="(entry, event) => statusPress.onPointerUp(entry, event)"
+            @pointerleave="(_, event) => statusPress.onPointerCancel(event)"
+            @pointercancel="(_, event) => statusPress.onPointerCancel(event)"
           />
         </div>
       </div>

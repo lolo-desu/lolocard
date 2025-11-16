@@ -24,21 +24,23 @@
         v-if="activeTab === '增益'"
         :entries="buffList"
         empty-text="暂无增益状态"
+        :min-rows="2"
         compact
-        @pointerdown="statusPress.onPointerDown"
-        @pointerup="statusPress.onPointerUp"
-        @pointerleave="statusPress.onPointerCancel"
-        @pointercancel="statusPress.onPointerCancel"
+        @pointerdown="(entry, event) => statusPress.onPointerDown(entry, event)"
+        @pointerup="(entry, event) => statusPress.onPointerUp(entry, event)"
+        @pointerleave="(_, event) => statusPress.onPointerCancel(event)"
+        @pointercancel="(_, event) => statusPress.onPointerCancel(event)"
       />
       <StatusList
         v-else
         :entries="debuffList"
         empty-text="暂无减益状态"
+        :min-rows="2"
         compact
-        @pointerdown="statusPress.onPointerDown"
-        @pointerup="statusPress.onPointerUp"
-        @pointerleave="statusPress.onPointerCancel"
-        @pointercancel="statusPress.onPointerCancel"
+        @pointerdown="(entry, event) => statusPress.onPointerDown(entry, event)"
+        @pointerup="(entry, event) => statusPress.onPointerUp(entry, event)"
+        @pointerleave="(_, event) => statusPress.onPointerCancel(event)"
+        @pointercancel="(_, event) => statusPress.onPointerCancel(event)"
       />
     </div>
   </div>
