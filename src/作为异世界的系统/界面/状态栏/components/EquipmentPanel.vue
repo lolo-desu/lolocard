@@ -50,6 +50,7 @@ const { activeBubble, toggleBubble } = useBubble<string>();
   display: grid;
   grid-template-columns: 1fr 1fr;
   gap: 6px;
+  grid-auto-rows: 60px;
   overflow: visible;
 }
 

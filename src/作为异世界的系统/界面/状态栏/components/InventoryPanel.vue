@@ -142,12 +142,11 @@ function shouldShowBubbleOnTop(index: number, total: number): boolean {
 
 .inventory-grid {
   flex: none;
-  min-height: 200px;
-  max-height: 200px;
+  max-height: 185px;
   display: grid;
   grid-template-columns: repeat(2, 1fr);
   gap: 6px;
-  grid-auto-rows: 94px;
+  grid-auto-rows: 75px;
   overflow-y: auto;
   overflow-x: hidden;
   padding-right: 4px;
