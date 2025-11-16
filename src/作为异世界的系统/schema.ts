@@ -88,7 +88,7 @@ export const Schema = z.object({
     可用积分: z.coerce.number().or(z.literal('待初始化')),
     对主角可见形象: z.string(),
     玩家ID: z.string(),
-    玩家本轮操作日志: z.array(z.string()).default([]),
+    玩家本轮操作日志: z.array(z.string()),
   }),
 
   商品列表: z.record(

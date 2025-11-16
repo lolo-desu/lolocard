@@ -459,9 +459,19 @@ ${reminder}
         }
 
         async function writePersonaEntry(worldbookName, values) {
-          await upsertWorldbookEntry(worldbookName, `(请自行关闭)人设：${values.heroName}`, () =>
-            ensureEntryBase({ content: values.heroPersona }),
-          );
+          await upsertWorldbookEntry(worldbookName, '人物设定', () => {
+            const wrappedContent = `---\n主角档案:\n${values.heroPersona}\n---`;
+            const entry = ensureEntryBase({
+              content: wrappedContent,
+              strategy: {
+                type: 'constant',
+                keys: [values.heroName],
+                keys_secondary: { logic: 'and_any', keys: [] },
+              },
+            });
+            delete entry.recursion;
+            return entry;
+          });
         }
 
         async function writeSystemSettingsEntry(worldbookName, values) {

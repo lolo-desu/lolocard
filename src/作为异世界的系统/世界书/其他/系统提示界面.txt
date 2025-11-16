@@ -16,3 +16,5 @@ example: |
     <li>确认危险</li>
   </ul>
   </system_notification>
+以下内容为玩家本轮操作的日志： 
+{{format_message_variable::系统状态.玩家本轮操作日志}}
