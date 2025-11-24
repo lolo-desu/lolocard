@@ -9,7 +9,10 @@ export const Schema = z.object({
   主角: z.object({
     姓名: z.string(),
     性别: z.string(),
-    年龄: z.coerce.number().or(z.literal('待初始化')),
+    年龄: z.coerce
+      .number()
+      .or(z.templateLiteral([z.coerce.number(), z.literal('岁')]).transform(value => parseInt(value)))
+      .or(z.literal('待初始化')),
     外貌: z.object({
       描述: z.string(),
       主角评价: z.string(),
