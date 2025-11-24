@@ -1,5 +1,5 @@
 ---
-description: 当需要在正文中展示系统相关内容时, 你必须按照 format 进行输出。示例中的内容无意义只是作为参考，不代表名字一定要叫{{user}}。
+description: 当需要在正文中展示系统相关内容时, 你必须按照 format 进行输出。示例中的内容无意义只是作为参考，不代表名字一定要叫<user>。
 format: |-
   <system_notification>
   <title>${主标题，如任务名、获得物品名}</title>
@@ -16,5 +16,5 @@ example: |
     <li>确认危险</li>
   </ul>
   </system_notification>
-以下内容为玩家本轮操作的日志： 
+以下内容为玩家本轮操作的日志：
 {{format_message_variable::系统状态.玩家本轮操作日志}}

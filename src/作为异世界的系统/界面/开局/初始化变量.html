@@ -266,7 +266,7 @@
         <form id="init-form" class="form-container">
           <div class="form-field">
             <label for="systemImage">
-              <small>{{user}}|系统</small><span class="optional"><br />(可选)</span>
+              <small><user>|系统</small><span class="optional"><br />(可选)</span>
             </label>
             <input id="systemImage" type="text" placeholder="神秘的声音、凭空出现的光板、白发蓝瞳猫耳耳机少女..." />
           </div>
@@ -318,7 +318,7 @@
               </label>
               <label style="display: flex; align-items: center; cursor: pointer; width: auto; text-align: left">
                 <input type="checkbox" id="allowAiControl" style="flex: none; width: auto; margin-right: 8px" />
-                <span>允许AI代替{{user}}行动</span>
+                <span>允许AI代替<user>行动</span>
               </label>
             </div>
           </div>
@@ -367,11 +367,11 @@
           const talkative = values.systemTalkative ? '会' : '不会';
           const personality = values.systemPersonality ? '具有' : '不具有';
           const reminder = values.allowAiControl
-            ? '为了剧情推进发展你可以适当代替{{user}}（系统）行动，但请记住{{user}}才是玩家。'
-            : '{{user}}（系统）的所有行动必须由玩家输入，严禁擅自代替{{user}}。';
+            ? '为了剧情推进发展你可以适当代替<user>（系统）行动，但请记住<user>才是玩家。'
+            : '<user>（系统）的所有行动必须由玩家输入，严禁擅自代替<user>。';
 
           return `<!--
-从现在起请初始化变量。{{user}}（系统）形象：${values.systemImage || FIELD_META.systemImage.fallback}
+从现在起请初始化变量。<user>（系统）形象：${values.systemImage || FIELD_META.systemImage.fallback}
 系统会${talkative}主动与角色交流，${personality}独立人格。
 ${reminder}
 === 主角信息 ===
@@ -380,8 +380,8 @@ ${reminder}
 年龄：${values.heroAge}
 背景和人设在其他区域。
 开场故事要求：请按照文风要求/写作要求介绍${values.heroName}的生平/日常生活/自我介绍等作为导入（必要的话也可以使用第一人称）。
-关于系统:应当一直到文章才出现关于系统的内容而不是开头，请勿擅自决定系统类型、名称等任何内容，交给玩家{{user}}来决定。
-如果下方内容中包括【不允许扮演{{user}}】，请不要擅自在正文中出现系统相关内容。
+关于系统:应当一直到文章才出现关于系统的内容而不是开头，请勿擅自决定系统类型、名称等任何内容，交给玩家<user>来决定。
+如果下方内容中包括【不允许扮演<user>】，请不要擅自在正文中出现系统相关内容。
 -->
 结合设定，为剧情撰写开场故事。`;
         }
@@ -391,10 +391,10 @@ ${reminder}
           const personality = values.systemPersonality ? '具有' : '不具有';
           const talkative = values.systemTalkative ? '会' : '不会';
           const reminder = values.allowAiControl
-            ? '你允许适当扮演系统，但请记住{{user}}才是玩家，玩家不是故事的主人公'
+            ? '你允许适当扮演系统，但请记住<user>才是玩家，玩家不是故事的主人公'
             : '再次强调，你不允许扮演系统进行任何行动，请在正文中出现玩家本人进行的操作';
 
-          return `【你${allowAction}扮演{{user}}系统进行行动（如发布任务、展示主角状态等全部系统相关行为）。{{user}}是一个${personality}独立人格和情感，${talkative}主动与角色交流互动的系统。${reminder}】`;
+          return `【你${allowAction}扮演<user>系统进行行动（如发布任务、展示主角状态等全部系统相关行为）。<user>是一个${personality}独立人格和情感，${talkative}主动与角色交流互动的系统。${reminder}】`;
         }
 
         function ensureEntryBase(overrides = {}) {
