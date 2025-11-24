@@ -29,7 +29,15 @@
         "年龄": {
           "anyOf": [
             {
-              "type": "number"
+              "anyOf": [
+                {
+                  "type": "number"
+                },
+                {
+                  "type": "string",
+                  "pattern": "^-?\\d+(?:\\.\\d+)?(岁)$"
+                }
+              ]
             },
             {
               "type": "string",
