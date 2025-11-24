@@ -5,7 +5,7 @@ configs:
     type: worldbook
     name: 上锁的日记本
     file: ./src/日记络络/世界书/index
-  作为异世界的系统:
+  转生系统:
     type: worldbook
     name: 异世界系统指南！
-    file: ./src/作为异世界的系统/世界书/index
+    file: ./src/转生系统/世界书/index

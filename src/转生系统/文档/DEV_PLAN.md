@@ -1,7 +1,7 @@
 # 异世界系统状态栏开发目标
 
 1. **数据管线与类型约束**
-   - 依据 `../nova-creator-cli/作品/作为异世界的系统/[InitVar]初始化.yaml` 定义 `stat_data` 的 TypeScript 类型。
+   - 依据 `../nova-creator-cli/作品/转生系统/[InitVar]初始化.yaml` 定义 `stat_data` 的 TypeScript 类型。
    - 建立统一的数据读取/写入服务，使用酒馆助手暴露的 `getVariables` 与 `updateVariablesWith` API 读取最新楼层变量并写回。
    - 提供自动轮询与手动刷新机制，保证状态栏与最新 `stat_data` 保持同步。
 
@@ -22,4 +22,4 @@
    - 采用 Vue 3 + `<script setup lang="ts">` + SCSS 模块化，局部组件化，并保持样式与示例 HTML 的像素风格一致。
    - 支持 jQuery/jQueryUI 但保持核心逻辑在 Vue 中；lodash 仅用于深拷贝和对象路径操作。
    - 使用响应式断点 + CSS 变量支持不同嵌入宽度；主界面固定右下角，可拖动/收起。
-   - 代码、自定义样式、类型、组件全部位于 `src/作为异世界的系统/状态栏` 目录中，便于独立维护与打包。
+   - 代码、自定义样式、类型、组件全部位于 `src/转生系统/状态栏` 目录中，便于独立维护与打包。
