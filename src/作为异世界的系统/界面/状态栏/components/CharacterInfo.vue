@@ -219,14 +219,6 @@ watch(
   text-overflow: ellipsis;
 }
 
-.self-evaluation::before {
-  content: '「';
-  font-style: normal;
-  font-weight: bold;
-  color: #666;
-  margin-right: 2px;
-}
-
 @media (max-width: 768px) {
   .character-info-card {
     padding: 8px;
