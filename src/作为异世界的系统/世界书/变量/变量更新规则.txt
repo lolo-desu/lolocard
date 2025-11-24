@@ -59,8 +59,8 @@
       type: |-
         {
           [物品名: string]: {
-            名称: string;
             描述: string;
+            主角评价: string;
           }
         }
       check:
