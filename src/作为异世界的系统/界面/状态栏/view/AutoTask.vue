@@ -59,7 +59,7 @@ const task_form = ref<TaskForm>({
 });
 
 async function handleSubmit() {
-  const message = `【<user>发布了一个${task_form.value.难度}的${task_form.value.类型}任务，奖励${task_form.value.奖励}，本次任务${task_form.value.是否色情 ? '必须' : '禁止'}包含色情内容】<!--必须立即根据剧情生成合适的任务-->`;
+  const message = `系统发布了一个${task_form.value.难度}的${task_form.value.类型}任务，奖励${task_form.value.奖励}，本次任务${task_form.value.是否色情 ? '必须' : '禁止'}包含色情内容<!--必须立即根据剧情生成合适的任务-->`;
   await createChatMessages([{ role: 'user', message }]);
   await triggerSlash('/trigger');
   toastr.success('已触发自动任务生成');
