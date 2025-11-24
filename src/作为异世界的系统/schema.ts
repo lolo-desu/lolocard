@@ -14,50 +14,20 @@ export const Schema = z.object({
       描述: z.string(),
       主角评价: z.string(),
     }),
-    能力面板: z.object({
-      力量: z.object({
+    能力面板: z.record(
+      z.enum(['力量', '敏捷', '体质', '感知', '意志', '魅力']),
+      z.object({
         数值: z.coerce.number().or(z.literal('待初始化')),
         主角评价: z.string(),
       }),
-      敏捷: z.object({
-        数值: z.coerce.number().or(z.literal('待初始化')),
-        主角评价: z.string(),
-      }),
-      体质: z.object({
-        数值: z.coerce.number().or(z.literal('待初始化')),
-        主角评价: z.string(),
-      }),
-      感知: z.object({
-        数值: z.coerce.number().or(z.literal('待初始化')),
-        主角评价: z.string(),
-      }),
-      意志: z.object({
-        数值: z.coerce.number().or(z.literal('待初始化')),
-        主角评价: z.string(),
-      }),
-      魅力: z.object({
-        数值: z.coerce.number().or(z.literal('待初始化')),
-        主角评价: z.string(),
-      }),
-    }),
-    装备栏: z.object({
-      主手: z.object({
+    ),
+    装备栏: z.record(
+      z.enum(['主手', '副手', '防具', '饰品']),
+      z.object({
         装备: z.string(),
         主角评价: z.string(),
       }),
-      副手: z.object({
-        装备: z.string(),
-        主角评价: z.string(),
-      }),
-      防具: z.object({
-        装备: z.string(),
-        主角评价: z.string(),
-      }),
-      饰品: z.object({
-        装备: z.string(),
-        主角评价: z.string(),
-      }),
-    }),
+    ),
     物品栏: z.record(
       z.string(),
       z.object({

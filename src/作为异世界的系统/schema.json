@@ -54,225 +54,67 @@
         },
         "能力面板": {
           "type": "object",
-          "properties": {
-            "力量": {
-              "type": "object",
-              "properties": {
-                "数值": {
-                  "anyOf": [
-                    {
-                      "type": "number"
-                    },
-                    {
-                      "type": "string",
-                      "const": "待初始化"
-                    }
-                  ]
-                },
-                "主角评价": {
-                  "type": "string"
-                }
-              },
-              "required": [
-                "数值",
-                "主角评价"
-              ]
-            },
-            "敏捷": {
-              "type": "object",
-              "properties": {
-                "数值": {
-                  "anyOf": [
-                    {
-                      "type": "number"
-                    },
-                    {
-                      "type": "string",
-                      "const": "待初始化"
-                    }
-                  ]
-                },
-                "主角评价": {
-                  "type": "string"
-                }
-              },
-              "required": [
-                "数值",
-                "主角评价"
-              ]
-            },
-            "体质": {
-              "type": "object",
-              "properties": {
-                "数值": {
-                  "anyOf": [
-                    {
-                      "type": "number"
-                    },
-                    {
-                      "type": "string",
-                      "const": "待初始化"
-                    }
-                  ]
-                },
-                "主角评价": {
-                  "type": "string"
-                }
-              },
-              "required": [
-                "数值",
-                "主角评价"
-              ]
-            },
-            "感知": {
-              "type": "object",
-              "properties": {
-                "数值": {
-                  "anyOf": [
-                    {
-                      "type": "number"
-                    },
-                    {
-                      "type": "string",
-                      "const": "待初始化"
-                    }
-                  ]
-                },
-                "主角评价": {
-                  "type": "string"
-                }
-              },
-              "required": [
-                "数值",
-                "主角评价"
-              ]
-            },
-            "意志": {
-              "type": "object",
-              "properties": {
-                "数值": {
-                  "anyOf": [
-                    {
-                      "type": "number"
-                    },
-                    {
-                      "type": "string",
-                      "const": "待初始化"
-                    }
-                  ]
-                },
-                "主角评价": {
-                  "type": "string"
-                }
-              },
-              "required": [
-                "数值",
-                "主角评价"
-              ]
-            },
-            "魅力": {
-              "type": "object",
-              "properties": {
-                "数值": {
-                  "anyOf": [
-                    {
-                      "type": "number"
-                    },
-                    {
-                      "type": "string",
-                      "const": "待初始化"
-                    }
-                  ]
-                },
-                "主角评价": {
-                  "type": "string"
-                }
-              },
-              "required": [
-                "数值",
-                "主角评价"
-              ]
-            }
+          "propertyNames": {
+            "type": "string",
+            "enum": [
+              "力量",
+              "敏捷",
+              "体质",
+              "感知",
+              "意志",
+              "魅力"
+            ]
           },
-          "required": [
-            "力量",
-            "敏捷",
-            "体质",
-            "感知",
-            "意志",
-            "魅力"
-          ]
+          "additionalProperties": {
+            "type": "object",
+            "properties": {
+              "数值": {
+                "anyOf": [
+                  {
+                    "type": "number"
+                  },
+                  {
+                    "type": "string",
+                    "const": "待初始化"
+                  }
+                ]
+              },
+              "主角评价": {
+                "type": "string"
+              }
+            },
+            "required": [
+              "数值",
+              "主角评价"
+            ]
+          }
         },
         "装备栏": {
           "type": "object",
-          "properties": {
-            "主手": {
-              "type": "object",
-              "properties": {
-                "装备": {
-                  "type": "string"
-                },
-                "主角评价": {
-                  "type": "string"
-                }
-              },
-              "required": [
-                "装备",
-                "主角评价"
-              ]
-            },
-            "副手": {
-              "type": "object",
-              "properties": {
-                "装备": {
-                  "type": "string"
-                },
-                "主角评价": {
-                  "type": "string"
-                }
-              },
-              "required": [
-                "装备",
-                "主角评价"
-              ]
-            },
-            "防具": {
-              "type": "object",
-              "properties": {
-                "装备": {
-                  "type": "string"
-                },
-                "主角评价": {
-                  "type": "string"
-                }
-              },
-              "required": [
-                "装备",
-                "主角评价"
-              ]
-            },
-            "饰品": {
-              "type": "object",
-              "properties": {
-                "装备": {
-                  "type": "string"
-                },
-                "主角评价": {
-                  "type": "string"
-                }
-              },
-              "required": [
-                "装备",
-                "主角评价"
-              ]
-            }
+          "propertyNames": {
+            "type": "string",
+            "enum": [
+              "主手",
+              "副手",
+              "防具",
+              "饰品"
+            ]
           },
-          "required": [
-            "主手",
-            "副手",
-            "防具",
-            "饰品"
-          ]
+          "additionalProperties": {
+            "type": "object",
+            "properties": {
+              "装备": {
+                "type": "string"
+              },
+              "主角评价": {
+                "type": "string"
+              }
+            },
+            "required": [
+              "装备",
+              "主角评价"
+            ]
+          }
         },
         "物品栏": {
           "type": "object",
