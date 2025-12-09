@@ -23,14 +23,28 @@ function compareVersions(lhs: string, rhs: string) {
   return 0;
 }
 
+export function isDebugMode() {
+  try {
+    const win = window as any;
+    if (win?.thVariableManagerDebug === true) {
+      return true;
+    }
+    return localStorage.getItem('variable_manager_debug') === 'true';
+  } catch {
+    return false;
+  }
+}
+
 export function checkMinimumVersion(minVersion: string, featureName: string) {
   const current = getCurrentVersion();
   if (compareVersions(current, minVersion) >= 0) {
     return true;
   }
-  console.warn(
-    `[变量管理器] 当前 SillyTavern 版本 (${current}) 无法满足 ${featureName} 所需的最低版本 ${minVersion}`,
-  );
+  if (isDebugMode()) {
+    console.warn(
+      `[变量管理器] 当前 SillyTavern 版本 (${current}) 无法满足 ${featureName} 所需的最低版本 ${minVersion}`,
+    );
+  }
   toastr?.warning?.(`需要 ST ${minVersion}+ 才能正常使用 ${featureName}`, '版本过低');
   return false;
 }

@@ -442,6 +442,9 @@ $mobile-breakpoint: 768px;
   }
 
   &--editing {
+    flex-direction: column;
+    align-items: stretch;
+    gap: 6px;
     border-color: $em-color;
     background: $bg-hover;
     padding: 4px 8px;
@@ -472,7 +475,8 @@ $mobile-breakpoint: 768px;
     &--editing {
       padding: 8px 12px;
       display: flex;
-      align-items: center;
+      flex-direction: column;
+      align-items: stretch;
       gap: 8px;
 
       .tree-node__label-group {

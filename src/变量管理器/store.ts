@@ -1,5 +1,6 @@
 import { defineStore } from 'pinia';
 import { computed, ref } from 'vue';
+import { isDebugMode } from './util';
 
 type StatData = Record<string, any>;
 type VariablesPayload = Record<string, any>;
@@ -131,10 +132,14 @@ export const useVariableManagerStore = defineStore('simple-variable-manager', ()
       }
 
       // 如果都获取不到，返回默认值
-      console.warn('[变量管理器] 无法获取角色ID，使用默认值: no-character');
+      if (isDebugMode()) {
+        console.warn('[变量管理器] 无法获取角色ID，使用默认值: no-character');
+      }
       return 'no-character';
     } catch (error) {
-      console.error('[变量管理器] 获取角色ID时出错:', error);
+      if (isDebugMode()) {
+        console.error('[变量管理器] 获取角色ID时出错:', error);
+      }
       return 'no-character';
     }
   }
@@ -223,7 +228,9 @@ export const useVariableManagerStore = defineStore('simple-variable-manager', ()
       return shouldApply;
     } catch {
       loadFromVariables({ stat_data: {} }, false);
-      toastr.error('无法获取最新楼层变量，请确认当前聊天中存在可编辑的楼层。', '变量管理器');
+      if (isDebugMode()) {
+        console.warn('[变量管理器] 无法获取最新楼层变量，请确认当前聊天中存在可编辑的楼层。');
+      }
       return false;
     }
   }

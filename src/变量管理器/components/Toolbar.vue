@@ -32,7 +32,7 @@
         :value="search"
         class="search-input"
         type="text"
-        placeholder="搜索 stat_data..."
+        placeholder="搜索变量..."
         @input="$emit('search', ($event.target as HTMLInputElement).value)"
       />
     </label>

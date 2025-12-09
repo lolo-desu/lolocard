@@ -1,6 +1,6 @@
 <template>
   <div class="value-controls">
-    <div class="input-row">
+    <div class="input-row" :class="{ 'input-row--string': type === 'string' }">
       <template v-if="type === 'number'">
         <input
           v-model="numberDraft"
@@ -102,7 +102,8 @@ watch(
 
 function adjustTextareaHeight(textarea: HTMLTextAreaElement) {
   textarea.style.height = 'auto';
-  textarea.style.height = textarea.scrollHeight + 'px';
+  const maxHeight = window.innerWidth <= 768 ? 420 : 520;
+  textarea.style.height = `${Math.min(Math.max(textarea.scrollHeight, 96), maxHeight)}px`;
 }
 
 function autoResize(event: Event) {
@@ -202,7 +203,7 @@ $mobile-breakpoint: 768px;
 .input-row {
   display: flex;
   gap: 6px;
-  align-items: center;
+  align-items: flex-start;
   flex: 1;
   min-width: 0;
   width: 100%;
@@ -212,18 +213,25 @@ $mobile-breakpoint: 768px;
     gap: 10px;
   }
 }
+.input-row--string {
+  align-items: stretch;
+}
 
 .editor-input {
   flex: 1;
   min-width: 0;
-  padding: 5px 10px;
+  padding: 8px 10px;
   border: 1.5px solid $border-color;
   border-radius: $border-radius;
   background: var(--SmartThemeBlurTintColor);
   color: $text-color;
-  font-size: 12px;
+  font-size: 13px;
   font-family: var(--monoFontFamily, 'Consolas', monospace);
   transition: all 0.2s ease;
+  min-height: 44px;
+  box-sizing: border-box;
+  width: 100%;
+  max-width: 100%;
 
   &:focus {
     outline: none;
@@ -246,20 +254,22 @@ $mobile-breakpoint: 768px;
 .editor-textarea {
   flex: 1;
   min-width: 0;
-  padding: 5px 10px;
+  padding: 8px 10px;
   border: 1.5px solid $border-color;
   border-radius: $border-radius;
   background: var(--SmartThemeBlurTintColor);
   color: $text-color;
-  font-size: 12px;
+  font-size: 13px;
   font-family: var(--monoFontFamily, 'Consolas', monospace);
   transition: border-color 0.2s ease, background 0.2s ease;
-  resize: vertical;
-  min-height: auto;
-  max-height: 300px;
+  resize: none;
+  min-height: 96px;
+  max-height: 520px;
   overflow-y: auto;
   line-height: 1.5;
   box-sizing: border-box;
+  width: 100%;
+  display: block;
 
   &:focus {
     outline: none;
@@ -275,7 +285,7 @@ $mobile-breakpoint: 768px;
   @media (max-width: $mobile-breakpoint) {
     padding: 10px 12px;
     font-size: 14px;
-    max-height: 400px;
+    max-height: 420px;
   }
 }
 
@@ -292,6 +302,8 @@ $mobile-breakpoint: 768px;
   color: $text-color;
   cursor: pointer;
   transition: all 0.2s ease;
+  min-height: 44px;
+  box-sizing: border-box;
 
   &:hover {
     background: $bg-hover;
@@ -356,6 +368,7 @@ $mobile-breakpoint: 768px;
   display: flex;
   gap: 6px;
   flex-shrink: 0;
+  align-items: center;
 
   @media (max-width: $mobile-breakpoint) {
     width: 100%;
@@ -363,8 +376,41 @@ $mobile-breakpoint: 768px;
   }
 }
 
+.input-row--string .cta-group {
+  flex-direction: column;
+  align-self: stretch;
+  justify-content: flex-start;
+  padding-left: 10px;
+  gap: 8px;
+  flex: 0 0 96px;
+}
+
+.input-row--string .cta-group .pill {
+  width: 100%;
+}
+
+@media (max-width: $mobile-breakpoint) {
+  .input-row--string {
+    align-items: stretch;
+  }
+
+  .input-row--string .cta-group {
+    flex-direction: row;
+    flex-wrap: wrap;
+    padding-left: 0;
+    flex: 1 1 100%;
+    justify-content: flex-end;
+    gap: 10px;
+  }
+
+  .input-row--string .cta-group .pill {
+    flex: 1 1 30%;
+    min-width: 90px;
+  }
+}
+
 .pill {
-  padding: 5px 14px;
+  padding: 6px 14px;
   border: 1.5px solid $border-color;
   border-radius: $border-radius;
   background: transparent;
@@ -451,4 +497,3 @@ $mobile-breakpoint: 768px;
   }
 }
 </style>
-

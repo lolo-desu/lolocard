@@ -67,6 +67,7 @@
 <script setup lang="ts">
 import { parse, stringify } from 'yaml';
 import { useVariableManagerStore } from '../store';
+import { isDebugMode } from '../util';
 
 const props = defineProps<{
   mode: 'import' | 'export';
@@ -99,7 +100,9 @@ function copyToClipboard() {
       copied.value = false;
     }, 2000);
   }).catch((error) => {
-    console.error('复制失败', error);
+    if (isDebugMode()) {
+      console.error('复制失败', error);
+    }
     toastr?.error?.('复制失败，请手动选择复制', '变量管理器');
   });
 }
