@@ -1,7 +1,8 @@
 import { AppController } from './app-controller';
-import { DialogManager } from './dialog-manager';
 import { EventHandler } from './event-handler';
 import { styleManager } from './style-manager';
+import { DialogManager } from './dialog-manager';
+import { initWechatHome } from './wechat-home';
 
 // 开发模式标志 - 发布前将此值设置为false
 // 使用window全局变量存储，避免循环依赖
@@ -27,6 +28,13 @@ $(async () => {
     (window as any).blmxApp = appController;
     (window as any).blmxStyleManager = styleManager;
     (window as any).dialogManager = DialogManager.getInstance();
+
+    // 初始化微信主界面 Tab
+    initWechatHome(appController);
+
+    // 主屏幕应用入口
+    $('#app-wechat').on('click', () => appController.navigateTo('wechatHome'));
+    $('#app-settings').on('click', () => appController.navigateTo('settings'));
 
     if ((window as any).BLMX_DEV_MODE) {
       console.log('[BLMX] 开发模式已启用，已加载测试数据');

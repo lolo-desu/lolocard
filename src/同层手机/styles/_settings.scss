@@ -456,8 +456,9 @@ body[data-theme='custom'] .fullscreen-size-btn {
   }
 }
 
-// 全屏大小滑块样式
-#fullscreen-size-slider {
+// 全屏大小/表情大小滑块样式
+#fullscreen-size-slider,
+#sticker-size-slider {
   -webkit-appearance: none;
   appearance: none;
   height: 0.25rem;
@@ -490,7 +491,8 @@ body[data-theme='custom'] .fullscreen-size-btn {
 }
 
 // 全屏大小数字输入框样式
-#fullscreen-size-input {
+#fullscreen-size-input,
+#sticker-size-input {
   width: 4rem;
   padding: 0.25rem 0.5rem;
   border: 1px solid #ddd;
@@ -509,7 +511,8 @@ body[data-theme='custom'] .fullscreen-size-btn {
 
 // 夜间模式下的滑块和输入框适配
 body.dark-mode {
-  #fullscreen-size-slider {
+  #fullscreen-size-slider,
+  #sticker-size-slider {
     background: #404040;
 
     &::-webkit-slider-thumb {
@@ -521,7 +524,8 @@ body.dark-mode {
     }
   }
 
-  #fullscreen-size-input {
+  #fullscreen-size-input,
+  #sticker-size-input {
     background: #2a2a2a;
     border-color: #404040;
     color: white;

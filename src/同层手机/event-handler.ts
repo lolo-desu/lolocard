@@ -69,6 +69,71 @@ export class EventHandler implements IEventHandler {
     this.options.updateFooterButtonsState();
   }
 
+  // 统一更新时间到全局状态 + 状态栏 + 时间戳
+  private updateGameTime(date: Date): void {
+    if (isNaN(date.getTime())) return;
+    window.currentGameDate = date;
+
+    const $timeElement = $('#current-time');
+    if ($timeElement.length) {
+      const formattedTime = `${date.getHours().toString().padStart(2, '0')}:${date
+        .getMinutes()
+        .toString()
+        .padStart(2, '0')}`;
+      $timeElement.text(formattedTime);
+    }
+
+    if (this.uiRenderer) {
+      this.uiRenderer.refreshAllTimestamps();
+    }
+  }
+
+  // 删除模式：按日志下标或消息队列下标删除，并刷新界面
+  private async deleteByLogIndex(indexToDelete: number, previewText: string): Promise<void> {
+    const confirmed = await this.dialogManager.confirm(
+      `确定要删除这条记录吗？\n\n预览: "${previewText}..."`,
+      '删除记录',
+    );
+    if (!confirmed) return;
+
+    const mainLogLength = this.blmxManager.logEntries.length;
+    if (indexToDelete < mainLogLength) {
+      this.blmxManager.logEntries.splice(indexToDelete, 1);
+      await this.blmxManager.persistLogToStorage();
+    } else {
+      const queueIndex = indexToDelete - mainLogLength;
+      this.appController.removeFromUserMessageQueue(queueIndex);
+    }
+
+    this.options.renderChatHistory();
+    this.options.renderMomentsFeed();
+  }
+
+  // 删除模式：按 messageId 删除，并处理找不到日志的情况
+  private async deleteByMessageId(
+    messageId: string,
+    previewText: string,
+    $messageRow: JQuery<HTMLElement>,
+  ): Promise<void> {
+    const confirmed = await this.dialogManager.confirm(
+      `确定要删除这条消息吗？\n\n预览: "${previewText}..."`,
+      '删除消息',
+    );
+    if (!confirmed) return;
+
+    const indexToDelete = this.blmxManager.logEntries.findIndex(entry => 'id' in entry && entry.id === messageId);
+
+    if (indexToDelete !== -1) {
+      this.blmxManager.logEntries.splice(indexToDelete, 1);
+      await this.blmxManager.persistLogToStorage();
+      this.options.renderChatHistory();
+      this.options.renderMomentsFeed();
+    } else {
+      $messageRow.remove();
+      await this.dialogManager.alert('无法找到对应的日志条目，已从界面移除该消息', '错误');
+    }
+  }
+
   // 添加长按监听器
   addLongPressListener(
     element: HTMLElement,
@@ -136,23 +201,8 @@ export class EventHandler implements IEventHandler {
       return null;
     }
 
-    // 更新系统当前日期
-    window.currentGameDate = parsedDate;
-
-    // 更新状态栏时间
-    const $timeElement = $('#current-time');
-    if ($timeElement.length) {
-      const formattedTime = `${window.currentGameDate.getHours().toString().padStart(2, '0')}:${window.currentGameDate
-        .getMinutes()
-        .toString()
-        .padStart(2, '0')}`;
-      $timeElement.text(formattedTime);
-    }
-
-    // 刷新所有时间戳的显示
-    if (this.uiRenderer) {
-      this.uiRenderer.refreshAllTimestamps();
-    }
+    // 统一更新系统当前日期和相关UI
+    this.updateGameTime(parsedDate);
 
     return [newDate, newTime] as [string, string];
   }
@@ -383,23 +433,8 @@ export class EventHandler implements IEventHandler {
             // 推进时间到朋友圈发布时间
             const parsedDate = new Date(momentDateTime.replace(' ', 'T'));
             if (!isNaN(parsedDate.getTime())) {
-              // 更新系统当前日期
-              window.currentGameDate = parsedDate;
-
-              // 更新状态栏时间
-              const $timeElement = $('#current-time');
-              if ($timeElement.length) {
-                const formattedTime = `${window.currentGameDate
-                  .getHours()
-                  .toString()
-                  .padStart(2, '0')}:${window.currentGameDate.getMinutes().toString().padStart(2, '0')}`;
-                $timeElement.text(formattedTime);
-              }
-
-              // 刷新所有时间戳的显示
-              if (this.uiRenderer) {
-                this.uiRenderer.refreshAllTimestamps();
-              }
+              // 统一更新时间和相关UI
+              this.updateGameTime(parsedDate);
 
               // 创建时间推进事件记录
               const timeAdvanceEvent: import('./script').EventLogEntry = {
@@ -572,29 +607,14 @@ export class EventHandler implements IEventHandler {
         e.preventDefault();
         e.stopPropagation();
 
-        const indexToDelete = parseInt($targetRow.data('logIndex'), 10);
+        // 以当前 DOM 顺序为准，避免 data-log-index 与最新日志错位
+        const indexToDelete =
+          $('.wechat-body [data-log-index]').index($targetRow) !== -1
+            ? $('.wechat-body [data-log-index]').index($targetRow)
+            : parseInt($targetRow.data('logIndex'), 10);
         const previewText = $targetRow.text().trim().replace(/\s+/g, ' ').substring(0, 50);
 
-        const confirmed = await this.dialogManager.confirm(
-          `确定要删除这条记录吗？\n\n预览: "${previewText}..."`,
-          '删除记录',
-        );
-        if (confirmed) {
-          const mainLogLength = this.blmxManager.logEntries.length;
-
-          if (indexToDelete < mainLogLength) {
-            // 删除主日志中的消息
-            this.blmxManager.logEntries.splice(indexToDelete, 1);
-            await this.blmxManager.persistLogToStorage();
-          } else {
-            // 删除队列中的消息
-            const queueIndex = indexToDelete - mainLogLength;
-            this.appController.removeFromUserMessageQueue(queueIndex);
-          }
-
-          this.options.renderChatHistory();
-          this.options.renderMomentsFeed();
-        }
+        await this.deleteByLogIndex(indexToDelete, previewText);
         return;
       }
 
@@ -607,26 +627,7 @@ export class EventHandler implements IEventHandler {
         const messageId = $messageRow.data('messageId');
         const previewText = $messageRow.text().trim().replace(/\s+/g, ' ').substring(0, 50);
 
-        const confirmed = await this.dialogManager.confirm(
-          `确定要删除这条消息吗？\n\n预览: "${previewText}..."`,
-          '删除消息',
-        );
-        if (confirmed) {
-          // 通过messageId查找对应的日志条目索引
-          const indexToDelete = this.blmxManager.logEntries.findIndex(entry => 'id' in entry && entry.id === messageId);
-
-          if (indexToDelete !== -1) {
-            this.blmxManager.logEntries.splice(indexToDelete, 1);
-            this.blmxManager.persistLogToStorage().then(() => {
-              this.options.renderChatHistory();
-              this.options.renderMomentsFeed();
-            });
-          } else {
-            // 如果找不到对应的日志条目，直接从DOM中移除该元素
-            $messageRow.remove();
-            await this.dialogManager.alert('无法找到对应的日志条目，已从界面移除该消息', '错误');
-          }
-        }
+        await this.deleteByMessageId(messageId, previewText, $messageRow);
       }
     });
 
@@ -719,17 +720,8 @@ export class EventHandler implements IEventHandler {
 
           // 按照原版逻辑：发送eventlog时立即更新游戏时间
           const [newDate, newTime] = [timeJumpData.date, timeJumpData.time];
-          window.currentGameDate = new Date(`${newDate} ${newTime}`.replace(' ', 'T'));
-
-          // 更新状态栏时间显示
-          const $timeElement = $('#current-time');
-          if ($timeElement.length) {
-            const formattedTime = `${window.currentGameDate
-              .getHours()
-              .toString()
-              .padStart(2, '0')}:${window.currentGameDate.getMinutes().toString().padStart(2, '0')}`;
-            $timeElement.text(formattedTime);
-          }
+          const newGameDate = new Date(`${newDate} ${newTime}`.replace(' ', 'T'));
+          this.updateGameTime(newGameDate);
 
           this.options.stageAndDisplayEntry({
             type: 'event',

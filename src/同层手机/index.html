@@ -32,7 +32,7 @@
 
         <div class="dynamic-island"></div>
 
-        <!-- 主屏幕 -->
+        <!-- 主屏幕：应用列表 -->
         <div class="app-view app-screen active" id="app-homescreen">
           <div class="app-grid">
             <div class="app-icon" id="app-wechat">
@@ -44,6 +44,62 @@
               <span class="app-name">设置</span>
             </div>
           </div>
+        </div>
+
+        <!-- 微信主界面（列表 + 底栏） -->
+        <div class="app-view" id="wechat-home">
+          <header class="wechat-home-header">
+            <i class="fas fa-chevron-left wechat-home-back" id="wechat-home-back"></i>
+            <div class="wechat-home-title">微信</div>
+            <div class="wechat-home-actions">
+              <i class="fas fa-search"></i>
+              <i class="fas fa-plus"></i>
+            </div>
+          </header>
+          <main class="wechat-home-body">
+            <section class="wechat-home-section active" id="wechat-tab-conv">
+              <ul id="conversation-list" class="conversation-list">
+                <li class="conv-item placeholder">暂无会话，后续展示单聊/群聊/公众号</li>
+              </ul>
+            </section>
+            <section class="wechat-home-section" id="wechat-tab-contacts">
+              <div class="shortcut-item">添加朋友（占位）</div>
+              <div class="shortcut-item">群聊列表（占位）</div>
+              <ul id="contacts-list" class="contacts-list">
+                <li class="contact-item placeholder">联系人列表占位</li>
+              </ul>
+            </section>
+            <section class="wechat-home-section" id="wechat-tab-discover">
+              <p class="placeholder">发现/朋友圈已在现有界面实现，点击右上角或后续入口进入。</p>
+            </section>
+            <section class="wechat-home-section" id="wechat-tab-me">
+              <div class="profile-card">
+                <div class="profile-avatar" id="profile-avatar"></div>
+                <div class="profile-info">
+                  <div class="profile-name" id="profile-name">用户昵称</div>
+                  <div class="profile-signature" id="profile-signature">个性签名占位</div>
+                </div>
+              </div>
+            </section>
+          </main>
+          <nav class="wechat-home-tabbar">
+            <button class="wechat-tab-btn active" data-target="conv">
+              <span class="tab-icon tab-icon-wechat"></span>
+              <span class="tab-label">微信</span>
+            </button>
+            <button class="wechat-tab-btn" data-target="contacts">
+              <span class="tab-icon tab-icon-contacts"></span>
+              <span class="tab-label">通讯录</span>
+            </button>
+            <button class="wechat-tab-btn" data-target="discover">
+              <span class="tab-icon tab-icon-discover"></span>
+              <span class="tab-label">发现</span>
+            </button>
+            <button class="wechat-tab-btn" data-target="me">
+              <span class="tab-icon tab-icon-me"></span>
+              <span class="tab-label">我</span>
+            </button>
+          </nav>
         </div>
 
         <!-- 微信聊天界面 -->
@@ -404,6 +460,7 @@
                       type="range"
                       id="sticker-size-slider"
                       min="40"
+                      step="5"
                       max="200"
                       value="120"
                       style="flex-grow: 1; margin: 0 10px; accent-color: var(--primary-blue)"
@@ -417,12 +474,16 @@
                       value="120"
                       min="40"
                       max="200"
+                      step="5"
                       style="
                         width: 70px;
-                        padding: 8px;
+                        padding: 0.25rem 0.5rem;
                         border: 1px solid var(--border-color);
-                        border-radius: 5px;
+                        border-radius: var(--element-border-radius);
                         text-align: center;
+                        font-size: 0.85em;
+                        background: var(--settings-card-bg-color);
+                        color: var(--text-primary);
                       "
                     />
                     <span style="font-size: 0.9em; color: var(--text-secondary)">像素</span>

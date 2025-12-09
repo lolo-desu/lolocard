@@ -1,0 +1,264 @@
+// 微信主界面（列表 + 底栏）骨架样式
+
+.wechat-home-header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 0.5rem 0.75rem;
+  padding-top: 2.8125rem; // 与聊天页标题栏一致的顶部留白
+  color: var(--text-primary);
+  font-weight: 600;
+  position: relative;
+  z-index: 2;
+}
+
+.wechat-home-title {
+  font-size: 1.05rem;
+  flex: 1;
+  text-align: center;
+}
+
+.wechat-home-actions {
+  display: flex;
+  align-items: center;
+  gap: 0.75rem;
+  color: var(--primary-blue);
+  justify-content: flex-end;
+
+  i {
+    font-size: 1.2em;
+    color: var(--primary-blue);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    width: 1.5rem;
+    height: 1.5rem;
+  }
+}
+
+.wechat-home-header .wechat-home-back {
+  font-size: 1.2em;
+  color: var(--primary-blue);
+  cursor: pointer;
+  width: 1.5rem;
+  height: 1.5rem;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.wechat-home-body {
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+  padding: 0 0.75rem 0.5rem;
+  gap: 0.5rem;
+  position: relative;
+  z-index: 1;
+}
+
+.wechat-home-section {
+  display: none;
+  flex: 1;
+  overflow-y: auto;
+  padding-bottom: 0.5rem;
+}
+
+.wechat-home-section.active {
+  display: block;
+}
+
+.conversation-list,
+.contacts-list {
+  list-style: none;
+  padding: 0;
+  margin: 0;
+  display: flex;
+  flex-direction: column;
+  gap: 0.5rem;
+}
+
+.conv-item,
+.contact-item,
+.shortcut-item,
+.profile-card {
+  padding: 0.75rem 0.9rem;
+  border: 1px solid var(--border-color);
+  border-radius: var(--element-border-radius);
+  background: var(--wechat-bubble-them-bg, rgba(255, 255, 255, 0.8));
+  box-shadow: 0 1px 4px rgba(0, 0, 0, 0.04);
+  color: var(--text-primary);
+  font-size: 0.95rem;
+  display: flex;
+  align-items: center;
+  gap: 0.75rem;
+}
+
+.placeholder {
+  color: var(--text-secondary);
+  font-size: 0.9rem;
+}
+
+.contacts-shortcuts {
+  display: flex;
+  flex-direction: column;
+  gap: 0.5rem;
+  margin-bottom: 0.5rem;
+}
+
+.wechat-home-tabbar {
+  display: grid;
+  grid-template-columns: repeat(4, 1fr);
+  gap: 0.1rem;
+  padding: 0.35rem 0.25rem 0.6rem;
+  border-top: 1px solid var(--border-color);
+  background: #fff;
+  // 扩展到底部内边距，避免被外框遮挡，同时保留左右一点留白
+  width: calc(100% + 0.8rem);
+  margin-left: -0.4rem;
+  margin-right: -0.4rem;
+  border-bottom-left-radius: 1.2rem;
+  border-bottom-right-radius: 1.2rem;
+  margin-top: auto;
+}
+
+.wechat-tab-btn {
+  border: none;
+  background: transparent;
+  color: var(--text-secondary);
+  padding: 0.2rem 0.1rem 0.15rem;
+  border-radius: 0.75rem;
+  font-size: 0.85rem;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  gap: 0.1rem;
+}
+
+.wechat-tab-btn.active {
+  color: var(--primary-blue);
+  background: transparent;
+  font-weight: 600;
+}
+
+.tab-icon {
+  width: 24px;
+  height: 24px;
+  background-size: cover;
+  background-repeat: no-repeat;
+  background-position: center;
+  filter: grayscale(1) opacity(0.9);
+}
+
+.wechat-tab-btn.active .tab-icon {
+  filter: grayscale(0) opacity(1);
+}
+
+.tab-icon-wechat {
+  background-image: url('https://files.catbox.moe/io8orb.png');
+}
+
+.tab-icon-contacts {
+  background-image: url('https://files.catbox.moe/atop6m.png');
+}
+
+.tab-icon-discover {
+  background-image: url('https://files.catbox.moe/jr13tf.png');
+}
+
+.tab-icon-me {
+  background-image: url('https://files.catbox.moe/yer0ly.png');
+}
+
+.tab-label {
+  font-size: 0.8rem;
+}
+
+.profile-card {
+  display: flex;
+  align-items: center;
+  gap: 0.75rem;
+}
+
+.conv-item {
+  cursor: pointer;
+}
+
+.conv-avatar {
+  width: 44px;
+  height: 44px;
+  border-radius: 12px;
+  background: #e8edf3 center/cover no-repeat;
+  flex-shrink: 0;
+}
+
+.conv-main {
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+  gap: 0.2rem;
+}
+
+.conv-row {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 0.35rem;
+}
+
+.conv-name {
+  font-weight: 600;
+  color: var(--text-primary);
+}
+
+.conv-time {
+  font-size: 0.8rem;
+  color: var(--text-secondary);
+  white-space: nowrap;
+}
+
+.conv-desc {
+  font-size: 0.88rem;
+  color: var(--text-secondary);
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+  flex: 1;
+}
+
+.conv-unread {
+  min-width: 1.25rem;
+  padding: 0 0.45rem;
+  height: 1.25rem;
+  border-radius: 0.75rem;
+  background: #ff4d4f;
+  color: #fff;
+  font-size: 0.75rem;
+  text-align: center;
+  line-height: 1.25rem;
+  margin-left: 0.4rem;
+  flex-shrink: 0;
+}
+
+.profile-avatar {
+  width: 52px;
+  height: 52px;
+  border-radius: var(--small-border-radius);
+  background: #f2f4f7 center/cover no-repeat;
+}
+
+.profile-name {
+  font-weight: 600;
+  color: var(--text-primary);
+}
+
+.profile-signature {
+  font-size: 0.9rem;
+  color: var(--text-secondary);
+  margin-top: 0.2rem;
+}
+
+.wechat-home-back {
+  position: static;
+}

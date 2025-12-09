@@ -371,10 +371,11 @@ export class AppController implements IAppController {
   }
 
   // 导航到指定视图
-  navigateTo(viewName: 'home' | 'wechat' | 'moments' | 'settings'): void {
+  navigateTo(viewName: 'home' | 'wechat' | 'wechatHome' | 'moments' | 'settings'): void {
     const views = {
       home: '#app-homescreen',
       wechat: '#wechat-view',
+      wechatHome: '#wechat-home',
       moments: '#moments-view',
       settings: '#settings-view',
     };

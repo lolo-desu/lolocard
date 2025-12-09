@@ -359,82 +359,32 @@ export class AiResponseManager {
             break;
 
           case 'sticker': {
-            const parsedStickerContent = safeJsonParse(value);
-            newEntry = {
-              id: `ai-sticker-${Date.now()}-${Math.random()}`,
-              type: 'sticker',
-              sender: 'them',
-              content: parsedStickerContent !== null ? parsedStickerContent : value,
-            } as any;
-            this.blmxManager.addEntry(newEntry);
-            if (newEntry) entriesForAnimation.push(newEntry);
+            this.addStickerEntry(value, entriesForAnimation);
             break;
           }
 
           case 'voice':
-            newEntry = {
-              id: `ai-voice-${Date.now()}-${Math.random()}`,
-              type: 'voice',
-              sender: 'them',
-              content: JSON.parse(value),
-            } as any;
-            this.blmxManager.addEntry(newEntry);
-            if (newEntry) entriesForAnimation.push(newEntry);
+            this.addJsonContentEntry('voice', value, entriesForAnimation);
             break;
 
           case 'image':
-            newEntry = {
-              id: `ai-image-${Date.now()}-${Math.random()}`,
-              type: 'image',
-              sender: 'them',
-              content: JSON.parse(value),
-            } as any;
-            this.blmxManager.addEntry(newEntry);
-            if (newEntry) entriesForAnimation.push(newEntry);
+            this.addJsonContentEntry('image', value, entriesForAnimation);
             break;
 
           case 'location':
-            newEntry = {
-              id: `ai-location-${Date.now()}-${Math.random()}`,
-              type: 'location',
-              sender: 'them',
-              content: JSON.parse(value),
-            } as any;
-            this.blmxManager.addEntry(newEntry);
-            if (newEntry) entriesForAnimation.push(newEntry);
+            this.addJsonContentEntry('location', value, entriesForAnimation);
             break;
 
           case 'transfer':
-            newEntry = {
-              id: `ai-transfer-${Date.now()}-${Math.random()}`,
-              type: 'transfer',
-              sender: 'them',
-              content: JSON.parse(value),
-            } as any;
-            this.blmxManager.addEntry(newEntry);
-            if (newEntry) entriesForAnimation.push(newEntry);
+            this.addJsonContentEntry('transfer', value, entriesForAnimation);
             break;
 
           case 'file':
-            newEntry = {
-              id: `ai-file-${Date.now()}-${Math.random()}`,
-              type: 'file',
-              sender: 'them',
-              content: JSON.parse(value),
-            } as any;
-            this.blmxManager.addEntry(newEntry);
-            if (newEntry) entriesForAnimation.push(newEntry);
+            this.addJsonContentEntry('file', value, entriesForAnimation);
             break;
 
           case 'gift':
-            newEntry = {
-              id: `ai-gift-${Date.now()}-${Math.random()}`,
-              type: 'gift',
-              sender: 'them',
-              content: JSON.parse(value),
-            } as any;
-            this.blmxManager.addEntry(newEntry);
-            if (newEntry) entriesForAnimation.push(newEntry);
+            this.addJsonContentEntry('gift', value, entriesForAnimation);
             break;
 
           case 'RECALL': {
@@ -650,5 +600,32 @@ export class AiResponseManager {
   // 获取完整提示词
   getFullPrompt(): string {
     return this.fullPrompt;
+  }
+
+  private addStickerEntry(value: string, entriesForAnimation: LogEntry[]): void {
+    const parsedStickerContent = safeJsonParse(value);
+    const entry = {
+      id: `ai-sticker-${Date.now()}-${Math.random()}`,
+      type: 'sticker',
+      sender: 'them',
+      content: parsedStickerContent !== null ? parsedStickerContent : value,
+    } as any;
+    this.blmxManager.addEntry(entry);
+    entriesForAnimation.push(entry);
+  }
+
+  private addJsonContentEntry(
+    type: 'voice' | 'image' | 'location' | 'transfer' | 'file' | 'gift',
+    value: string,
+    entriesForAnimation: LogEntry[],
+  ): void {
+    const entry = {
+      id: `ai-${type}-${Date.now()}-${Math.random()}`,
+      type,
+      sender: 'them',
+      content: JSON.parse(value),
+    } as any;
+    this.blmxManager.addEntry(entry);
+    entriesForAnimation.push(entry);
   }
 }
