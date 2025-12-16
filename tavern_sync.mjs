@@ -38803,7 +38803,7 @@ class Document {
             replacer = undefined;
         }
         const { aliasDuplicateObjects, anchorPrefix, flow, keepUndefined, onTagObj, tag } = options ?? {};
-        const { onAnchor, setAnchors, sourceObjects } = anchors.createNodeAnchors(this,
+        const { onAnchor, setAnchors, sourceObjects } = anchors.createNodeAnchors(this, 
         // eslint-disable-next-line @typescript-eslint/prefer-nullish-coalescing
         anchorPrefix || 'a');
         const ctx = {
@@ -39663,14 +39663,14 @@ var Base64Id = function() { };
 Base64Id.prototype.getRandomBytes = function(bytes) {
 
   var BUFFER_SIZE = 4096
-  var self = this;
-
+  var self = this;  
+  
   bytes = bytes || 12;
 
   if (bytes > BUFFER_SIZE) {
     return crypto.randomBytes(bytes);
   }
-
+  
   var bytesInBuffer = parseInt(BUFFER_SIZE/bytes);
   var threshold = parseInt(bytesInBuffer*0.85);
 
@@ -39689,25 +39689,25 @@ Base64Id.prototype.getRandomBytes = function(bytes) {
 
   // No buffered bytes available or index above threshold
   if (this.bytesBufferIndex == -1 || this.bytesBufferIndex > threshold) {
-
+     
     if (!this.isGeneratingBytes) {
       this.isGeneratingBytes = true;
       crypto.randomBytes(BUFFER_SIZE, function(err, bytes) {
         self.bytesBuffer = bytes;
         self.bytesBufferIndex = 0;
         self.isGeneratingBytes = false;
-      });
+      }); 
     }
-
+    
     // Fall back to sync call when no buffered bytes are available
     if (this.bytesBufferIndex == -1) {
       return crypto.randomBytes(bytes);
     }
   }
-
-  var result = this.bytesBuffer.slice(bytes*this.bytesBufferIndex, bytes*(this.bytesBufferIndex+1));
-  this.bytesBufferIndex++;
-
+  
+  var result = this.bytesBuffer.slice(bytes*this.bytesBufferIndex, bytes*(this.bytesBufferIndex+1)); 
+  this.bytesBufferIndex++; 
+  
   return result;
 }
 
@@ -47644,7 +47644,7 @@ module.exports = __WEBPACK_EXTERNAL_createRequire_require("fs");
 /************************************************************************/
 /******/ // The module cache
 /******/ var __webpack_module_cache__ = {};
-/******/
+/******/ 
 /******/ // The require function
 /******/ function __webpack_require__(moduleId) {
 /******/ 	// Check if module is in cache
@@ -47658,17 +47658,17 @@ module.exports = __WEBPACK_EXTERNAL_createRequire_require("fs");
 /******/ 		loaded: false,
 /******/ 		exports: {}
 /******/ 	};
-/******/
+/******/ 
 /******/ 	// Execute the module function
 /******/ 	__webpack_modules__[moduleId].call(module.exports, module, module.exports, __webpack_require__);
-/******/
+/******/ 
 /******/ 	// Flag the module as loaded
 /******/ 	module.loaded = true;
-/******/
+/******/ 
 /******/ 	// Return the exports of the module
 /******/ 	return module.exports;
 /******/ }
-/******/
+/******/ 
 /************************************************************************/
 /******/ /* webpack/runtime/compat get default export */
 /******/ (() => {
@@ -47681,7 +47681,7 @@ module.exports = __WEBPACK_EXTERNAL_createRequire_require("fs");
 /******/ 		return getter;
 /******/ 	};
 /******/ })();
-/******/
+/******/ 
 /******/ /* webpack/runtime/define property getters */
 /******/ (() => {
 /******/ 	// define getter functions for harmony exports
@@ -47693,12 +47693,12 @@ module.exports = __WEBPACK_EXTERNAL_createRequire_require("fs");
 /******/ 		}
 /******/ 	};
 /******/ })();
-/******/
+/******/ 
 /******/ /* webpack/runtime/hasOwnProperty shorthand */
 /******/ (() => {
 /******/ 	__webpack_require__.o = (obj, prop) => (Object.prototype.hasOwnProperty.call(obj, prop))
 /******/ })();
-/******/
+/******/ 
 /******/ /* webpack/runtime/make namespace object */
 /******/ (() => {
 /******/ 	// define __esModule on exports
@@ -47709,7 +47709,7 @@ module.exports = __WEBPACK_EXTERNAL_createRequire_require("fs");
 /******/ 		Object.defineProperty(exports, '__esModule', { value: true });
 /******/ 	};
 /******/ })();
-/******/
+/******/ 
 /******/ /* webpack/runtime/node module decorator */
 /******/ (() => {
 /******/ 	__webpack_require__.nmd = (module) => {
@@ -47718,12 +47718,12 @@ module.exports = __WEBPACK_EXTERNAL_createRequire_require("fs");
 /******/ 		return module;
 /******/ 	};
 /******/ })();
-/******/
+/******/ 
 /************************************************************************/
 var __webpack_exports__ = {};
 
 ;// ./src/server/settings_default.yaml?raw
-const settings_defaultraw_namespaceObject = "# yaml-language-server: $schema=https://testingcf.jsdelivr.net/gh/StageDog/tavern_sync/dist/schema/settings.zh.json\n\n# 在此填入 user 名称, 提示词中如果有这个名字则会被替换成 <user> 宏\nuser名称: 青空黎\n\n# 在此填入新的\"世界书\"或\"预设\"配置\n配置:\n  # 配置名称, 可以和酒馆中的不同. 你使用脚本时需要填写配置名称来指出用哪个配置, 因此尽量配置名称尽量简单点方便填写\n  恩赐之主:\n    # 类型可以是\"世界书\"或\"预设\"\n    类型: 世界书\n\n    # 在酒馆中这个\"世界书\"或\"预设\"叫什么\n    酒馆中的名称: 恩赐之主\n\n    # 这个世界书或预设的等效配置文件要提取到本地哪个文件中, 可以是绝对路径或相对于本文件的相对路径\n    # 如果不满足路径格式将会报错\n    # - 绝对路径: 如 Windows 中, 想将世界书提取到 C 盘\"恩赐之主\"文件夹中, 则填入 `C:/恩赐之主/恩赐之主`\n    # - 相对路径:\n    #   - 想将世界书配置文件提取到本文件相同的文件夹中, 则填入 `./恩赐之主` 或 `恩赐之主`\n    #   - 想将世界书配置文件提取到本文件所在文件夹的子文件夹\"世界书\"中, 则填入 `./世界书/恩赐之主` 或 `世界书/恩赐之主`\n    #   - 想将世界书配置文件提取到本文件所在文件夹的父文件夹中, 则填入 `../恩赐之主\n    本地文件路径: ./世界书/恩赐之主\n\n    # 当使用 `node tavern_sync.mjs push 配置名称 -e` 导出能直接由酒馆界面导入的世界书/预设文件时, 要将它存放在哪个文件中\n    # 你也可以直接删去下面一行不填, 则默认会导出到本地文件路径的同目录下\n    导出文件路径: ./世界书/恩赐之主\n";
+const settings_defaultraw_namespaceObject = "# yaml-language-server: $schema=https://testingcf.jsdelivr.net/gh/StageDog/tavern_sync/dist/schema/settings.zh.json\n\n# 在此填入 user 名称, 提示词中如果有这个名字则会被替换成 <user> 宏\nuser名称: 青空黎\n\n# 在此填入新的\"世界书\"或\"预设\"配置\n配置:\n  # 配置名称, 可以和酒馆中的不同. 你使用脚本时需要填写配置名称来指出用哪个配置, 因此尽量配置名称尽量简单点方便填写\n  角色卡示例:\n    # 类型可以是\"世界书\"或\"预设\"\n    类型: 世界书\n\n    # 在酒馆中这个\"世界书\"或\"预设\"叫什么\n    酒馆中的名称: 呕吐内心的少女\n\n    # 这个世界书或预设的等效配置文件要提取到本地哪个文件中, 可以是绝对路径或相对于本文件的相对路径\n    # 如果不满足路径格式将会报错\n    # - 绝对路径: 如 Windows 中, 想将世界书提取到 C 盘\"角色卡示例\"文件夹中, 则填入 `C:/角色卡示例`\n    # - 相对路径:\n    #   - 想将世界书配置文件提取到本文件相同的文件夹中, 则填入 `./角色卡示例` 或 `角色卡示例`\n    #   - 想将世界书配置文件提取到本文件所在文件夹的子文件夹\"世界书\"中, 则填入 `./世界书/角色卡示例` 或 `世界书/角色卡示例`\n    #   - 想将世界书配置文件提取到本文件所在文件夹的父文件夹中, 则填入 `../角色卡示例`\n    本地文件路径: src/角色卡示例/世界书/index\n\n    # 当使用打包功能 `node tavern_sync.mjs bundle 配置名称` 直接生成世界书/预设文件时, 要将它存放在哪个文件中\n    # 你也可以直接删去下面一行不填, 则默认会导出到本地文件路径的同目录下\n    导出文件路径: src/角色卡示例/角色卡示例\n";
 ;// ./src/server/util/prettified_parse.ts
 function detailed_parse(schema, data) {
     const result = schema.safeParse(data, { reportInput: true });
@@ -48981,7 +48981,7 @@ const $ZodCheckGreaterThan = /*@__PURE__*/ $constructor("$ZodCheckGreaterThan", 
         });
     };
 });
-const $ZodCheckMultipleOf =
+const $ZodCheckMultipleOf = 
 /*@__PURE__*/ $constructor("$ZodCheckMultipleOf", (inst, def) => {
     $ZodCheck.init(inst, def);
     inst._zod.onattach.push((inst) => {
@@ -50384,8 +50384,8 @@ const $ZodObjectJIT = /*@__PURE__*/ $constructor("$ZodObjectJIT", (inst, def) =>
             path: iss.path ? [${k}, ...iss.path] : [${k}]
           })));
         }
-
-
+        
+        
         if (${id}.value === undefined) {
           if (${k} in input) {
             newResult[${k}] = undefined;
@@ -50393,7 +50393,7 @@ const $ZodObjectJIT = /*@__PURE__*/ $constructor("$ZodObjectJIT", (inst, def) =>
         } else {
           newResult[${k}] = ${id}.value;
         }
-
+        
       `);
         }
         doc.write(`payload.value = newResult;`);
@@ -50499,7 +50499,7 @@ const $ZodUnion = /*@__PURE__*/ $constructor("$ZodUnion", (inst, def) => {
         });
     };
 });
-const $ZodDiscriminatedUnion =
+const $ZodDiscriminatedUnion = 
 /*@__PURE__*/
 (/* unused pure expression or super */ null && (core.$constructor("$ZodDiscriminatedUnion", (inst, def) => {
     $ZodUnion.init(inst, def);
