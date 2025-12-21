@@ -17,20 +17,18 @@ rule:
 
 format: |-
   <UpdateVariable>
-    <Analysis>
-      - ${calculate time passed: ...}
-      - ${本节故事中主角经历了什么事情或可能发生什么变化: ...}
-      - ${decide whether dramatic updates are allowed as it's in a special case or the time passed is more than usual: yes/no}
-      - ${analyze every variable based on its corresponding `check`, according only to current reply instead of previous plots: ...}
-    </Analysis>
-    <JSONPatch>
-    [
-      { "op": "replace", "path": "${/path/to/variable}", "value": "${new_value}" },
-      { "op": "add", "path": "${/path/to/array/-}", "value": "${item_to_append}" },
-      { "op": "add", "path": "${/path/to/object/newKey}", "value": "${content}" }
-      { "op": "move", "from": "${/source/list/0}", "path": "${/dest/list/-}" },
-      { "op": "remove", "path": "${/path/to/array/0}" },
-      ...
-    ]
-    </JSONPatch>
+  <Analysis>$(IN ENGLISH, no more than 80 words)
+  - ${calculate time passed: ...}
+  - ${本节故事中主角经历了什么事情或可能发生什么变化: ...}
+  - ${decide whether dramatic updates are allowed as it's in a special case or the time passed is more than usual: yes/no}
+  - ${analyze every variable based on its corresponding `check`, according only to current reply instead of previous plots: ...}
+  </Analysis>
+  </JSONPatch>
+  [
+    { "op": "replace", "path": "${/path/to/variable}", "value": "${new_value}" },
+    { "op": "add", "path": "${/path/to/object/new_key}", "value": "${content}" }
+    { "op": "remove", "path": "${/path/to/array/0}" },
+    ...
+  ]
+  </JSONPatch>
   </UpdateVariable>
