@@ -6,12 +6,12 @@
     - don't update field names starts with `_` as they are readonly, such as `_变量`
   format: |-
     <UpdateVariable>
-    </Analysis>$(IN ENGLISH, no more than 80 words)
+    <Analysis>$(IN ENGLISH, no more than 80 words)
     - ${calculate time passed: ...}
     - ${decide whether dramatic updates are allowed as it's in a special case or the time passed is more than usual: yes/no}
     - ${analyze every variable based on its corresponding `check`, according only to current reply instead of previous plots: ...}
     </Analysis>
-    </JSONPatch>
+    <JSONPatch>
     [
       { "op": "replace", "path": "${/path/to/variable}", "value": "${new_value}" },
       { "op": "add", "path": "${/path/to/object/new_key}", "value": "${new_value}" }
