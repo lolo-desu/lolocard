@@ -1,0 +1,19 @@
+---
+系统提示界面:
+  description: 当需要在正文中展示系统相关内容时，你必须按照 format 进行输出。示例中的内容无意义只是作为参考，不代表名字一定要叫<user>
+  format: |-
+    <system_notification>
+    <title>${主标题，如任务名、获得物品名}</title>
+    <tag>${标签，如主线任务、增益、能力}</tag>
+    ${系统提示内容，允许使用标题与列表等结构，输出方式为 HTML 标签（如 <h1> <ul>）}
+    </system_notification>
+  example: |-
+    <system_notification>
+    <title>探索村庄</title>
+    <tag>主线任务</tag>
+    <p>看看前面的村庄里都有什么吧</p>
+    <ul>
+      <li>探索周边</li>
+      <li>确认危险</li>
+    </ul>
+    </system_notification>
