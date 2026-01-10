@@ -1,4 +1,4 @@
-# :<%_ if (getvar('stat_data.世界.下次响应界面选择判断') === 3 && getvar('主角性别') === '男') { _%>
+# :@@if getvar('stat_data.下一回合界面选择') === 'galgameNSFW' && getvar('主角性别') === '男'
 ---
 NSFWCG列表:
   文件信息:
@@ -72,4 +72,3 @@ NSFWCG列表:
     - NSFWCG/夜晚卧室床上口交预备微微坏笑.jpg
     - NSFWCG/白天教室后入M腿扶桌.jpg
     - NSFWCG/白天沙滩无人沙滩单腿站立.jpg
-# :<%_ } _%>

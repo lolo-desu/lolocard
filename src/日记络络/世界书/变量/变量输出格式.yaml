@@ -17,9 +17,9 @@
     - ${decide whether dramatic updates are allowed as it's in a special case or the time passed is more than usual: yes/no}
     - ${has the day has passed? should the week and date be added or changed?: yes/no}
     <%_ if (getvar('stat_data.络络.亲密度') >= 50) { _%>
-    - ${main event status check: what is the current event ID ('无'?) and stage (0?)?}
-    - ${main event progression decision: based on the story and rules, should the event stage progress (1->2, 2->3, 3->4)? why?}
-    - ${main event conclusion check: has the event effectively concluded in the narrative? should ID be set to '无' and stage to 0? why?}
+    - ${main event status check: what is the current event topic and stage?}
+    - ${main event progression decision: based on the story and rules, should the event stage progress? why?}
+    - ${main event conclusion check: has the event effectively concluded in the narrative? should `主线事件.当前状态` be set to '冷却中'? why?}
     <%_ } _%>
     - ${analyze every variable based on its corresponding `check`, according only to current reply instead of previous plots: ...}
     </Analysis>

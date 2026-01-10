@@ -22,12 +22,7 @@
       </diary>
   # :<%_ } else { _%>
   galgame:
-    rule:
-      # :<%_ if (getvar('stat_data.世界.下次响应界面选择判断') === 2) { _%>
-      - by recalling `下次响应界面选择判断系统`, `背景列表`, `立绘列表`, `关键CG列表` documents, the following must be inserted to the reply and cannot be omitted
-      # :<%_ } else { _%>
-      - by recalling `下次响应界面选择判断系统`, `背景列表`, `立绘列表`, `NSFWCG列表` documents, the following must be inserted to the reply and cannot be omitted
-      # :<%_ } _%>
+    rule: "by recalling `下次响应界面选择判断系统`, `背景列表`, `立绘列表`, `<%= getvar('stat_data.世界.下次响应界面选择判断') === 2 ? `关键CG列表` : `NSFWCG列表` _%>` documents, the following must be inserted to the reply and cannot be omitted"
     format: |-
       <interface_analysis>
       ...

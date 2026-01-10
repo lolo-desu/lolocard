@@ -3,7 +3,7 @@ import { CHARACTER_NAME, WORLDBOOK_NAME } from '../constant';
 
 export async function checkUpdate() {
   const worldbook = await getWorldbook(WORLDBOOK_NAME);
-  const is_new = worldbook.some(entry => entry.name.includes('样式主题'));
+  const is_new = worldbook.some(entry => entry.name.includes('下一回合界面选择'));
   if (is_new) {
     return;
   }

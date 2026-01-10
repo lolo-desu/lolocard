@@ -1,4 +1,4 @@
-# :<%_ if (getvar('stat_data.世界.下次响应界面选择判断') === 3 && getvar('主角性别') === '女') { _%>
+# :@@if getvar('stat_data.下一回合界面选择') === 'galgameNSFW' && getvar('主角性别') === '女'
 ---
 NSFWCG列表:
   文件信息:
@@ -44,4 +44,3 @@ NSFWCG列表:
     - NSFWCG/卧室床上口交主角主动.jpg
     - NSFWCG/夜晚卧室床上扑倒络络主动.jpg
     - NSFWCG/白天室内法式舌吻.jpg
-# :<%_ } _%>

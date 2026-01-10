@@ -1,5 +1,57 @@
 ---
 变量更新规则:
+  下一回合界面选择:
+    type: "'纯文字尾附立绘' | '展示日记' | 'galgameSFW' | 'galgameNSFW'"
+    check:
+      - set to '展示日记' when: the storyline reaches a point where viewing the diary is required,
+      - set to 'galgameSFW' when: the plot approaches an emotional or climactic CG scene (e.g., confession, farewell, reconciliation, or other emotional peak)
+      - set to 'galgameNSFW' when: the plot approaches a scene with erotic intent
+      - reset to '纯文字尾附立绘' when: the current value is not '纯文字尾附立绘'
+      - default to '纯文字尾附立绘' if: none of the above conditions are met
+  世界:
+    当前时间:
+      format: HH:MM
+      check: pace it according to narrative flow
+    当前日期:
+      format: YYYY/MM/DD
+    当前星期:
+      format: 星期x
+    是否需要上学:
+      type: boolean
+      check: set to true when the current date is a weekday
+  主线事件:
+    # :<%_ if (getvar('stat_data.主线事件.当前状态') === '无法触发') { _%>
+    check: 禁止更新
+    # :<%_ } else if (getvar('stat_data.主线事件.当前状态') === '冷却中') { _%>
+    # :<%_   if (getvar('stat_data.主线事件.剩余冷却回合数') === 0) { _%>
+    type: |-
+      {
+        当前状态: '冷却中';
+        剩余冷却回合数: number;
+      } | {
+        当前状态: '进行中';
+        当前阶段: '引入';
+        主题: string;
+        描述: string;
+        大纲: {
+          引入: string;
+          发展: string;
+          高潮: string;
+          结局: string;
+        };
+      }
+    # :<%_   } else { _%>
+    剩余冷却回合数:
+      type: number
+      check: update it to ${剩余冷却回合数-1}
+    # :<%_ } _%>
+    # :<%_ } else { _%>
+    当前阶段:
+      type: "'引入' | '发展' | '高潮' | '结局'"
+      check:
+        - step to next stage (引入->发展->高潮->解决) when storyline reaches stage progression points according to 主线事件系统 document
+        - set `主线事件.当前状态` to '冷却中' when the event concludes
+    # :<%_ } _%>
   络络:
     亲密度:
       type: number
@@ -10,50 +62,3 @@
     拥有联系方式:
       type: boolean
       check: set to true when 络络 and <user> exchange contact details
-  世界:
-    当前日期:
-      format: x月x日
-      check: update when day changes (typically when 当前时间阶段 resets after reaching ~83+)
-    当前星期:
-      format: 星期x
-      check: update alongside 当前日期
-    当前时间阶段:
-      type: number
-      range: 0-99
-      category:
-        0-16: 晨间
-        17-31: 课上
-        32-48: 午休
-        49-65: 放学后
-        66-82: 傍晚或晚上
-        83-99: 假日
-      check:
-        - +(1~5) for meaningful events
-        - +(5~15) for idle periods
-        - +(10~20) between major phases
-        - reset to 0 when day ends (~83+)
-        - always prioritize narrative flow
-    下次响应界面选择判断:
-      type: 0 | 1 | 2 | 3
-      check:
-        - condition 1 (mandatory diary view): when the storyline reaches a point where viewing the diary is required, set '下次响应界面选择判断' to 1
-        - condition 2 (emotional/climax CG): when the plot approaches an emotional or climactic CG scene (e.g., confession, farewell, reconciliation, or other emotional peak), set '下次响应界面选择判断' to 2
-        - condition 3 (scene with erotic intent): when the plot approaches a scene with erotic intent, set '下次响应界面选择判断' to 3
-        - reset rule: if the current value of '下次响应界面选择判断' is already 1, 2, or 3, immediately reset it to 0
-        - default rule: otherwise (if the conditions for setting to 1, 2, or 3 are not met), set '下次响应界面选择判断' to 0
-    当前主线事件ID:
-      check:
-        - update to new event ID when event triggers (stage 0->1)
-        - update to '无' when event concludes (stage 4->0)
-    当前主线事件阶段:
-      type: 0 | 1 | 2 | 3 | 4
-      category:
-        0: 无事件
-        1: 引入
-        2: 发展
-        3: 高潮
-        4: 解决
-      check:
-        - set to 1 when new event triggers
-        - increment (1->2, 2->3, 3->4) when storyline reaches stage progression points per 主线事件系统 document
-        - reset to 0 when event concludes
