@@ -1,4 +1,4 @@
-# :<%_ if (getvar('stat_data.世界.下次响应界面选择判断') === 3 && getvar('stat_data.<user>.性别') === '女') { _%>
+# :<%_ if (getvar('stat_data.世界.下次响应界面选择判断') === 3 && getvar('主角性别') === '女') { _%>
 ---
 NSFWCG列表:
   文件信息:

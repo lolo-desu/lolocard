@@ -1,0 +1,59 @@
+---
+变量更新规则:
+  络络:
+    亲密度:
+      type: number
+      check: update by ±(1~4) according to 络络's attitude towards <user>'s behavior only if she's currently aware of it
+    阅读日记数量:
+      type: number
+      check: +1 when <user> reads a diary entry
+    拥有联系方式:
+      type: boolean
+      check: set to true when 络络 and <user> exchange contact details
+  世界:
+    当前日期:
+      format: x月x日
+      check: update when day changes (typically when 当前时间阶段 resets after reaching ~83+)
+    当前星期:
+      format: 星期x
+      check: update alongside 当前日期
+    当前时间阶段:
+      type: number
+      range: 0-99
+      category:
+        0-16: 晨间
+        17-31: 课上
+        32-48: 午休
+        49-65: 放学后
+        66-82: 傍晚或晚上
+        83-99: 假日
+      check:
+        - +(1~5) for meaningful events
+        - +(5~15) for idle periods
+        - +(10~20) between major phases
+        - reset to 0 when day ends (~83+)
+        - always prioritize narrative flow
+    下次响应界面选择判断:
+      type: 0 | 1 | 2 | 3
+      check:
+        - condition 1 (mandatory diary view): when the storyline reaches a point where viewing the diary is required, set '下次响应界面选择判断' to 1
+        - condition 2 (emotional/climax CG): when the plot approaches an emotional or climactic CG scene (e.g., confession, farewell, reconciliation, or other emotional peak), set '下次响应界面选择判断' to 2
+        - condition 3 (scene with erotic intent): when the plot approaches a scene with erotic intent, set '下次响应界面选择判断' to 3
+        - reset rule: if the current value of '下次响应界面选择判断' is already 1, 2, or 3, immediately reset it to 0
+        - default rule: otherwise (if the conditions for setting to 1, 2, or 3 are not met), set '下次响应界面选择判断' to 0
+    当前主线事件ID:
+      check:
+        - update to new event ID when event triggers (stage 0->1)
+        - update to '无' when event concludes (stage 4->0)
+    当前主线事件阶段:
+      type: 0 | 1 | 2 | 3 | 4
+      category:
+        0: 无事件
+        1: 引入
+        2: 发展
+        3: 高潮
+        4: 解决
+      check:
+        - set to 1 when new event triggers
+        - increment (1->2, 2->3, 3->4) when storyline reaches stage progression points per 主线事件系统 document
+        - reset to 0 when event concludes

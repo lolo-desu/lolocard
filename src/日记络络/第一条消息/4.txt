@@ -1,5 +1,3 @@
-<!-- 触发事件：【放学后走廊前往花田告白】 -->
-
 时间过得飞快，两人已经相识一个月。
 
 放学铃声刚刚响起，教室里就爆发出此起彼伏的椅子挪动声。<user>收拾好书包，正准备离开教室，走廊上传来了一阵熟悉的脚步声。
@@ -33,16 +31,23 @@
 "<user>"络络突然停下脚步，转身面对<user>，阳光在她身后形成一圈柔和的轮廓，向后一仰，躺在雏菊花海中微笑。
 
 <UpdateVariable>
-_.set('络络.亲密度', 74);
-_.set('络络.阅读日记数量', 31);
-_.set('络络.拥有联系方式', true);
-_.set('世界.当前时间阶段', 70);
-_.set('世界.下次响应界面选择判断', 2);
+<initvar>
+```yaml
+络络:
+  亲密度: 74
+  阅读日记数量: 31
+  拥有联系方式: true
+世界:
+  当前星期: 星期三
+  当前日期: 4月4日
+  当前时间阶段: 10
+  下次响应界面选择判断: 2
+```
+</initvar>
 </UpdateVariable>
 
-<!-- STORY END: Carefully reviewing the provided SUPPORTED File Paths in <场景文件列表>: Which SUPPORTED location best describes where 络络 或 <user> is currently physically located? 住宅街/白天.jpg. Which SUPPORTED File Paths in <立绘文件列表> best describes her current clouthes and facial expression? 水手服/稍微脸红.png -->
 <sprite>
- 立绘: 水手服/稍微脸红.png
- 场景: 住宅街/白天.jpg
- 时间: 放学后
+立绘: 水手服/稍微脸红.png
+场景: 住宅街/白天.jpg
+时间: 放学后
 </sprite>

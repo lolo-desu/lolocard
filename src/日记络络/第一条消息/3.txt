@@ -1,5 +1,3 @@
-<!-- 触发事件：【基础事件-假日邀约】 -->
-
 周日的阳光透过窗帘缝隙洒进房间，<user>正懒散地翻看着书架上的小说，手机震动起来，屏幕上跳出了络络的名字。这一个月来，两人每天放学后在天台的相处已经成为了一种习惯。络络的日记里总是充满了细腻的观察和温柔的文字，仿佛通过那些行间的文字，<user>得以窥见一个平时沉默寡言的络络内心中丰富的世界。
 
 <message>
@@ -23,15 +21,22 @@
 <user>拿起手机，对着镜子确认了一下自己的装扮，然后朝着约定的车站走去。心中不知为何，有种莫名的期待在涌动。
 
 <UpdateVariable>
-_.set('络络.亲密度', 48);
-_.set('络络.阅读日记数量', 12);
-_.set('络络.拥有联系方式', true);
-_.set('世界.当前时间阶段', 85);
+<initvar>
+```yaml
+络络:
+  亲密度: 48
+  阅读日记数量: 12
+  拥有联系方式: true
+世界:
+  当前星期: 星期三
+  当前日期: 4月4日
+  当前时间阶段: 85
+```
+</initvar>
 </UpdateVariable>
 
-<!-- STORY END: Carefully reviewing the provided SUPPORTED File Paths in <场景文件列表>: Which SUPPORTED location best describes where 络络 或 <user> is currently physically located? 上学路上/白天.jpg. Which SUPPORTED value best describes her current clothes and facial expression? 格纹衫/微笑.png -->
 <sprite>
- 立绘: 格纹衫/微笑.png
- 场景: 繁华商业街/白天.jpg
- 时间: 假日
+立绘: 格纹衫/微笑.png
+场景: 繁华商业街/白天.jpg
+时间: 假日
 </sprite>

@@ -5,9 +5,9 @@
     - 事件分为引入(1)、发展(2)、高潮(3)、解决(4)四个阶段
     - 结束后有20回合冷却期
   status:
-    当前主线事件ID: # :{{get_message_variable::stat_data.世界.当前主线事件ID}} # 值为'无'表示当前没有主线事件
-    当前主线事件阶段: # :{{get_message_variable::stat_data.世界.当前主线事件阶段}} # 0:无, 1:引入, 2:发展, 3:高潮, 4:解决
-    主线事件冷却计数: # :{{get_message_variable::stat_data.世界.主线事件冷却计数}} # 大于0表示冷却中
+    当前主线事件ID: # :{{format_message_variable::stat_data.世界.当前主线事件ID}} # 值为'无'表示当前没有主线事件
+    当前主线事件阶段: # :{{format_message_variable::stat_data.世界.当前主线事件阶段}} # 0:无, 1:引入, 2:发展, 3:高潮, 4:解决
+    主线事件冷却计数: # :{{format_message_variable::stat_data.世界.主线事件冷却计数}} # 大于0表示冷却中
 # :<%_
 # :const 主线事件库 = {
 # :  生病照顾: '<user>有些身体不适，大概得了感冒发烧一类的病，络络得知之后来照顾<user>',

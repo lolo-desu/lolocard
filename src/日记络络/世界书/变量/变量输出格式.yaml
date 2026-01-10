@@ -1,0 +1,35 @@
+---
+变量输出格式:
+  rule:
+    - you must output the update analysis and the actual update commands at once in the end of the next reply
+    - the update commands works like the **JSON Patch (RFC 6902)** standard, must be a valid JSON array containing operation objects, but supports the following operations instead:
+      - replace: replace the value of existing paths
+      - delta: update the value of existing number paths by a delta value
+      - insert: insert new items into an object or array
+      - remove
+    - don't update field names starts with `_` as they are readonly, such as `_变量`
+  format: |-
+    <UpdateVariable>
+    <Analysis>$(IN ENGLISH, no more than 120 words)
+    - ${calculate time passed: ...}
+    - ${should the current storyline progression include viewing 络络's diary?: yes/no}
+    - ${does the current storyline progression lead directly into an emotional or climactic CG scene?: yes/no}
+    - ${decide whether dramatic updates are allowed as it's in a special case or the time passed is more than usual: yes/no}
+    - ${has the day has passed? should the week and date be added or changed?: yes/no}
+    <%_ if (getvar('stat_data.络络.亲密度') >= 50) { _%>
+    - ${main event status check: what is the current event ID ('无'?) and stage (0?)?}
+    - ${main event progression decision: based on the story and rules, should the event stage progress (1->2, 2->3, 3->4)? why?}
+    - ${main event conclusion check: has the event effectively concluded in the narrative? should ID be set to '无' and stage to 0? why?}
+    <%_ } _%>
+    - ${analyze every variable based on its corresponding `check`, according only to current reply instead of previous plots: ...}
+    </Analysis>
+    <JSONPatch>
+    [
+      { "op": "replace", "path": "${/path/to/variable}", "value": "${new_value}" },
+      { "op": "delta", "path": "${/path/to/number/variable}", "value": "${positve_or_negative_delta}" },
+      { "op": "insert", "path": "${/path/to/object/new_key}", "value": "${new_value}" },
+      { "op": "remove", "path": "${/path/to/array/0}" },
+      ...
+    ]
+    </JSONPatch>
+    </UpdateVariable>

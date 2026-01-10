@@ -18,12 +18,22 @@
 她低头盯着手里紧攥的笔记本像是自言自语的完全没等<user>回复就接着说："我们老师布置了交换日记作业，可是班上人数是单数...我在班上没什么朋友...<user>同学能帮我吗？只要偶尔约好时间，来读读我写的内容，留几句短评就好，不需要你自己写日记的。"
 
 <UpdateVariable>
-_.set('世界.当前时间阶段', 4);
+<initvar>
+```yaml
+络络:
+  亲密度: 10
+  阅读日记数量: 0
+  拥有联系方式: false
+世界:
+  当前星期: 星期三
+  当前日期: 4月4日
+  当前时间阶段: 4
+```
+</initvar>
 </UpdateVariable>
 
-<!-- STORY END: Carefully reviewing the provided SUPPORTED File Paths in <场景文件列表>: Which SUPPORTED location best describes where 络络 或 <user> is currently physically located? 上学路上/白天.jpg. Which SUPPORTED File Paths best describes her current clothes and facial expression? 水手服/害羞.png -->
 <sprite>
- 立绘: 水手服/害羞.png
- 场景: 上学路上/白天.jpg
- 时间: 晨间
+立绘: 水手服/害羞.png
+场景: 上学路上/白天.jpg
+时间: 晨间
 </sprite>

@@ -1,0 +1,186 @@
+.roleplay_options_hr {
+  display: none;
+}
+
+.roleplay_options_back {
+  background: #332d30; /* 深色背景 */
+  border-radius: 16px;
+  box-shadow: 0 8px 20px rgba(20, 18, 19, 0.25); /* 柔和阴影 */
+  padding: 22px 24px;
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
+  gap: 16px;
+  border: 1px solid #4a4447; /* 深色边框 */
+  width: 90%;
+  max-width: 740px;
+  margin: 24px auto;
+}
+
+.roleplay_options_item {
+  position: relative;
+  background: #403a3d; /* 略淡的深色背景 */
+  border-radius: 12px;
+  box-shadow: 0 5px 15px rgba(20, 18, 19, 0.2); /* 柔和阴影 */
+  padding: 18px 20px;
+  cursor: default;
+  border: 1px solid #4a4447; /* 深色边框 */
+  transition: all 0.28s cubic-bezier(0.22, 1, 0.36, 1);
+  overflow: hidden;
+  display: flex;
+  flex-direction: column;
+  z-index: 1;
+  margin: 0;
+  color: #ffd0d8; /* 浅粉色文字 */
+  font-weight: 400;
+  line-height: 1.6;
+  height: 100%;
+  font-family: 'Microsoft YaHei', Arial, sans-serif; /* 使用微软雅黑 */
+}
+
+.last_mes .roleplay_options_item {
+  cursor: pointer;
+}
+
+.last_mes .roleplay_options_item::after {
+  content: '';
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  background: linear-gradient(140deg, transparent 0%, transparent 50%, rgba(255, 204, 214, 0.15) 150%); /* 浅粉色 */
+  opacity: 0;
+  transition: opacity 0.35s ease;
+  z-index: -1;
+}
+
+.last_mes .roleplay_options_item:hover {
+  transform: translateY(-4px);
+  box-shadow: 0 8px 24px rgba(20, 18, 19, 0.3); /* 柔和阴影 */
+  background: #4a4447; /* 悬浮时稍亮 */
+  border-color: rgba(255, 204, 214, 0.3); /* 浅粉色 */
+}
+
+.last_mes .roleplay_options_item:hover::after {
+  opacity: 1;
+}
+
+.last_mes .roleplay_options_item:hover .roleplay_options_content {
+  color: #ffe5ea; /* 稍微加亮 */
+}
+
+.last_mes .roleplay_options_item:active {
+  transform: translateY(-2px);
+  box-shadow: 0 4px 12px rgba(20, 18, 19, 0.2);
+}
+
+.roleplay_options_item:before {
+  content: '';
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 3px;
+  background: linear-gradient(90deg, #ffd0d8, #ffbbc8); /* 浅粉色 */
+  transform: scaleX(0);
+  transform-origin: 0 0;
+  transition: transform 0.35s cubic-bezier(0.4, 0, 0.2, 1);
+}
+
+.last_mes .roleplay_options_item:hover:before {
+  transform: scaleX(1);
+}
+
+.roleplay_options_title {
+  font-size: 0.95em;
+  font-weight: 600;
+  color: #ffd0d8; /* 浅粉色文字 */
+  margin-bottom: 12px;
+  letter-spacing: 0.04em;
+  text-align: left;
+  padding-bottom: 10px;
+  border-bottom: 1px solid rgba(80, 74, 77, 0.3);
+  text-shadow: 0 1px 1px rgba(20, 18, 19, 0.5); /* 深色文字阴影 */
+  line-height: 1.4;
+  position: relative;
+  display: flex;
+  align-items: center;
+}
+
+.roleplay_options_title::before {
+  content: '';
+  display: inline-block;
+  width: 6px;
+  height: 6px;
+  background: #ffd0d8; /* 浅粉色 */
+  border-radius: 50%;
+  margin-right: 10px;
+  box-shadow: 0 0 0 2px rgba(255, 204, 214, 0.2);
+}
+
+.roleplay_options_content {
+  font-size: 0.95em;
+  line-height: 1.65;
+  color: #e0a7b5; /* 降低对比度 */
+  font-weight: normal;
+  transition: color 0.25s ease;
+  text-align: left;
+  flex: 1;
+  text-shadow: 0 1px 1px rgba(20, 18, 19, 0.5); /* 深色文字阴影 */
+  letter-spacing: 0.018em;
+}
+
+.roleplay_options_item.selected {
+  background: rgba(64, 58, 61, 0.7); /* 深色 */
+  border-color: rgba(255, 204, 214, 0.5); /* 浅粉色 */
+}
+
+.roleplay_options_item.selected:before {
+  background: linear-gradient(90deg, #ffd0d8, #ffbbc8); /* 浅粉色 */
+  transform: scaleX(1);
+}
+
+.roleplay_options_item.selected .roleplay_options_title::before {
+  background: #ffd0d8; /* 浅粉色 */
+  box-shadow: 0 0 0 2px rgba(255, 204, 214, 0.3);
+}
+
+@media (max-width: 999px) {
+  .roleplay_options_back {
+    padding: 18px;
+    gap: 14px;
+    grid-template-columns: 1fr;
+    width: 100%;
+    max-width: none;
+    margin: 24px 0;
+    background: #332d30;
+    border: 1px solid #4a4447;
+  }
+
+  .roleplay_options_item {
+    padding: 16px;
+    background: #403a3d;
+    border: 1px solid #4a4447;
+  }
+
+  .roleplay_options_title {
+    font-size: 0.9em;
+    padding-bottom: 8px;
+    margin-bottom: 10px;
+  }
+
+  .roleplay_options_content {
+    font-size: 0.92em;
+    line-height: 1.6;
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .roleplay_options_item,
+  .roleplay_options_item::before,
+  .roleplay_options_item::after,
+  .roleplay_options_content,
+  .roleplay_options_title {
+    transition: none;
+  }
+}
