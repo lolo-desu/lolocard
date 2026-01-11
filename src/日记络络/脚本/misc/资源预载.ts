@@ -1,14 +1,19 @@
-import assets from './资源预载.json';
+import { backgrounds, characters, getImageUrl } from '../../image';
 
 export function initPrefetches() {
   Promise.allSettled(
-    assets.map(
-      asset =>
+    [...backgrounds, ...characters].map(
+      id =>
         new Promise(resolve => {
-          const img = new Image();
-          img.onload = resolve;
-          img.onerror = resolve;
-          img.src = asset;
+          const url = getImageUrl(id);
+          if (!url) {
+            resolve(null);
+            return;
+          }
+          const image = new Image();
+          image.onload = resolve;
+          image.onerror = resolve;
+          image.src = url;
         }),
     ),
   );

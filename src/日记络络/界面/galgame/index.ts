@@ -1,35 +1,10 @@
 // @ts-nocheck
+import { characters, getImageUrl } from '@/日记络络/image';
 import './index.scss';
 
 import * as z from 'zod';
 
-const id = z.literal('络络').catch('络络');
-const Expression = z
-  .enum([
-    '微笑',
-    '浅笑',
-    '生气',
-    '惊讶',
-    '害羞',
-    '稍微脸红',
-    '手托下巴思考',
-    '看透一切的坏笑',
-    '邪恶的坏笑',
-    '星星眼',
-    '晕晕眼',
-    '猫爪生气',
-    '流口水',
-    '哭泣',
-    '擦眼泪',
-    '等待吻',
-    '性高潮',
-    '眼神空洞的催眠状态',
-    '无表情',
-    '无人',
-  ])
-  .catch('无人'); // 如果都不匹配, 默认为无人
-const Costume
-  = z.enum(['水手服', '格纹衫', '开衫', '睡衣', '全裸']).catch('水手服'); // 如果都不匹配, 默认为水手服
+const Tachie = z.enum(characters).catch('无人.png');
 
 type Dialog = z.infer<typeof Dialog>;
 const Dialog = z.object({
@@ -42,14 +17,14 @@ const Dialog = z.object({
     z.object({
       left: z.object({
         id: z.literal('络络').catch('络络'),
-        expression: Expression,
-        costume: Costume,
+        tachie: Tachie,
       }),
-      right: z.object({
-        id: z.literal('络络').catch('络络'),
-        expression: Expression,
-        costume: Costume,
-      }),
+      right: z
+        .object({
+          id: z.literal('络络').catch('络络'),
+          tachie: Tachie,
+        })
+        .optional(),
     }),
   ]),
 });
@@ -76,206 +51,6 @@ class GalgameEngine {
     this.characterContainer = document.getElementById('character-container');
     this.historyPanel = document.getElementById('history-panel');
     this.historyContent = document.getElementById('history-content');
-
-    // ===== 可自定义背景图片基础 URL =====
-    this.imageBaseUrl =
-      'https://gitgud.io/lolodesu/lolocard/-/raw/ebf826c38410ee0b35111f9a982063ab291b88c9/src/日记络络/图片/背景/';
-
-    // ===== 新增可自定义：角色立绘链接 =====
-    // 角色立绘图片URL对象
-    // 键名作为角色的标识符，值是包含不同服装的对象，每种服装包含不同表情的立绘URL
-    const characterSprites = {
-      络络: {
-        水手服: {
-          '微笑.png':
-            'https://gitgud.io/lolodesu/lolocard/-/raw/ebf826c38410ee0b35111f9a982063ab291b88c9/src/日记络络/图片/立绘/水手服/微笑.png',
-          '浅笑.png':
-            'https://gitgud.io/lolodesu/lolocard/-/raw/ebf826c38410ee0b35111f9a982063ab291b88c9/src/日记络络/图片/立绘/水手服/浅笑.png',
-          '生气.png':
-            'https://gitgud.io/lolodesu/lolocard/-/raw/ebf826c38410ee0b35111f9a982063ab291b88c9/src/日记络络/图片/立绘/水手服/生气.png',
-          '惊讶.png':
-            'https://gitgud.io/lolodesu/lolocard/-/raw/ebf826c38410ee0b35111f9a982063ab291b88c9/src/日记络络/图片/立绘/水手服/惊讶.png',
-          '害羞.png':
-            'https://gitgud.io/lolodesu/lolocard/-/raw/ebf826c38410ee0b35111f9a982063ab291b88c9/src/日记络络/图片/立绘/水手服/害羞.png',
-          '稍微脸红.png':
-            'https://gitgud.io/lolodesu/lolocard/-/raw/ebf826c38410ee0b35111f9a982063ab291b88c9/src/日记络络/图片/立绘/水手服/稍微脸红.png',
-          '手托下巴思考.png':
-            'https://gitgud.io/lolodesu/lolocard/-/raw/ebf826c38410ee0b35111f9a982063ab291b88c9/src/日记络络/图片/立绘/水手服/手托下巴思考.png',
-          '看透一切的坏笑.png':
-            'https://gitgud.io/lolodesu/lolocard/-/raw/ebf826c38410ee0b35111f9a982063ab291b88c9/src/日记络络/图片/立绘/水手服/看透一切的坏笑.png',
-          '邪恶的坏笑.png':
-            'https://gitgud.io/lolodesu/lolocard/-/raw/ebf826c38410ee0b35111f9a982063ab291b88c9/src/日记络络/图片/立绘/水手服/邪恶的坏笑.png',
-          '星星眼.png':
-            'https://gitgud.io/lolodesu/lolocard/-/raw/ebf826c38410ee0b35111f9a982063ab291b88c9/src/日记络络/图片/立绘/水手服/星星眼.png',
-          '晕晕眼.png':
-            'https://gitgud.io/lolodesu/lolocard/-/raw/ebf826c38410ee0b35111f9a982063ab291b88c9/src/日记络络/图片/立绘/水手服/晕晕眼.png',
-          '猫爪生气.png':
-            'https://gitgud.io/lolodesu/lolocard/-/raw/ebf826c38410ee0b35111f9a982063ab291b88c9/src/日记络络/图片/立绘/水手服/猫爪生气.png',
-          '流口水.png':
-            'https://gitgud.io/lolodesu/lolocard/-/raw/ebf826c38410ee0b35111f9a982063ab291b88c9/src/日记络络/图片/立绘/水手服/流口水.png',
-          '哭泣.png':
-            'https://gitgud.io/lolodesu/lolocard/-/raw/ebf826c38410ee0b35111f9a982063ab291b88c9/src/日记络络/图片/立绘/水手服/哭泣.png',
-          '擦眼泪.png':
-            'https://gitgud.io/lolodesu/lolocard/-/raw/ebf826c38410ee0b35111f9a982063ab291b88c9/src/日记络络/图片/立绘/水手服/擦眼泪.png',
-          '等待吻.png':
-            'https://gitgud.io/lolodesu/lolocard/-/raw/ebf826c38410ee0b35111f9a982063ab291b88c9/src/日记络络/图片/立绘/水手服/等待吻.png',
-          '性高潮.png':
-            'https://gitgud.io/lolodesu/lolocard/-/raw/ebf826c38410ee0b35111f9a982063ab291b88c9/src/日记络络/图片/立绘/水手服/性高潮.png',
-          '眼神空洞的催眠状态.png':
-            'https://gitgud.io/lolodesu/lolocard/-/raw/ebf826c38410ee0b35111f9a982063ab291b88c9/src/日记络络/图片/立绘/水手服/眼神空洞的催眠状态.png',
-          '无表情.png':
-            'https://gitgud.io/lolodesu/lolocard/-/raw/ebf826c38410ee0b35111f9a982063ab291b88c9/src/日记络络/图片/立绘/水手服/无表情.png',
-          '无人.png':
-            'https://gitgud.io/lolodesu/lolocard/-/raw/ebf826c38410ee0b35111f9a982063ab291b88c9/src/日记络络/图片/立绘/水手服/无人.png',
-        },
-        格纹衫: {
-          '微笑.png':
-            'https://gitgud.io/lolodesu/lolocard/-/raw/ebf826c38410ee0b35111f9a982063ab291b88c9/src/日记络络/图片/立绘/格纹衫/微笑.png',
-          '浅笑.png':
-            'https://gitgud.io/lolodesu/lolocard/-/raw/ebf826c38410ee0b35111f9a982063ab291b88c9/src/日记络络/图片/立绘/格纹衫/浅笑.png',
-          '生气.png':
-            'https://gitgud.io/lolodesu/lolocard/-/raw/ebf826c38410ee0b35111f9a982063ab291b88c9/src/日记络络/图片/立绘/格纹衫/生气.png',
-          '惊讶.png':
-            'https://gitgud.io/lolodesu/lolocard/-/raw/ebf826c38410ee0b35111f9a982063ab291b88c9/src/日记络络/图片/立绘/格纹衫/惊讶.png',
-          '害羞.png':
-            'https://gitgud.io/lolodesu/lolocard/-/raw/ebf826c38410ee0b35111f9a982063ab291b88c9/src/日记络络/图片/立绘/格纹衫/害羞.png',
-          '稍微脸红.png':
-            'https://gitgud.io/lolodesu/lolocard/-/raw/ebf826c38410ee0b35111f9a982063ab291b88c9/src/日记络络/图片/立绘/格纹衫/稍微脸红.png',
-          '手托下巴思考.png':
-            'https://gitgud.io/lolodesu/lolocard/-/raw/ebf826c38410ee0b35111f9a982063ab291b88c9/src/日记络络/图片/立绘/格纹衫/手托下巴思考.png',
-          '看透一切的坏笑.png':
-            'https://gitgud.io/lolodesu/lolocard/-/raw/ebf826c38410ee0b35111f9a982063ab291b88c9/src/日记络络/图片/立绘/格纹衫/看透一切的坏笑.png',
-          '邪恶的坏笑.png':
-            'https://gitgud.io/lolodesu/lolocard/-/raw/ebf826c38410ee0b35111f9a982063ab291b88c9/src/日记络络/图片/立绘/格纹衫/邪恶的坏笑.png',
-          '星星眼.png':
-            'https://gitgud.io/lolodesu/lolocard/-/raw/ebf826c38410ee0b35111f9a982063ab291b88c9/src/日记络络/图片/立绘/格纹衫/星星眼.png',
-          '晕晕眼.png':
-            'https://gitgud.io/lolodesu/lolocard/-/raw/ebf826c38410ee0b35111f9a982063ab291b88c9/src/日记络络/图片/立绘/格纹衫/晕晕眼.png',
-          '猫爪生气.png':
-            'https://gitgud.io/lolodesu/lolocard/-/raw/ebf826c38410ee0b35111f9a982063ab291b88c9/src/日记络络/图片/立绘/格纹衫/猫爪生气.png',
-          '流口水.png':
-            'https://gitgud.io/lolodesu/lolocard/-/raw/ebf826c38410ee0b35111f9a982063ab291b88c9/src/日记络络/图片/立绘/格纹衫/流口水.png',
-          '哭泣.png':
-            'https://gitgud.io/lolodesu/lolocard/-/raw/ebf826c38410ee0b35111f9a982063ab291b88c9/src/日记络络/图片/立绘/格纹衫/哭泣.png',
-          '擦眼泪.png':
-            'https://gitgud.io/lolodesu/lolocard/-/raw/ebf826c38410ee0b35111f9a982063ab291b88c9/src/日记络络/图片/立绘/格纹衫/擦眼泪.png',
-          '等待吻.png':
-            'https://gitgud.io/lolodesu/lolocard/-/raw/ebf826c38410ee0b35111f9a982063ab291b88c9/src/日记络络/图片/立绘/格纹衫/等待吻.png',
-          '性高潮.png':
-            'https://gitgud.io/lolodesu/lolocard/-/raw/ebf826c38410ee0b35111f9a982063ab291b88c9/src/日记络络/图片/立绘/格纹衫/性高潮.png',
-          '眼神空洞的催眠状态.png':
-            'https://gitgud.io/lolodesu/lolocard/-/raw/ebf826c38410ee0b35111f9a982063ab291b88c9/src/日记络络/图片/立绘/格纹衫/眼神空洞的催眠状态.png',
-          '无人.png':
-            'https://gitgud.io/lolodesu/lolocard/-/raw/ebf826c38410ee0b35111f9a982063ab291b88c9/src/日记络络/图片/立绘/格纹衫/无人.png',
-        },
-        开衫: {
-          '微笑.png':
-            'https://gitgud.io/lolodesu/lolocard/-/raw/ebf826c38410ee0b35111f9a982063ab291b88c9/src/日记络络/图片/立绘/开衫/微笑.png',
-          '浅笑.png':
-            'https://gitgud.io/lolodesu/lolocard/-/raw/ebf826c38410ee0b35111f9a982063ab291b88c9/src/日记络络/图片/立绘/开衫/浅笑.png',
-          '生气.png':
-            'https://gitgud.io/lolodesu/lolocard/-/raw/ebf826c38410ee0b35111f9a982063ab291b88c9/src/日记络络/图片/立绘/开衫/生气.png',
-          '惊讶.png':
-            'https://gitgud.io/lolodesu/lolocard/-/raw/ebf826c38410ee0b35111f9a982063ab291b88c9/src/日记络络/图片/立绘/开衫/惊讶.png',
-          '害羞.png':
-            'https://gitgud.io/lolodesu/lolocard/-/raw/ebf826c38410ee0b35111f9a982063ab291b88c9/src/日记络络/图片/立绘/开衫/害羞.png',
-          '稍微脸红.png':
-            'https://gitgud.io/lolodesu/lolocard/-/raw/ebf826c38410ee0b35111f9a982063ab291b88c9/src/日记络络/图片/立绘/开衫/稍微脸红.png',
-          '手托下巴思考.png':
-            'https://gitgud.io/lolodesu/lolocard/-/raw/ebf826c38410ee0b35111f9a982063ab291b88c9/src/日记络络/图片/立绘/开衫/手托下巴思考.png',
-          '看透一切的坏笑.png':
-            'https://gitgud.io/lolodesu/lolocard/-/raw/ebf826c38410ee0b35111f9a982063ab291b88c9/src/日记络络/图片/立绘/开衫/看透一切的坏笑.png',
-          '邪恶的笑容.png':
-            'https://gitgud.io/lolodesu/lolocard/-/raw/ebf826c38410ee0b35111f9a982063ab291b88c9/src/日记络络/图片/立绘/开衫/邪恶的笑容.png',
-          '星星眼.png':
-            'https://gitgud.io/lolodesu/lolocard/-/raw/ebf826c38410ee0b35111f9a982063ab291b88c9/src/日记络络/图片/立绘/开衫/星星眼.png',
-          '晕晕眼.png':
-            'https://gitgud.io/lolodesu/lolocard/-/raw/ebf826c38410ee0b35111f9a982063ab291b88c9/src/日记络络/图片/立绘/开衫/晕晕眼.png',
-          '猫爪生气.png':
-            'https://gitgud.io/lolodesu/lolocard/-/raw/ebf826c38410ee0b35111f9a982063ab291b88c9/src/日记络络/图片/立绘/开衫/猫爪生气.png',
-          '流口水.png':
-            'https://gitgud.io/lolodesu/lolocard/-/raw/ebf826c38410ee0b35111f9a982063ab291b88c9/src/日记络络/图片/立绘/开衫/流口水.png',
-          '哭泣.png':
-            'https://gitgud.io/lolodesu/lolocard/-/raw/ebf826c38410ee0b35111f9a982063ab291b88c9/src/日记络络/图片/立绘/开衫/哭泣.png',
-          '擦眼泪.png':
-            'https://gitgud.io/lolodesu/lolocard/-/raw/ebf826c38410ee0b35111f9a982063ab291b88c9/src/日记络络/图片/立绘/开衫/擦眼泪.png',
-          '等待吻.png':
-            'https://gitgud.io/lolodesu/lolocard/-/raw/ebf826c38410ee0b35111f9a982063ab291b88c9/src/日记络络/图片/立绘/开衫/等待吻.png',
-          '性高潮.png':
-            'https://gitgud.io/lolodesu/lolocard/-/raw/ebf826c38410ee0b35111f9a982063ab291b88c9/src/日记络络/图片/立绘/开衫/性高潮.png',
-          '无表情.png':
-            'https://gitgud.io/lolodesu/lolocard/-/raw/ebf826c38410ee0b35111f9a982063ab291b88c9/src/日记络络/图片/立绘/开衫/无表情.png',
-          '无人.png':
-            'https://gitgud.io/lolodesu/lolocard/-/raw/ebf826c38410ee0b35111f9a982063ab291b88c9/src/日记络络/图片/立绘/开衫/无人.png',
-        },
-        睡衣: {
-          '微笑.png':
-            'https://gitgud.io/lolodesu/lolocard/-/raw/ebf826c38410ee0b35111f9a982063ab291b88c9/src/日记络络/图片/立绘/睡衣/微笑.png',
-          '浅笑.png':
-            'https://gitgud.io/lolodesu/lolocard/-/raw/ebf826c38410ee0b35111f9a982063ab291b88c9/src/日记络络/图片/立绘/睡衣/浅笑.png',
-          '生气.png':
-            'https://gitgud.io/lolodesu/lolocard/-/raw/ebf826c38410ee0b35111f9a982063ab291b88c9/src/日记络络/图片/立绘/睡衣/生气.png',
-          '惊讶.png':
-            'https://gitgud.io/lolodesu/lolocard/-/raw/ebf826c38410ee0b35111f9a982063ab291b88c9/src/日记络络/图片/立绘/睡衣/惊讶.png',
-          '害羞.png':
-            'https://gitgud.io/lolodesu/lolocard/-/raw/ebf826c38410ee0b35111f9a982063ab291b88c9/src/日记络络/图片/立绘/睡衣/害羞.png',
-          '稍微脸红.png':
-            'https://gitgud.io/lolodesu/lolocard/-/raw/ebf826c38410ee0b35111f9a982063ab291b88c9/src/日记络络/图片/立绘/睡衣/稍微脸红.png',
-          '看透一切的坏笑.png':
-            'https://gitgud.io/lolodesu/lolocard/-/raw/ebf826c38410ee0b35111f9a982063ab291b88c9/src/日记络络/图片/立绘/睡衣/看透一切的坏笑.png',
-          '邪恶的坏笑.png':
-            'https://gitgud.io/lolodesu/lolocard/-/raw/ebf826c38410ee0b35111f9a982063ab291b88c9/src/日记络络/图片/立绘/睡衣/邪恶的坏笑.png',
-          '星星眼.png':
-            'https://gitgud.io/lolodesu/lolocard/-/raw/ebf826c38410ee0b35111f9a982063ab291b88c9/src/日记络络/图片/立绘/睡衣/星星眼.png',
-          '晕晕眼.png':
-            'https://gitgud.io/lolodesu/lolocard/-/raw/ebf826c38410ee0b35111f9a982063ab291b88c9/src/日记络络/图片/立绘/睡衣/晕晕眼.png',
-          '猫爪生气.png':
-            'https://gitgud.io/lolodesu/lolocard/-/raw/ebf826c38410ee0b35111f9a982063ab291b88c9/src/日记络络/图片/立绘/睡衣/猫爪生气.png',
-          '流口水.png':
-            'https://gitgud.io/lolodesu/lolocard/-/raw/ebf826c38410ee0b35111f9a982063ab291b88c9/src/日记络络/图片/立绘/睡衣/流口水.png',
-          '哭泣.png':
-            'https://gitgud.io/lolodesu/lolocard/-/raw/ebf826c38410ee0b35111f9a982063ab291b88c9/src/日记络络/图片/立绘/睡衣/哭泣.png',
-          '等待吻.png':
-            'https://gitgud.io/lolodesu/lolocard/-/raw/ebf826c38410ee0b35111f9a982063ab291b88c9/src/日记络络/图片/立绘/睡衣/等待吻.png',
-          '性高潮.png':
-            'https://gitgud.io/lolodesu/lolocard/-/raw/ebf826c38410ee0b35111f9a982063ab291b88c9/src/日记络络/图片/立绘/睡衣/性高潮.png',
-          '眼神空洞的催眠状态.png':
-            'https://gitgud.io/lolodesu/lolocard/-/raw/ebf826c38410ee0b35111f9a982063ab291b88c9/src/日记络络/图片/立绘/睡衣/眼神空洞的催眠状态.png',
-          '无人.png':
-            'https://gitgud.io/lolodesu/lolocard/-/raw/ebf826c38410ee0b35111f9a982063ab291b88c9/src/日记络络/图片/立绘/睡衣/无人.png',
-        },
-        全裸: {
-          '浅笑.png':
-            'https://gitgud.io/lolodesu/lolocard/-/raw/ebf826c38410ee0b35111f9a982063ab291b88c9/src/日记络络/图片/立绘/全裸/浅笑.png',
-          '生气.png':
-            'https://gitgud.io/lolodesu/lolocard/-/raw/ebf826c38410ee0b35111f9a982063ab291b88c9/src/日记络络/图片/立绘/全裸/生气.png',
-          '惊讶.png':
-            'https://gitgud.io/lolodesu/lolocard/-/raw/ebf826c38410ee0b35111f9a982063ab291b88c9/src/日记络络/图片/立绘/全裸/惊讶.png',
-          '害羞.png':
-            'https://gitgud.io/lolodesu/lolocard/-/raw/ebf826c38410ee0b35111f9a982063ab291b88c9/src/日记络络/图片/立绘/全裸/害羞.png',
-          '稍微脸红.png':
-            'https://gitgud.io/lolodesu/lolocard/-/raw/ebf826c38410ee0b35111f9a982063ab291b88c9/src/日记络络/图片/立绘/全裸/稍微脸红.png',
-          '看透一切的坏笑.png':
-            'https://gitgud.io/lolodesu/lolocard/-/raw/ebf826c38410ee0b35111f9a982063ab291b88c9/src/日记络络/图片/立绘/全裸/看透一切的坏笑.png',
-          '邪恶的坏笑.png':
-            'https://gitgud.io/lolodesu/lolocard/-/raw/ebf826c38410ee0b35111f9a982063ab291b88c9/src/日记络络/图片/立绘/全裸/邪恶的坏笑.png',
-          '星星眼.png':
-            'https://gitgud.io/lolodesu/lolocard/-/raw/ebf826c38410ee0b35111f9a982063ab291b88c9/src/日记络络/图片/立绘/全裸/星星眼.png',
-          '晕晕眼.png':
-            'https://gitgud.io/lolodesu/lolocard/-/raw/ebf826c38410ee0b35111f9a982063ab291b88c9/src/日记络络/图片/立绘/全裸/晕晕眼.png',
-          '流口水.png':
-            'https://gitgud.io/lolodesu/lolocard/-/raw/ebf826c38410ee0b35111f9a982063ab291b88c9/src/日记络络/图片/立绘/全裸/流口水.png',
-          '哭泣.png':
-            'https://gitgud.io/lolodesu/lolocard/-/raw/ebf826c38410ee0b35111f9a982063ab291b88c9/src/日记络络/图片/立绘/全裸/哭泣.png',
-          '性高潮.png':
-            'https://gitgud.io/lolodesu/lolocard/-/raw/ebf826c38410ee0b35111f9a982063ab291b88c9/src/日记络络/图片/立绘/全裸/性高潮.png',
-          '眼神空洞的催眠状态.png':
-            'https://gitgud.io/lolodesu/lolocard/-/raw/ebf826c38410ee0b35111f9a982063ab291b88c9/src/日记络络/图片/立绘/全裸/眼神空洞的催眠状态.png',
-          '无人.png':
-            'https://gitgud.io/lolodesu/lolocard/-/raw/ebf826c38410ee0b35111f9a982063ab291b88c9/src/日记络络/图片/立绘/全裸/无人.png',
-        },
-      },
-    };
 
     try {
       const message = SillyTavern.chat[getCurrentMessageId()].mes;
@@ -305,16 +80,12 @@ class GalgameEngine {
         }
       }
 
-      this.dialogData = z.array(Dialog).min(1).parse(parsedData);
+      this.dialogData = z.array(Dialog).min(1).parse(parsedData, { reportInput: true });
     } catch (error) {
       // 捕获所有加载/解析过程中的错误
       console.error('加载或解析游戏数据时出错:', error);
       this.dialogData = [{ name: '系统提示', text: `加载对话数据失败：${error.message}`, characters: 'narrator' }];
     }
-    // ===== 数据加载结束 =====
-
-    // 设置角色立绘
-    this.characterSprites = characterSprites;
 
     // 初始化事件监听
     this.initEventListeners();
@@ -352,7 +123,7 @@ class GalgameEngine {
         console.error('背景图片加载失败:', initialBgUrl);
         // 尝试使用预设的CG URL
         this.currentImage.src =
-          'https://gitgud.io/lolodesu/lolocard/-/raw/ebf826c38410ee0b35111f9a982063ab291b88c9/src/日记络络/图片/背景/商店街/黄昏.jpg';
+          'https://testingcf.jsdelivr.net/gh/lolo-desu/lolocard/src/日记络络/图片/背景/商店街/黄昏.jpg';
       };
 
       // 检查图片是否已经加载完成
@@ -367,28 +138,16 @@ class GalgameEngine {
   }
 
   // 获取完整的图片URL，处理URL编码问题
-  getFullImageUrl(relativePath) {
-    if (!relativePath) return '';
-
-    // 使用预定义的硬编码URL
-    if (relativePath === '商店街/黄昏.jpg') {
-      return 'https://gitgud.io/lolodesu/lolocard/-/raw/ebf826c38410ee0b35111f9a982063ab291b88c9/src/日记络络/图片/背景/商店街/黄昏.jpg';
-    } else if (relativePath === '商店街/夜晚开灯.jpg') {
-      return 'https://gitgud.io/lolodesu/lolocard/-/raw/ebf826c38410ee0b35111f9a982063ab291b88c9/src/日记络络/图片/背景/商店街/夜晚开灯.jpg';
-    }
-
-    // 如果不是硬编码的图片，则尝试构建URL
-    // 拆分路径以便正确编码每个部分
-    try {
-      const pathParts = relativePath.split('/');
-      const encodedParts = pathParts.map(part => encodeURIComponent(part));
-      const encodedPath = encodedParts.join('/');
-
-      return this.imageBaseUrl + encodedPath;
-    } catch (error) {
-      console.error('URL编码失败:', error, '原始路径:', relativePath);
+  getFullImageUrl(id) {
+    if (!id) {
       return '';
     }
+    const url = getImageUrl(id);
+    if (!url) {
+      console.error('背景图片加载失败:', id);
+      return '';
+    }
+    return url;
   }
 
   initEventListeners() {
@@ -505,24 +264,7 @@ class GalgameEngine {
         const char = text.charAt(i);
         this.dialogText.textContent += char;
         i++;
-
-        // --- 修改点：移除了标点符号的特殊停顿判断 ---
-        // 不再检查是否为标点符号，统一使用计算出的 speed
         setTimeout(typeWriter, speed);
-        // --- 修改结束 ---
-
-        // --- 移除的代码块 ---
-        // const isPunctuation = /[，。？！、：；]/.test(char);
-        // if (isPunctuation) {
-        //   lastPunctuation = i;
-        //   setTimeout(typeWriter, speed * 5); // 标点符号后停顿更长时间
-        // } else if (i - lastPunctuation <= 2) {
-        //   // 标点符号后的前两个字符也稍微慢一点
-        //   setTimeout(typeWriter, speed * 1.5);
-        // } else {
-        //   setTimeout(typeWriter, speed);
-        // }
-        // --- 移除结束 ---
       } else {
         this.isAnimating = false;
         document.getElementById('next-hint').style.opacity = '1'; // 显示提示
@@ -577,16 +319,14 @@ class GalgameEngine {
         !dialog.characters.right
       ) {
         const characterId = dialog.characters.id;
-        const expression = dialog.characters.expression || '默认.png';
-        const costume = dialog.characters.costume || '水手服'; // 默认使用水手服
+        const tachie = dialog.characters.tachie;
 
         newActiveCharacters[characterId] = {
           position: 'center',
-          expression: expression,
-          costume: costume, // 记录服装信息
+          tachie: tachie,
         };
 
-        this.showCharacter(characterId, 'center', dialog.name === characterId, expression, costume);
+        this.showCharacter(characterId, 'center', dialog.name === characterId, tachie);
       }
       // 左右两个角色（新格式）
       else if (typeof dialog.characters === 'object') {
@@ -597,57 +337,49 @@ class GalgameEngine {
         if (hasLeftChar && !hasRightChar) {
           // 只有左边角色，居中显示
           const characterId = dialog.characters.left.id;
-          const expression = dialog.characters.left.expression || '默认.png';
-          const costume = dialog.characters.left.costume || '水手服'; // 默认使用水手服
+          const tachie = dialog.characters.left.tachie;
 
           newActiveCharacters[characterId] = {
             position: 'center',
-            expression: expression,
-            costume: costume,
+            tachie: tachie,
           };
 
-          this.showCharacter(characterId, 'center', dialog.name === characterId, expression, costume);
+          this.showCharacter(characterId, 'center', dialog.name === characterId, tachie);
         } else if (!hasLeftChar && hasRightChar) {
           // 只有右边角色，居中显示
           const characterId = dialog.characters.right.id;
-          const expression = dialog.characters.right.expression || '默认.png';
-          const costume = dialog.characters.right.costume || '水手服'; // 默认使用水手服
+          const tachie = dialog.characters.right.tachie;
 
           newActiveCharacters[characterId] = {
             position: 'center',
-            expression: expression,
-            costume: costume,
+            tachie: tachie,
           };
 
-          this.showCharacter(characterId, 'center', dialog.name === characterId, expression, costume);
+          this.showCharacter(characterId, 'center', dialog.name === characterId, tachie);
         } else {
           // 两个角色都有，左右显示
           if (dialog.characters.left && dialog.characters.left.id) {
             const characterId = dialog.characters.left.id;
-            const expression = dialog.characters.left.expression || '默认.png';
-            const costume = dialog.characters.left.costume || '水手服'; // 默认使用水手服
+            const tachie = dialog.characters.left.tachie;
 
             newActiveCharacters[characterId] = {
               position: 'left',
-              expression: expression,
-              costume: costume,
+              tachie: tachie,
             };
 
-            this.showCharacter(characterId, 'left', dialog.name === characterId, expression, costume);
+            this.showCharacter(characterId, 'left', dialog.name === characterId, tachie);
           }
 
           if (dialog.characters.right && dialog.characters.right.id) {
             const characterId = dialog.characters.right.id;
-            const expression = dialog.characters.right.expression || '默认.png';
-            const costume = dialog.characters.right.costume || '水手服'; // 默认使用水手服
+            const tachie = dialog.characters.right.tachie;
 
             newActiveCharacters[characterId] = {
               position: 'right',
-              expression: expression,
-              costume: costume,
+              tachie: tachie,
             };
 
-            this.showCharacter(characterId, 'right', dialog.name === characterId, expression, costume);
+            this.showCharacter(characterId, 'right', dialog.name === characterId, tachie);
           }
         }
       }
@@ -672,35 +404,14 @@ class GalgameEngine {
   }
 
   // 显示角色立绘
-  showCharacter(characterId, position, isSpeaking, expression = '默认', costume = '水手服') {
+  showCharacter(characterId, position, isSpeaking, tachie) {
     // 转场中不更新角色显示，避免冲突
     if (this.isTransitioning) {
       console.log('正在转场中，跳过显示角色:', characterId);
       return;
     }
 
-    // 获取角色的服装和表情立绘URL
-    if (!this.characterSprites[characterId]) return;
-
-    // 指定角色的服装，如果不存在则使用默认服装
-    const characterCostumes = this.characterSprites[characterId];
-    let costumeToUse = costume;
-
-    // 如果指定的服装不存在，则使用第一个可用的服装
-    if (!characterCostumes[costumeToUse]) {
-      costumeToUse = Object.keys(characterCostumes)[0];
-    }
-
-    // 获取指定服装下的表情
-    const costumeExpressions = characterCostumes[costumeToUse];
-
-    // 如果指定的表情不存在，则使用默认表情
-    let expressionToUse = expression;
-    if (!costumeExpressions[expressionToUse]) {
-      expressionToUse = Object.keys(costumeExpressions)[0] || '默认.png';
-    }
-
-    const spriteUrl = costumeExpressions[expressionToUse];
+    const spriteUrl = getImageUrl(tachie);
 
     // 如果没有找到有效的立绘URL，则退出
     if (!spriteUrl) return;
@@ -718,8 +429,7 @@ class GalgameEngine {
       characterElement.id = characterElementId;
       characterElement.className = 'character-sprite character-enter';
       characterElement.src = spriteUrl;
-      characterElement.dataset.expression = expressionToUse;
-      characterElement.dataset.position = position;
+      characterElement.dataset.tachie = tachie;
       characterElement.alt = `${characterId}的立绘`;
 
       // 过渡前准备 - 如果是从一侧切换到另一侧，先使用原来的位置
@@ -760,9 +470,9 @@ class GalgameEngine {
     // 如果已存在但表情或位置不同
     else {
       // 表情变化
-      if (characterElement.dataset.expression !== expressionToUse) {
+      if (characterElement.dataset.tachie !== tachie) {
         characterElement.src = spriteUrl;
-        characterElement.dataset.expression = expressionToUse;
+        characterElement.dataset.tachie = tachie;
       }
 
       // 位置变化

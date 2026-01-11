@@ -65,10 +65,9 @@
               | {
                   left: {
                     id: string; // 角色名称：只支持填入络络
-                    expression: string; // 当前角色的表情，从`立绘列表`中选择存在的立绘文件名
-                    costume: string; // 当前角色的服装，仅有格纹衫、开衫、水手服、睡衣和全裸五个选项
+                    tachie: string; // 当前角色的立绘，从`立绘列表`中选择存在的立绘文件名
                   };
-                  right: { id: string; expression: string; costume: string };
+                  right?: { id: string; tachie: string };
                 };
           }
         limit:
@@ -107,36 +106,33 @@
             {
               "name": "络络",
               "text": "今天的风有点大呢，走在路上差点被吹跑了！",
-              "background": "上学路上_白天.jpg",
+              "background": "上学路上/白天.jpg",
               "characters": {
                 "left": {
                   "id": "络络",
-                  "expression": "微笑.png",
-                  "costume": "水手服"
+                  "tachie": "水手服/微笑.png"
                 }
               }
             },
             {
               "name": "络络",
               "text": "不过看到路边的樱花开得这么漂亮，心情一下子就变好了。",
-              "background": "上学路上_白天.jpg",
+              "background": "上学路上/白天.jpg",
               "characters": {
                 "left": {
                   "id": "络络",
-                  "expression": "浅笑.png",
-                  "costume": "水手服"
+                  "tachie": "水手服/浅笑.png"
                 }
               }
             },
             {
               "name": "<user>",
               "text": "我也觉得今天的景色特别美，尤其是你站在花瓣下的时候。",
-              "background": "上学路上_白天.jpg",
+              "background": "上学路上/白天.jpg",
               "characters": {
                 "left": {
                   "id": "络络",
-                  "expression": "稍微脸红.png",
-                  "costume": "水手服"
+                  "tachie": "水手服/稍微脸红.png"
                 }
               }
             }
