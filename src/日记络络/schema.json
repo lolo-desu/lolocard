@@ -2,16 +2,6 @@
   "$schema": "https://json-schema.org/draft/2020-12/schema",
   "type": "object",
   "properties": {
-    "下一回合界面选择": {
-      "default": "纯文字尾附立绘",
-      "type": "string",
-      "enum": [
-        "纯文字尾附立绘",
-        "展示日记",
-        "galgameSFW",
-        "galgameNSFW"
-      ]
-    },
     "世界": {
       "type": "object",
       "properties": {
@@ -41,6 +31,18 @@
         "是否需要上学": {
           "default": true,
           "type": "boolean"
+        },
+        "是否处于NSFW场景": {
+          "type": "boolean"
+        },
+        "下一回合界面选择": {
+          "default": "纯文字尾附立绘",
+          "type": "string",
+          "enum": [
+            "纯文字尾附立绘",
+            "展示日记",
+            "galgame"
+          ]
         }
       },
       "required": [

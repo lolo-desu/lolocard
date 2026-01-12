@@ -10,7 +10,7 @@
         <plot_hint>
         触发事件：【${事件名称}】
         </plot_hint>
-  "以下为当前时间阶段（{{format_message_variable:stat_data.世界._当前时间阶段}}）、<%= getvar('stat_data.世界.是否需要上学') ? '需要上学' : '不需要上学' _%>的情况下可以参考的事件列表":
+  "以下为当前时间阶段（{{format_message_variable:stat_data.世界._当前时间阶段}}）、<%= getvar('stat_data.世界.是否需要上学') ? '需要上学' : '不需要上学' %>的情况下可以参考的事件列表":
     # :<%_ if (getvar('stat_data.世界.是否需要上学') === true) { _%>
     # :<%_   if (getvar('stat_data.世界._当前时间阶段') === '早晨') { _%>
     早晨:

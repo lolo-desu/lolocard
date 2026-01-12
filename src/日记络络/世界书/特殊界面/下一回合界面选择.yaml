@@ -1,12 +1,13 @@
 ---
 下一回合界面选择系统:
   判断可能情况:
+    # :<%_ if (!getvar('始终使用galgame界面')) { _%>
     纯文字尾附立绘: 无需查看日记，生成sprite界面
     展示日记: 必须查看日记，只使用diary界面
-    galgameSFW: 进入感人或剧情高潮CG场景，如告白、离别、和解等情感爆发点，只使用galgame界面展示关键CG
-    galgameNSFW: 进入NSFWCG场景，只使用galgame界面展示NSFWCG
-  你必须输出判断{{format_message_variable::stat_data.下一回合界面选择}}对应的界面，因此必须最优先地遵守以下内容:
-    # :<%_ if (getvar('stat_data.下一回合界面选择') === '纯文字尾附立绘') { _%>
+    # :<%_ } _%>
+    galgame: 进入感人或剧情高潮CG场景（如告白、离别、和解等情感爆发点）或NSFWCG场景，使用galgame界面
+  你必须输出判断{{format_message_variable::stat_data.世界.下一回合界面选择}}对应的界面，因此必须最优先地遵守以下内容:
+    # :<%_ if (getvar('stat_data.世界.下一回合界面选择') === '纯文字尾附立绘') { _%>
     sprite:
       rule: the following must be inserted to the end of each reply and cannot be omitted
       format: |-
@@ -19,14 +20,14 @@
         场景: ${刚刚选择的当前络络所在的地点/地点情况路径}.jpg
         时间: ${请检查时间变量！目前是{{format_message_variable::stat_data.世界.当前时间}}，请你根据剧情填写一个主观时间名称，例如'放学后'、'深夜'等}
         </sprite>
-    # :<%_ } else if (getvar('stat_data.下一回合界面选择') === '展示日记') { _%>
+    # :<%_ } else if (getvar('stat_data.世界.下一回合界面选择') === '展示日记') { _%>
     diary:
       rule:
         - 本次响应专注于络络的日记编写，**仅输出diary界面**，非必要情况下**避免生成任何正文**；但若直接查看日记过于突兀，可以增加仅一两行正文用来转折过渡，之后必须输出diary标签和其中的格式
         - 请注意！立绘、场景和对话都发生在现在，也就是络络将日记交给<user>的时间而不是写日记的时间
         - 日期、天气和心情是络络写日记的日期天气心情等，其中天气和心情只允许单一个emoji
         - 日记内容是前一天晚上或者其他时间络络写的日记，避免出现写日记之后发生的事件
-        - 输出日记后，你必须在本次<UpdateVariable>中更新`下一回合界面选择`为'纯文字尾附立绘'
+        - 输出日记后，你必须在本次<UpdateVariable>中更新`世界.下一回合界面选择`为'纯文字尾附立绘'
       format: |-
         <interface_analysis>
         - which EXISTING location in `背景列表` document best describes where 络络 or <user> is currently physically located? ${地点}/${地点情况}.jpg
@@ -46,13 +47,13 @@
           ${可选的结束语，一句话或者一段话的结束语，可以是写写完日记之后要去做什么，比如"今天就写到这里吧，我要去洗澡了，好期待明天和你见面"，或者也可以引用一句名言来表示自己的心情，也可以没有这一段直接戛然而止。}
         </diary>
         <UpdateVariable>
-        ${将`下一回合界面选择`更新为'纯文字尾附立绘'}
+        ${将`世界.下一回合界面选择`更新为'纯文字尾附立绘'}
         ...
         </UpdateVariable>
     # :<%_ } else { _%>
     galgame:
-      可调用的CG文件列表: # :<%= getvar('stat_data.下一回合界面选择') === 'galgameSFW' ? '`关键CG列表`document' : '`NSFWCG列表`document' _%>
-      场景风格: # :<%= getvar('stat_data.下一回合界面选择') === 'galgameSFW' ? 'galgame游戏中的关键情感爆发场景' : getvar('主角性别') === '男' ? 'galgame游戏中的R18场景' : 'galgame游戏中的百合/女同向R18场景' _%>
+      可调用的CG文件列表: # :<%= getvar('stat_data.世界.是否处于NSFW场景') === true ? '`NSFWCG列表`document' : '`关键CG列表`document' %>
+      场景风格: # :<%= getvar('stat_data.世界.是否处于NSFW场景') === true ? 'galgame游戏中的R18场景' : 'galgame游戏中的关键情感爆发场景' %>
       type:
         definition: |-
           interface Chat {
@@ -63,7 +64,9 @@
           }
       rule:
         - 本次响应专注于CG场景，**仅输出galgame界面，绝对禁止生成任何正文**
-        - 输出CG场景后，你必须在本次<UpdateVariable>中更新`下一回合界面选择`为'纯文字尾附立绘'
+        # :<%_ if (!getvar('始终使用galgame界面')) { _%>
+        - 输出CG场景后，你必须在本次<UpdateVariable>中更新`世界.下一回合界面选择`为'纯文字尾附立绘'
+        # :<%_ } _%>
       format: |-
         <interface_analysis>
         - 当前时间: ...
@@ -79,7 +82,7 @@
         ```
         </galgame>
         <UpdateVariable>
-        ${将`下一回合界面选择`更新为'纯文字尾附立绘'}
+        ${将`世界.下一回合界面选择`更新为'纯文字尾附立绘'}
         ...
         </UpdateVariable>
       example: |-

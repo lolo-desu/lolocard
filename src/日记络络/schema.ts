@@ -1,6 +1,5 @@
 export const Schema = z
   .object({
-    下一回合界面选择: z.enum(['纯文字尾附立绘', '展示日记', 'galgameSFW', 'galgameNSFW']).prefault('纯文字尾附立绘'),
     世界: z
       .object({
         当前时间: z.templateLiteral([z.coerce.number(), ':', z.coerce.number()]),
@@ -8,6 +7,8 @@ export const Schema = z
         当前日期: z.string(),
         当前星期: z.templateLiteral([z.literal('星期'), z.enum(['一', '二', '三', '四', '五', '六', '日'])]),
         是否需要上学: z.boolean().prefault(true),
+        是否处于NSFW场景: z.boolean().prefault(false),
+        下一回合界面选择: z.enum(['纯文字尾附立绘', '展示日记', 'galgame']).prefault('纯文字尾附立绘'),
       })
       .transform(data => {
         const minutes = data.当前时间

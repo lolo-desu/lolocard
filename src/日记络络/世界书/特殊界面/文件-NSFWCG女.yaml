@@ -1,4 +1,4 @@
-# :@@if getvar('stat_data.下一回合界面选择') === 'galgameNSFW' && getvar('主角性别') === '女'
+# :@@if getvar('stat_data.世界.下一回合界面选择') === 'galgame' && getvar('stat_data.世界.是否处于NSFW场景') === true && getvar('主角性别') === '女'
 ---
 NSFWCG列表:
   文件信息:

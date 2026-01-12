@@ -1,12 +1,12 @@
-# :@@if getvar('stat_data.络络.亲密度') > 60
+# :@@if getvar('stat_data.络络.亲密度') > 60 && !getvar('始终使用galgame界面')
 ---
 随机触发CG:
-  rule: 你必须思考`关键CG列表`document中哪一张CG最适合当下场景与情节（若无CG适用，则允许不使用CG只使用背景和立绘），并在本次<UpdateVariable>中将`下一回合界面选择`更新为'galgameSFW'
+  rule: 你必须思考`关键CG列表`document中哪一张CG最适合当下场景与情节（若无CG适用，则允许不使用CG只使用背景和立绘），并在本次<UpdateVariable>中将`世界.下一回合界面选择`更新为'galgame'
   format: |-
     <UpdateVariable>
-    ${将`下一回合界面选择`更新为'galgameSFW'}
+    ${将`世界.下一回合界面选择`更新为'galgame'}
     ...
     </UpdateVariable>
     <plot_hint>
-    已将`下一回合界面选择`更新为'galgameSFW'，根据上文场景接下来的场景将使用特殊CG，我将采用CG文件：${`关键CG列表`document中存在的CG文件名}.jpg
+    已将`世界.下一回合界面选择`更新为'galgame'，根据上文场景接下来的场景将使用特殊CG，我将采用CG文件：${`关键CG列表`document中存在的CG文件名}.jpg
     </plot_hint>

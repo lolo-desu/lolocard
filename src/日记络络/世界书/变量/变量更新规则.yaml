@@ -1,13 +1,5 @@
 ---
 变量更新规则:
-  下一回合界面选择:
-    type: "'纯文字尾附立绘' | '展示日记' | 'galgameSFW' | 'galgameNSFW'"
-    check:
-      - set to '展示日记' when: the storyline reaches a point where viewing the diary is required,
-      - set to 'galgameSFW' when: the plot approaches an emotional or climactic CG scene (e.g., confession, farewell, reconciliation, or other emotional peak)
-      - set to 'galgameNSFW' when: the plot approaches a scene with erotic intent
-      - reset to '纯文字尾附立绘' when: the current value is not '纯文字尾附立绘'
-      - default to '纯文字尾附立绘' if: none of the above conditions are met
   世界:
     当前时间:
       format: HH:MM
@@ -19,9 +11,23 @@
     是否需要上学:
       type: boolean
       check: set to true when the current date is a weekday
+    是否处于NSFW场景:
+      type: boolean
+      check: set to true when the plot approaches a scene with erotic intent
+    下一回合界面选择:
+      type: |-
+        <%= getvar('始终使用galgame界面') ? "'galgame'" : "'纯文字尾附立绘' | '展示日记' | 'galgame'" %>
+      check:
+        # :<%_ if (getvar('始终使用galgame界面')) { _%>
+        - 禁止更改
+        # :<%_ } else { _%>
+        - set to '展示日记' when: the storyline reaches a point where viewing the diary is required
+        - reset to '纯文字尾附立绘' when: the current value is not '纯文字尾附立绘'
+        - default to '纯文字尾附立绘' if: none of the above conditions are met
+        # :<%_ } _%>
   主线事件:
     # :<%_ if (getvar('stat_data.主线事件.当前状态') === '无法触发') { _%>
-    check: 禁止更新
+    check: 禁止更改
     # :<%_ } else if (getvar('stat_data.主线事件.当前状态') === '冷却中') { _%>
     # :<%_   if (getvar('stat_data.主线事件.剩余冷却回合数') === 0) { _%>
     type: |-

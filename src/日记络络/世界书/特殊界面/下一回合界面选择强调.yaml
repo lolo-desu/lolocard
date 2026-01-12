@@ -1,8 +1,8 @@
 ---
-下次响应界面选择判断系统强调:
-  # :<%_ if (getvar('stat_data.世界.下次响应界面选择判断') === 0) { _%>
+下一回合界面选择系统强调:
+  # :<%_ if (getvar('stat_data.世界.下一回合界面选择') === '纯文字尾附立绘') { _%>
   sprite:
-    rule: by recalling `下次响应界面选择判断系统`, `背景列表`, `立绘列表` documents, the following must be inserted to the reply and cannot be omitted
+    rule: by recalling `下一回合界面选择系统`, `背景列表`, `立绘列表` documents, the following must be inserted to the reply and cannot be omitted
     format: |-
       <interface_analysis>
       ...
@@ -10,9 +10,9 @@
       <sprite>
       ...
       </sprite>
-  # :<%_ } else if (getvar('stat_data.世界.下次响应界面选择判断') === 1) { _%>
+  # :<%_ } else if (getvar('stat_data.世界.下一回合界面选择') === '展示日记') { _%>
   diary:
-    rule: by recalling `下次响应界面选择判断系统`, `背景列表`, `立绘列表`` documents, the following must be inserted to the reply and cannot be omitted
+    rule: by recalling `下一回合界面选择系统`, `背景列表`, `立绘列表`` documents, the following must be inserted to the reply and cannot be omitted
     format: |-
       <interface_analysis>
       ...
@@ -22,7 +22,7 @@
       </diary>
   # :<%_ } else { _%>
   galgame:
-    rule: "by recalling `下次响应界面选择判断系统`, `背景列表`, `立绘列表`, `<%= getvar('stat_data.世界.下次响应界面选择判断') === 2 ? `关键CG列表` : `NSFWCG列表` _%>` documents, the following must be inserted to the reply and cannot be omitted"
+    rule: "by recalling `下一回合界面选择系统`, `背景列表`, `立绘列表`, `<%= getvar('stat_data.世界.是否处于NSFW场景') ? `NSFWCG列表` : `关键CG列表` %>` documents, the following must be inserted to the reply and cannot be omitted"
     format: |-
       <interface_analysis>
       ...
