@@ -47,6 +47,9 @@ importers:
       lodash:
         specifier: ^4.17.21
         version: 4.17.21
+      openai-partial-json-parser:
+        specifier: ^1.1.1
+        version: 1.1.1
       pinia:
         specifier: ^3.0.4
         version: 3.0.4(typescript@6.0.0-dev.20250807)(vue@3.5.26(typescript@6.0.0-dev.20250807))
@@ -2953,6 +2956,10 @@ packages:
   object.values@1.2.1:
     resolution: {integrity: sha512-gXah6aZrcUxjWg2zR2MwouP2eHlCBzdV4pygudehaKXSGW4v2AsRQUK+lwwXhii6KFZcunEnmSUoYp5CXibxtA==}
     engines: {node: '>= 0.4'}
+
+  openai-partial-json-parser@1.1.1:
+    resolution: {integrity: sha512-q01ELgmL3QjdbHBhIm7SJfZxk3FOx7hoW1QC6A4TwlQYtuVUALTdS3zAbDFKbQs56i6neOJVhAbOC/9J/CKvOg==}
+    engines: {node: '>=18'}
 
   optionator@0.8.3:
     resolution: {integrity: sha512-+IW9pACdk3XWmmTXG8m3upGUJst5XRGzxMRjXzAuJ1XnIFNvfhjjIuYkDvysnPQ7qzqVzLt78BCruntqRhWQbA==}
@@ -6969,6 +6976,8 @@ snapshots:
       call-bound: 1.0.4
       define-properties: 1.2.1
       es-object-atoms: 1.1.1
+
+  openai-partial-json-parser@1.1.1: {}
 
   optionator@0.8.3:
     dependencies:

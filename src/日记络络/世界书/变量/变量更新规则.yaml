@@ -16,9 +16,9 @@
       check: set to true when the plot approaches a scene with erotic intent
     下一回合界面选择:
       type: |-
-        <%= getvar('始终使用galgame界面') ? "'galgame'" : "'纯文字尾附立绘' | '展示日记' | 'galgame'" %>
+        <%= getvar('始终启用galgame界面') ? "'galgame'" : "'纯文字尾附立绘' | '展示日记' | 'galgame'" %>
       check:
-        # :<%_ if (getvar('始终使用galgame界面')) { _%>
+        # :<%_ if (getvar('始终启用galgame界面')) { _%>
         - 禁止更改
         # :<%_ } else { _%>
         - set to '展示日记' when: the storyline reaches a point where viewing the diary is required

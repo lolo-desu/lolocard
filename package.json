@@ -90,6 +90,7 @@
     "jqueryui": "^1.11.1",
     "klona": "^2.0.6",
     "lodash": "^4.17.21",
+    "openai-partial-json-parser": "^1.1.1",
     "pinia": "^3.0.4",
     "pixi.js": "^8.15.0",
     "react": "^19.2.3",

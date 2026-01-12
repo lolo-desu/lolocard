@@ -1,11 +1,13 @@
 <template>
   <div class="absolute inset-x-0 bottom-0 z-30 w-full">
     <div ref="box" class="relative w-full" :style="{ '--dialog-fade-end': `${fade_end_px}px` }">
-      <div class="dialog-bg absolute inset-0"></div>
+      <div
+        class="absolute inset-0 bg-[linear-gradient(to_bottom,rgba(255,240,245,0)_0px,rgba(255,240,245,0.93)_var(--dialog-fade-end,38px),rgba(255,240,245,0.93)_100%)]"
+      />
       <div class="relative px-[6%] pt-[44px] pb-[4%]">
         <div class="flex items-end justify-between">
           <div
-            class="text-[22px] font-extrabold tracking-[0.08em] text-[#4d2b35] [text-shadow:0_1px_1px_rgba(255,255,255,0.92),0_3px_10px_rgba(0,0,0,0.08)]"
+            class="min-h-[33px] text-[22px] font-extrabold tracking-[0.08em] text-[#4d2b35] [text-shadow:0_1px_1px_rgba(255,255,255,0.92),0_3px_10px_rgba(0,0,0,0.08)]"
           >
             {{ store.current_dialog.speaker }}
           </div>
@@ -95,14 +97,3 @@ defineExpose({
   stopTyping,
 });
 </script>
-
-<style scoped>
-.dialog-bg {
-  background: linear-gradient(
-    to bottom,
-    rgba(255, 240, 245, 0) 0px,
-    rgba(255, 240, 245, 0.93) var(--dialog-fade-end, 38px),
-    rgba(255, 240, 245, 0.93) 100%
-  );
-}
-</style>

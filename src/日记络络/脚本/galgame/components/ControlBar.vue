@@ -9,11 +9,18 @@
       </button>
     </DefineButton>
     <Button
-      :text="store.is_ended ? '重播' : `${store.current_index + 1}/${store.dialogs.length}`"
+      :text="
+        store.has_ended
+          ? '重播'
+          : `${store.current_index + 1}/${store.dialogs.length}${store.during_streaming ? '?' : ''}`
+      "
       @click.stop="store.restart()"
     />
     <Button text="日志" @click.stop="store.history_opened = true" />
-    <Button :text="store.dialog_opened ? '隐藏UI' : '显示UI'" @click.stop="store.dialog_opened = !store.dialog_opened" />
+    <Button
+      :text="store.dialog_opened ? '隐藏UI' : '显示UI'"
+      @click.stop="store.dialog_opened = !store.dialog_opened"
+    />
   </div>
 </template>
 

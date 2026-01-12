@@ -45,11 +45,26 @@ import HistoryPanel from './components/HistoryPanel.vue';
 import SceneStage from './components/SceneStage.vue';
 import { useGalgameStore } from './store';
 
+const data = inject<{ message: string; duringStreaming: boolean }>('data', { message: '', duringStreaming: false });
+
 const store = useGalgameStore();
+watchImmediate(
+  () => data.duringStreaming,
+  new_during_streaming => {
+    store.during_streaming = new_during_streaming;
+  },
+);
+watchImmediate(
+  () => data.message,
+  new_message => {
+    store.loadDialogs(new_message);
+  },
+);
+
 const dialog_box_ref = useTemplateRef('dialog_box');
 
 function handleAdvance() {
-  if (store.history_opened || store.is_ended) {
+  if (store.history_opened || store.has_ended) {
     return;
   }
 

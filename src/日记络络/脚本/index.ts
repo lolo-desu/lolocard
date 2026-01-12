@@ -1,4 +1,5 @@
 import { waitUntil } from 'async-wait-until';
+import { initGalgame } from './galgame/index';
 import './misc/mvu';
 import './misc/变量结构';
 import { initForceGalgameInterface } from './misc/强制galgame界面';
@@ -18,6 +19,7 @@ $(async () => {
   await useConfigStore()._wait_init;
 
   const destroy_list: Array<() => void> = [];
+  destroy_list.push(initGalgame().destroy);
   destroy_list.push(initForceGalgameInterface().destroy);
   destroy_list.push(initButtons().destroy);
   destroy_list.push(initStyle().destroy);
