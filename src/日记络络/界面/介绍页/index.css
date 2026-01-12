@@ -142,7 +142,10 @@ body {
 
 .main-title .white-text {
   color: #ffffff;
-  text-shadow: 0 0 2px #7d4450, 1px 1px 3px rgba(125, 68, 80, 0.5), -1px -1px 3px rgba(125, 68, 80, 0.5);
+  text-shadow:
+    0 0 2px #7d4450,
+    1px 1px 3px rgba(125, 68, 80, 0.5),
+    -1px -1px 3px rgba(125, 68, 80, 0.5);
 }
 
 .main-title .blue-text {
@@ -161,7 +164,10 @@ body {
 
 .main-title:hover .white-text {
   color: #ffffff;
-  text-shadow: 0 0 3px #7d4450, 1px 1px 4px rgba(125, 68, 80, 0.6), -1px -1px 4px rgba(125, 68, 80, 0.6);
+  text-shadow:
+    0 0 3px #7d4450,
+    1px 1px 4px rgba(125, 68, 80, 0.6),
+    -1px -1px 4px rgba(125, 68, 80, 0.6);
 }
 
 .main-title:hover .blue-text {
@@ -350,6 +356,7 @@ body {
   color: #5d8cb3;
   text-decoration: none;
   transition: all 0.3s ease;
+  white-space: nowrap;
 }
 
 .copyright a:hover {
@@ -361,9 +368,9 @@ body {
   margin-left: 3px;
   vertical-align: text-bottom;
   filter: opacity(0.7);
+  display: inline-block;
 }
 
-/* 添加版权作者名称的蓝色样式 */
 .copyright .author-name {
   color: #5d8cb3;
   font-weight: 500;
@@ -385,7 +392,8 @@ body {
 }
 
 .note-paper {
-  background-image: linear-gradient(rgba(255, 255, 255, 0.3), rgba(255, 255, 255, 0.3)),
+  background-image:
+    linear-gradient(rgba(255, 255, 255, 0.3), rgba(255, 255, 255, 0.3)),
     repeating-linear-gradient(transparent, transparent 31px, #a8798366 31px, #a8798366 32px);
   padding: 8px 16px;
   position: relative;
@@ -886,7 +894,10 @@ body {
 .expandable-section {
   max-height: 0;
   overflow: hidden;
-  transition: max-height 0.4s ease, opacity 0.3s ease, transform 0.3s ease;
+  transition:
+    max-height 0.4s ease,
+    opacity 0.3s ease,
+    transform 0.3s ease;
   opacity: 0;
   transform: translateY(-10px);
   border-radius: 10px;
@@ -1055,6 +1066,10 @@ body {
   font-weight: 500;
 }
 
+.copy-button.copied {
+  background: #e6f2ff !important;
+}
+
 .copy-button::before {
   content: '📋';
   margin-right: 5px;
@@ -1094,7 +1109,9 @@ body {
   box-shadow: 0 4px 12px rgba(93, 140, 179, 0.2);
   z-index: 100;
   opacity: 0;
-  transition: opacity 0.3s ease, transform 0.3s ease;
+  transition:
+    opacity 0.3s ease,
+    transform 0.3s ease;
   border-left: 3px solid #5d8cb3;
   font-size: 0.9rem;
   font-weight: 500;

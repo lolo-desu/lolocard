@@ -56,28 +56,11 @@
       type:
         definition: |-
           interface Chat {
-            name: string; // 当前发言者的名字或`旁白`二字，禁止使用protagonist和narrator
-            text: string; // 当前发言者的台词
+            speaker: '旁白' | '独白' | string;
+            speech: string; // 当前发言者的台词
             background: string; // `背景列表`中支持的当前所处地点位置、时间等的背景文件名
-            characters:
-              | 'narrator' // 旁白
-              | 'protagonist' // 第一人称独白
-              | {
-                  left: {
-                    id: string; // 角色名称：只支持填入络络
-                    tachie: string; // 当前角色的立绘，从`立绘列表`中选择存在的立绘文件名
-                  };
-                  right?: { id: string; tachie: string };
-                };
+            tachie?: string; // 如果络络在场，从`立绘列表`中选择存在的络络立绘文件名, 否则不设置
           }
-        limit:
-          - 对于正常的背景和立绘，你不应该经常使用protagonist和narrator，旁白和第一人称独白都可以将character设置为络络，只有络络不在场的时候或者CG背景图片的时候才考虑使用这两个
-          - single sprite display: when showing one character, the `characters` object MUST contain *either* `left` *or* `right`, but **NEVER both** simultaneously
-          - CG background handling: if the `background` filename signifies a CG image, the `characters` field **MUST** be the string `"protagonist"`, irrespective of the value in the `name` field
-          - speaker vs. display:
-              - 'use `characters: "protagonist"` for general narration or during CGs'
-              - 'use `characters: "protagonist"` for the player''s internal thoughts when their sprite isn''t shown'
-              - 'for spoken lines (`name` is "<user>" or "络络"), use the character object (`{left: ...}` or `{right: ...}`) unless it''s a CG scene'
       rule:
         - 本次响应专注于CG场景，**仅输出galgame界面，绝对禁止生成任何正文**
         - 输出CG场景后，你必须在本次<UpdateVariable>中更新`下一回合界面选择`为'纯文字尾附立绘'
@@ -91,8 +74,8 @@
         - 将`立绘列表`中的立绘: ...
         </interface_analysis>
         <galgame>
-        ```json
-        ${按JSON格式输出Chat[]（不少于10个Chat，不多于25个Chat），营造一个符合场景风格的、具有充足情感爆发的CG场景，留给玩家深刻印象，要注重于单个CG场景的深刻描写，禁止过于频繁地切换CG}
+        ```yaml
+        ${按YAML格式输出Chat[]（不少于10个Chat，不多于25个Chat），营造一个符合场景风格的、具有充足情感爆发的CG场景，留给玩家深刻印象，要注重于单个CG场景的深刻描写，禁止过于频繁地切换CG}
         ```
         </galgame>
         <UpdateVariable>
@@ -101,42 +84,19 @@
         </UpdateVariable>
       example: |-
         <galgame>
-        ```json
-          [
-            {
-              "name": "络络",
-              "text": "今天的风有点大呢，走在路上差点被吹跑了！",
-              "background": "上学路上/白天.jpg",
-              "characters": {
-                "left": {
-                  "id": "络络",
-                  "tachie": "水手服/微笑.png"
-                }
-              }
-            },
-            {
-              "name": "络络",
-              "text": "不过看到路边的樱花开得这么漂亮，心情一下子就变好了。",
-              "background": "上学路上/白天.jpg",
-              "characters": {
-                "left": {
-                  "id": "络络",
-                  "tachie": "水手服/浅笑.png"
-                }
-              }
-            },
-            {
-              "name": "<user>",
-              "text": "我也觉得今天的景色特别美，尤其是你站在花瓣下的时候。",
-              "background": "上学路上/白天.jpg",
-              "characters": {
-                "left": {
-                  "id": "络络",
-                  "tachie": "水手服/稍微脸红.png"
-                }
-              }
-            }
-          ]
+        ```yaml
+        - speaker: 络络
+          speech: 今天的风有点大呢，走在路上差点被吹跑了！
+          background: 上学路上/白天.jpg
+          tachie: 水手服/微笑.png
+        - speaker: 络络
+          speech: 不过看到路边的樱花开得这么漂亮，心情一下子就变好了。
+          background: 上学路上/白天.jpg
+          tachie: 水手服/浅笑.png
+        - speaker: <user>
+          speech: 我也觉得今天的景色特别美，尤其是你站在花瓣下的时候。
+          background: 上学路上/白天.jpg
+          tachie: 水手服/稍微脸红.png
         ```
         </galgame>
     # :<%_ } _%>
