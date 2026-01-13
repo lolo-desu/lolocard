@@ -2,9 +2,18 @@ import { compare } from 'compare-versions';
 import { CHARACTER_NAME, WORLDBOOK_NAME } from '../constant';
 
 export async function checkUpdate() {
-  const worldbook = await getWorldbook(WORLDBOOK_NAME);
-  const is_new = worldbook.some(entry => entry.name.includes('始终启用galgame界面'));
-  if (is_new) {
+  const version =
+    (await getWorldbook(WORLDBOOK_NAME)).find(entry => entry.name === '版本号')?.content.trim() ?? '0.0.0';
+  if (
+    compare(
+      version,
+      await fetch('https://testingcf.jsdelivr.net/gh/lolo-desu/lolocard/src/日记络络/世界书/版本号.txt')
+        .then(response => response.text())
+        .then(text => text.trim())
+        .catch(() => '0.0.0'),
+      '>=',
+    )
+  ) {
     return;
   }
   await importRawCharacter(

@@ -4,6 +4,6 @@
   format: |-
     <roleplay_options>
     ```
-    ...
+    ...<%= getvar('stat_data.世界.下一回合界面选择') === 'galgame' ? '$(最多3个选项，每个选项内容必须是主视角的话（用引号包裹）或行动，不多于20字)' : '' %>
     ```
     </roleplay_options>

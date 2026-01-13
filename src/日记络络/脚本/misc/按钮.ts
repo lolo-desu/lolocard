@@ -16,15 +16,14 @@ const buttons: Button[] = [
     name: '🕛度过',
     function: async () => {
       const data = {
-        晨间: "先描写结束当前场景的剧情再快速将时间调整到下个晨间\n<UpdateVariable>\n_.set('世界.当前时间阶段', 1);\n</UpdateVariable>",
-        课上: "先描写结束当前场景的剧情再快速将时间调整到下个课上\n<UpdateVariable>\n_.set('世界.当前时间阶段', 18);\n</UpdateVariable>",
-        午休: "先描写结束当前场景的剧情再快速将时间调整到下个午休\n<UpdateVariable>\n_.set('世界.当前时间阶段', 32);\n</UpdateVariable>",
-        放学后:
-          "先描写结束当前场景的剧情再快速将时间调整到下个放学后\n<UpdateVariable>\n_.set('世界.当前时间阶段', 49);\n</UpdateVariable>",
-        夜间: "先描写结束当前场景的剧情再快速将时间调整到下个夜间\n<UpdateVariable>\n_.set('世界.当前时间阶段', 66);\n</UpdateVariable>",
-        假日: "先描写结束当前场景的剧情再快速将时间调整到下个假日\n<UpdateVariable>\n_.set('世界.当前时间阶段', 83);\n</UpdateVariable>",
+        晨间: '先描写结束当前场景的剧情再快速将时间调整到下个晨间',
+        课上: '先描写结束当前场景的剧情再快速将时间调整到下个课上',
+        午休: '先描写结束当前场景的剧情再快速将时间调整到下个午休',
+        放学后: '先描写结束当前场景的剧情再快速将时间调整到下个放学后',
+        夜间: '先描写结束当前场景的剧情再快速将时间调整到下个夜间',
+        假日: '先描写结束当前场景的剧情再快速将时间调整到下个假日',
         第二天:
-          "先描写结束当前场景的剧情再快速将时间调整到第二天，并调整当前时间阶段变量到接下来故事情节最有意义的时间，下一次响应的时间阶段变量调整没有任何限制\n<UpdateVariable>\n_.set('世界.当前时间阶段', 1);\n</UpdateVariable>",
+          '先描写结束当前场景的剧情再快速将时间调整到第二天，并调整当前时间阶段变量到接下来故事情节最有意义的时间，下一次响应的时间阶段变量调整没有任何限制',
       };
 
       const time = await triggerSlash(`/buttons labels=${JSON.stringify(Object.keys(data))} 时间来到了...`);
@@ -81,7 +80,7 @@ const buttons: Button[] = [
       }
 
       triggerSlash(
-        `/send <!--于本次响应需要描写结束当前场景的剧情再写出理由前往下一个地点-->[移动] {{user}}前往了${subplace}\n<UpdateVariable>\n_.set('世界.下次响应界面选择判断', 0);\n</UpdateVariable> || /trigger`,
+        `/send <!--于本次响应需要描写结束当前场景的剧情再写出理由前往下一个地点-->[移动] {{user}}前往了${subplace} || /trigger`,
       );
     },
   },

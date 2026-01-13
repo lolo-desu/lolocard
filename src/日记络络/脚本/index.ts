@@ -1,6 +1,7 @@
 import { waitUntil } from 'async-wait-until';
 import { initGalgame } from './galgame/index';
 import './misc/mvu';
+import './misc/世界书强制自定义排序';
 import './misc/变量结构';
 import { initForceGalgameInterface } from './misc/强制galgame界面';
 import { initButtons } from './misc/按钮';

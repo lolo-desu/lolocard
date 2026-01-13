@@ -3,7 +3,7 @@
     <div class="relative flex h-full w-full flex-col overflow-hidden rounded-xl">
       <div class="relative flex flex-1 flex-col overflow-hidden rounded-lg bg-white">
         <div
-          class="relative flex h-[5.5%] items-center justify-center rounded-t-lg bg-linear-to-r from-[#ffd0d8] to-[#ffbbc8] text-[clamp(10px,1.5vw,16px)] font-bold text-[#7d6b6e] [text-shadow:0px_1px_1px_rgba(255,255,255,0.5)] max-md:h-5"
+          class="relative flex h-[5.5%] items-center justify-center rounded-t-lg bg-linear-to-r from-[#ffd0d8] to-[#ffbbc8] text-[12px] font-bold text-[#7d6b6e] [text-shadow:0px_1px_1px_rgba(255,255,255,0.5)] max-md:h-5"
         >
           <span class="absolute left-4 text-[18px] text-[#c18e98]">❀</span>
           『⁺⊹𝒞𝒢𝒯𝒾𝓂ℯʚෆɞ₊』
@@ -24,6 +24,8 @@
             ✿
           </div>
 
+          <ChoiceBox v-if="store.has_ended" />
+
           <DialogBox v-show="store.dialog_opened" ref="dialog_box" />
 
           <template v-if="store.history_opened">
@@ -39,13 +41,15 @@
 </template>
 
 <script setup lang="ts">
+import ChoiceBox from './components/ChoiceBox.vue';
 import ControlBar from './components/ControlBar.vue';
 import DialogBox from './components/DialogBox.vue';
 import HistoryPanel from './components/HistoryPanel.vue';
 import SceneStage from './components/SceneStage.vue';
 import { useGalgameStore } from './store';
+import { Data } from './type';
 
-const data = inject<{ message: string; duringStreaming: boolean }>('data', { message: '', duringStreaming: false });
+const data = inject<Data>('data', Data.parse({}));
 
 const store = useGalgameStore();
 watchImmediate(
@@ -57,7 +61,7 @@ watchImmediate(
 watchImmediate(
   () => data.message,
   new_message => {
-    store.loadDialogs(new_message);
+    store.loadMessage(new_message);
   },
 );
 

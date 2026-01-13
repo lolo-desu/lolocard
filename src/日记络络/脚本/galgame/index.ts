@@ -1,12 +1,25 @@
 import type { Reactive, App as VueApp } from 'vue';
+import { useConfigStore } from '../store';
 import App from './App.vue';
+import { Data } from './type';
 
-const states: Map<
-  number,
-  { app: VueApp; data: Reactive<{ message: string; duringStreaming: boolean }>; destroy: () => void }
-> = new Map();
+const states: Map<number, { app: VueApp; data: Reactive<Data>; destroy: () => void }> = new Map();
 
 const CLASS = 'mes_galgame' as const;
+
+function injectStylesIntoIframe(document: Document) {
+  const script_id = getScriptId();
+  document.head.querySelector(`div[script_id="${script_id}"]`)?.remove();
+
+  const container = document.createElement('div');
+  container.setAttribute('script_id', script_id);
+
+  for (const style of Array.from(window.document.head.querySelectorAll(':scope > style'))) {
+    container.append(style.cloneNode(true));
+  }
+
+  document.head.append(container);
+}
 
 function clearInvalidStates() {
   const last_message_id = getLastMessageId();
@@ -58,7 +71,7 @@ async function renderOneMessage(message_id: number | string, stream_message?: st
 <script src="https://testingcf.jsdelivr.net/gh/n0vi028/JS-Slash-Runner/lib/tailwindcss.min.js"></script>
 <script src="https://testingcf.jsdelivr.net/npm/jquery"></script>
 <script src="https://testingcf.jsdelivr.net/npm/lodash"></script>
-<script src="/scripts/extensions/third-party/JS-Slash-Runner/src/iframe/adjust_iframe_height.js"></script>
+<script src="https://testingcf.jsdelivr.net/gh/n0vi028/JS-Slash-Runner/src/iframe/adjust_iframe_height.js"></script>
 <style>
 *,*::before,*::after{box-sizing:border-box;}
 html,body{margin:0!important;padding:0;overflow:hidden!important;max-width:100%!important;}
@@ -67,13 +80,16 @@ html,body{margin:0!important;padding:0;overflow:hidden!important;max-width:100%!
     })
     .insertAfter($mes_text) as JQuery<HTMLIFrameElement>;
 
-  const data = reactive({
+  const data = reactive(<Data>{
+    messageId: numbered_message_id,
     message,
     duringStreaming: Boolean(stream_message),
+    inputMethod: useConfigStore().config.选择框触发方式,
   });
   const app = createApp(App).provide('data', data).use(createPinia());
   $mes_galgame.on('load', function () {
     const document = this.contentDocument!;
+    injectStylesIntoIframe(document);
     app.mount(document.body);
   });
 
@@ -87,6 +103,13 @@ html,body{margin:0!important;padding:0;overflow:hidden!important;max-width:100%!
 
   observer.observe($mes_text[0] as HTMLElement, { childList: true, subtree: true, characterData: true });
 
+  const stop = watch(
+    () => useConfigStore().config.选择框触发方式,
+    new_input_method => {
+      data.inputMethod = new_input_method;
+    },
+  );
+
   states.set(numbered_message_id, {
     app,
     data,
@@ -95,6 +118,7 @@ html,body{margin:0!important;padding:0;overflow:hidden!important;max-width:100%!
       app.unmount();
       $mes_galgame.remove();
       observer.disconnect();
+      stop();
     },
   });
 }

@@ -1,12 +1,11 @@
 import { partialParse } from 'openai-partial-json-parser';
 import { Dialog } from './type';
 
-const PARTIAL_REGEX = /<(galgame)>(?!.*<\/\1>)\s*(?:```[^\n]*\n)?(.*?)\s*(?:```.*)?$/is;
-const FULL_REGEX = /<(galgame)>\s*(?:```.*\n)?((?:(?!<\1>)[\s\S])*?)(?:\n```)?\s*<\/\1>/im;
-
-function parseDialogsFromMessage(message: string): Dialog[] {
+function parseDialogsFromMessage(message: string): { dialogs: Dialog[]; type: 'full' | 'partial' | 'error' } {
   message = message.replace('<StatusPlaceHolderImpl/>', '');
-  const content = message.match(FULL_REGEX)?.[2] ?? message.match(PARTIAL_REGEX)?.[2] ?? '';
+  const full_match = message.match(/<(galgame)>\s*(?:```.*\n)?((?:(?!<\1>)[\s\S])*?)(?:\n```)?\s*<\/\1>/im);
+  const partial_match = message.match(/<(galgame)>(?!.*<\/\1>)\s*(?:```[^\n]*\n)?(.*?)\s*(?:```.*)?$/is);
+  const content = full_match?.[2] ?? partial_match?.[2] ?? '';
 
   let parsed: unknown;
   try {
@@ -17,34 +16,53 @@ function parseDialogsFromMessage(message: string): Dialog[] {
     } catch (yaml_error) {
       const json_message = json_error instanceof Error ? json_error.message : String(json_error);
       const yaml_message = yaml_error instanceof Error ? yaml_error.message : String(yaml_error);
-      return [
-        {
-          speaker: '系统提示',
-          speech: `数据解析失败: 既不是有效的 JSON 也不是有效的 YAML.\n内容: ${content}\nJSON 错误: ${json_message}\nYAML 错误: ${yaml_message}`,
-          background: '',
-          characters: [],
-        },
-      ];
+      return {
+        dialogs: [
+          {
+            speaker: '系统提示',
+            speech: `数据解析失败: 既不是有效的 JSON 也不是有效的 YAML.\n内容: ${content}\nJSON 错误: ${json_message}\nYAML 错误: ${yaml_message}`,
+            background: '',
+            characters: [],
+          },
+        ],
+        type: 'error',
+      };
     }
   }
 
   try {
     // TODO: 只去除尾部的
-    return z
-      .array(Dialog.or(z.literal('failed')).catch('failed'))
-      .min(1)
-      .parse(parsed, { reportInput: true })
-      .filter(dialog => dialog !== 'failed');
+    return {
+      dialogs: z
+        .array(Dialog.or(z.literal('failed')).catch('failed'))
+        .min(1)
+        .parse(parsed, { reportInput: true })
+        .filter(dialog => dialog !== 'failed'),
+      type: full_match ? 'full' : 'partial',
+    };
   } catch (error) {
-    return [
-      {
-        speaker: '系统提示',
-        speech: `加载对话数据失败：${error instanceof Error ? error.message : String(error)}`,
-        background: '',
-        characters: [],
-      },
-    ];
+    return {
+      dialogs: [
+        {
+          speaker: '系统提示',
+          speech: `加载对话数据失败：${error instanceof Error ? error.message : String(error)}`,
+          background: '',
+          characters: [],
+        },
+      ],
+      type: 'error',
+    };
   }
+}
+
+function parseOptionsFromMessage(message: string): string[] {
+  const FULL_REGEX = /<(roleplay_options)>\s*(?:```.*\n)?((?:(?!<\1>)[\s\S])*?)(?:\n```)?\s*<\/\1>/im;
+  const PARTIAL_REGEX = /<(roleplay_options)>(?!.*<\/\1>)\s*(?:```[^\n]*\n)?(.*?)\s*(?:```.*)?$/is;
+  const content = message.match(FULL_REGEX)?.[2] ?? message.match(PARTIAL_REGEX)?.[2] ?? '';
+
+  return [...content.matchAll(/(.+?)[:：]\s*(.+)/gm)].map(match =>
+    match[2].replace(/^\$\{(.+)\}$/, '$1').replace(/^「(.+)」$/, '$1'),
+  );
 }
 
 export const useGalgameStore = defineStore('galgame', () => {
@@ -56,12 +74,23 @@ export const useGalgameStore = defineStore('galgame', () => {
       characters: [],
     },
   ]);
-  const loadDialogs = (message: string) => {
-    const new_dialogs = parseDialogsFromMessage(message);
-    if (during_streaming.value && new_dialogs.length === 1 && new_dialogs[0].speaker === '系统提示') {
+  const options = ref<string[]>([]);
+  const loadMessage = (message: string) => {
+    const { dialogs: new_dialogs, type } = parseDialogsFromMessage(message);
+    if (during_streaming.value && type === 'error') {
       return;
     }
+    if (!during_streaming.value && type === 'partial') {
+      new_dialogs.push({
+        speaker: '系统提示',
+        speech: '消息截断了……请重新生成',
+        background: '',
+        characters: [],
+      });
+    }
     dialogs.value = new_dialogs;
+
+    options.value = parseOptionsFromMessage(message);
   };
 
   const current_index = ref(0);
@@ -96,7 +125,8 @@ export const useGalgameStore = defineStore('galgame', () => {
 
   return {
     dialogs,
-    loadDialogs,
+    options,
+    loadMessage,
 
     current_index,
     during_streaming,

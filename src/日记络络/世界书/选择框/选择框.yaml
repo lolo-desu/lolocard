@@ -2,7 +2,7 @@
 选择框:
   rule:
     - you must output the roleplay options wrapped in <roleplay_options> tags at the bottom of each reply
-    - you can only output 100 to 200 Chinese words in total for roleplay options
+    - "you can only output <%= getvar('stat_data.世界.下一回合界面选择') === 'galgame' ? '20 to 60 Chinese words' : '100 to 200 Chinese words' %> in total for roleplay options"
     - each option inside the roleplay options must completely differ from others in titles and contents, leading to various creative plot directions
     - you should use option types listed below averagely
     - '**选项必须符合人设，且接续剧情，在空间、行为上保持人设**'
@@ -11,8 +11,8 @@
     basic: |-
       <roleplay_options>
       ```
-      ${按照content而非type拟定标题标题}:${content，必须以第三人称输出行为的主语}
-      ...$(generate {{random::4::5::6}} options based on option type below)
+      ${按照content而非type拟定标题标题}:${content，<%= getvar('stat_data.世界.下一回合界面选择') === 'galgame' ? '必须是主视角的话（用引号包裹）或行动，不多于20字' : '必须以第三人称输出行为的主语' %>}
+      ...$(generate <%= getvar('stat_data.世界.下一回合界面选择') === 'galgame' ? _.random(2, 3) : _.random(4, 6) %> options based on option type below)
       ```
       </roleplay_options>
     option type: [
@@ -54,17 +54,17 @@
         },
         {
           type: '欧亨利可能',
-          content: '${以欧亨利风格给出一个意料之外情理之中的剧情发展，必须出乎意料但合乎逻辑，引导故事走向不同的方向}'
+          content: '${以欧亨利风格给出一个意料之外情理之中的剧情发展，必须出乎意料但合乎逻辑，引导故事走向不同的方向}',
         },
         # :<%_   } else { _%>
         {
           type: '色色特化',
-          content: '${以完全不同的性互动路径（如主动/被动、温柔/粗暴等），创新性地描述一个可能的性爱发展}'
+          content: '${以完全不同的性互动路径（如主动/被动、温柔/粗暴等），创新性地描述一个可能的性爱发展}',
         },
         {
           type: '魔鬼低语',
-          content: '${通过诱惑性言辞，引导角色犯下特定罪行或走向歧途}'
-        }
+          content: '${通过诱惑性言辞，引导角色犯下特定罪行或走向歧途}',
+        },
         # :<%_   } _%>
         # :<%_ } _%>
       ]

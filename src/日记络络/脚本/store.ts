@@ -4,7 +4,7 @@ const Config = z.object({
   主角性别: z.enum(['男', '女']).prefault('男'),
   样式主题: z.enum(['暗色', '亮色']).prefault('暗色'),
   选择框触发方式: z.enum(['直接发送', '覆盖输入']).prefault('直接发送'),
-  始终启用galgame界面: z.boolean().prefault(false),
+  始终使用galgame界面: z.boolean().prefault(false),
 });
 type Config = z.infer<typeof Config>;
 
@@ -22,7 +22,7 @@ export const useConfigStore = defineStore(
         主角性别: getEntryState('主角性别') ? '男' : '女',
         样式主题: getEntryState('样式主题') ? '暗色' : '亮色',
         选择框触发方式: getEntryState('选择框触发方式') ? '直接发送' : '覆盖输入',
-        始终启用galgame界面: getEntryState('始终启用galgame界面') ? true : false,
+        始终使用galgame界面: getEntryState('始终使用galgame界面') ? true : false,
       });
       if (!_.isEqual(new_config, old_confg)) {
         config.value = klona(new_config);
