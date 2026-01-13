@@ -1,4 +1,4 @@
-import { createScriptIdDiv, destroyScriptIdDiv, deteleportStyle, teleportStyle } from '@/util/script';
+import { createScriptIdDiv, destroyScriptIdDiv, deteleportStyle, teleportStyle } from '@util/script';
 import 界面 from './设置界面.vue';
 
 const app = createApp(界面).use(createPinia());
