@@ -63,7 +63,7 @@
             tachie?: string; // 如果络络在场，从`立绘列表`中选择存在的络络立绘文件名, 否则不设置
           }
       rule:
-        - 本次响应专注于CG场景，**仅输出galgame界面，绝对禁止生成任何正文**
+        - 本次响应专注于CG场景，**仅输出galgame界面和roleplay_options选择框，绝对禁止生成任何正文**
         # :<%_ if (!getvar('始终使用galgame界面')) { _%>
         - 输出CG场景后，你必须在本次<UpdateVariable>中更新`世界.下一回合界面选择`为'纯文字尾附立绘'
         # :<%_ } _%>
@@ -81,10 +81,12 @@
         ${按YAML格式输出Chat[]（不少于10个Chat，不多于25个Chat），营造一个符合场景风格的、具有充足情感爆发的CG场景，留给玩家深刻印象，要注重于单个CG场景的深刻描写，禁止过于频繁地切换CG}
         ```
         </galgame>
+        # :<%_ if (!getvar('始终使用galgame界面')) { _%>
         <UpdateVariable>
         ${将`世界.下一回合界面选择`更新为'纯文字尾附立绘'}
         ...
         </UpdateVariable>
+        # :<%_ } _%>
       example: |-
         <galgame>
         ```yaml
