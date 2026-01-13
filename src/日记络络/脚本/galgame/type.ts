@@ -20,7 +20,7 @@ export const Dialog = z
     日记络络专用,
     z.object({
       speaker: z.string(),
-      speech: z.string(),
+      speech: z.string().transform(text => text.replace(/^「(.+)」$/, '“$1”').replace(/^"(.+)"$/, '“$1”')),
       background: z.string(),
       characters: z.array(Character).prefault([]).catch([]),
     }),
@@ -28,7 +28,8 @@ export const Dialog = z
   .transform(data => {
     // 虽然影响其他组件无法对独白、旁白进行特殊处理，但这样的处理确实是我们想要的
     if (data.speaker === '独白') {
-      data.speech = `（${data.speech}）`;
+      data.speaker = substitudeMacros('<user>');
+      data.speech = data.speech.startsWith('（') || data.speech.startsWith('(') ? data.speech : `（${data.speech}）`;
     }
     if (data.speaker === '独白' || data.speaker === '旁白') {
       data.speaker = '';

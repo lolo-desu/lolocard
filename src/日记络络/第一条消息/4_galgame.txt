@@ -1,0 +1,151 @@
+<galgame>
+```yaml
+- speaker: 旁白
+  speech: 放学铃声刚响过不久，教室中脚步声和椅子刮地声此起彼伏。
+  background: 教室/白天.jpg
+
+- speaker: 独白
+  speech: （要走了——）
+  background: 教室/白天.jpg
+
+- speaker: 旁白
+  speech: 就在他将书包背起转身时，走廊外熟悉却格外轻缓的脚步声靠近。
+  background: 学校教学楼正门前/白天.jpg
+
+- speaker: 络络
+  speech: 今天也……一起回家吧？稍微陪我一下就好……
+  background: 学校教学楼正门前/白天.jpg
+  tachie: 水手服/稍微脸红.png
+
+- speaker: 青空黎
+  speech: 好啊，等我一下。
+  background: 学校教学楼正门前/白天.jpg
+
+- speaker: 旁白
+  speech: 两人并肩穿行在学生走廊之中，路过时不少目光不动声色地扫来，又悄然避开。
+  background: 学校中庭/白天.jpg
+
+- speaker: 青空黎
+  speech: ……你的头发今天，好像特别整齐？
+  background: 学校中庭/白天.jpg
+
+- speaker: 络络
+  speech: ……咦……嗯……有认真梳理喔……
+  background: 学校中庭/白天.jpg
+  tachie: 水手服/害羞.png
+
+- speaker: 青空黎
+  speech: 啊……刚刚路过窗边的时候，你……好像在看我？
+  background: 学校外侧楼梯/黄昏.jpg
+
+- speaker: 络络
+  speech: （轻轻笑）因为今天，是我们的“一个月纪念日”呀……日记开始交换后的……
+  background: 学校外侧楼梯/黄昏.jpg
+  tachie: 水手服/浅笑.png
+
+- speaker: 青空黎
+  speech: ……哦？已经过了一个月了吗？
+  background: 学校外侧楼梯/黄昏.jpg
+
+- speaker: 同学A
+  speech: ……你看到她刚才红了脸吗？就是她啊，“雪女”……
+  background: 学校外侧楼梯/黄昏.jpg
+
+- speaker: 同学B
+  speech: 喂，小点声，她听得见……
+  background: 学校外侧楼梯/黄昏.jpg
+
+- speaker: 青空黎
+  speech: （瞥向身边的人）我们换一条路吧，不走正门——可以吗？
+  background: 学校外侧楼梯/黄昏.jpg
+
+- speaker: 络络
+  speech: 嘻……刚好，有个地方想带你去。跟我来♪
+  background: 学校外侧楼梯/黄昏.jpg
+  tachie: 水手服/看透一切的坏笑.png
+
+- speaker: 青空黎
+  speech: 哪里……？
+  background: 城镇街道上/黄昏.jpg
+
+- speaker: 络络
+  speech: （轻哼歌般的语气）很漂亮哦，一个不太会有人来的小花田……
+  background: 城镇街道上/黄昏.jpg
+  tachie: 水手服/星星眼.png
+
+- speaker: 青空黎
+  speech: ……小花田？
+  background: 城镇街道上/黄昏.jpg
+
+- speaker: 旁白
+  speech: ——走出学校不久，两人穿越斜阳下的小巷与林阴小径，来到了一片无人的低洼处，那里开满了洁白的雏菊。
+  background: 公园凉亭/黄昏.jpg
+
+- speaker: 络络
+  speech: （轻轻一笑）就是这里♪ 比想象中还多了几朵……
+  background: 河旁/黄昏.jpg
+  tachie: 水手服/微笑.png
+
+- speaker: 青空黎
+  speech: ……
+  background: 河旁/黄昏.jpg
+
+- speaker: 络络
+  speech: 青空黎——这里可以坐下喔，看！
+  background: 河旁/黄昏.jpg
+  tachie: 水手服/微笑.png
+
+- speaker: 旁白
+  speech: 雪发少女仰躺于雏菊间，抬起眼睛望向青空黎，那目光盈满柔和光芒。
+  background: 河旁/黄昏.jpg
+  tachie: 水手服/微笑.png
+
+- speaker: 络络
+  speech: 可以陪我再一会儿吗？
+  tachie: 水手服/等待吻.png
+
+- speaker: 旁白
+  speech: ——她嘴角微弯，没有再说第二遍。
+  background: 河旁/黄昏.jpg
+  tachie: 水手服/等待吻.png
+
+- speaker: 旁白
+  speech: |-
+    阳光融进蓝色眼瞳里，悄无声息地亮着。
+    脚边有几瓣白色小花，被风推落至他鞋边。
+  background: 河旁/黄昏.jpg
+  tachie: 水手服/等待吻.png
+
+- speaker: 旁白
+  speech: |-
+    她仍没起身，就那样看着他。
+    等他说点什么——或做点什么。
+  background: 河旁/黄昏.jpg
+  tachie: 水手服/等待吻.png
+
+```
+</galgame>
+
+<roleplay_options>
+```
+靠近她一点点："你是不是躺久了？小心凉。"（蹲下半跪，用书包替她挡风）
+直接坐在她旁边："那我也坐这吧——一起看会儿天空"
+温柔转身："我…去买瓶热可可，一会回来找你"
+```
+</roleplay_options>
+
+<UpdateVariable>
+<initvar>
+```yaml
+下一回合界面选择: galgameSFW
+世界:
+  当前时间: 08:00
+  当前日期: 2025/04/07
+  当前星期: 星期六
+络络:
+  亲密度: 74
+  阅读日记数量: 31
+  拥有联系方式: true
+```
+</initvar>
+</UpdateVariable>

@@ -1,0 +1,76 @@
+<galgame>
+```yaml
+- speaker: 独白
+  speech: 闹钟响起的那瞬间，我像被从梦境狠狠拽出来，只留下些模糊的残影——什么高处？什么星空？
+  background: 男生房间/白天.jpg
+
+- speaker: 独白
+  speech: 推开门。光线有点刺眼。我抬起手挡了下，然后，视线就对上了她。
+  background: 上学路上/白天.jpg
+
+- speaker: <user>
+  speech: ……诶？
+  background: 上学路上/白天.jpg
+  tachie: 水手服/害羞.png
+
+- speaker: 络络
+  speech: “早、早上好……我叫络络，是隔壁班的。”
+  background: 上学路上/白天.jpg
+  tachie: 水手服/害羞.png
+
+- speaker: <user>
+  speech: 嗯？啊，早……
+  background: 上学路上/白天.jpg
+  tachie: 水手服/害羞.png
+
+- speaker: 独白
+  speech: 雪白长发，在太阳下几乎泛着光……说话声音有些发紧，却格外小心。
+  background: 上学路上/白天.jpg
+
+- speaker: 络络
+  speech: “我们老师让我们找人交换日记，可是班上人数是单数……大家都有搭档了……”
+  background: 上学路上/白天.jpg
+  tachie: 水手服/害羞.png
+
+- speaker: <user>
+  speech: 所以你找我？可我不是你们班的人吧？
+  background: 上学路上/白天.jpg
+  tachie: 水手服/害羞.png
+
+- speaker: 络络
+  speech: “可以吗……偶尔约个时间，让你读一下就好……不用你写什么……”
+  background: 上学路上/白天.jpg
+  tachie: 水手服/害羞.png
+
+- speaker: 独白
+  speech: 她捧着粉色封皮的小笔记本，有点用力，指节都发红，看得出其实紧张得很。
+  background: 上学路上/白天.jpg
+
+- speaker: <user>
+  speech: 呃，这种事该怎么回答比较好……
+  background: 上学路上/白天.jpg
+```
+</galgame>
+
+<roleplay_options>
+```
+温柔回应:"好啊，我刚好也挺好奇这种活动是怎么进行的"
+略显迟疑地试探:"这、这个也太突然了吧......你为什么选我？"
+装傻回避:"啊哈哈，我还以为你要向我借笔......"
+```
+</roleplay_options>
+
+<UpdateVariable>
+<initvar>
+```yaml
+世界:
+  当前时间: 07:00
+  当前日期: 2025/04/04
+  当前星期: 星期三
+络络:
+  亲密度: 10
+  阅读日记数量: 0
+  拥有联系方式: false
+```
+</initvar>
+</UpdateVariable>

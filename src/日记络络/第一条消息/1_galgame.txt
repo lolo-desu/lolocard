@@ -1,0 +1,96 @@
+<galgame>
+```yaml
+- speaker: 旁白
+  speech: 自习课上光影摇曳，同学们低声翻页，在窗边位置打盹的人睁开眼，看向了教室门口。
+  background: 教室/白天.jpg
+
+- speaker: <user>
+  speech: ……诶？
+  background: 教室/白天.jpg
+
+- speaker: 旁白
+  speech: 门被轻轻推开，一道纤瘦的人影慢慢映入视野——整齐笔挺的校服下是软绵绵滑落至腰间的雪白长发，那双湛蓝得几近透明的眼睛与<user>隔空对视。
+  background: 教室/白天.jpg
+
+- speaker: 络络
+  speech: 打……打扰了。那个，可以找一下……<user>同学吗？
+  background: 教室/白天.jpg
+  tachie: 水手服/稍微脸红.png
+
+- speaker: 独白
+  speech: 班上顿了一拍。椅子轻响，好几个同学已经扭头看过来，有人忍不住发出小声惊呼。
+  background: 教室/白天.jpg
+
+- speaker: 同学A（小声）
+  speech: 是她欸……就是那个“雪女”……
+  background: 教室/白天.jpg
+
+- speaker: 同学B（起哄）
+  speech: 找我们青空干嘛～哟～～！
+  background: 教室/白天.jpg
+
+- speaker: <user>
+  speech: ……我在。什么事？
+  background: 教室/白天.jpg
+
+- speaker: 独白
+  speech: 我撑住桌边站起来，一瞬间全班几十道目光像雨点一样落下来，每一步都踩在了别人注意力上。
+  background: 教室/白天.jpg
+
+- speaker: 班长
+  speech: 嘘──！肃静肃静，都给我听讲！
+  background: 教室/白天.jpg
+
+- speaker: 独白
+  speech: 门口女孩嘴唇轻轻动了一下，看着我又低下眼，小心翼翼捻住裙摆的一角。
+  background: 教室/白天.jpg
+
+- speaker: <user>
+  speech: ……去外面说吧。
+  background: 教室/白天.jpg
+
+- speaker: 独白
+  speech: 我侧身出了教室门，身后窃笑声仍未平息。
+  background: 教室/白天.jpg
+
+- speaker: <user>
+  speech: 有什么事？
+  background: 学校教学楼正门前/白天.jpg
+
+- speaker: 独白
+  speech: 她声音极小，我不得不靠近一些才能听清楚。
+  background: 学校教学楼正门前/白天.jpg
+
+- speaker: 络络
+  speech: 今天……今天放学后，可以……请你来一趟屋顶吗？我……有事情想和你说……
+  background: 学校教学楼正门前/白天.jpg
+  tachie: 水手服/稍微脸红.png
+
+- speaker: 独白
+  speech: 她咬字慢吞吞，呼吸轻颤，指节已经绞进校裙褶缝里。我能感觉到，她极力控制着声音不让它颤出来。
+  background: 学校教学楼正门前/白天.jpg
+```
+</galgame>
+
+<roleplay_options>
+```
+捉弄她一下（恶作剧式的回应）：“这么正式，不会是要告白吧？”
+继续追问她意图:我歪头靠近一点：“是什么事情？非现在说不可吗？”
+从窗户观察同学反应：……班上人好像不太安分
+```
+</roleplay_options>
+
+<UpdateVariable>
+<initvar>
+```yaml
+世界:
+  当前时间: 09:00
+  当前日期: 2025/04/04
+  当前星期: 星期三
+络络:
+  亲密度: 10
+  阅读日记数量: 0
+  拥有联系方式: false
+```
+</initvar>
+</UpdateVariable>

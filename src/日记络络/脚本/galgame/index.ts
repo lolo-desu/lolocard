@@ -21,26 +21,35 @@ function injectStylesIntoIframe(document: Document) {
   document.head.append(container);
 }
 
-function clearInvalidStates() {
-  const last_message_id = getLastMessageId();
-  const invalid_states = states.entries().filter(([message_id]) => message_id > last_message_id);
-  invalid_states.forEach(([, { destroy }]) => destroy());
-  invalid_states.forEach(([message_id]) => states.delete(message_id));
+function destroy(message_id: number | string) {
+  const numbered_message_id = Number(message_id);
+  states.get(numbered_message_id)?.destroy();
+  states.delete(numbered_message_id);
+}
+
+function destroyIfInvalid(message_id: number | string) {
+  const numbered_message_id = Number(message_id);
+  const min_message_id = Number($('#chat > .mes').first().attr('mesid'));
+  const max_message_id = getLastMessageId();
+  if (!_.inRange(numbered_message_id, min_message_id, max_message_id + 1)) {
+    destroy(message_id);
+  }
+}
+
+function destroyAllInvalid() {
+  states.keys().forEach(message_id => destroyIfInvalid(message_id));
 }
 
 async function renderOneMessage(message_id: number | string, stream_message?: string) {
   const $message_element = $(`.mes[mesid='${message_id}']`);
   const numbered_message_id = Number($message_element.attr('mesid'));
 
-  const last_message_id = getLastMessageId();
-  if (numbered_message_id > last_message_id) {
-    states.get(numbered_message_id)?.destroy();
-    states.delete(numbered_message_id);
-  }
+  destroyIfInvalid(numbered_message_id);
 
   const message = stream_message ?? getChatMessages(numbered_message_id)[0].message ?? '';
   const matched = message.match(/<galgame>\s*```/im);
   if (!matched) {
+    destroy(numbered_message_id);
     return;
   }
 
@@ -58,8 +67,7 @@ async function renderOneMessage(message_id: number | string, stream_message?: st
     }
   }
 
-  states.get(numbered_message_id)?.destroy();
-  states.delete(numbered_message_id);
+  destroy(numbered_message_id);
 
   $mes_galgame.remove();
   $mes_galgame = $(`<iframe class="${CLASS} w-full">`)
@@ -124,7 +132,7 @@ html,body{margin:0!important;padding:0;overflow:hidden!important;max-width:100%!
 }
 
 async function renderAllMessage() {
-  clearInvalidStates();
+  destroyAllInvalid();
 
   $('#chat')
     .children(".mes[is_user='false'][is_system='false']")
@@ -142,16 +150,23 @@ async function renderAllMessage() {
 
 export function initGalgame() {
   renderAllMessage();
-  eventOn(tavern_events.CHAT_CHANGED, errorCatched(renderAllMessage));
-  eventOn(tavern_events.CHARACTER_MESSAGE_RENDERED, errorCatched(renderOneMessage));
-  eventOn(tavern_events.MESSAGE_UPDATED, errorCatched(renderOneMessage));
+  eventOn(
+    tavern_events.CHAT_CHANGED,
+    errorCatched(() => renderAllMessage()),
+  );
+  eventOn(
+    tavern_events.CHARACTER_MESSAGE_RENDERED,
+    errorCatched(message_id => renderOneMessage(message_id)),
+  );
+  eventOn(
+    tavern_events.MESSAGE_UPDATED,
+    errorCatched(message_id => renderOneMessage(message_id)),
+  );
   eventOn(
     tavern_events.MESSAGE_SWIPED,
     errorCatched(message_id => {
-      const numbered_message_id = Number(message_id);
-      states.get(numbered_message_id)?.destroy();
-      states.delete(numbered_message_id);
-      renderOneMessage(numbered_message_id);
+      destroy(message_id);
+      renderOneMessage(message_id);
     }),
   );
   eventOn(tavern_events.MESSAGE_DELETED, () => setTimeout(errorCatched(renderAllMessage), 1000));

@@ -1,0 +1,70 @@
+<galgame>
+```yaml
+- speaker: 独白
+  speech: 周日上午，阳光透过窗帘洒进来，我靠在椅背上，手中那本旧小说翻到了第五章，却一个字也没看进去。
+  background: 男生房间/白天.jpg
+- speaker: 独白
+  speech: 手机突然震动，屏幕亮起，一串熟悉又期待的名字跃然眼前：络络。
+  background: 男生房间/白天.jpg
+- speaker: <user>
+  speech: 啊……她会不会是在犹豫啊？这句话的结尾还带着省略号…
+  background: 男生房间/白天.jpg
+- speaker: <user>
+  speech: “新开的水族馆……去吧，反正今天也没别的安排。”
+  background: 男生房间/白天.jpg
+- speaker: 独白
+  speech: 我敲下这句话前停顿了一秒，然后迅速按下发送键。几秒后她又发来一句——
+  background: 男生房间/白天.jpg
+- speaker: 络络
+  speech: 啊，如果你已经有安排了，那我们改天再约...
+  background: 男生房间/白天.jpg
+  tachie: 无人.png
+- speaker: <user>
+  speech: 真是的，总这样着急地认为会被拒绝。
+  background: 男生房间/白天.jpg
+- speaker: 独白
+  speech: 一边回复“我已经准备好了”，一边拉开衣柜门，我看着里面满是深浅色叠放整齐的衣服，迟疑地伸手进去摸了一件藏青色帽T出来。
+  background: 男生房间/白天.jpg
+- speaker: <user>
+  speech: 太随便了吗……要不换件浅色系？算了，还是搭条灰色裤子好了，不会出错。
+  background: 男生房间/白天.jpg
+- speaker: 独白
+  speech: 换好衣服对着镜子确认了一下发型，没有用发胶，只简单把刘海拨到右边耳后固定。看起来不算太糟吧……
+  background: 男生房间/白天.jpg
+- speaker: 独白
+  speech: 手指停在口袋边沿的时候，我又犹豫了一下。会不会太正式？可如果太随意，她又会不会失望？
+  background: 男生房间/白天.jpg
+- speaker: <user>
+  speech: 不就是水族馆吗，你纠结这些干什么……明明她可能现在也正紧张得在换衣服。
+  background: 男生房间/白天.jpg
+- speaker: 旁白
+  speech: 想到那雪白长发搭在私服领口上的样子，青空莉不知为何竟开始对未知的相遇感到一种微妙的不安与兴奋交织的紧绷。
+  background: 男生房间/白天.jpg
+- speaker: 独白
+  speech: 我重新确认一次手机、钱包，还有那本带着角落压痕却干净整洁的小日记本后，拉开门走了出去。
+  background: 男生房间/白天.jpg
+```
+</galgame>
+
+<roleplay_options>
+```
+偷瞄短信:“她该不会已经在车站等我了吧？”
+观察镜中自己:“这打扮...真的配得上她现在那副模样吗？”
+跳过至车站相遇场景:我快速前往约定地点，期待和她见面
+```
+</roleplay_options>
+
+<UpdateVariable>
+<initvar>
+```yaml
+世界:
+  当前时间: 07:00
+  当前日期: 2025/04/07
+  当前星期: 星期六
+络络:
+  亲密度: 48
+  阅读日记数量: 12
+  拥有联系方式: true
+```
+</initvar>
+</UpdateVariable>

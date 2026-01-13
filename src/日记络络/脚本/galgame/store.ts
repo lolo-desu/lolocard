@@ -61,7 +61,10 @@ function parseOptionsFromMessage(message: string): string[] {
   const content = message.match(FULL_REGEX)?.[2] ?? message.match(PARTIAL_REGEX)?.[2] ?? '';
 
   return [...content.matchAll(/(.+?)[:：]\s*(.+)/gm)].map(match =>
-    match[2].replace(/^\$\{(.+)\}$/, '$1').replace(/^「(.+)」$/, '$1'),
+    match[2]
+      .replace(/^\$\{(.+)\}$/, '$1')
+      .replace(/^「(.+)」$/, '“$1”')
+      .replace(/^"(.+)"$/, '“$1”'),
   );
 }
 
