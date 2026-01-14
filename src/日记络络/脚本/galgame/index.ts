@@ -28,8 +28,12 @@ function destroyAllInvalid() {
 }
 
 async function renderOneMessage(message_id: number | string, stream_message?: string) {
-  const $message_element = $(`.mes[mesid='${message_id}']`);
-  const numbered_message_id = Number($message_element.attr('mesid'));
+  const numbered_message_id = Number(message_id);
+  if (isNaN(numbered_message_id)) {
+    return;
+  }
+
+  const $message_element = $(`.mes[mesid='${numbered_message_id}']`);
 
   destroyIfInvalid(numbered_message_id);
 
@@ -110,14 +114,7 @@ async function renderAllMessage() {
   $('#chat')
     .children(".mes[is_user='false'][is_system='false']")
     .each((_index, node) => {
-      const message_id = $(node).attr('mesid');
-      try {
-        if (message_id) {
-          renderOneMessage(parseInt(message_id));
-        }
-      } catch (error) {
-        /** empty */
-      }
+      renderOneMessage($(node).attr('mesid') ?? 'NaN');
     });
 }
 
