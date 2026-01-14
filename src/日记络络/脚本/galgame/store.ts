@@ -1,4 +1,4 @@
-import { partialParse } from 'openai-partial-json-parser';
+import { jsonrepair } from 'jsonrepair';
 import { Dialog } from './type';
 
 function parseDialogsFromMessage(message: string): { dialogs: Dialog[]; type: 'full' | 'partial' | 'error' } {
@@ -9,7 +9,7 @@ function parseDialogsFromMessage(message: string): { dialogs: Dialog[]; type: 'f
 
   let parsed: unknown;
   try {
-    parsed = partialParse(content);
+    parsed = jsonrepair(content);
   } catch (json_error) {
     try {
       parsed = YAML.parse(content);
