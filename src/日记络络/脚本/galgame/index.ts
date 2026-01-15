@@ -56,9 +56,13 @@ async function renderOneMessage(message_id: number | string, stream_message?: st
       const before_galgame = message.indexOf('<galgame>');
       if (before_galgame !== -1) {
         $iframe.prevAll().remove();
-        $iframe.before(
-          formatAsDisplayedMessage(message.slice(0, before_galgame).trim(), { message_id: numbered_message_id }),
+        const $before = $(
+          formatAsDisplayedMessage(message.slice(0, before_galgame).trim(), {
+            message_id: numbered_message_id,
+          }),
         );
+        $before.find('pre:contains("<body")').remove();
+        $iframe.before($before);
       }
 
       state.data.duringStreaming = Boolean(stream_message);
@@ -67,7 +71,7 @@ async function renderOneMessage(message_id: number | string, stream_message?: st
       const after_galgame = message.lastIndexOf('</galgame>');
       if (after_galgame !== -1) {
         $iframe.nextAll().remove();
-        $iframe.after(
+        const $after = $(
           formatAsDisplayedMessage(
             message
               .slice(after_galgame + 10)
@@ -78,6 +82,8 @@ async function renderOneMessage(message_id: number | string, stream_message?: st
             },
           ),
         );
+        $after.find('pre:contains("<body")').remove();
+        $iframe.after($after);
       }
 
       $mes_galgame.removeClass('hidden!');
@@ -93,14 +99,16 @@ async function renderOneMessage(message_id: number | string, stream_message?: st
     .insertAfter($mes_text);
   const before_galgame = message.indexOf('<galgame>');
   if (before_galgame !== -1) {
-    $mes_galgame.append(
+    const $before = $(
       formatAsDisplayedMessage(message.slice(0, before_galgame).trim(), { message_id: numbered_message_id }),
     );
+    $before.find('pre:contains("<body")').remove();
+    $mes_galgame.append($before);
   }
   const $iframe = createScriptIdIframe().addClass('w-full').appendTo($mes_galgame);
   const after_galgame = message.indexOf('</galgame>');
   if (after_galgame !== -1) {
-    $mes_galgame.append(
+    const $after = $(
       formatAsDisplayedMessage(
         message
           .slice(after_galgame + 10)
@@ -111,6 +119,8 @@ async function renderOneMessage(message_id: number | string, stream_message?: st
         },
       ),
     );
+    $after.find('pre:contains("<body")').remove();
+    $mes_galgame.append($after);
   }
 
   const data = reactive(<Data>{
