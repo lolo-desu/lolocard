@@ -51,7 +51,10 @@ import { Data } from './type';
 
 const data = inject<Data>('data', Data.parse({}));
 
+const dialog_box_ref = useTemplateRef('dialog_box');
+
 const store = useGalgameStore();
+
 watchImmediate(
   () => data.duringStreaming,
   new_during_streaming => {
@@ -64,8 +67,6 @@ watchImmediate(
     store.loadMessage(new_message);
   },
 );
-
-const dialog_box_ref = useTemplateRef('dialog_box');
 
 function handleAdvance() {
   if (store.history_opened || store.has_ended) {

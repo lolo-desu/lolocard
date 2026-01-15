@@ -101,10 +101,6 @@ export const useGalgameStore = defineStore('galgame', () => {
   const has_ended = ref(false);
   const current_dialog = computed(() => dialogs.value[current_index.value]);
   const history_dialogs = computed(() => dialogs.value.slice(0, current_index.value + 1));
-
-  const dialog_opened = ref(true);
-  const history_opened = ref(false);
-
   function advance() {
     if (has_ended.value) {
       return;
@@ -120,11 +116,13 @@ export const useGalgameStore = defineStore('galgame', () => {
 
     current_index.value = next_index;
   }
-
   function restart() {
     current_index.value = 0;
     has_ended.value = false;
   }
+
+  const dialog_opened = ref(true);
+  const history_opened = ref(false);
 
   return {
     dialogs,

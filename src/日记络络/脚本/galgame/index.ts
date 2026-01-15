@@ -74,8 +74,7 @@ async function renderOneMessage(message_id: number | string, stream_message?: st
   });
   const app = createApp(App).provide('data', data).use(createPinia());
   $mes_galgame.on('load', function () {
-    const document = this.contentDocument!;
-    app.mount(document.body);
+    app.mount(this.contentDocument!.body);
   });
 
   const observer = new MutationObserver(() => {
@@ -142,16 +141,7 @@ export function initGalgame() {
   eventOn(tavern_events.MESSAGE_DELETED, () => setTimeout(errorCatched(renderAllMessage), 1000));
   eventOn(
     tavern_events.STREAM_TOKEN_RECEIVED,
-    errorCatched(message => {
-      const mesid = $('#chat').children('.mes.last_mes').attr('mesid');
-      try {
-        if (mesid) {
-          renderOneMessage(parseInt(mesid), message);
-        }
-      } catch (error) {
-        /** empty */
-      }
-    }),
+    errorCatched(message => renderOneMessage($('#chat').children('.mes.last_mes').attr('mesid') ?? 'NaN', message)),
   );
 
   return {
