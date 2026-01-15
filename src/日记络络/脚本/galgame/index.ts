@@ -1,4 +1,4 @@
-import { createScriptIdIframe } from '@util/script';
+import { createScriptIdDiv, createScriptIdIframe } from '@util/script';
 import type { Reactive, App as VueApp } from 'vue';
 import { useConfigStore } from '../store';
 import App from './App.vue';
@@ -47,24 +47,71 @@ async function renderOneMessage(message_id: number | string, stream_message?: st
   const $mes_text = $message_element.find('.mes_text');
   $mes_text.addClass('hidden!');
 
-  let $mes_galgame = $message_element.find(`.${CLASS}`) as JQuery<HTMLIFrameElement>;
+  let $mes_galgame = $message_element.find(`.${CLASS}`) as JQuery<HTMLDivElement>;
   if ($mes_galgame.length > 0) {
     const state = states.get(numbered_message_id);
     if (state) {
-      $mes_galgame.removeClass('hidden!');
+      const $iframe = $mes_galgame.find('iframe');
+
+      const before_galgame = message.indexOf('<galgame>');
+      if (before_galgame !== -1) {
+        $iframe.prevAll().remove();
+        $iframe.before(
+          formatAsDisplayedMessage(message.slice(0, before_galgame).trim(), { message_id: numbered_message_id }),
+        );
+      }
+
       state.data.duringStreaming = Boolean(stream_message);
       state.data.message = message;
+
+      const after_galgame = message.lastIndexOf('</galgame>');
+      if (after_galgame !== -1) {
+        $iframe.nextAll().remove();
+        $iframe.after(
+          formatAsDisplayedMessage(
+            message
+              .slice(after_galgame + 10)
+              .replace(/<(roleplay_options)>(?:(?!.*<\/\1>)(?:(?!<\1>).)*$|(?:(?!<\1>).)*<\/\1?>)/, '')
+              .trim(),
+            {
+              message_id: numbered_message_id,
+            },
+          ),
+        );
+      }
+
+      $mes_galgame.removeClass('hidden!');
       return;
     }
   }
 
   destroy(numbered_message_id);
 
-  $mes_galgame.remove();
-  $mes_galgame = createScriptIdIframe()
+  $mes_galgame = createScriptIdDiv()
     .addClass(`${CLASS} w-full`)
     .attr('id', `stream-${numbered_message_id}`)
     .insertAfter($mes_text);
+  const before_galgame = message.indexOf('<galgame>');
+  if (before_galgame !== -1) {
+    $mes_galgame.append(
+      formatAsDisplayedMessage(message.slice(0, before_galgame).trim(), { message_id: numbered_message_id }),
+    );
+  }
+  const $iframe = createScriptIdIframe().addClass('w-full').appendTo($mes_galgame);
+  const after_galgame = message.indexOf('</galgame>');
+  if (after_galgame !== -1) {
+    $mes_galgame.append(
+      formatAsDisplayedMessage(
+        message
+          .slice(after_galgame + 10)
+          .replace(/<(roleplay_options)>(?:(?!.*<\/\1>)(?:(?!<\1>).)*$|(?:(?!<\1>).)*<\/\1?>)/gis, '')
+          .trim(),
+        {
+          message_id: numbered_message_id,
+        },
+      ),
+    );
+  }
 
   const data = reactive(<Data>{
     messageId: numbered_message_id,
@@ -73,7 +120,7 @@ async function renderOneMessage(message_id: number | string, stream_message?: st
     inputMethod: useConfigStore().config.选择框触发方式,
   });
   const app = createApp(App).provide('data', data).use(createPinia());
-  $mes_galgame.on('load', function () {
+  $iframe.on('load', function () {
     app.mount(this.contentDocument!.body);
   });
 
