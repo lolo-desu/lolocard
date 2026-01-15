@@ -59,8 +59,8 @@
           interface Chat {
             speaker: '旁白' | '独白' | string;
             speech: string; // 当前发言者的台词
-            background: string; // `背景列表`中支持的当前所处地点位置、时间等的背景文件名
-            tachie?: string; // 如果络络在场，从`立绘列表`中选择存在的络络立绘文件名, 否则不设置
+            background: string; // `背景列表`中支持的当前所处地点位置、时间等的背景文件名，或`可调用的CG文件列表`中支持的CG文件名
+            tachie?: string; // 如果络络在场且background不是CG文件，从`立绘列表`中选择存在的络络立绘文件名, 否则不设置
           }
       rule:
         - 本次响应专注于CG场景，**仅输出galgame界面和roleplay_options选择框，绝对禁止生成任何正文**
@@ -73,6 +73,7 @@
         - 角色所在地点: ...
         - `可调用的CG文件列表`中是否有对应于当前时间、角色所在地点和剧情氛围的CG: yes/no
           - 将使用CG: ...
+          - 由于使用了CG，将不显示任何立绘
         - 将`背景列表`中的背景: ...
         - 将`立绘列表`中的立绘: ...
         </interface_analysis>
