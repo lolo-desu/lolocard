@@ -21,10 +21,12 @@
       :text="store.dialog_opened ? '隐藏UI' : '显示UI'"
       @click.stop="store.dialog_opened = !store.dialog_opened"
     />
+    <Button v-if="valid_cg" text="放大" @click.stop="enlargeBackground()" />
   </div>
 </template>
 
 <script setup lang="ts">
+import { getImageUrl } from '../../../image';
 import { useGalgameStore } from '../store';
 
 const [DefineButton, Button] = createReusableTemplate<{
@@ -32,4 +34,31 @@ const [DefineButton, Button] = createReusableTemplate<{
 }>();
 
 const store = useGalgameStore();
+
+const valid_cg = computed(() => {
+  return store.current_dialog.background.includes('CG') ? getImageUrl(store.current_dialog.background) : null;
+});
+
+function enlargeBackground() {
+  const $image = $('<img>')
+    .addClass('img_enlarged')
+    .attr('src', valid_cg.value)
+    .on('click', function (event) {
+      $(this).toggleClass('zoomed');
+      event.stopPropagation();
+    });
+  const $image_container = $('<div>')
+    .addClass('img_enlarged_container')
+    .append($('<div>').addClass('img_enlarged_holder').append($image));
+  const popup = new SillyTavern.Popup($image_container[0], SillyTavern.POPUP_TYPE.DISPLAY, '', {
+    large: true,
+    transparent: true,
+  });
+  popup.dlg.style.width = 'unset';
+  popup.dlg.style.height = 'unset';
+  popup.dlg.addEventListener('click', () => {
+    popup.completeCancelled();
+  });
+  popup.show();
+}
 </script>
