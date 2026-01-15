@@ -16,7 +16,7 @@ setActivePinia(pinia);
 
 $(async () => {
   await waitUntil(() => getCharWorldbookNames('current').primary !== null);
-    await waitGlobalInitialized('Mvu');
+  await waitGlobalInitialized('Mvu');
   await checkUpdate();
   await useConfigStore()._wait_init;
 

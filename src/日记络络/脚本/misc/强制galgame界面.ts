@@ -9,7 +9,7 @@ import start_4_galgame from '../../第一条消息/4_galgame.txt?raw';
 import start_4_normal from '../../第一条消息/4_normal.txt?raw';
 import { useConfigStore } from '../store';
 
-export async function initForceGalgameInterface() {
+export function initForceGalgameInterface() {
   const store = useConfigStore();
 
   const normal_starts: string[] = [start_0, start_1_normal, start_2_normal, start_3_normal, start_4_normal];
