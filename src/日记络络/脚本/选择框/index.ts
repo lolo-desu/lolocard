@@ -7,13 +7,12 @@ const apps: Map<number, VueApp> = new Map();
 const TAG = '<roleplay_options>' as const;
 const REGEX = /<(roleplay_options)>\s*(?:```.*\n)?((?:(?!<\1>)[\s\S])*?)(?:\n```)?\s*<\/\1>/im;
 
-async function renderOneMessage(message_id: number | string) {
-  const numbered_message_id = Number(message_id);
-  if (isNaN(numbered_message_id)) {
+async function renderOneMessage(message_id: number) {
+  if (isNaN(message_id)) {
     return;
   }
 
-  const chat_messages = getChatMessages(numbered_message_id);
+  const chat_messages = getChatMessages(message_id);
   if (chat_messages.length === 0) {
     return;
   }
@@ -23,10 +22,10 @@ async function renderOneMessage(message_id: number | string) {
     return;
   }
 
-  apps.get(numbered_message_id)?.unmount();
-  apps.delete(numbered_message_id);
+  apps.get(message_id)?.unmount();
+  apps.delete(message_id);
 
-  const $mes_text = retrieveDisplayedMessage(numbered_message_id);
+  const $mes_text = retrieveDisplayedMessage(message_id);
   const $to_render = $mes_text.find(`pre:contains("${TAG}")`);
   if ($to_render.length > 0) {
     const $th_render = $to_render.parent('.TH-render');
@@ -37,14 +36,14 @@ async function renderOneMessage(message_id: number | string) {
     }
 
     const app = createApp(App, {
-      messageId: numbered_message_id,
+      messageId: message_id,
       options: [...match[2].matchAll(/(.+?)[:：]\s*(.+)/gm)].map(match => ({
         title: match[1],
         content: match[2].replace(/^\$\{(.+)\}$/, '$1').replace(/^「(.+)」$/, '$1'),
       })),
     }).use(getActivePinia()!);
 
-    apps.set(numbered_message_id, app);
+    apps.set(message_id, app);
 
     const possible_div = $mes_text.find(`div[script_id="${getScriptId()}"]`);
     app.mount(
@@ -62,7 +61,10 @@ async function renderAllMessage() {
   $('#chat')
     .children(".mes[is_user='false'][is_system='false']")
     .each((_index, node) => {
-      renderOneMessage($(node).attr('mesid') ?? 'NaN');
+      const message_id = Number($(node).attr('mesid') ?? 'NaN');
+      if (!isNaN(message_id)) {
+        renderOneMessage(message_id);
+      }
     });
 }
 

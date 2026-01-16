@@ -8,17 +8,15 @@ const states: Map<number, { app: VueApp; data: Reactive<Data>; destroy: () => vo
 
 const CLASS = 'mes_galgame' as const;
 
-function destroy(message_id: number | string) {
-  const numbered_message_id = Number(message_id);
-  states.get(numbered_message_id)?.destroy();
-  states.delete(numbered_message_id);
+function destroy(message_id: number) {
+  states.get(message_id)?.destroy();
+  states.delete(message_id);
 }
 
-function destroyIfInvalid(message_id: number | string) {
-  const numbered_message_id = Number(message_id);
+function destroyIfInvalid(message_id: number) {
   const min_message_id = Number($('#chat > .mes').first().attr('mesid'));
   const max_message_id = getLastMessageId();
-  if (!_.inRange(numbered_message_id, min_message_id, max_message_id + 1)) {
+  if (!_.inRange(message_id, min_message_id, max_message_id + 1)) {
     destroy(message_id);
   }
 }
@@ -27,20 +25,15 @@ function destroyAllInvalid() {
   states.keys().forEach(message_id => destroyIfInvalid(message_id));
 }
 
-async function renderOneMessage(message_id: number | string, stream_message?: string) {
-  const numbered_message_id = Number(message_id);
-  if (isNaN(numbered_message_id)) {
-    return;
-  }
+async function renderOneMessage(message_id: number, stream_message?: string) {
+  const $message_element = $(`.mes[mesid='${message_id}']`);
 
-  const $message_element = $(`.mes[mesid='${numbered_message_id}']`);
+  destroyIfInvalid(message_id);
 
-  destroyIfInvalid(numbered_message_id);
-
-  const message = stream_message ?? getChatMessages(numbered_message_id)[0].message ?? '';
+  const message = stream_message ?? getChatMessages(message_id)[0].message ?? '';
   const matched = message.match(/<galgame>\s*```/im);
   if (!matched) {
-    destroy(numbered_message_id);
+    destroy(message_id);
     return;
   }
 
@@ -49,7 +42,7 @@ async function renderOneMessage(message_id: number | string, stream_message?: st
 
   let $mes_galgame = $message_element.find(`.${CLASS}`) as JQuery<HTMLDivElement>;
   if ($mes_galgame.length > 0) {
-    const state = states.get(numbered_message_id);
+    const state = states.get(message_id);
     if (state) {
       const $iframe = $mes_galgame.find('iframe');
 
@@ -58,7 +51,7 @@ async function renderOneMessage(message_id: number | string, stream_message?: st
         $iframe.prevAll().remove();
         const $before = $(
           formatAsDisplayedMessage(message.slice(0, before_galgame).trim(), {
-            message_id: numbered_message_id,
+            message_id: message_id,
           }),
         );
         $before.find('pre:contains("<body")').remove();
@@ -78,7 +71,7 @@ async function renderOneMessage(message_id: number | string, stream_message?: st
               .replace(/<(roleplay_options)>(?:(?!.*<\/\1>)(?:(?!<\1>).)*$|(?:(?!<\1>).)*<\/\1?>)/, '')
               .trim(),
             {
-              message_id: numbered_message_id,
+              message_id: message_id,
             },
           ),
         );
@@ -91,16 +84,16 @@ async function renderOneMessage(message_id: number | string, stream_message?: st
     }
   }
 
-  destroy(numbered_message_id);
+  destroy(message_id);
 
   $mes_galgame = createScriptIdDiv()
     .addClass(`${CLASS} w-full`)
-    .attr('id', `stream-${numbered_message_id}`)
+    .attr('id', `stream-${message_id}`)
     .insertAfter($mes_text);
   const before_galgame = message.indexOf('<galgame>');
   if (before_galgame !== -1) {
     const $before = $(
-      formatAsDisplayedMessage(message.slice(0, before_galgame).trim(), { message_id: numbered_message_id }),
+      formatAsDisplayedMessage(message.slice(0, before_galgame).trim(), { message_id: message_id }),
     );
     $before.find('pre:contains("<body")').remove();
     $mes_galgame.append($before);
@@ -115,7 +108,7 @@ async function renderOneMessage(message_id: number | string, stream_message?: st
           .replace(/<(roleplay_options)>(?:(?!.*<\/\1>)(?:(?!<\1>).)*$|(?:(?!<\1>).)*<\/\1?>)/gis, '')
           .trim(),
         {
-          message_id: numbered_message_id,
+          message_id: message_id,
         },
       ),
     );
@@ -124,7 +117,7 @@ async function renderOneMessage(message_id: number | string, stream_message?: st
   }
 
   const data = reactive(<Data>{
-    messageId: numbered_message_id,
+    messageId: message_id,
     message,
     duringStreaming: Boolean(stream_message),
     inputMethod: useConfigStore().config.选择框触发方式,
@@ -151,7 +144,7 @@ async function renderOneMessage(message_id: number | string, stream_message?: st
     },
   );
 
-  states.set(numbered_message_id, {
+  states.set(message_id, {
     app,
     data,
     destroy: () => {
@@ -170,7 +163,10 @@ async function renderAllMessage() {
   $('#chat')
     .children(".mes[is_user='false'][is_system='false']")
     .each((_index, node) => {
-      renderOneMessage($(node).attr('mesid') ?? 'NaN');
+      const message_id = Number($(node).attr('mesid') ?? 'NaN');
+      if (!isNaN(message_id)) {
+        renderOneMessage(message_id);
+      }
     });
 }
 
@@ -198,7 +194,12 @@ export function initGalgame() {
   eventOn(tavern_events.MESSAGE_DELETED, () => setTimeout(errorCatched(renderAllMessage), 1000));
   eventOn(
     tavern_events.STREAM_TOKEN_RECEIVED,
-    errorCatched(message => renderOneMessage($('#chat').children('.mes.last_mes').attr('mesid') ?? 'NaN', message)),
+    errorCatched(message => {
+      const message_id = Number($('#chat').children('.mes.last_mes').attr('mesid') ?? 'NaN');
+      if (!isNaN(message_id)) {
+        renderOneMessage(message_id, message);
+      }
+    }),
   );
 
   return {
