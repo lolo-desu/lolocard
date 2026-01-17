@@ -46,7 +46,7 @@ async function renderOneMessage(message_id: number, stream_message?: string) {
     if (state) {
       const $iframe = $mes_galgame.find('iframe');
 
-      const before_galgame = message.indexOf('<galgame>');
+      const before_galgame = message.lastIndexOf('<galgame>');
       if (before_galgame !== -1) {
         $iframe.prevAll().remove();
         const $before = $(
