@@ -86,6 +86,7 @@ async function renderOneMessage(message_id: number, stream_message?: string) {
 
   destroy(message_id);
 
+  $mes_galgame.remove();
   $mes_galgame = createScriptIdDiv()
     .addClass(`${CLASS} w-full`)
     .attr('id', `stream-${message_id}`)
