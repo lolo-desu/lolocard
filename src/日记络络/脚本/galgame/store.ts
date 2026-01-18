@@ -1,4 +1,4 @@
-import { jsonrepair } from 'jsonrepair';
+import { parseString } from '@util/common';
 import { Dialog } from './type';
 
 function parseDialogsFromMessage(message: string): { dialogs: Dialog[]; type: 'full' | 'partial' | 'error' } {
@@ -7,27 +7,25 @@ function parseDialogsFromMessage(message: string): { dialogs: Dialog[]; type: 'f
   const partial_match = message.match(/<(galgame)>(?!.*<\/\1>)\s*(?:```[^\n]*\n)?(.*?)\s*(?:```.*)?$/is);
   const content = full_match?.[2] ?? partial_match?.[2] ?? '';
 
+  const onError = (title: string, error: unknown) => {
+    return {
+      dialogs: [
+        {
+          speaker: '系统提示',
+          speech: `${title}: ${error instanceof Error ? error.message : String(error)}`,
+          background: '',
+          characters: [],
+        },
+      ],
+      type: 'error' as const,
+    };
+  };
+
   let parsed: unknown;
   try {
-    parsed = jsonrepair(content);
-  } catch (json_error) {
-    try {
-      parsed = YAML.parse(content);
-    } catch (yaml_error) {
-      const json_message = json_error instanceof Error ? json_error.message : String(json_error);
-      const yaml_message = yaml_error instanceof Error ? yaml_error.message : String(yaml_error);
-      return {
-        dialogs: [
-          {
-            speaker: '系统提示',
-            speech: `数据解析失败: 既不是有效的 JSON 也不是有效的 YAML.\n内容: ${content}\nJSON 错误: ${json_message}\nYAML 错误: ${yaml_message}`,
-            background: '',
-            characters: [],
-          },
-        ],
-        type: 'error',
-      };
-    }
+    parsed = parseString(content);
+  } catch (error) {
+    return onError('解析数据失败', error);
   }
 
   try {
@@ -41,17 +39,7 @@ function parseDialogsFromMessage(message: string): { dialogs: Dialog[]; type: 'f
       type: full_match ? 'full' : 'partial',
     };
   } catch (error) {
-    return {
-      dialogs: [
-        {
-          speaker: '系统提示',
-          speech: `加载对话数据失败：${error instanceof Error ? error.message : String(error)}`,
-          background: '',
-          characters: [],
-        },
-      ],
-      type: 'error',
-    };
+    return onError('加载对话数据失败', error);
   }
 }
 
