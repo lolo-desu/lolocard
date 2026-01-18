@@ -10,10 +10,5 @@ const props = defineProps<{ transformer: (message: string) => string }>();
 
 const context = injectStreamingMessageContext();
 const transformed_message = computed(() => props.transformer(context.message));
-const html = computed(() => {
-  const html = formatAsDisplayedMessage(transformed_message.value, { message_id: context.message_id });
-  const $div = $('<div>').html(html);
-  $div.find('pre:contains("<body")').remove();
-  return $div.html();
-});
+const html = computed(() => formatAsDisplayedMessage(transformed_message.value, { message_id: context.message_id }));
 </script>
