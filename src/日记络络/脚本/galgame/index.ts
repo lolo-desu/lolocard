@@ -47,16 +47,14 @@ async function renderOneMessage(message_id: number, stream_message?: string) {
       const $iframe = $mes_galgame.find('iframe');
 
       const before_galgame = message.lastIndexOf('<galgame>');
-      if (before_galgame !== -1) {
-        $iframe.prevAll().remove();
-        const $before = $(
-          formatAsDisplayedMessage(message.slice(0, before_galgame).trim(), {
-            message_id: message_id,
-          }),
-        );
-        $before.find('pre:contains("<body")').remove();
-        $iframe.before($before);
-      }
+      $iframe.prevAll().remove();
+      const $before = $(
+        formatAsDisplayedMessage(message.slice(0, before_galgame === -1 ? undefined : before_galgame).trim(), {
+          message_id: message_id,
+        }),
+      );
+      $before.find('pre:contains("<body")').remove();
+      $iframe.before($before);
 
       state.data.duringStreaming = Boolean(stream_message);
       state.data.message = message;
@@ -92,14 +90,26 @@ async function renderOneMessage(message_id: number, stream_message?: string) {
     .attr('id', `stream-${message_id}`)
     .insertAfter($mes_text);
   const before_galgame = message.indexOf('<galgame>');
-  if (before_galgame !== -1) {
-    const $before = $(
-      formatAsDisplayedMessage(message.slice(0, before_galgame).trim(), { message_id: message_id }),
-    );
-    $before.find('pre:contains("<body")').remove();
-    $mes_galgame.append($before);
-  }
+  const $before = $(
+    formatAsDisplayedMessage(message.slice(0, before_galgame === -1 ? undefined : before_galgame).trim(), {
+      message_id: message_id,
+    }),
+  );
+  $before.find('pre:contains("<body")').remove();
+  $mes_galgame.append($before);
+
   const $iframe = createScriptIdIframe().addClass('w-full').appendTo($mes_galgame);
+  const data = reactive(<Data>{
+    messageId: message_id,
+    message,
+    duringStreaming: Boolean(stream_message),
+    inputMethod: useConfigStore().config.选择框触发方式,
+  });
+  const app = createApp(App).provide('data', data).use(createPinia());
+  $iframe.on('load', function () {
+    app.mount(this.contentDocument!.body);
+  });
+
   const after_galgame = message.indexOf('</galgame>');
   if (after_galgame !== -1) {
     const $after = $(
@@ -116,17 +126,6 @@ async function renderOneMessage(message_id: number, stream_message?: string) {
     $after.find('pre:contains("<body")').remove();
     $mes_galgame.append($after);
   }
-
-  const data = reactive(<Data>{
-    messageId: message_id,
-    message,
-    duringStreaming: Boolean(stream_message),
-    inputMethod: useConfigStore().config.选择框触发方式,
-  });
-  const app = createApp(App).provide('data', data).use(createPinia());
-  $iframe.on('load', function () {
-    app.mount(this.contentDocument!.body);
-  });
 
   const observer = new MutationObserver(() => {
     const $edit_textarea = $('#curEditTextarea');
