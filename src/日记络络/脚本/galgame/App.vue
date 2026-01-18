@@ -41,28 +41,28 @@
 </template>
 
 <script setup lang="ts">
+import { injectStreamingMessageContext } from '@util/streaming';
 import ChoiceBox from './components/ChoiceBox.vue';
 import ControlBar from './components/ControlBar.vue';
 import DialogBox from './components/DialogBox.vue';
 import HistoryPanel from './components/HistoryPanel.vue';
 import SceneStage from './components/SceneStage.vue';
 import { useGalgameStore } from './store';
-import { Data } from './type';
 
-const data = inject<Data>('data', Data.parse({}));
+const context = injectStreamingMessageContext();
 
 const dialog_box_ref = useTemplateRef('dialog_box');
 
 const store = useGalgameStore();
 
 watchImmediate(
-  () => data.duringStreaming,
+  () => context.during_streaming,
   new_during_streaming => {
     store.during_streaming = new_during_streaming;
   },
 );
 watchImmediate(
-  () => data.message,
+  () => context.message,
   new_message => {
     store.loadMessage(new_message);
   },

@@ -37,13 +37,3 @@ export const Dialog = z
     return data;
   });
 export type Dialog = z.infer<typeof Dialog>;
-
-export const Data = z
-  .object({
-    messageId: z.number().prefault(0),
-    message: z.string().prefault(''),
-    duringStreaming: z.boolean().prefault(false),
-    inputMethod: z.enum(['直接发送', '覆盖输入']).prefault('直接发送'),
-  })
-  .prefault({});
-export type Data = z.infer<typeof Data>;

@@ -30,17 +30,18 @@
 </template>
 
 <script setup lang="ts">
+import { injectStreamingMessageContext } from '@util/streaming';
 import { useGalgameStore } from '../store';
-import { Data } from '../type';
 
-const data = inject<Data>('data', Data.parse({}));
+const context = injectStreamingMessageContext();
+const input_method = inject<() => '直接发送' | '覆盖输入'>('input_method')!;
 const store = useGalgameStore();
 
 function onSelect(option: string) {
-  if (data.messageId !== getLastMessageId()) {
+  if (context.message_id !== getLastMessageId()) {
     return;
   }
-  switch (data.inputMethod) {
+  switch (input_method()) {
     case '直接发送':
       triggerSlash(`/send ${option} || /trigger`);
       break;
