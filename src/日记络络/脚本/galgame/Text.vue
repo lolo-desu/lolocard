@@ -10,5 +10,10 @@ const props = defineProps<{ transformer: (message: string) => string }>();
 
 const context = injectStreamingMessageContext();
 const transformed_message = computed(() => props.transformer(context.message));
-const html = computed(() => formatAsDisplayedMessage(transformed_message.value, { message_id: context.message_id }));
+const html = computed(() =>
+  formatAsDisplayedMessage(transformed_message.value, { message_id: context.message_id }).replaceAll(
+    'mes_text',
+    'mes_streaming',
+  ),
+);
 </script>
