@@ -1,3 +1,4 @@
+import { checkMinimumVersion } from '@util/common';
 import { waitUntil } from 'async-wait-until';
 import { initGalgame } from './galgame/index';
 import './misc/mvu';
@@ -15,6 +16,8 @@ const pinia = createPinia();
 setActivePinia(pinia);
 
 $(async () => {
+  await checkMinimumVersion('4.6.2', '白化蓝染的日记本');
+
   await waitUntil(() => getCharWorldbookNames('current').primary !== null);
   await waitGlobalInitialized('Mvu');
   await checkUpdate();

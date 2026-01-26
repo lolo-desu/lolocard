@@ -16,16 +16,11 @@ export async function checkUpdate() {
   ) {
     return;
   }
-  if (compare(getTavernHelperVersion(), '4.3.18', '<')) {
-    toastr.warning('检测到角色卡有更新，但酒馆助手版本过低，无法自动更新', '白化蓝染的日记本')
-    return;
-  }
   await importRawCharacter(
     CHARACTER_NAME,
     await fetch('https://testingcf.jsdelivr.net/gh/lolo-desu/lolocard/src/日记络络/白化蓝染的日记本.png').then(
       response => response.blob(),
     ),
   );
-  toastr.success('角色卡自动更新成功, 准备刷新页面以生效...', '白化蓝染的日记本');
-  setTimeout(() => triggerSlash('/reload-page'), 3000);
+  toastr.success('角色卡自动更新成功', '白化蓝染的日记本');
 }
