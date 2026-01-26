@@ -16,7 +16,7 @@ export async function checkUpdate() {
   ) {
     return;
   }
-  if (compare(getTavernVersion(), '4.3.18', '<')) {
+  if (compare(getTavernHelperVersion(), '4.3.18', '<')) {
     toastr.warning('检测到角色卡有更新，但酒馆助手版本过低，无法自动更新', '白化蓝染的日记本')
     return;
   }
