@@ -70,7 +70,7 @@ export const Schema = z
   })
   .transform(data => {
     if (data.络络.亲密度 < 50) {
-      data.主线事件.当前状态 = '无法触发';
+      data.主线事件 = { 当前状态: '无法触发' };
     } else if (data.主线事件.当前状态 === '无法触发') {
       data.主线事件 = { 当前状态: '冷却中', 剩余冷却回合数: 0 };
     }
