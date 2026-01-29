@@ -47,14 +47,16 @@ export const Schema = z
         z.object({
           当前状态: z.literal('进行中'),
           当前阶段: z.enum(['引入', '发展', '高潮', '结局']).prefault('引入'),
-          主题: z.string(),
-          描述: z.string(),
-          大纲: z.object({
-            引入: z.string(),
-            发展: z.string(),
-            高潮: z.string(),
-            结局: z.string(),
-          }),
+          主题: z.string().prefault(''),
+          描述: z.string().prefault(''),
+          大纲: z
+            .object({
+              引入: z.string().prefault(''),
+              发展: z.string().prefault(''),
+              高潮: z.string().prefault(''),
+              结局: z.string().prefault(''),
+            })
+            .prefault({}),
         }),
       ])
       .prefault({
