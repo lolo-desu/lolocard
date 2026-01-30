@@ -1,11 +1,12 @@
 # yaml-language-server: $schema=https://testingcf.jsdelivr.net/gh/StageDog/tavern_sync/dist/schema/settings.en.json
 user_name: 【【没有用】】
-configs:
-  日记络络:
-    type: worldbook
-    name: 上锁的日记本
-    file: src/日记络络/世界书/index
-  转生系统:
-    type: worldbook
-    name: 异世界系统指南！
-    file: src/转生系统/世界书/index
+configs: {}
+  # 暂时禁用所有世界书, 等待调整
+  # 日记络络:
+  #   type: worldbook
+  #   name: 上锁的日记本
+  #   file: src/日记络络/世界书/index
+  # 转生系统:
+  #   type: worldbook
+  #   name: 异世界系统指南！
+  #   file: src/转生系统/世界书/index
