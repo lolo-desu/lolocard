@@ -1,9 +1,10 @@
 import { compare } from 'compare-versions';
-import { CHARACTER_NAME } from '../constant';
+
+const CHARACTER_NAME = '作为异世界的系统' as const;
 
 export async function checkUpdate() {
   const current_version = (await getCharacter(CHARACTER_NAME)).version.trim() || '0.0.0';
-  const latest_version = await fetch('https://testingcf.jsdelivr.net/gh/lolo-desu/lolocard/src/日记络络/index.yaml')
+  const latest_version = await fetch('https://testingcf.jsdelivr.net/gh/lolo-desu/lolocard/src/转生系统/index.yaml')
     .then(response => response.text())
     .then(text => _.get(YAML.parse(text), '版本', '0.0.0'))
     .catch(() => '0.0.0');
@@ -12,7 +13,7 @@ export async function checkUpdate() {
   }
   await importRawCharacter(
     CHARACTER_NAME,
-    await fetch('https://testingcf.jsdelivr.net/gh/lolo-desu/lolocard/src/日记络络/白化蓝染的日记本.png').then(
+    await fetch('https://testingcf.jsdelivr.net/gh/lolo-desu/lolocard/src/转生系统/作为异世界的系统.png').then(
       response => response.blob(),
     ),
   );

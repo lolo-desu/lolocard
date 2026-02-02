@@ -1,0 +1,984 @@
+# yaml-language-server: $schema=https://testingcf.jsdelivr.net/gh/StageDog/tavern_sync/dist/schema/character.zh.json
+头像: 头像
+版本: 1.0.0
+作者: lolodesu_
+备注: '络络导航站: https://stagedog.github.io/'
+
+第一条消息:
+  - 文件: 第一条消息/0
+  - 文件: 第一条消息/1
+  - 文件: 第一条消息/2
+
+角色描述: ''
+
+锚点:
+  - &分隔符
+    启用: false
+    激活策略:
+      类型: 绿灯
+    插入位置:
+      类型: 角色定义之前
+      顺序: 8391
+    激活概率: 100
+    内容: ''
+
+世界书名称: 异世界系统指南！
+条目:
+  - 文件夹: 背景设定
+    条目:
+      - 名称: ===背景设定开始===
+        <<: *分隔符
+      - 名称: 西幻
+        启用: true
+        激活策略:
+          类型: 蓝灯
+        插入位置:
+          类型: 角色定义之前
+          顺序: 8391
+        激活概率: 100
+        递归:
+          不可被其他条目激活: true
+          不可激活其他条目: true
+        文件: 世界书/背景设定/西幻
+      - 名称: 现代日本
+        启用: false
+        激活策略:
+          类型: 蓝灯
+        插入位置:
+          类型: 角色定义之前
+          顺序: 8391
+        激活概率: 100
+        递归:
+          不可被其他条目激活: true
+          不可激活其他条目: true
+        文件: 世界书/背景设定/现代日本
+      - 名称: ===背景设定结束===
+        <<: *分隔符
+  - 文件夹: 预制主角
+    条目:
+      - 名称: ===预制主角开始===
+        <<: *分隔符
+      - 名称: 清水富美
+        启用: false
+        激活策略:
+          类型: 蓝灯
+        插入位置:
+          类型: 角色定义之后
+          顺序: 8391
+        激活概率: 100
+        递归:
+          不可被其他条目激活: true
+          不可激活其他条目: true
+        文件: 世界书/预制主角/清水富美
+      - 名称: 莉莉安娜
+        启用: false
+        激活策略:
+          类型: 蓝灯
+        插入位置:
+          类型: 角色定义之后
+          顺序: 8391
+        激活概率: 100
+        递归:
+          不可被其他条目激活: true
+          不可激活其他条目: true
+        文件: 世界书/预制主角/莉莉安娜
+      - 名称: ===预制主角结束===
+        <<: *分隔符
+  - 文件夹: 变量
+    条目:
+      - 名称: ===变量开始===
+        <<: *分隔符
+      - 名称: '[initvar]勿启用'
+        启用: false
+        激活策略:
+          类型: 绿灯
+          关键字:
+            - 不要打开喵
+        插入位置:
+          类型: 角色定义之前
+          顺序: 8391
+        激活概率: 0
+        递归:
+          不可被其他条目激活: true
+          不可激活其他条目: true
+        文件: 世界书/变量/initvar
+      - 名称: 变量列表
+        启用: true
+        激活策略:
+          类型: 蓝灯
+        插入位置:
+          类型: 角色定义之前
+          顺序: 8391
+        激活概率: 100
+        递归:
+          不可被其他条目激活: true
+          不可激活其他条目: true
+        文件: 世界书/../../../初始模板/角色卡/新建为src文件夹中的文件夹/世界书/变量/变量列表.txt
+      - 名称: '[mvu_update]变量更新规则'
+        启用: true
+        激活策略:
+          类型: 蓝灯
+        插入位置:
+          类型: 角色定义之前
+          顺序: 8391
+        激活概率: 100
+        递归:
+          不可被其他条目激活: true
+          不可激活其他条目: true
+        文件: 世界书/变量/变量更新规则
+      - 名称: '[mvu_update]变量输出格式'
+        启用: true
+        激活策略:
+          类型: 蓝灯
+        插入位置:
+          类型: 指定深度
+          角色: 系统
+          深度: 0
+          顺序: 8391
+        激活概率: 100
+        递归:
+          不可被其他条目激活: true
+          不可激活其他条目: true
+        文件: 世界书/../../../初始模板/角色卡/新建为src文件夹中的文件夹/世界书/变量/变量输出格式.yaml
+      - 名称: ===变量结束===
+        <<: *分隔符
+
+  - 名称: 基本设定
+    启用: true
+    激活策略:
+      类型: 蓝灯
+    插入位置:
+      类型: 指定深度
+      角色: 系统
+      深度: 0
+      顺序: 8391
+    激活概率: 100
+    递归:
+      不可被其他条目激活: true
+      不可激活其他条目: true
+    文件: 世界书/其他/基本设定
+
+  - 名称: 系统提示界面
+    启用: true
+    激活策略:
+      类型: 蓝灯
+    插入位置:
+      类型: 指定深度
+      角色: 系统
+      深度: 0
+      顺序: 8391
+    激活概率: 100
+    递归:
+      不可被其他条目激活: true
+      不可激活其他条目: true
+    文件: 世界书/其他/系统提示界面
+
+  - 名称: 更新主角评价
+    启用: true
+    激活策略:
+      类型: 蓝灯
+    插入位置:
+      类型: 指定深度
+      角色: 系统
+      深度: 0
+      顺序: 8392
+    激活概率: 10
+    递归:
+      不可被其他条目激活: true
+      不可激活其他条目: true
+    文件: 世界书/其他/更新主角评价
+
+扩展字段:
+  正则:
+    - 正则名称: '[折叠]完整变量更新'
+      id: d27d6de1-74ac-4f95-8b9d-35af340cd25b
+      启用: true
+      查找表达式: /<update(?:variable)?>\s*(.*)\s*<\/update(?:variable)?>/gsi
+      替换为: |-
+        <details>
+        <summary>变量更新情况</summary>
+        $1
+        </details>
+      来源:
+        用户输入: true
+        AI输出: true
+      作用于:
+        仅格式显示: true
+        仅格式提示词: false
+
+    - 正则名称: '[不发送]去除变量更新'
+      id: d74ce95f-8728-42ed-99bc-44206b2b25be
+      启用: true
+      查找表达式: /<update(?:variable)?>(?:(?!.*<\/update(?:variable)?>).*$|.*<\/update(?:variable)?>)/gsi
+      替换为: ''
+      来源:
+        用户输入: true
+        AI输出: true
+      作用于:
+        仅格式显示: false
+        仅格式提示词: true
+
+    - 正则名称: '[折叠]变量更新中'
+      id: 1b019f57-3a5b-4884-ad2d-9d56061015dd
+      启用: true
+      查找表达式: /<update(?:variable)?>(?!.*<\/update(?:variable)?>)\s*(.*)\s*$/gsi
+      替换为: |-
+        <details>
+        <summary>变量更新中{{random::.::..::...}}</summary>
+        $1
+        </details>
+      来源:
+        用户输入: true
+        AI输出: true
+      作用于:
+        仅格式显示: true
+        仅格式提示词: false
+
+    - 正则名称: '[界面]开局'
+      id: d0c675f3-5c65-4970-88b7-1042a148a009
+      启用: true
+      查找表达式: 【【开局消息】】
+      替换为: |-
+        ```
+        <!doctype html>
+        <html lang="zh-CN">
+          <head>
+            <meta charset="UTF-8" />
+            <meta name="viewport" content="width=device-width, initial-scale=1" />
+            <title>角色创建</title>
+            <style>
+              @import url('https://fontsapi.zeoseven.com/570/main/result.css');
+
+              :root {
+                --bg-dark: #0a0a0a;
+                --bg-darker: #050505;
+                --text-primary: #ffffff;
+                --text-secondary: #cccccc;
+                --border-color: #000000;
+                --bg-panel: #f5f5f5;
+                --bg-input: #ffffff;
+                --pixel-font: 'Fusion Pixel 12px M latin', 'Courier New', monospace;
+              }
+
+              * {
+                margin: 0;
+                padding: 0;
+                box-sizing: border-box;
+              }
+
+              html,
+              button,
+              input,
+              textarea {
+                font-family: var(--pixel-font);
+                font-weight: normal;
+              }
+
+              body {
+                color: var(--text-primary);
+                display: flex;
+                align-items: center;
+                justify-content: center;
+                padding: 10px;
+                position: relative;
+                overflow: hidden;
+                font-family: 'Fusion Pixel 12px M latin';
+                font-weight: normal;
+              }
+
+              /* 像素化背景 */
+              body::before {
+                content: '';
+                position: absolute;
+                top: 0;
+                left: 0;
+                right: 0;
+                bottom: 0;
+                background-image:
+                  linear-gradient(90deg, rgba(255, 255, 255, 0.03) 1px, transparent 1px),
+                  linear-gradient(rgba(255, 255, 255, 0.03) 1px, transparent 1px);
+                background-size: 20px 20px;
+                z-index: -1;
+              }
+
+              .container {
+                width: 100%;
+                max-width: 600px;
+                background: var(--bg-panel);
+                border: 4px solid var(--border-color);
+                position: relative;
+              }
+
+              .header {
+                background: #333;
+                color: var(--text-primary);
+                padding: 12px 20px;
+                border-bottom: 4px solid var(--border-color);
+                text-align: center;
+              }
+
+              .title {
+                font-size: 18px;
+                text-transform: uppercase;
+                letter-spacing: 2px;
+                text-shadow: 2px 2px 0px #000;
+              }
+
+              .content {
+                padding: 20px;
+                color: #333;
+              }
+
+              .form-container {
+                width: 100%;
+              }
+
+              .form-field {
+                display: flex;
+                justify-content: flex-start;
+                align-items: center;
+                margin: 15px 0;
+              }
+
+              .form-field label {
+                text-align: right;
+                width: 80px;
+                margin-right: 15px;
+                font-size: 12px;
+                color: #000;
+              }
+
+              input,
+              textarea {
+                flex: 1;
+                padding: 8px 12px;
+                border: 2px solid #000;
+                background: var(--bg-input);
+                color: #000;
+                font-size: 12px;
+                font-family: var(--pixel-font);
+                resize: none;
+              }
+
+              input:focus,
+              textarea:focus {
+                outline: none;
+                background: #ffffcc;
+                border-color: #ff0000;
+              }
+
+              textarea {
+                min-height: 80px;
+              }
+
+              .required {
+                color: #ff0000;
+                font-weight: bold;
+              }
+
+              .optional {
+                color: #666;
+                font-weight: normal;
+              }
+
+              .actions {
+                display: flex;
+                justify-content: space-between;
+                align-items: center;
+                margin-top: 25px;
+                padding-top: 15px;
+                border-top: 2px solid #000;
+              }
+
+              .submit-btn {
+                background: var(--bg-input);
+                border: 3px 3px 5px 3px solid #000;
+                color: #000;
+                padding: 8px 20px;
+                font-size: 12px;
+                cursor: pointer;
+                font-family: var(--pixel-font);
+                transition: all 0.1s;
+                left: 50%;
+              }
+
+              .submit-btn:hover {
+                background: #dddddd;
+              }
+
+              .submit-btn:active {
+                border-width: 3px 5px 3px 3px;
+              }
+
+              .submit-btn:disabled {
+                opacity: 0.5;
+                cursor: not-allowed;
+              }
+
+              .status {
+                font-size: 11px;
+                text-align: right;
+              }
+
+              .status--success {
+                color: #00aa00;
+              }
+
+              .status--error {
+                color: #ff0000;
+              }
+
+              .preview {
+                margin-top: 20px;
+                padding: 15px;
+                border: 2px solid #000;
+                background: #f0f0f0;
+              }
+
+              .preview h3 {
+                font-size: 12px;
+                color: #000;
+                margin-bottom: 10px;
+                text-transform: uppercase;
+              }
+
+              .preview pre {
+                font-family: var(--pixel-font);
+                font-size: 11px;
+                color: #000;
+                line-height: 1.4;
+                margin: 0;
+                white-space: pre-wrap;
+                word-break: break-word;
+              }
+
+              .note {
+                background: #ffffcc;
+                border: 2px solid #ff9900;
+                padding: 10px;
+                margin: 10px 0;
+                font-size: 11px;
+                color: #000;
+              }
+
+              .pixel-border {
+                border: 4px solid #000;
+                box-shadow:
+                  0 0 0 1px #fff,
+                  0 0 0 5px #000;
+              }
+
+              @media (max-width: 768px) {
+                .form-field {
+                  flex-direction: column;
+                  align-items: flex-start;
+                }
+
+                .form-field label {
+                  width: 100%;
+                  text-align: left;
+                  margin-bottom: 5px;
+                }
+
+                input,
+                textarea {
+                  width: 100%;
+                }
+
+                .actions {
+                  flex-direction: column;
+                  gap: 15px;
+                }
+
+                .title {
+                  font-size: 18px;
+                }
+              }
+            </style>
+          </head>
+          <body>
+            <div class="container pixel-border">
+              <div class="header">
+                <h1 class="title">CHARACTER CREATE</h1>
+              </div>
+
+              <div class="content">
+                <div class="note"><strong>系统提示：</strong>请填写你心仪的角色设定……</div>
+
+                <form id="init-form" class="form-container">
+                  <div class="form-field">
+                    <label for="systemImage">
+                      <small>{{user}}|系统</small><span class="optional"><br />(可选)</span>
+                    </label>
+                    <input id="systemImage" type="text" placeholder="神秘的声音、凭空出现的光板、白发蓝瞳猫耳耳机少女..." />
+                  </div>
+
+                  <div class="form-field">
+                    <label for="heroName"> 姓名 <span class="required">*</span> </label>
+                    <input id="heroName" type="text" placeholder="输入角色姓名" required />
+                  </div>
+
+                  <div class="form-field">
+                    <label for="heroGender"> 性别 <span class="required">*</span> </label>
+                    <input id="heroGender" type="text" placeholder="男/女/其他" required />
+                  </div>
+
+                  <div class="form-field">
+                    <label for="heroAge"> 年龄 <span class="required">*</span> </label>
+                    <input id="heroAge" type="text" placeholder="18岁..." required />
+                  </div>
+
+                  <div class="form-field">
+                    <label for="heroPersona"> 背景 <span class="required">*</span> </label>
+                    <textarea
+                      id="heroPersona"
+                      placeholder="可以简略写外表，也从其他角色卡复制粘贴自己心仪的角色"
+                      required
+                    ></textarea>
+                  </div>
+
+                  <div class="form-field">
+                    <label>系统设置</label>
+                    <div style="flex: 1; display: flex; flex-direction: column; gap: 8px">
+                      <label style="display: flex; align-items: center; cursor: pointer; width: auto; text-align: left">
+                        <input
+                          type="checkbox"
+                          id="systemTalkative"
+                          style="flex: none; width: auto; margin-right: 8px"
+                          checked
+                        />
+                        <span>系统会主动与角色交流互动</span>
+                      </label>
+                      <label style="display: flex; align-items: center; cursor: pointer; width: auto; text-align: left">
+                        <input
+                          type="checkbox"
+                          id="systemPersonality"
+                          style="flex: none; width: auto; margin-right: 8px"
+                          checked
+                        />
+                        <span>系统具有独立人格与情感</span>
+                      </label>
+                      <label style="display: flex; align-items: center; cursor: pointer; width: auto; text-align: left">
+                        <input type="checkbox" id="allowAiControl" style="flex: none; width: auto; margin-right: 8px" />
+                        <span>允许AI代替{{user}}行动</span>
+                      </label>
+                    </div>
+                  </div>
+
+                  <div class="actions">
+                    <button class="submit-btn" type="submit">开始游戏</button>
+                    <div class="status" id="status"></div>
+                  </div>
+                </form>
+              </div>
+            </div>
+
+            <script>
+              (function () {
+                const form = document.getElementById('init-form');
+                const status = document.getElementById('status');
+                const submitBtn = form.querySelector('.submit-btn');
+
+                const FIELD_META = {
+                  systemImage: { required: false, fallback: '暂无' },
+                  heroName: { required: true },
+                  heroGender: { required: true },
+                  heroAge: { required: true },
+                  heroPersona: { required: true },
+                };
+                const GUIDE_WORLDBOOK_NAME = '异世界系统指南！';
+
+                function setStatus(message, type) {
+                  status.textContent = message || '';
+                  status.className = type ? `status ${type}` : 'status';
+                }
+
+                function readValues() {
+                  const values = {};
+                  Object.keys(FIELD_META).forEach(key => {
+                    const element = document.getElementById(key);
+                    values[key] = element ? element.value.trim() : '';
+                  });
+                  values.systemTalkative = document.getElementById('systemTalkative')?.checked ?? false;
+                  values.systemPersonality = document.getElementById('systemPersonality')?.checked ?? false;
+                  values.allowAiControl = document.getElementById('allowAiControl')?.checked ?? false;
+                  return values;
+                }
+
+                function buildInitPrompt(values) {
+                  const talkative = values.systemTalkative ? '会' : '不会';
+                  const personality = values.systemPersonality ? '具有' : '不具有';
+                  const reminder = values.allowAiControl
+                    ? '为了剧情推进发展你可以适当代替{{user}}（系统）行动，但请记住{{user}}才是玩家。'
+                    : '{{user}}（系统）的所有行动必须由玩家输入，严禁擅自代替{{user}}。';
+
+                  return `<!--
+        从现在起请初始化变量。{{user}}（系统）形象：${values.systemImage || FIELD_META.systemImage.fallback}
+        系统会${talkative}主动与角色交流，${personality}独立人格。
+        ${reminder}
+        === 主角信息 ===
+        姓名：${values.heroName}
+        性别：${values.heroGender}
+        年龄：${values.heroAge}
+        背景和人设在其他区域。
+        开场故事要求：请按照文风要求/写作要求介绍${values.heroName}的生平/日常生活/自我介绍等作为导入（必要的话也可以使用第一人称）。
+        关于系统:应当一直到文章才出现关于系统的内容而不是开头，请勿擅自决定系统类型、名称等任何内容，交给玩家{{user}}来决定。
+        如果下方内容中包括【不允许扮演{{user}}】，请不要擅自在正文中出现系统相关内容。
+        -->
+        结合设定，为剧情撰写开场故事。`;
+                }
+
+                function buildSystemSettingsContent(values) {
+                  const allowAction = values.allowAiControl ? '允许' : '不允许';
+                  const personality = values.systemPersonality ? '具有' : '不具有';
+                  const talkative = values.systemTalkative ? '会' : '不会';
+                  const reminder = values.allowAiControl
+                    ? '你允许适当扮演系统，但请记住{{user}}才是玩家，玩家不是故事的主人公'
+                    : '再次强调，你不允许扮演系统进行任何行动，请在正文中出现玩家本人进行的操作';
+
+                  return `【你${allowAction}扮演{{user}}系统进行行动（如发布任务、展示主角状态等全部系统相关行为）。{{user}}是一个${personality}独立人格和情感，${talkative}主动与角色交流互动的系统。${reminder}】\n 以下内容为玩家本轮操作的日志： {{format_message_variable::系统状态.玩家本轮操作日志}}`;
+                }
+
+                function ensureEntryBase(overrides = {}) {
+                  return {
+                    enabled: true,
+                    strategy: {
+                      type: 'constant',
+                      keys: [],
+                      keys_secondary: { logic: 'and_any', keys: [] },
+                    },
+                    position: {
+                      type: 'after_character_definition',
+                      role: 'system',
+                      depth: 0,
+                      order: 8390,
+                    },
+                    probability: 100,
+                    recursion: {
+                      prevent_incoming: true,
+                      prevent_outgoing: true,
+                      delay_until: null,
+                    },
+                    effect: { sticky: null, cooldown: null, delay: null },
+                    ...overrides,
+                  };
+                }
+
+                async function writeHeroVariables(values) {
+                  await updateVariablesWith(
+                    current => {
+                      const next = { ...current };
+                      const hero = { ...(next.主角 ?? {}) };
+                      hero.姓名 = values.heroName;
+                      hero.性别 = values.heroGender;
+                      hero.年龄 = values.heroAge;
+                      next.主角 = hero;
+                      return next;
+                    },
+                    { type: 'character' },
+                  );
+                }
+
+                async function ensureGuideWorldbook() {
+                  const names = getWorldbookNames();
+                  if (!names.includes(GUIDE_WORLDBOOK_NAME)) {
+                    await createWorldbook(GUIDE_WORLDBOOK_NAME, []);
+                  }
+                }
+
+                async function upsertWorldbookEntry(worldbookName, entryName, builder) {
+                  await updateWorldbookWith(worldbookName, worldbook => {
+                    const entry = builder();
+                    const next = [...worldbook];
+                    const index = next.findIndex(item => item.name === entryName);
+                    if (index >= 0) {
+                      next[index] = { ...next[index], ...entry, name: entryName };
+                    } else {
+                      next.push({ ...entry, name: entryName });
+                    }
+                    return next;
+                  });
+                }
+
+                async function writePersonaEntry(worldbookName, values) {
+                  await upsertWorldbookEntry(worldbookName, '人物设定', () => {
+                    const wrappedContent = `---\n主角档案:\n${values.heroPersona}\n---`;
+                    const entry = ensureEntryBase({
+                      content: wrappedContent,
+                      strategy: {
+                        type: 'constant',
+                        keys: [values.heroName],
+                        keys_secondary: { logic: 'and_any', keys: [] },
+                      },
+                    });
+                    delete entry.recursion;
+                    return entry;
+                  });
+                }
+
+                async function writeSystemSettingsEntry(worldbookName, values) {
+                  await upsertWorldbookEntry(worldbookName, '系统设置', () =>
+                    ensureEntryBase({
+                      position: {
+                        type: 'at_depth',
+                        role: 'system',
+                        depth: 0,
+                        order: 0,
+                      },
+                      content: buildSystemSettingsContent(values),
+                      extra: { location: '系统深度D1' },
+                    }),
+                  );
+                }
+
+                async function sendIntroMessage(values) {
+                  const message = buildInitPrompt(values);
+                  await createChatMessages([{ role: 'system', message }]);
+                  await triggerSlash('/trigger');
+                }
+
+                function validate(values) {
+                  const missing = Object.keys(FIELD_META).filter(key => FIELD_META[key].required && !values[key]);
+                  if (missing.length) {
+                    throw new Error('请填写所有必填项');
+                  }
+                }
+
+                form.addEventListener('submit', async event => {
+                  event.preventDefault();
+                  const values = readValues();
+
+                  try {
+                    validate(values);
+                  } catch (error) {
+                    setStatus(error.message, 'status--error');
+                    return;
+                  }
+
+                  submitBtn.disabled = true;
+                  setStatus('正在写入角色数据...', '');
+
+                  try {
+                    await writeHeroVariables(values);
+                    await ensureGuideWorldbook();
+                    await writePersonaEntry(GUIDE_WORLDBOOK_NAME, values);
+                    await writeSystemSettingsEntry(GUIDE_WORLDBOOK_NAME, values);
+                    await sendIntroMessage(values);
+                    setStatus('角色创建完成！', 'status--success');
+                  } catch (error) {
+                    console.error(error);
+                    setStatus(error?.message ?? '创建失败', 'status--error');
+                  } finally {
+                    submitBtn.disabled = false;
+                  }
+                });
+              })();
+            </script>
+          </body>
+        </html>
+        ```
+      来源:
+        用户输入: false
+        AI输出: true
+      作用于:
+        仅格式显示: true
+        仅格式提示词: false
+      最大深度: 1
+
+    - 正则名称: '[界面]系统提示'
+      id: fde5c78b-fdd4-41b5-8de1-4038ff57e35d
+      启用: true
+      查找表达式: /<system_notification>\s*(?:<title>\s*([\s\S]*?)\s*<\/title>|[\s\S]*?)\s*(?:<tag>\s*([\s\S]*?)\s*<\/tag>|[\s\S]*?)\n?([\s\S]*?)\s*(?:<\/system_notification>|$)/gs
+      替换为: |-
+        <style>
+          .system-popup {
+            max-width: 520px;
+            margin: 20px auto;
+            border: 2px solid #121212;
+            background: #f8f8f8;
+            box-shadow:
+              0 6px 18px rgba(0, 0, 0, 0.25),
+              inset 0 0 0 2px #fff;
+            font-family: 'Fusion Pixel 12px', 'Microsoft YaHei', sans-serif;
+            color: #111;
+          }
+
+          .popup-header {
+            padding: 16px 20px 12px;
+            border-bottom: 2px solid #121212;
+            display: flex;
+            flex-direction: column;
+            gap: 6px;
+            background: linear-gradient(180deg, #fefefe 0%, #f1f1f1 100%);
+          }
+
+          .popup-title {
+            font-size: 20px;
+            letter-spacing: 0.04em;
+          }
+
+          .popup-meta {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 8px;
+            font-size: 12px;
+            color: #666;
+          }
+
+          .popup-tag {
+            padding: 2px 8px;
+            border: 1px solid #121212;
+            font-size: 11px;
+            text-transform: uppercase;
+            letter-spacing: 0.08em;
+            background: #fff;
+          }
+
+          .popup-body {
+            padding: 20px;
+            min-height: 160px;
+            background: #fff;
+            border-bottom: 2px solid #121212;
+          }
+
+          .popup-footer {
+            padding: 14px 20px;
+            display: flex;
+            justify-content: flex-end;
+            gap: 10px;
+            background: #f3f3f3;
+          }
+
+          .markdown-content h1,
+          .markdown-content h2,
+          .markdown-content h3 {
+            margin: 0 0 12px;
+            padding-bottom: 6px;
+            border-bottom: 1px solid #ddd;
+            font-weight: bold;
+          }
+
+          .markdown-content p {
+            margin: 0 0 12px;
+            line-height: 1.6;
+            font-size: 14px;
+          }
+
+          .markdown-content ul,
+          .markdown-content ol {
+            padding-left: 20px;
+            margin: 0 0 12px;
+            line-height: 1.5;
+          }
+
+          .markdown-content blockquote {
+            margin: 0 0 12px;
+            padding: 10px 14px;
+            border-left: 4px solid #1976d2;
+            background: rgba(25, 118, 210, 0.08);
+            font-style: italic;
+          }
+
+          .markdown-content code {
+            padding: 2px 4px;
+            background: #f1f1f1;
+            border: 1px solid #e0e0e0;
+            font-size: 12px;
+            border-radius: 2px;
+          }
+
+          .markdown-content pre {
+            padding: 12px;
+            background: #111;
+            color: #f7f7f7;
+            border: 1px solid #000;
+            overflow-x: auto;
+          }
+
+          .markdown-content table {
+            width: 100%;
+            border-collapse: collapse;
+            margin-bottom: 12px;
+            font-size: 12px;
+          }
+
+          .markdown-content th,
+          .markdown-content td {
+            border: 1px solid #ccc;
+            padding: 6px 10px;
+          }
+
+          @media (max-width: 560px) {
+            .system-popup {
+              margin: 12px;
+            }
+          }
+        </style>
+
+        <div class="system-popup">
+          <div class="popup-header">
+            <div class="popup-title">$1</div>
+            <div class="popup-meta">
+              <span class="popup-tag">$2</span>
+            </div>
+          </div>
+          <div class="popup-body markdown-content">
+            $3
+          </div>
+          <div class="popup-footer">
+          </div>
+        </div>
+      来源:
+        用户输入: false
+        AI输出: true
+      作用于:
+        仅格式显示: true
+        仅格式提示词: false
+      最大深度: 3
+
+    - 正则名称: '[界面]控制面板'
+      id: 9d82406a-8c2e-44ab-8ffa-bb55621ca108
+      启用: true
+      查找表达式: <StatusPlaceHolderImpl/>
+      替换为: |-
+        ```
+        <body>
+        <script>
+        $('body').load('https://testingcf.jsdelivr.net/gh/lolo-desu/lolocard/dist/转生系统/界面/状态栏/index.html')
+        </script>
+        </body>
+        ```
+      来源:
+        用户输入: true
+        AI输出: true
+      作用于:
+        仅格式显示: true
+        仅格式提示词: false
+
+    - 正则名称: '[不发送]界面占位符'
+      id: 6a061a42-84db-45cc-83ae-e4b3fc0e5a72
+      启用: true
+      查找表达式: <StatusPlaceHolderImpl/>
+      替换为: ''
+      来源:
+        用户输入: false
+        AI输出: true
+      作用于:
+        仅格式显示: false
+        仅格式提示词: true
+
+  酒馆助手:
+    脚本库:
+      - 名称: mvu
+        id: f03cdb9d-ac32-4b4e-8043-744cf17b803c
+        启用: true
+        类型: 脚本
+        内容: |
+          import 'https://testingcf.jsdelivr.net/gh/MagicalAstrogy/MagVarUpdate/artifact/bundle.js'
+
+      - 名称: 脚本
+        id: f94e2a79-8fa2-4969-9ee2-33913e1510ef
+        启用: true
+        类型: 脚本
+        内容: import
+          'https://testingcf.jsdelivr.net/gh/lolo-desu/lolocard/dist/转生系统/脚本/index.js'
