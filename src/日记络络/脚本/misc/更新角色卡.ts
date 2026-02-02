@@ -1,20 +1,14 @@
-import { compare } from 'compare-versions';
+import { checkAndUpdateCharacter } from '@util/common';
+import _ from 'lodash';
 import { CHARACTER_NAME } from '../constant';
 
 export async function checkUpdate() {
-  const current_version = (await getCharacter(CHARACTER_NAME)).version.trim() || '0.0.0';
-  const latest_version = await fetch('https://testingcf.jsdelivr.net/gh/lolo-desu/lolocard/src/日记络络/index.yaml')
-    .then(response => response.text())
-    .then(text => _.get(YAML.parse(text), '版本', '0.0.0'))
-    .catch(() => '0.0.0');
-  if (compare(current_version, latest_version, '>=')) {
-    return;
-  }
-  await importRawCharacter(
+  await checkAndUpdateCharacter(
     CHARACTER_NAME,
-    await fetch('https://testingcf.jsdelivr.net/gh/lolo-desu/lolocard/src/日记络络/白化蓝染的日记本.png').then(
-      response => response.blob(),
-    ),
+    await fetch('https://testingcf.jsdelivr.net/gh/lolo-desu/lolocard/src/日记络络/index.yaml')
+      .then(response => response.text())
+      .then(text => _.get(YAML.parse(text), '版本', '0.0.0'))
+      .catch(() => '0.0.0'),
+    'https://testingcf.jsdelivr.net/gh/lolo-desu/lolocard/src/日记络络/白化蓝染的日记本.png',
   );
-  toastr.success(`角色卡已自动更新到 'v${latest_version}'`, CHARACTER_NAME);
 }
