@@ -539,7 +539,7 @@ function parse_configuration(entry: Entry): (_env: any, argv: any) => webpack.Co
       }
 
       if (
-        ['vue', 'vue-router', 'pixi.js'].every(key => request !== key) &&
+        ['vue', 'vue-router'].every(key => request !== key) &&
         ['pixi', 'react', 'vue'].some(key => request.includes(key))
       ) {
         return callback();
@@ -553,7 +553,6 @@ function parse_configuration(entry: Entry): (_env: any, argv: any) => webpack.Co
         'vue-router': 'VueRouter',
         yaml: 'YAML',
         zod: 'z',
-        'pixi.js': 'PIXI',
       };
       if (request in global) {
         return callback(null, 'var ' + global[request as keyof typeof global]);
