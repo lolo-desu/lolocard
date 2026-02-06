@@ -12,8 +12,7 @@ import { initPrefetches } from './misc/资源预载';
 import { useConfigStore } from './store';
 import { initRoleplayOptions } from './选择框/index';
 
-const pinia = createPinia();
-setActivePinia(pinia);
+setActivePinia(getActivePinia() ?? createPinia());
 
 $(async () => {
   await checkMinimumVersion('4.6.2', '白化蓝染的日记本');
