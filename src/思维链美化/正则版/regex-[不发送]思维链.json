@@ -1,9 +1,12 @@
 {
     "id": "241f66f4-9917-415b-9f5d-9490ff683911",
     "scriptName": "[不发送]思维链",
-    "findRegex": "/<(think(?:ing)?|metacognition)>\\s*(.*)\\s*(?:(?:\\n<\\/\\1>)|(?=\\n(?:<content>|<context>|<spacetime_table>)))/si",
+    "findRegex": "/(?:<(?:think(?:ing)?|metacognition)>)?\\s*(.*)\\s*(?:(?:\\n<\\/(?:think(?:ing)?|metacognition)>)|(?=\\n(?:<content>|<context>|<spacetime_table>)))/si",
     "replaceString": "",
-    "trimStrings": ["<", ">"],
+    "trimStrings": [
+        "<",
+        ">"
+    ],
     "placement": [
         2
     ],
