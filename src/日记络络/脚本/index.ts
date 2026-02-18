@@ -6,7 +6,7 @@ import './misc/世界书强制自定义排序';
 import './misc/变量结构';
 import { initForceGalgameInterface } from './misc/强制galgame界面';
 import { initButtons } from './misc/按钮';
-import { checkUpdate } from './misc/更新角色卡';
+import './misc/更新角色卡';
 import { initStyle } from './misc/样式加载';
 import { initPrefetches } from './misc/资源预载';
 import { useConfigStore } from './store';
@@ -19,7 +19,6 @@ $(async () => {
 
   await waitUntil(() => getCharWorldbookNames('current').primary !== null);
   await waitGlobalInitialized('Mvu');
-  await checkUpdate();
   await useConfigStore()._wait_init;
 
   const destroy_list: Array<() => void> = [];
