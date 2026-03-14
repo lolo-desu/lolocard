@@ -5,7 +5,7 @@
     纯文字尾附立绘: 无需查看日记，生成sprite界面
     展示日记: 必须查看日记，只使用diary界面
     # :<%_ } _%>
-    galgame: 进入感人或剧情高潮CG场景（如告白、离别、和解等情感爆发点）或NSFWCG场景，使用galgame界面
+    galgame: 进入感人或剧情高潮CG场景（如告白、离别、和解等情感爆发点），使用galgame界面
   你必须输出判断{{format_message_variable::stat_data.世界.下一回合界面选择}}对应的界面，因此必须最优先地遵守以下内容:
     # :<%_ if (getvar('stat_data.世界.下一回合界面选择') === '纯文字尾附立绘') { _%>
     sprite:
@@ -16,7 +16,7 @@
         - which EXISTING tachi-e in `立绘列表` document best describes her current clothes and facial expression? ${服装}/${表情}.png
         </interface_analysis>
         <sprite>
-        立绘: ${刚刚选择的当前络络的立绘 (仅包括格纹衫、开衫、水手服、睡衣和全裸)服装/表情路径}.png
+        立绘: ${刚刚选择的当前络络的立绘 (仅包括格纹衫、开衫、水手服和睡衣)服装/表情路径}.png
         场景: ${刚刚选择的当前络络所在的地点/地点情况路径}.jpg
         时间: ${请检查时间变量！目前是{{format_message_variable::stat_data.世界.当前时间}}，请你根据剧情填写一个主观时间名称，例如'放学后'、'深夜'等}
         </sprite>
@@ -52,8 +52,8 @@
         </UpdateVariable>
     # :<%_ } else { _%>
     galgame:
-      可调用的CG文件列表: # :<%= getvar('stat_data.世界.是否处于NSFW场景') === true ? '`NSFWCG列表`document' : '`关键CG列表`document' %>
-      场景风格: # :<%= getvar('stat_data.世界.是否处于NSFW场景') === true ? 'galgame游戏中的R18场景' : 'galgame游戏中的关键情感爆发场景' %>
+      可调用的CG文件列表: '`关键CG列表`document'
+      场景风格: 'galgame游戏中的关键情感爆发场景'
       type:
         definition: |-
           interface Chat {

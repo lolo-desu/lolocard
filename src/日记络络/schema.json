@@ -32,9 +32,6 @@
           "default": true,
           "type": "boolean"
         },
-        "是否处于NSFW场景": {
-          "type": "boolean"
-        },
         "下一回合界面选择": {
           "default": "纯文字尾附立绘",
           "type": "string",
