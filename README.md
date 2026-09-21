@@ -7,7 +7,7 @@
 
 ### 代码部分
 
-[Aladdin](LICENSE)
+[PolyForm Noncommercial License 1.0.0](LICENSE)
 
 ### 世界书、图片部分
 
